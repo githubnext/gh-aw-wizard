@@ -192,6 +192,14 @@ describe('generateAgentPrompt', () => {
     expect(prompt).toContain('.github/workflows/issue-triage.md');
   });
 
+  it('asks the agent to analyze the repository first', () => {
+    const prompt = generateAgentPrompt(answers(), patterns);
+    expect(prompt).toContain('First, analyze this repository so the workflow is optimized for it:');
+    expect(prompt).toContain('AGENTS.md');
+    expect(prompt).toContain('build/test/lint commands');
+    expect(prompt.indexOf('First, analyze this repository')).toBeLessThan(prompt.indexOf('Requirements:'));
+  });
+
   it('mentions pre-steps, memory and project context when requested', () => {
     const prompt = generateAgentPrompt(
       answers({ needsData: true, extras: ['memory'], dataDescription: 'Uses pnpm' }),

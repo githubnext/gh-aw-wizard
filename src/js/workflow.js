@@ -216,6 +216,11 @@ export function generateAgentPrompt(answers, patterns) {
 
   var prompt = 'Create a workflow for GitHub Agentic Workflows using https://raw.githubusercontent.com/github/gh-aw/main/create.md\n\n';
   prompt += 'The purpose of the workflow is: ' + desc + '\n\n';
+  prompt += 'First, analyze this repository so the workflow is optimized for it:\n';
+  prompt += '- Read the README, AGENTS.md (and any CONTRIBUTING or docs files) to understand the project purpose and conventions\n';
+  prompt += '- Identify the languages, package managers, build/test/lint commands and CI setup actually used\n';
+  prompt += '- Note repository conventions such as labels, issue/PR templates and branch naming\n';
+  prompt += '- Use those findings to tailor the workflow prompt, tools, and instructions to this repository\n\n';
   prompt += 'Requirements:\n';
   prompt += '- Name: ' + name + '\n';
   prompt += '- Triggers: ' + triggersReadable + '\n';
