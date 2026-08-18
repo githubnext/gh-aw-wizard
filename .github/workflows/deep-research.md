@@ -370,7 +370,7 @@ If changes are warranted:
 
 1. Create a new branch named `deep-research/YYYY-MM-DD`
 2. Refine the rebuilt `patterns.json` with any additional supported changes:
-    - Update `success_rate` values for archetypes when deltas are significant
+   - Update `success_rate` values for archetypes when deltas are significant
    - Add new anti-patterns when trigger combos or workflow patterns consistently fail
    - Update `tips` arrays with new findings (e.g., "Adding workflow_dispatch improves success by X%")
    - Update `trigger_success_rates` if present, or add the section
