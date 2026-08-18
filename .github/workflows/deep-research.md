@@ -2,38 +2,23 @@
 name: "🔬 Deep Research"
 description: Analyze agentic workflow trends and open PRs to improve the pattern library
 engine: copilot
-on: daily
+on:
+  schedule: daily
+  skip-if-match: 'is:pr is:open in:title "Pattern library update"'
 permissions:
   contents: read
-  pull-requests: read
   copilot-requests: write
 safe-outputs:
   create-pull-request:
-  noop:
 strict: true
 timeout-minutes: 30
 steps:
-  - name: Check for existing deep research PR
-    id: existing-pr
-    run: |
-      count=$(gh pr list --state open --limit 100 --json number,headRefName --jq '[.[] | select(.headRefName | startswith("deep-research/"))] | length')
-      if [ "$count" != "0" ]; then
-        echo "exists=true" >> "$GITHUB_OUTPUT"
-        printf '%s\n' "An open deep research pull request already exists. Call noop and do not scan, modify files, commit, or open another PR." > .deep-research-skip
-      else
-        echo "exists=false" >> "$GITHUB_OUTPUT"
-      fi
-    env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   - name: Run scan
-    if: steps.existing-pr.outputs.exists != 'true'
     run: ./scripts/scan.sh --active-only --run-history
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   - name: Rebuild patterns.json
-    if: steps.existing-pr.outputs.exists != 'true'
     run: |
       python3 << 'PYEOF'
       import json
@@ -337,7 +322,6 @@ steps:
       PYEOF
 
   - name: Run statistical analysis
-    if: steps.existing-pr.outputs.exists != 'true'
     run: python3 scripts/analyze.py --max-log-repos 100
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -347,7 +331,7 @@ steps:
 
 You are a **data analyst** specializing in GitHub Copilot agentic workflows.
 
-Your job is to read the statistical analysis report, compare it with the current pattern library, and open a pull request with improvements when the data supports changes. If an open deep research pull request already exists, skip the run.
+Your job is to read the statistical analysis report, compare it with the current pattern library, and open a pull request with improvements when the data supports changes.
 
 ## Context
 
@@ -356,10 +340,6 @@ This repository contains a prompt generator for agentic workflows. It uses `patt
 The workflow first runs `scripts/scan.sh --active-only --run-history` to collect data from real public repositories, then rebuilds `patterns.json`, and then runs `scripts/analyze.py` to produce `data/analysis-report.json` with fresh statistics.
 
 ## Instructions
-
-### Step 0: Skip when a PR is already open
-
-If `.deep-research-skip` exists, call `noop` and stop. Do not open another pull request.
 
 ### Step 1: Read the data
 
