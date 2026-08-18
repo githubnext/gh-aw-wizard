@@ -6,13 +6,66 @@
   let generatedMd = '';
   let generatedPrompt = '';
   let currentFormat = 'workflow';
+  let themeMode = 'auto';
 
   // ── Bootstrap ──────────────────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', function () {
+    initTheme();
     loadPatterns();
     bindNavigation();
     bindFormEvents();
   });
+
+  // ── Theme ──────────────────────────────────────────────────────────────────
+  function initTheme() {
+    themeMode = document.documentElement.getAttribute('data-theme-preference') || 'auto';
+    if (['auto', 'light', 'dark'].indexOf(themeMode) === -1) themeMode = 'auto';
+    applyTheme(themeMode);
+
+    var toggle = document.getElementById('theme-toggle');
+    if (!toggle) return;
+    toggle.addEventListener('click', function () {
+      var next = themeMode === 'auto' ? 'light' : themeMode === 'light' ? 'dark' : 'auto';
+      applyTheme(next);
+      try {
+        localStorage.setItem('gh-aw-wizard-theme', next);
+      } catch (e) {
+        // Ignore storage failures; the selected theme still applies for this page load.
+      }
+    });
+
+    if (window.matchMedia) {
+      var media = window.matchMedia('(prefers-color-scheme: dark)');
+      var updateAutoTheme = function () {
+        if (themeMode === 'auto') applyTheme('auto');
+      };
+      if (media.addEventListener) media.addEventListener('change', updateAutoTheme);
+      else if (media.addListener) media.addListener(updateAutoTheme);
+    }
+  }
+
+  function applyTheme(mode) {
+    themeMode = mode;
+    var systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var colorMode = mode === 'auto' ? (systemDark ? 'dark' : 'light') : mode;
+    document.documentElement.setAttribute('data-theme-preference', mode);
+    document.documentElement.setAttribute('data-color-mode', colorMode);
+
+    var label = document.getElementById('theme-toggle-label');
+    var toggle = document.getElementById('theme-toggle');
+    var icon = document.querySelector('.theme-toggle-icon');
+    var copy = {
+      auto: { label: 'Auto theme', icon: '◐' },
+      light: { label: 'Light theme', icon: '☀️' },
+      dark: { label: 'Dark theme', icon: '☾' }
+    };
+    var state = copy[mode] || copy.auto;
+    if (label) label.textContent = state.label;
+    if (icon) icon.textContent = state.icon;
+    if (toggle) {
+      toggle.setAttribute('title', state.label + '. Click to change.');
+    }
+  }
 
   // ── Data loading ───────────────────────────────────────────────────────────
   function loadPatterns() {

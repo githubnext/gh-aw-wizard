@@ -1,8 +1,55 @@
 :root {
+  color-scheme: light;
+  --bg-primary: var(--color-canvas-default, #ffffff);
+  --bg-secondary: var(--color-canvas-subtle, #f6f8fa);
+  --bg-tertiary: var(--color-neutral-subtle, rgba(175, 184, 193, 0.2));
+  --bg-card: var(--color-canvas-default, #ffffff);
+  --bg-subtle: var(--color-canvas-subtle, #f6f8fa);
+  --bg-inset: var(--color-canvas-inset, #f6f8fa);
+  --text-primary: var(--color-fg-default, #24292f);
+  --text-secondary: var(--color-fg-muted, #57606a);
+  --text-muted: var(--color-fg-subtle, #6e7781);
+  --accent-blue: var(--color-accent-fg, #0969da);
+  --accent-purple: var(--color-done-fg, #8250df);
+  --accent-green: var(--color-success-emphasis, #1f883d);
+  --accent-green-hover: #1a7f37;
+  --border-color: var(--color-border-default, #d0d7de);
+  --border-default: var(--color-border-default, #d0d7de);
+  --border-subtle: var(--color-border-muted, #d8dee4);
+  --border-hover: var(--color-border-default, #8c959f);
+  --border-focus: var(--color-accent-fg, #0969da);
+  --code-bg: var(--color-canvas-inset, #f6f8fa);
+  --yaml-key: var(--color-prettylights-syntax-constant, #0550ae);
+  --yaml-value: var(--color-prettylights-syntax-string, #0a3069);
+  --yaml-string: var(--color-prettylights-syntax-string, #0a3069);
+  --yaml-comment: var(--color-prettylights-syntax-comment, #6e7781);
+  --heading-color: var(--color-done-fg, #8250df);
+  --success: var(--color-success-fg, #1a7f37);
+  --warning: var(--color-attention-fg, #9a6700);
+  --danger: var(--color-danger-fg, #cf222e);
+  --control-fg-on-emphasis: var(--color-fg-on-emphasis, #ffffff);
+  --header-gradient-start: rgba(246, 248, 250, 0.85);
+  --glow-blue: rgba(9, 105, 218, 0.12);
+  --glow-purple: rgba(130, 80, 223, 0.08);
+  --shadow-card: var(--color-shadow-medium, 0 3px 12px rgba(27,31,36,0.15));
+  --shadow-floating: var(--color-shadow-large, 0 8px 24px rgba(140,149,159,0.2));
+  --shadow-btn-primary-hover: 0 2px 6px rgba(31, 136, 61, 0.25);
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --radius-md: var(--borderRadius-medium, 8px);
+  --radius-lg: var(--borderRadius-large, 12px);
+  --transition-fast: 0.15s ease;
+  --transition-med: 0.25s ease;
+}
+
+[data-color-mode="dark"] {
+  color-scheme: dark;
   --bg-primary: #0d1117;
   --bg-secondary: #161b22;
   --bg-tertiary: #21262d;
   --bg-card: #151b23;
+  --bg-subtle: #161b22;
+  --bg-inset: #010409;
   --text-primary: #e6edf3;
   --text-secondary: #9198a1;
   --text-muted: #6e7681;
@@ -11,7 +58,9 @@
   --accent-green: #238636;
   --accent-green-hover: #2ea043;
   --border-color: #30363d;
+  --border-default: #30363d;
   --border-subtle: #21262d;
+  --border-hover: #484f58;
   --border-focus: #58a6ff;
   --code-bg: #0d1117;
   --yaml-key: #79c0ff;
@@ -22,14 +71,12 @@
   --success: #3fb950;
   --warning: #d29922;
   --danger: #f85149;
+  --header-gradient-start: rgba(22, 27, 34, 0.8);
   --glow-blue: rgba(88, 166, 255, 0.15);
   --glow-purple: rgba(188, 140, 255, 0.1);
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --transition-fast: 0.15s ease;
-  --transition-med: 0.25s ease;
+  --shadow-card: 0 2px 8px rgba(0,0,0,0.2);
+  --shadow-floating: 0 4px 16px rgba(0,0,0,0.3);
+  --shadow-btn-primary-hover: 0 2px 6px rgba(46,160,67,0.25);
 }
 
 *, *::before, *::after {
@@ -59,7 +106,7 @@ body::before {
   transform: translateX(-50%);
   width: 800px;
   height: 600px;
-  background: radial-gradient(ellipse, rgba(88,166,255,0.04) 0%, rgba(188,140,255,0.02) 40%, transparent 70%);
+  background: radial-gradient(ellipse, var(--glow-blue) 0%, var(--glow-purple) 40%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
@@ -97,7 +144,7 @@ a:hover {
 .site-header {
   padding: 2.5rem 0 1.75rem;
   text-align: center;
-  background: linear-gradient(180deg, rgba(22,27,34,0.8) 0%, transparent 100%);
+  background: linear-gradient(180deg, var(--header-gradient-start) 0%, transparent 100%);
   border-bottom: 1px solid var(--border-color);
   margin-bottom: 2.5rem;
 }
@@ -115,7 +162,7 @@ a:hover {
 .site-header h1 {
   font-size: 1.75rem;
   font-weight: 700;
-  color: #f0f6fc;
+  color: var(--text-primary);
   letter-spacing: -0.02em;
 }
 .site-header .subtitle {
@@ -124,6 +171,25 @@ a:hover {
   max-width: 500px;
   margin: 0 auto 0.75rem;
   line-height: 1.5;
+}
+.header-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+.theme-toggle {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+.theme-toggle:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--border-hover);
+  text-decoration: none;
+}
+.theme-toggle-icon {
+  width: 1em;
+  text-align: center;
 }
 
 /* Progress bar */
@@ -186,7 +252,7 @@ a:hover {
 .progress-step.completed .step-indicator {
   border-color: var(--accent-green);
   background: var(--accent-green);
-  color: #fff;
+  color: var(--control-fg-on-emphasis);
   box-shadow: none;
   animation: none;
 }
@@ -248,7 +314,7 @@ a:hover {
 .step-title {
   font-size: 1.4rem;
   font-weight: 600;
-  color: #f0f6fc;
+  color: var(--text-primary);
   margin-bottom: 0.35rem;
   letter-spacing: -0.01em;
 }
@@ -284,10 +350,10 @@ a:hover {
   position: relative;
 }
 .option-card:hover {
-  border-color: #484f58;
+  border-color: var(--border-hover);
   background: var(--bg-tertiary);
   transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  box-shadow: var(--shadow-card);
 }
 .option-card.selected {
   border-color: var(--accent-blue);
@@ -320,7 +386,7 @@ a:hover {
   transition: all var(--transition-fast);
 }
 .option-card:hover .archetype-icon {
-  border-color: #484f58;
+  border-color: var(--border-hover);
 }
 .option-card.selected .archetype-icon {
   background: rgba(88,166,255,0.1);
@@ -361,7 +427,7 @@ a:hover {
   top: 3px; left: 3px;
   width: 8px; height: 8px;
   border-radius: 50%;
-  background: #fff;
+  background: var(--control-fg-on-emphasis);
 }
 .option-card input[type="checkbox"]:checked::after {
   content: '✓';
@@ -369,7 +435,7 @@ a:hover {
   top: -1px; left: 2px;
   font-size: 12px;
   font-weight: 700;
-  color: #fff;
+  color: var(--control-fg-on-emphasis);
 }
 /* Hide radio/checkbox in archetype grid — icon replaces it */
 .archetype-grid .option-card input[type="radio"] {
@@ -468,17 +534,17 @@ a:hover {
 }
 .btn-secondary:hover {
   background: var(--border-color);
-  border-color: #484f58;
+  border-color: var(--border-hover);
 }
 .btn-primary {
   background: var(--accent-green);
-  color: #fff;
+  color: var(--control-fg-on-emphasis);
   border-color: var(--accent-green);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  box-shadow: var(--color-shadow-small, 0 1px 3px rgba(27,31,36,0.12));
 }
 .btn-primary:hover {
   background: var(--accent-green-hover);
-  box-shadow: 0 2px 6px rgba(46,160,67,0.25);
+  box-shadow: var(--shadow-btn-primary-hover);
 }
 .btn-primary:disabled {
   opacity: 0.4;
@@ -539,7 +605,7 @@ a:hover {
 .preview-code .yaml-value { color: var(--yaml-value); }
 .preview-code .md-heading  { color: var(--heading-color); font-weight: 700; }
 .preview-code .md-list     { color: var(--text-primary); }
-.preview-code .md-bold     { color: #f0f6fc; font-weight: 600; }
+.preview-code .md-bold     { color: var(--text-primary); font-weight: 600; }
 .preview-code .md-number   { color: var(--accent-blue); }
 
 /* Toast */
@@ -558,7 +624,7 @@ a:hover {
   opacity: 0;
   transition: all 0.3s ease;
   z-index: 100;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  box-shadow: var(--shadow-floating);
 }
 .toast.show {
   opacity: 1;
@@ -616,9 +682,9 @@ a:hover {
   font-family: var(--font-sans);
 }
 .format-btn:hover {
-  border-color: #484f58;
+  border-color: var(--border-hover);
   transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  box-shadow: var(--shadow-card);
 }
 .format-btn.active {
   border-color: var(--accent-blue);
@@ -659,7 +725,7 @@ a:hover {
 }
 .next-steps-panel h3 {
   font-size: 0.92rem;
-  color: #f0f6fc;
+  color: var(--text-primary);
   margin-bottom: 0.75rem;
   display: flex;
   align-items: center;
