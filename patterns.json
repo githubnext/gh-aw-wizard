@@ -218,7 +218,7 @@
       "id": "issue-triage",
       "label": "Issue Triage",
       "description": "Classify and label new issues",
-      "success_rate": 0.63,
+      "success_rate": 0.72,
       "count": 42,
       "recommended_triggers": [
         {
@@ -287,7 +287,7 @@
       "id": "pr-review",
       "label": "PR Review",
       "description": "Review pull requests for quality and issues",
-      "success_rate": 0.47,
+      "success_rate": 0.42,
       "count": 30,
       "recommended_triggers": [
         {
@@ -355,7 +355,7 @@
       "id": "documentation-updater",
       "label": "Documentation Updater",
       "description": "Keep docs accurate and up-to-date",
-      "success_rate": 0.7,
+      "success_rate": 0.78,
       "count": 28,
       "recommended_triggers": [
         {
@@ -553,7 +553,7 @@
       "id": "content-moderation",
       "label": "Content Moderation",
       "description": "Review content for quality or policy",
-      "success_rate": 0.46,
+      "success_rate": 0.77,
       "count": 5,
       "recommended_triggers": [
         {
@@ -758,7 +758,7 @@
         "use_for": "triage, labeling, single-repo analysis"
       },
       "codex": {
-        "success_rate": 0.47,
+        "success_rate": 0.57,
         "use_for": "avoid unless specifically needed for code generation"
       },
       "claude-opus-4.5": {
@@ -887,7 +887,8 @@
     "workflow_run_risky": "workflow_run chaining has 13-16% success rate. Use pre-steps or schedule instead.",
     "pre_steps_help": "Workflows with pre-steps are more likely to be active (+13pp internal, +5pp community).",
     "prompt_size_matters": "Active workflows have 35-48% larger prompts. More detail = better outcomes.",
-    "template_clones_fragile": "32% of workflows are template copies. Copied templates have lower success than customized ones."
+    "template_clones_fragile": "32% of workflows are template copies. Copied templates have lower success than customized ones.",
+    "tools_reduce_success": "Workflows that declare tools: have 12.2pp lower success rate than those without (52% vs 64%, n=31 vs 4857) \u2014 prefer safe-outputs and minimal tool scopes."
   },
   "degraded_workflows": [
     {
@@ -950,7 +951,7 @@
       "id": "slash-command",
       "trigger": "slash_command",
       "success_rate": 0.01,
-      "n_runs": 204,
+      "n_runs": 262,
       "severity": "critical",
       "fix": "Remove slash_command trigger. Use issues + workflow_dispatch instead.",
       "explanation": "slash_command has 0-2% success rate across ALL trigger combos. Effectively broken."
@@ -958,7 +959,7 @@
     {
       "id": "workflow-run-alone",
       "trigger": "workflow_run",
-      "success_rate": 0.13,
+      "success_rate": 0.16,
       "n_runs": 76,
       "severity": "critical",
       "fix": "Use schedule + workflow_dispatch instead of workflow_run chaining.",
@@ -967,10 +968,10 @@
     {
       "id": "codex-model",
       "config": "model: codex",
-      "success_rate": 0.47,
+      "success_rate": 0.57,
       "severity": "high",
       "fix": "Use default model (67% success) or claude-opus for complex tasks.",
-      "explanation": "codex model has 47% success rate vs 67% for default."
+      "explanation": "codex model has 57% success rate vs 67% for default."
     },
     {
       "id": "template-clone",
