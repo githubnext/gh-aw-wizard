@@ -21,7 +21,7 @@ export function nextStepsHtml(format, workflowName) {
   } else {
     html += step(1, 'Make sure <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository" target="_blank">GitHub Actions is enabled</a> on your repository');
     html += step(2, 'Install the <a href="https://cli.github.com" target="_blank">GitHub CLI</a> and the Agentic Workflows extension:<br><code>gh extension install github/gh-aw</code>');
-    html += step(3, 'Copy the prompt above and paste it into your coding agent — <a href="https://code.visualstudio.com/docs/copilot/agents/overview" target="_blank">VS Code Agent Mode</a>, Copilot, Claude, or Codex');
+    html += step(3, 'Copy the prompt above and run it in your favorite agent — <a href="https://code.visualstudio.com/docs/copilot/agents/overview" target="_blank">VS Code Agent Mode</a>, Copilot, Claude, or Codex');
     html += step(4, 'The agent will create a <code>.md</code> file in <code>.github/workflows/</code> — review it');
     html += step(5, 'Set up your AI engine secret with <code>gh aw add-wizard</code> if you haven\'t already');
     html += step(6, 'Compile, commit, and push:<br><code>gh aw compile && git add .github/workflows/ && git push</code>');
