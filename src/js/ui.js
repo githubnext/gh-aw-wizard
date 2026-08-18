@@ -137,6 +137,7 @@ function bindFormEvents() {
       customField.classList.toggle('visible', radio.value === 'custom');
       // Auto-fill triggers/outputs from archetype data
       prefillFromArchetype(radio.value);
+      if (radio.value !== 'custom') goToStep(2);
     });
   });
 
