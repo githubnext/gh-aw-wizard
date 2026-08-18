@@ -10,6 +10,7 @@
   --text-secondary: var(--color-fg-muted, #57606a);
   --text-muted: var(--color-fg-subtle, #6e7781);
   --accent-blue: var(--color-accent-fg, #0969da);
+  --accent-blue-rgb: 9, 105, 218;
   --accent-purple: var(--color-done-fg, #8250df);
   --accent-green: var(--color-success-emphasis, #1f883d);
   --accent-green-hover: #1a7f37;
@@ -54,6 +55,7 @@
   --text-secondary: #9198a1;
   --text-muted: #6e7681;
   --accent-blue: #58a6ff;
+  --accent-blue-rgb: 88, 166, 255;
   --accent-purple: #bc8cff;
   --accent-green: #238636;
   --accent-green-hover: #2ea043;
@@ -72,7 +74,7 @@
   --warning: #d29922;
   --danger: #f85149;
   --header-gradient-start: rgba(22, 27, 34, 0.8);
-  --glow-blue: rgba(88, 166, 255, 0.15);
+  --glow-blue: rgba(var(--accent-blue-rgb), 0.15);
   --glow-purple: rgba(188, 140, 255, 0.1);
   --shadow-card: 0 2px 8px rgba(0,0,0,0.2);
   --shadow-floating: 0 4px 16px rgba(0,0,0,0.3);
@@ -237,13 +239,13 @@ a:hover {
 .progress-step.active .step-indicator {
   border-color: var(--accent-blue);
   color: var(--accent-blue);
-  background: rgba(88, 166, 255, 0.1);
-  box-shadow: 0 0 0 4px rgba(88, 166, 255, 0.08);
+  background: rgba(var(--accent-blue-rgb), 0.1);
+  box-shadow: 0 0 0 4px rgba(var(--accent-blue-rgb), 0.08);
   animation: pulseRing 2s ease-in-out infinite;
 }
 @keyframes pulseRing {
-  0%, 100% { box-shadow: 0 0 0 4px rgba(88, 166, 255, 0.08); }
-  50% { box-shadow: 0 0 0 8px rgba(88, 166, 255, 0.04); }
+  0%, 100% { box-shadow: 0 0 0 4px rgba(var(--accent-blue-rgb), 0.08); }
+  50% { box-shadow: 0 0 0 8px rgba(var(--accent-blue-rgb), 0.04); }
 }
 .progress-step.active .step-label {
   color: var(--accent-blue);
@@ -357,8 +359,8 @@ a:hover {
 }
 .option-card.selected {
   border-color: var(--accent-blue);
-  background: rgba(88, 166, 255, 0.05);
-  box-shadow: 0 0 0 1px var(--accent-blue), 0 2px 12px rgba(88,166,255,0.08);
+  background: rgba(var(--accent-blue-rgb), 0.05);
+  box-shadow: 0 0 0 1px var(--accent-blue), 0 2px 12px rgba(var(--accent-blue-rgb), 0.08);
 }
 .option-card.selected::before {
   content: '';
@@ -389,7 +391,7 @@ a:hover {
   border-color: var(--border-hover);
 }
 .option-card.selected .archetype-icon {
-  background: rgba(88,166,255,0.1);
+  background: rgba(var(--accent-blue-rgb), 0.1);
   border-color: var(--accent-blue);
 }
 
@@ -480,7 +482,7 @@ a:hover {
 .text-area:focus {
   outline: none;
   border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.12);
+  box-shadow: 0 0 0 3px rgba(var(--accent-blue-rgb), 0.12);
 }
 .text-area {
   min-height: 80px;
@@ -688,7 +690,7 @@ a:hover {
 }
 .format-btn.active {
   border-color: var(--accent-blue);
-  background: rgba(88, 166, 255, 0.05);
+  background: rgba(var(--accent-blue-rgb), 0.05);
   box-shadow: 0 0 0 1px var(--accent-blue);
 }
 .format-btn.active::after {
