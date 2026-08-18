@@ -13,7 +13,7 @@ export function preStepsBlock(answers) {
       '1. **Fetch** ' + desc + '\n' +
       '2. **Validate** that the data is complete — check for empty arrays or missing fields\n' +
       '3. **Read** the pre-fetched JSON files from `/tmp/` instead of making API calls at runtime\n\n';
-  } else if (archetype === 'dependency-monitor' || archetype === 'upstream-monitor') {
+  } else if (archetype === 'dependency-monitor') {
     block += 'Pre-fetch dependency/release data before analysis:\n\n' +
       '1. **Check** upstream repos or package registries for new versions\n' +
       '2. **Compare** against current versions in your project\n' +
@@ -195,33 +195,6 @@ export function buildContentModeration(answers, label) {
     '- When in doubt, err on the side of legitimate. False positives are worse than false negatives.\n' +
     '- Be factual in your comments. Do not be accusatory.\n' +
     '- Include specific evidence for why content was flagged.\n';
-}
-
-export function buildUpstreamMonitor(answers, label) {
-  return '# ' + label + '\n\n' +
-    'You are an **upstream dependency monitor** for this repository.\n\n' +
-    'Your job is to check upstream repositories or packages for new releases, breaking changes, or important updates, and report findings.\n\n' +
-    preStepsBlock(answers) +
-    '## Instructions\n\n' +
-    '1. **Identify** the upstream dependencies to check (listed below or in package files)\n' +
-    '2. **Check** for new releases, tags, or significant commits since the last check\n' +
-    '3. **Compare** upstream changes against the current state of this project\n' +
-    '4. **Report** findings by creating an issue with a summary\n\n' +
-    '## What to Monitor\n\n' +
-    '- New stable releases or version tags\n' +
-    '- Breaking changes or deprecation notices\n' +
-    '- Security advisories affecting tracked packages\n' +
-    '- API changes that may require updates in this project\n\n' +
-    '## Output Format\n\n' +
-    'Create an issue titled `[Upstream] Updates detected — YYYY-MM-DD` with:\n' +
-    '- A table of dependencies checked and their status\n' +
-    '- Details of any new releases or breaking changes\n' +
-    '- Recommended actions for the team\n\n' +
-    '## Constraints\n\n' +
-    '- **DO NOT** automatically create PRs or merge changes — report only.\n' +
-    '- **DO NOT** report on dependencies that have not changed.\n' +
-    '- If no updates are found, do not create an issue.\n' +
-    '- Include links to upstream changelogs or release notes when available.\n';
 }
 
 export function buildDocumentationUpdater(answers, label) {

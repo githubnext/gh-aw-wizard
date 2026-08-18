@@ -7,7 +7,6 @@ import {
   buildStatusReport,
   buildDependencyMonitor,
   buildContentModeration,
-  buildUpstreamMonitor,
   buildDocumentationUpdater,
   buildPrReview,
   buildCustom
@@ -26,7 +25,7 @@ export function workflowName(archetype, customDesc) {
 
 export function inferNeedsPreSteps(archetype) {
   // These archetypes deal with lots of data — auto-add pre-steps
-  return ['status-report', 'dependency-monitor', 'upstream-monitor'].indexOf(archetype) !== -1;
+  return ['status-report', 'dependency-monitor'].indexOf(archetype) !== -1;
 }
 
 export function inferCapabilities(archetype) {
@@ -36,7 +35,6 @@ export function inferCapabilities(archetype) {
     case 'status-report':
       caps.preSteps = true; caps.githubToolsets = true; break;
     case 'dependency-monitor':
-    case 'upstream-monitor':
       caps.preSteps = true; caps.bash = true; break;
     case 'code-improvement':
     case 'documentation-updater':
@@ -166,9 +164,6 @@ export function generateWorkflowFile(answers, patterns) {
       break;
     case 'content-moderation':
       body = buildContentModeration(answers, label);
-      break;
-    case 'upstream-monitor':
-      body = buildUpstreamMonitor(answers, label);
       break;
     case 'documentation-updater':
       body = buildDocumentationUpdater(answers, label);

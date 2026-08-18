@@ -66,7 +66,7 @@ describe('workflowName', () => {
 describe('inferNeedsPreSteps', () => {
   it('enables pre-steps for data heavy archetypes', () => {
     expect(inferNeedsPreSteps('status-report')).toBe(true);
-    expect(inferNeedsPreSteps('upstream-monitor')).toBe(true);
+    expect(inferNeedsPreSteps('dependency-monitor')).toBe(true);
   });
 
   it('leaves other archetypes without pre-steps', () => {
