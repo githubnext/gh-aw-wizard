@@ -132,7 +132,7 @@ steps:
             if "triage" in name or "label" in name:
                 return ("issue-triage", "Issue Triage", "Classify and label new issues")
             if "upstream" in name or "sync" in name or "monitor" in name:
-                return ("upstream-monitor", "Upstream Monitor", "Track upstream dependencies and sync changes")
+                return ("dependency-monitor", "Dependency Monitor", "Track and update dependencies")
             if "doc" in name and ("updat" in name or "improv" in name or "generat" in name or "clean" in name):
                 return ("documentation-updater", "Documentation Updater", "Keep docs accurate and up-to-date")
             if "review" in name or "pr-review" in name or "pr-check" in name:
@@ -246,17 +246,6 @@ steps:
                         "Never auto-close or lock — label and comment only",
                         "Include explicit rules for what IS legitimate to reduce false positives",
                         "Use DO NOT constraints for actions the agent should never take",
-                    ],
-                },
-                "upstream-monitor": {
-                    "safe_outputs": ["issues"],
-                    "tools": ["create-issue"],
-                    "prompt_style": "checklist",
-                    "size_range": [3000, 6000],
-                    "tips": [
-                        "98% success rate across public repos — most reliable archetype",
-                        "List specific upstream repos/packages to track in the prompt",
-                        "Enable network access to fetch upstream release data",
                     ],
                 },
                 "documentation-updater": {
@@ -421,7 +410,7 @@ steps:
         const classifyWorkflow = (workflow) => {
           const name = `${workflow.name || ''} ${workflow.file || ''}`.toLowerCase();
           if (name.includes('triage') || name.includes('label')) return 'issue-triage';
-          if (name.includes('upstream') || name.includes('sync') || name.includes('monitor')) return 'upstream-monitor';
+          if (name.includes('upstream') || name.includes('sync') || name.includes('monitor')) return 'dependency-monitor';
           if (name.includes('doc') && ['updat', 'improv', 'generat', 'clean'].some((word) => name.includes(word))) return 'documentation-updater';
           if (name.includes('review') || name.includes('pr-review') || name.includes('pr-check')) return 'pr-review';
           if (['fix', 'doctor', 'ci', 'code'].some((word) => name.includes(word))) return 'code-improvement';
