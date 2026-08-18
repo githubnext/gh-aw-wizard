@@ -1,5 +1,5 @@
 ---
-name: deep-research
+name: "🔬 Deep Research"
 description: Analyze agentic workflow trends and open PRs to improve the pattern library
 engine: copilot
 on: weekly
