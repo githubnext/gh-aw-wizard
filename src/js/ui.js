@@ -74,11 +74,14 @@ function bindNavigation() {
   document.getElementById('task-dialog-cancel').addEventListener('click', function () {
     document.getElementById('task-dialog').close();
   });
-  document.querySelector('#task-dialog form').addEventListener('submit', function () {
+  document.querySelector('#task-dialog form').addEventListener('submit', function (event) {
+    event.preventDefault();
     var description = document.getElementById('task-dialog-description').value.trim();
+    if (!description) return;
     document.getElementById('custom-description').value = description;
     renderWorkflowSummary();
     saveSelectionState();
+    document.getElementById('task-dialog').close('save');
     goToStep(2);
   });
 
