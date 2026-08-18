@@ -194,95 +194,7 @@ a:hover {
   text-align: center;
 }
 
-/* Progress bar */
-.progress-bar {
-  display: flex;
-  gap: 0;
-  margin-bottom: 2.5rem;
-  position: relative;
-  padding: 0 2rem;
-}
-.progress-step {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  position: relative;
-  z-index: 1;
-}
-.progress-step .step-indicator {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 2px solid var(--border-color);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  background: var(--bg-secondary);
-  transition: all var(--transition-med);
-  position: relative;
-}
-.progress-step .step-label {
-  font-size: 0.72rem;
-  font-weight: 500;
-  color: var(--text-muted);
-  text-align: center;
-  transition: color var(--transition-med);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-.progress-step.active .step-indicator {
-  border-color: var(--accent-blue);
-  color: var(--accent-blue);
-  background: rgba(var(--accent-blue-rgb), 0.1);
-  box-shadow: 0 0 0 4px rgba(var(--accent-blue-rgb), 0.08);
-  animation: pulseRing 2s ease-in-out infinite;
-}
-@keyframes pulseRing {
-  0%, 100% { box-shadow: 0 0 0 4px rgba(var(--accent-blue-rgb), 0.08); }
-  50% { box-shadow: 0 0 0 8px rgba(var(--accent-blue-rgb), 0.04); }
-}
-.progress-step.active .step-label {
-  color: var(--accent-blue);
-  font-weight: 600;
-}
-.progress-step.completed .step-indicator {
-  border-color: var(--accent-green);
-  background: var(--accent-green);
-  color: var(--control-fg-on-emphasis);
-  box-shadow: none;
-  animation: none;
-}
-.progress-step.completed .step-label {
-  color: var(--success);
-}
-/* Connecting line between steps */
-.progress-step::after {
-  content: '';
-  position: absolute;
-  top: 18px;
-  left: calc(50% + 22px);
-  width: calc(100% - 44px);
-  height: 2px;
-  background: var(--border-color);
-  transition: background var(--transition-med);
-}
-.progress-step:last-child::after {
-  display: none;
-}
-.progress-step.completed::after {
-  background: linear-gradient(90deg, var(--accent-green), var(--accent-green));
-}
-.progress-step.active::after {
-  background: var(--border-color);
-}
-
-/* IFTTT-inspired workflow recipe */
+/* IFTTT-inspired workflow recipe and progress */
 .workflow-recipe {
   margin-bottom: 2.5rem;
   padding: 1.25rem;
@@ -298,16 +210,7 @@ a:hover {
   gap: 1rem;
   margin-bottom: 1rem;
 }
-.recipe-eyebrow {
-  display: block;
-  color: var(--accent-blue);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
 .recipe-header h2 {
-  margin-top: 0.1rem;
   font-size: 1rem;
   font-weight: 650;
   color: var(--text-primary);
@@ -322,24 +225,88 @@ a:hover {
   font-size: 0.7rem;
   font-weight: 600;
 }
+.recipe-status-dot {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-right: 0.25rem;
+  background: var(--accent-green);
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px rgba(31, 136, 61, 0.12);
+}
+.recipe-status-step {
+  margin-left: 0.3rem;
+  padding-left: 0.45rem;
+  border-left: 1px solid var(--border-color);
+  color: var(--text-muted);
+}
 .recipe-clauses {
   display: grid;
   gap: 0.5rem;
 }
 .recipe-clause {
   display: grid;
-  grid-template-columns: 4.5rem minmax(0, 1fr);
+  grid-template-columns: 2.75rem 4.5rem minmax(0, 1fr);
   align-items: stretch;
+  width: 100%;
   min-height: 2.75rem;
+  padding: 0;
   overflow: hidden;
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  transition: opacity var(--transition-fast), border-color var(--transition-fast);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  transition: opacity var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 .recipe-clause.is-placeholder {
   opacity: 0.62;
   border-style: dashed;
+}
+.recipe-clause.active {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 1px var(--accent-blue);
+}
+.recipe-clause.completed {
+  cursor: pointer;
+}
+.recipe-clause.completed:hover {
+  border-color: var(--accent-green);
+}
+.recipe-clause:disabled {
+  cursor: default;
+}
+.recipe-clause:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}
+.progress-step .step-indicator {
+  align-self: center;
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  color: var(--text-muted);
+  background: var(--bg-card);
+  border: 2px solid var(--border-color);
+  border-radius: 50%;
+  font-size: 0.72rem;
+  font-weight: 700;
+  transition: all var(--transition-med);
+}
+.progress-step.active .step-indicator {
+  color: var(--accent-blue);
+  background: rgba(var(--accent-blue-rgb), 0.1);
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(var(--accent-blue-rgb), 0.08);
+}
+.progress-step.completed .step-indicator {
+  color: var(--control-fg-on-emphasis);
+  background: var(--accent-green);
+  border-color: var(--accent-green);
 }
 .recipe-key {
   display: flex;
@@ -357,6 +324,7 @@ a:hover {
 .recipe-key-where { background: #168f63; }
 .recipe-key-how { background: #9a6700; }
 .recipe-key-agent { background: #5b6573; }
+.recipe-key-preview { background: #8250df; }
 .recipe-value {
   align-self: center;
   padding: 0.6rem 0.8rem;
@@ -823,13 +791,10 @@ a:hover {
   .header-icon { width: 26px; height: 26px; }
   .option-group.archetype-grid { grid-template-columns: 1fr; }
   .archetype-icon { width: 34px; height: 34px; font-size: 1rem; }
-  .progress-step .step-label { display: none; }
-  .progress-step .step-indicator { width: 30px; height: 30px; font-size: 0.75rem; }
-  .progress-step::after { top: 15px; left: calc(50% + 19px); width: calc(100% - 38px); }
-  .progress-bar { padding: 0 0.5rem; }
   .recipe-header { align-items: flex-start; }
-  .recipe-status { display: none; }
-  .recipe-clause { grid-template-columns: 3.75rem minmax(0, 1fr); }
+  .recipe-status { font-size: 0.65rem; }
+  .recipe-clause { grid-template-columns: 2.25rem 3.75rem minmax(0, 1fr); }
+  .progress-step .step-indicator { width: 1.5rem; height: 1.5rem; font-size: 0.65rem; }
   .recipe-key { padding: 0.55rem 0.35rem; }
   .step-nav { flex-direction: column-reverse; gap: 0.75rem; }
   .step-nav .btn { width: 100%; justify-content: center; }
