@@ -122,7 +122,7 @@
               </label>
             </div>
             <div class="conditional-field" id="custom-description-field">
-              <label for="custom-description">Describe what you want the workflow to do:</label>
+              <label for="custom-description">What specifically should the workflow do?</label>
               <textarea class="text-area" id="custom-description" placeholder="e.g., Review pull requests for security vulnerabilities and leave comments on risky patterns…"></textarea>
             </div>
             <div class="step-nav">
@@ -373,6 +373,19 @@
       </div>
     </section>
   </main>
+
+  <dialog class="task-dialog" id="task-dialog" aria-labelledby="task-dialog-title">
+    <form method="dialog">
+      <h2 id="task-dialog-title">Clarify the task</h2>
+      <p>Describe specifically what you want this workflow to do.</p>
+      <label for="task-dialog-description">Task</label>
+      <textarea class="text-area" id="task-dialog-description" required></textarea>
+      <div class="task-dialog-actions">
+        <button class="btn btn-secondary" type="button" id="task-dialog-cancel">Cancel</button>
+        <button class="btn btn-primary" type="submit" value="save">Save and continue →</button>
+      </div>
+    </form>
+  </dialog>
 
 
   <footer class="site-footer">

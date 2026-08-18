@@ -40,9 +40,7 @@ function mapLabels(values, labels) {
 
 export function buildWorkflowSummary(answers, patterns) {
   var archetype = getArchetype(patterns, answers.archetype);
-  var purpose = answers.archetype === 'custom'
-    ? answers.customDescription
-    : archetype && archetype.description;
+  var purpose = answers.customDescription || (archetype && archetype.description);
   var engine = engineLabels[answers.engine] || 'Copilot';
   var context = [];
 

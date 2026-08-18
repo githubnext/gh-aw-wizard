@@ -1,6 +1,6 @@
 // DOM wiring for the wizard UI.
 
-import { loadPatterns, getRecommendedConfiguration } from './patterns.js';
+import { loadPatterns, getArchetype, getRecommendedConfiguration } from './patterns.js';
 import {
   workflowName,
   inferNeedsPreSteps,
@@ -71,6 +71,16 @@ function bindNavigation() {
   document.getElementById('prev-6').addEventListener('click', function () { goToStep(5); });
 
   document.getElementById('btn-copy').addEventListener('click', copyToClipboard);
+  document.getElementById('task-dialog-cancel').addEventListener('click', function () {
+    document.getElementById('task-dialog').close();
+  });
+  document.querySelector('#task-dialog form').addEventListener('submit', function () {
+    var description = document.getElementById('task-dialog-description').value.trim();
+    document.getElementById('custom-description').value = description;
+    renderWorkflowSummary();
+    saveSelectionState();
+    goToStep(2);
+  });
 
   // Clickable progress steps
   var steps = document.querySelectorAll('.progress-step');
@@ -158,12 +168,12 @@ function bindFormEvents() {
       updateCardSelection('#archetype-options', 'radio');
       document.getElementById('next-1').disabled = false;
       var customField = document.getElementById('custom-description-field');
-      customField.classList.toggle('visible', radio.value === 'custom');
+      customField.classList.add('visible');
       // Selecting a new "what" scenario invalidates any downstream choices made for the previous one.
       clearDownstreamSelections(radio.value);
       // Auto-fill triggers/outputs from archetype data
       prefillFromArchetype(radio.value);
-      if (radio.value !== 'custom') goToStep(2);
+      openTaskDialog(radio.value);
     });
   });
 
@@ -211,14 +221,26 @@ function bindFormEvents() {
       saveSelectionState();
     });
   });
+  document.getElementById('custom-description').addEventListener('input', function () {
+    document.getElementById('next-1').disabled = !this.value.trim();
+  });
+}
+
+function openTaskDialog(archetypeId) {
+  var archetype = getArchetype(patterns, archetypeId);
+  var description = archetypeId === 'custom'
+    ? ''
+    : (archetype && archetype.description) || '';
+  document.getElementById('custom-description').value = description;
+  document.getElementById('task-dialog-description').value = description;
+  document.getElementById('next-1').disabled = !description;
+  document.getElementById('task-dialog').showModal();
+  document.getElementById('task-dialog-description').focus();
 }
 
 // Reset any selections that depend on the "what" (archetype) choice, since they
 // no longer apply once a different scenario is picked.
 function clearDownstreamSelections(archetypeId) {
-  if (archetypeId !== 'custom') {
-    document.getElementById('custom-description').value = '';
-  }
   document.getElementById('data-description').value = '';
 }
 
@@ -333,7 +355,7 @@ function restoreSelectionState() {
   }
   updateCardSelection('#archetype-options', 'radio');
   document.getElementById('next-1').disabled = !state.archetype;
-  document.getElementById('custom-description-field').classList.toggle('visible', state.archetype === 'custom');
+  document.getElementById('custom-description-field').classList.toggle('visible', Boolean(state.archetype));
   if (state.customDescription != null) document.getElementById('custom-description').value = state.customDescription;
 
   (state.triggers || []).forEach(function (trigger) {

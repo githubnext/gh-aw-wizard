@@ -75,5 +75,14 @@ describe('buildWorkflowSummary', () => {
       value: 'Check release notes for breaking changes',
       complete: true
     });
+
+    it('uses a clarified description for a predefined archetype', () => {
+      const summary = buildWorkflowSummary(answers({
+        archetype: 'issue-triage',
+        customDescription: 'Label only bug reports that include reproduction steps'
+      }), patterns);
+
+      expect(summary.purpose.value).toBe('Label only bug reports that include reproduction steps');
+    });
   });
 });

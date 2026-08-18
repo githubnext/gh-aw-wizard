@@ -76,7 +76,7 @@ export function generateWorkflowFile(answers, patterns) {
   var arch = getArchetype(patterns, answers.archetype);
   var name = workflowName(answers.archetype, answers.customDescription);
   var label = arch ? arch.label : 'Custom Workflow';
-  var desc = arch ? arch.description : answers.customDescription || 'Custom agentic workflow';
+  var desc = answers.customDescription || (arch ? arch.description : 'Custom agentic workflow');
 
   // Build safe outputs
   var safeSet = new Set();
@@ -202,7 +202,7 @@ export function fencedBlock(content, lang) {
 export function generateAgentPrompt(answers, patterns) {
   var arch = getArchetype(patterns, answers.archetype);
   var name = workflowName(answers.archetype, answers.customDescription);
-  var desc = arch ? arch.description : answers.customDescription || 'Custom agentic workflow';
+  var desc = answers.customDescription || (arch ? arch.description : 'Custom agentic workflow');
   var engine = normalizeEngine(answers.engine);
 
   var triggersReadable = answers.triggers.map(function (t) {

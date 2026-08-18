@@ -49,6 +49,16 @@ describe('workflowName', () => {
     expect(workflowName('issue-triage', '')).toBe('issue-triage');
   });
 
+  describe('generateAgentPrompt task description', () => {
+    it('uses a clarified description for a predefined archetype', () => {
+      const prompt = generateAgentPrompt(answers({
+        customDescription: 'Label only actionable bug reports'
+      }), patterns);
+
+      expect(prompt).toContain('The purpose of the workflow is: Label only actionable bug reports');
+    });
+  });
+
   it('slugifies the description for custom workflows', () => {
     expect(workflowName('custom', 'Review PRs for Security!')).toBe('review-prs-for-security');
   });
