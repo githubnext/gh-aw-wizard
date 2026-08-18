@@ -239,6 +239,7 @@ export function generateAgentPrompt(answers, patterns) {
   }
 
   prompt += '\nThe workflow should be saved to .github/workflows/' + name + '.md';
+  prompt += '\nCreate a pull request with the generated agentic workflow files.';
 
   // Inline the generated workflow markdown as a starting-point suggestion.
   var suggestion = generateWorkflowFile(answers, patterns);
