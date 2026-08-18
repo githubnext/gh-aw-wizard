@@ -817,6 +817,29 @@ a:hover {
   font-weight: 600;
   margin-bottom: 0.5rem;
 }
+.anti-patterns-summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.anti-patterns-summary::-webkit-details-marker {
+  display: none;
+}
+.anti-patterns-summary::before {
+  content: "▸";
+  color: var(--text-muted);
+}
+.anti-patterns-details[open] > .anti-patterns-summary::before {
+  content: "▾";
+}
+.anti-patterns-summary .section-title {
+  margin-bottom: 0;
+}
+.anti-patterns-details > .section-subtitle {
+  margin-top: 0.5rem;
+}
 .section-subtitle {
   color: var(--text-muted);
   margin-bottom: 2rem;
