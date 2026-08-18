@@ -204,7 +204,7 @@ steps:
             archetype_config = {
                 "issue-triage": {
                     "safe_outputs": ["issues"],
-                    "tools": ["add-comment", "add-label"],
+                    "tools": ["add-comment", "add-labels"],
                     "prompt_style": "role-steps",
                     "size_range": [3000, 7000],
                     "tips": [
@@ -214,8 +214,8 @@ steps:
                     ],
                 },
                 "code-improvement": {
-                    "safe_outputs": ["pull-requests", "contents"],
-                    "tools": ["create-pull-request", "commit-files"],
+                    "safe_outputs": ["pull-requests"],
+                    "tools": ["create-pull-request"],
                     "prompt_style": "phase-based",
                     "size_range": [5000, 12000],
                     "tips": [
@@ -248,7 +248,7 @@ steps:
                 },
                 "content-moderation": {
                     "safe_outputs": ["issues", "pull-requests"],
-                    "tools": ["add-comment", "add-label"],
+                    "tools": ["add-comment", "add-labels"],
                     "prompt_style": "role-rules",
                     "size_range": [4000, 7000],
                     "tips": [
@@ -258,8 +258,8 @@ steps:
                     ],
                 },
                 "documentation-updater": {
-                    "safe_outputs": ["pull-requests", "contents"],
-                    "tools": ["create-pull-request", "commit-files"],
+                    "safe_outputs": ["pull-requests"],
+                    "tools": ["create-pull-request"],
                     "prompt_style": "phase-based",
                     "size_range": [3000, 7000],
                     "tips": [
@@ -717,23 +717,23 @@ steps:
           const triggers = [...new Set(workflow.triggers || [])].sort();
           if (!triggers.length) continue;
           const key = triggers.join('+');
-           if (!comboStats.has(key)) {
-             comboStats.set(key, { successes: 0, total: 0, workflows: new Set(), repos: new Set() });
-           }
-           const stats = comboStats.get(key);
-           stats.workflows.add(`${workflow._repo}/${workflow.file || workflow.name || ''}`);
-           stats.repos.add(workflow._repo);
-           const runs = workflow.recent_runs_detail || [];
-           if (runs.length) {
-             for (const run of runs) {
-               stats.total += 1;
-               if (run.conclusion === 'success') stats.successes += 1;
-             }
-           } else if (parseSuccessRate(workflow.success_rate) !== null) {
-             const [successes, total] = workflow.success_rate.split('/').map(Number);
-             stats.successes += successes;
-             stats.total += total;
-           }
+          if (!comboStats.has(key)) {
+            comboStats.set(key, { successes: 0, total: 0, workflows: new Set(), repos: new Set() });
+          }
+          const stats = comboStats.get(key);
+          stats.workflows.add(`${workflow._repo}/${workflow.file || workflow.name || ''}`);
+          stats.repos.add(workflow._repo);
+          const runs = workflow.recent_runs_detail || [];
+          if (runs.length) {
+            for (const run of runs) {
+              stats.total += 1;
+              if (run.conclusion === 'success') stats.successes += 1;
+            }
+          } else if (parseSuccessRate(workflow.success_rate) !== null) {
+            const [successes, total] = workflow.success_rate.split('/').map(Number);
+            stats.successes += successes;
+            stats.total += total;
+          }
         }
         const triggerCombos = sortedEntries(comboStats, ([, a], [, b]) => b.total - a.total)
           .map(([combo, stats]) => {
@@ -753,56 +753,56 @@ steps:
 
         const profileStats = new Map();
         for (const workflow of allWorkflows) {
-           const triggers = [...new Set(workflow.triggers || [])].sort();
-           const safeOutputs = [...new Set(workflow.safe_outputs || [])].sort();
-           if (!triggers.length || !safeOutputs.length) continue;
-           const archetype = classifyWorkflow(workflow);
-           const key = JSON.stringify([archetype, triggers, safeOutputs]);
-           if (!profileStats.has(key)) {
-             profileStats.set(key, {
-               archetype,
-               triggers,
-               safeOutputs,
-               successes: 0,
-               total: 0,
-               workflows: new Set(),
-               repos: new Set(),
-             });
-           }
-           const stats = profileStats.get(key);
-           stats.workflows.add(`${workflow._repo}/${workflow.file || workflow.name || ''}`);
-           stats.repos.add(workflow._repo);
-           const runs = workflow.recent_runs_detail || [];
-           if (runs.length) {
-             stats.total += runs.length;
-             stats.successes += runs.filter((run) => run.conclusion === 'success').length;
-           } else if (parseSuccessRate(workflow.success_rate) !== null) {
-             const [successes, total] = workflow.success_rate.split('/').map(Number);
-             stats.successes += successes;
-             stats.total += total;
-           }
+          const triggers = [...new Set(workflow.triggers || [])].sort();
+          const safeOutputs = [...new Set(workflow.safe_outputs || [])].sort();
+          if (!triggers.length || !safeOutputs.length) continue;
+          const archetype = classifyWorkflow(workflow);
+          const key = JSON.stringify([archetype, triggers, safeOutputs]);
+          if (!profileStats.has(key)) {
+            profileStats.set(key, {
+              archetype,
+              triggers,
+              safeOutputs,
+              successes: 0,
+              total: 0,
+              workflows: new Set(),
+              repos: new Set(),
+            });
+          }
+          const stats = profileStats.get(key);
+          stats.workflows.add(`${workflow._repo}/${workflow.file || workflow.name || ''}`);
+          stats.repos.add(workflow._repo);
+          const runs = workflow.recent_runs_detail || [];
+          if (runs.length) {
+            stats.total += runs.length;
+            stats.successes += runs.filter((run) => run.conclusion === 'success').length;
+          } else if (parseSuccessRate(workflow.success_rate) !== null) {
+            const [successes, total] = workflow.success_rate.split('/').map(Number);
+            stats.successes += successes;
+            stats.total += total;
+          }
         }
         const profileRanks = new Map();
         const configurationProfiles = [...profileStats.values()]
-           .filter((stats) => stats.total >= 20 && stats.workflows.size >= 3 && stats.repos.size >= 3)
-           .map((stats) => ({
-             archetype: stats.archetype,
-             triggers: stats.triggers,
-             safe_outputs: stats.safeOutputs,
-             success_rate: round(stats.successes / stats.total),
-             confidence_score: round(wilsonLower(stats.successes, stats.total)),
-             total_runs: stats.total,
-             n_workflows: stats.workflows.size,
-             n_repos: stats.repos.size,
-           }))
-           .sort((a, b) => a.archetype.localeCompare(b.archetype)
-             || b.confidence_score - a.confidence_score
-             || b.total_runs - a.total_runs)
-           .flatMap((profile) => {
-             const rank = (profileRanks.get(profile.archetype) || 0) + 1;
-             profileRanks.set(profile.archetype, rank);
-             return rank <= 3 ? [{ ...profile, rank }] : [];
-           });
+          .filter((stats) => stats.total >= 20 && stats.workflows.size >= 3 && stats.repos.size >= 3)
+          .map((stats) => ({
+            archetype: stats.archetype,
+            triggers: stats.triggers,
+            safe_outputs: stats.safeOutputs,
+            success_rate: round(stats.successes / stats.total),
+            confidence_score: round(wilsonLower(stats.successes, stats.total)),
+            total_runs: stats.total,
+            n_workflows: stats.workflows.size,
+            n_repos: stats.repos.size,
+          }))
+          .sort((a, b) => a.archetype.localeCompare(b.archetype)
+            || b.confidence_score - a.confidence_score
+            || b.total_runs - a.total_runs)
+          .flatMap((profile) => {
+            const rank = (profileRanks.get(profile.archetype) || 0) + 1;
+            profileRanks.set(profile.archetype, rank);
+            return rank <= 3 ? [{ ...profile, rank }] : [];
+          });
         console.log(`    Found ${configurationProfiles.length} supported trigger + safe-output profiles`);
 
         console.log('  [2/10] Archetype health...');

@@ -165,12 +165,10 @@
         }
       ],
       "recommended_safe_outputs": [
-        "pull-requests",
-        "contents"
+        "pull-requests"
       ],
       "recommended_tools": [
-        "create-pull-request",
-        "commit-files"
+        "create-pull-request"
       ],
       "timeout_minutes": 30,
       "prompt_style": "phase-based",
@@ -239,7 +237,7 @@
       ],
       "recommended_tools": [
         "add-comment",
-        "add-label"
+        "add-labels"
       ],
       "timeout_minutes": 30,
       "prompt_style": "role-steps",
@@ -368,12 +366,10 @@
         }
       ],
       "recommended_safe_outputs": [
-        "pull-requests",
-        "contents"
+        "pull-requests"
       ],
       "recommended_tools": [
-        "create-pull-request",
-        "commit-files"
+        "create-pull-request"
       ],
       "timeout_minutes": 30,
       "prompt_style": "phase-based",
@@ -507,7 +503,7 @@
       ],
       "recommended_tools": [
         "add-comment",
-        "add-label"
+        "add-labels"
       ],
       "timeout_minutes": 30,
       "prompt_style": "role-rules",

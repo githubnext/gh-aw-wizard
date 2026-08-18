@@ -25,11 +25,20 @@ var SAFE_OUTPUT_MAP = {
   'add-labels': ['labels'],
   'create-issue': ['new-issues'],
   'create-pull-request': ['pull-requests'],
-  'commit-files': ['commits'],
+  'commit-files': ['pull-requests'],
   'issues': ['comments', 'labels', 'new-issues'],
   'pull-requests': ['pull-requests', 'comments'],
-  'contents': ['commits']
+  'contents': ['pull-requests']
 };
+var WIZARD_TRIGGERS = [
+  'issues',
+  'pull_request',
+  'schedule',
+  'workflow_dispatch',
+  'slash_command',
+  'label_command',
+  'push'
+];
 
 function wizardOutputs(safeOutputs) {
   var outputs = [];
@@ -46,7 +55,14 @@ export function getRecommendedConfiguration(patterns, id) {
   if (!archetype) return { triggers: [], outputs: [], profile: null };
 
   var profiles = (patterns.configuration_profiles || [])
-    .filter(function (profile) { return profile.archetype === id; })
+    .filter(function (profile) {
+      return profile.archetype === id &&
+        Array.isArray(profile.triggers) &&
+        profile.triggers.every(function (trigger) { return WIZARD_TRIGGERS.indexOf(trigger) !== -1; }) &&
+        Array.isArray(profile.safe_outputs) &&
+        profile.safe_outputs.length > 0 &&
+        profile.safe_outputs.every(function (safeOutput) { return SAFE_OUTPUT_MAP[safeOutput]; });
+    })
     .slice()
     .sort(function (a, b) {
       return (b.confidence_score || 0) - (a.confidence_score || 0) ||

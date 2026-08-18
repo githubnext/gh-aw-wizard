@@ -28,6 +28,13 @@ describe('getRecommendedConfiguration', () => {
       configuration_profiles: [
         {
           archetype: 'status-report',
+          triggers: ['discussion', 'schedule'],
+          safe_outputs: ['create-discussion'],
+          confidence_score: 0.9,
+          total_runs: 300
+        },
+        {
+          archetype: 'status-report',
           triggers: ['schedule'],
           safe_outputs: ['create-issue'],
           confidence_score: 0.65,
@@ -46,7 +53,7 @@ describe('getRecommendedConfiguration', () => {
     expect(getRecommendedConfiguration(patterns, 'status-report')).toEqual({
       triggers: ['schedule', 'workflow_dispatch'],
       outputs: ['new-issues', 'comments'],
-      profile: patterns.configuration_profiles[1]
+      profile: patterns.configuration_profiles[2]
     });
   });
 
@@ -55,7 +62,7 @@ describe('getRecommendedConfiguration', () => {
       archetypes: [{
         id: 'issue-triage',
         recommended_triggers: [{ type: 'issues' }, { type: 'workflow_dispatch' }],
-        recommended_tools: ['add-label', 'add-comment']
+        recommended_tools: ['add-labels', 'add-comment']
       }]
     };
 

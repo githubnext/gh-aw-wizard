@@ -283,7 +283,7 @@ python3 << 'PYEOF'
 import json, subprocess, time, sys, re
 
 def frontmatter_entries(frontmatter, key):
-    match = re.search(rf'^{re.escape(key)}:\s*(.*?)\s*$', frontmatter, re.MULTILINE)
+    match = re.search(rf'^{re.escape(key)}:[ \t]*(.*?)[ \t]*$', frontmatter, re.MULTILINE)
     if not match:
         return []
 

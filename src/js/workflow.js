@@ -78,24 +78,22 @@ export function generateWorkflowFile(answers, patterns) {
   var label = arch ? arch.label : 'Custom Workflow';
   var desc = arch ? arch.description : answers.customDescription || 'Custom agentic workflow';
 
-  // Build tools and safe-outputs
-  var toolSet = new Set();
+  // Build safe outputs
   var safeSet = new Set();
   answers.outputs.forEach(function (o) {
     switch (o) {
       case 'comments':
-        toolSet.add('add-comment'); safeSet.add('issues'); safeSet.add('pull-requests'); break;
+        safeSet.add('add-comment'); break;
       case 'labels':
-        toolSet.add('add-label'); safeSet.add('issues'); break;
+        safeSet.add('add-labels'); break;
       case 'new-issues':
-        toolSet.add('create-issue'); safeSet.add('issues'); break;
+        safeSet.add('create-issue'); break;
       case 'pull-requests':
-        toolSet.add('create-pull-request'); safeSet.add('pull-requests'); break;
+        safeSet.add('create-pull-request'); break;
       case 'commits':
-        toolSet.add('commit-files'); safeSet.add('contents'); break;
+        safeSet.add('create-pull-request'); break;
     }
   });
-  var tools = Array.from(toolSet);
   var safeOutputs = Array.from(safeSet);
 
   // Timeout
@@ -118,24 +116,36 @@ export function generateWorkflowFile(answers, patterns) {
   fm += 'name: ' + name + '\n';
   fm += 'description: ' + desc + '\n';
   fm += 'on:\n' + triggerYaml;
+  if (inferred.githubToolsets) {
+    fm += 'permissions:\n';
+    fm += '  actions: read\n';
+    fm += '  contents: read\n';
+    fm += '  discussions: read\n';
+    fm += '  issues: read\n';
+    fm += '  pull-requests: read\n';
+    fm += '  security-events: read\n';
+  }
   fm += 'engine: ' + engine + '\n';
 
   // Tools section
-  fm += 'tools:\n';
-  tools.forEach(function (t) { fm += '  - ' + t + '\n'; });
-  if (inferred.bash) {
-    fm += '  bash: true\n';
-  }
-  if (inferred.githubToolsets) {
-    fm += '  github:\n';
-    fm += '    toolsets: [repos, issues, pull_requests, actions, code_security, discussions]\n';
-  }
-  if (extras.indexOf('memory') !== -1) {
-    fm += '  cache-memory:\n';
+  if (inferred.bash || inferred.githubToolsets || extras.indexOf('memory') !== -1) {
+    fm += 'tools:\n';
+    if (inferred.bash) {
+      fm += '  bash: true\n';
+    }
+    if (inferred.githubToolsets) {
+      fm += '  github:\n';
+      fm += '    toolsets: [repos, issues, pull_requests, actions, code_security, discussions]\n';
+    }
+    if (extras.indexOf('memory') !== -1) {
+      fm += '  cache-memory:\n';
+    }
   }
 
-  fm += 'safe-outputs:\n';
-  safeOutputs.forEach(function (s) { fm += '  - ' + s + '\n'; });
+  if (safeOutputs.length) {
+    fm += 'safe-outputs:\n';
+    safeOutputs.forEach(function (safeOutput) { fm += '  ' + safeOutput + ':\n'; });
+  }
   fm += 'timeout-minutes: ' + timeout + '\n';
 
   fm += '---\n\n';
