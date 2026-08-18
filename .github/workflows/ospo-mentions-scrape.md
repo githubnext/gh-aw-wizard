@@ -7,6 +7,7 @@ on:
     - cron: "0 10 * * 1-5"
   workflow_dispatch:
 permissions:
+  contents: read
   copilot-requests: write
   issues: write
 safe-outputs:
@@ -58,6 +59,8 @@ steps:
       findings = []
       for repo in repos:
           items = gh_json(f"repos/{repo}/issues?state=all&per_page=100")
+          item_index = {}
+          pr_numbers = []
           for item in items:
               number = item.get("number")
               if not number:
@@ -65,6 +68,9 @@ steps:
 
               kind = "pull_request" if item.get("pull_request") else "issue"
               url = item.get("html_url")
+              item_index[number] = {"type": kind, "url": url}
+              if kind == "pull_request":
+                  pr_numbers.append(number)
 
               body_mentions = find_mentions(item.get("body", "")) + find_mentions(item.get("title", ""))
               if body_mentions:
@@ -77,45 +83,58 @@ steps:
                       "mentions": sorted(set(body_mentions)),
                   })
 
-              issue_comments = gh_json(f"repos/{repo}/issues/{number}/comments?per_page=100")
-              for comment in issue_comments:
-                  mentions = find_mentions(comment.get("body", ""))
+          issue_comments = gh_json(f"repos/{repo}/issues/comments?per_page=100")
+          for comment in issue_comments:
+              issue_url = comment.get("issue_url", "")
+              try:
+                  number = int(issue_url.rstrip("/").split("/")[-1])
+              except Exception:
+                  continue
+              mentions = find_mentions(comment.get("body", ""))
+              if mentions:
+                  idx = item_index.get(number, {"type": "issue", "url": issue_url})
+                  findings.append({
+                      "repo": repo,
+                      "type": idx["type"],
+                      "number": number,
+                      "source": "issue_comment",
+                      "url": comment.get("html_url", idx["url"]),
+                      "mentions": mentions,
+                  })
+
+          review_comments = gh_json(f"repos/{repo}/pulls/comments?per_page=100")
+          for comment in review_comments:
+              pull_url = comment.get("pull_request_url", "")
+              try:
+                  number = int(pull_url.rstrip("/").split("/")[-1])
+              except Exception:
+                  continue
+              mentions = find_mentions(comment.get("body", ""))
+              if mentions:
+                  idx = item_index.get(number, {"type": "pull_request", "url": pull_url})
+                  findings.append({
+                      "repo": repo,
+                      "type": "pull_request",
+                      "number": number,
+                      "source": "review_comment",
+                      "url": comment.get("html_url", idx["url"]),
+                      "mentions": mentions,
+                  })
+
+          for number in pr_numbers:
+              reviews = gh_json(f"repos/{repo}/pulls/{number}/reviews?per_page=100")
+              for review in reviews:
+                  mentions = find_mentions(review.get("body", ""))
                   if mentions:
+                      idx = item_index.get(number, {"url": f"https://github.com/{repo}/pull/{number}"})
                       findings.append({
                           "repo": repo,
-                          "type": kind,
+                          "type": "pull_request",
                           "number": number,
-                          "source": "issue_comment",
-                          "url": comment.get("html_url", url),
+                          "source": "review_body",
+                          "url": review.get("html_url", idx["url"]),
                           "mentions": mentions,
                       })
-
-              if kind == "pull_request":
-                  review_comments = gh_json(f"repos/{repo}/pulls/{number}/comments?per_page=100")
-                  for comment in review_comments:
-                      mentions = find_mentions(comment.get("body", ""))
-                      if mentions:
-                          findings.append({
-                              "repo": repo,
-                              "type": kind,
-                              "number": number,
-                              "source": "review_comment",
-                              "url": comment.get("html_url", url),
-                              "mentions": mentions,
-                          })
-
-                  reviews = gh_json(f"repos/{repo}/pulls/{number}/reviews?per_page=100")
-                  for review in reviews:
-                      mentions = find_mentions(review.get("body", ""))
-                      if mentions:
-                          findings.append({
-                              "repo": repo,
-                              "type": kind,
-                              "number": number,
-                              "source": "review_body",
-                              "url": review.get("html_url", url),
-                              "mentions": mentions,
-                          })
 
       with open("/tmp/ospo-mentions.json", "w") as f:
           json.dump({
