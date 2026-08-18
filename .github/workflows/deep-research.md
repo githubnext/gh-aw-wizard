@@ -12,9 +12,6 @@ on:
   workflow_dispatch:
 safe-outputs:
   create-pull-request:
-permissions:
-  contents: write
-  pull-requests: write
 strict: true
 timeout-minutes: 30
 steps:
