@@ -17,7 +17,6 @@ steps:
     uses: actions/github-script@v9
     with:
       script: |
-        const exec = require('@actions/exec');
         await exec.exec('./scripts/scan.sh', ['--active-only', '--run-history']);
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -26,7 +25,6 @@ steps:
     uses: actions/github-script@v9
     with:
       script: |
-        const exec = require('@actions/exec');
         const script = String.raw`
         import json
         from collections import Counter, defaultdict
@@ -333,7 +331,6 @@ steps:
     uses: actions/github-script@v9
     with:
       script: |
-        const exec = require('@actions/exec');
         await exec.exec('python3', ['scripts/analyze.py', '--max-log-repos', '100']);
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
