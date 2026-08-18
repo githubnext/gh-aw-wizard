@@ -154,6 +154,19 @@ function updateProgress(from, to) {
 function bindFormEvents() {
   // Step 1: archetype radios
   document.querySelectorAll('input[name="archetype"]').forEach(function (radio) {
+    // Native radio inputs cannot be unchecked by clicking them again. Track whether
+    // the radio was already selected before the click so we can toggle it off.
+    var wasChecked = false;
+    radio.addEventListener('mousedown', function () {
+      wasChecked = radio.checked;
+    });
+    radio.addEventListener('click', function (e) {
+      if (wasChecked) {
+        e.preventDefault();
+        radio.checked = false;
+        clearArchetypeSelection();
+      }
+    });
     radio.addEventListener('change', function () {
       updateCardSelection('#archetype-options', 'radio');
       document.getElementById('next-1').disabled = false;
@@ -220,6 +233,31 @@ function clearDownstreamSelections(archetypeId) {
     document.getElementById('custom-description').value = '';
   }
   document.getElementById('data-description').value = '';
+}
+
+// Fully clear the "what" (archetype) choice and every downstream selection that
+// depended on it. Used when the user clicks an already-selected activity card
+// to deselect it.
+function clearArchetypeSelection() {
+  document.querySelectorAll('input[name="archetype"]').forEach(function (radio) { radio.checked = false; });
+  updateCardSelection('#archetype-options', 'radio');
+  document.getElementById('next-1').disabled = true;
+  document.getElementById('custom-description-field').classList.remove('visible');
+  clearDownstreamSelections(null);
+
+  document.querySelectorAll('input[name="trigger"]').forEach(function (cb) { cb.checked = false; });
+  updateCardSelection('#trigger-options', 'checkbox');
+  document.getElementById('next-2').disabled = true;
+
+  document.querySelectorAll('input[name="output"]').forEach(function (cb) { cb.checked = false; });
+  updateCardSelection('#output-options', 'checkbox');
+  document.getElementById('next-3').disabled = true;
+
+  document.querySelectorAll('input[name="extra"]').forEach(function (cb) { cb.checked = false; });
+  updateCardSelection('#data-options', 'checkbox');
+
+  renderWorkflowSummary();
+  saveSelectionState();
 }
 
 function updateCardSelection(containerSel, type) {
