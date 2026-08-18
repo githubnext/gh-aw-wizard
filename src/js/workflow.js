@@ -14,7 +14,7 @@ import {
 } from './bodies.js';
 
 export function normalizeEngine(engine) {
-  return ['copilot', 'claude', 'codex', 'gemini', 'pi'].indexOf(engine) !== -1 ? engine : 'copilot';
+  return ['copilot', 'claude', 'codex', 'gemini', 'pi'].includes(engine) ? engine : 'copilot';
 }
 
 export function workflowName(archetype, customDesc) {
