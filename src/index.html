@@ -8,6 +8,7 @@
     (function () {
       var theme = 'auto';
       try {
+        // Keep this key in sync with THEME_STORAGE_KEY in js/theme.js.
         theme = localStorage.getItem('gh-aw-wizard-theme') || 'auto';
       } catch (e) {}
       if (['auto', 'light', 'dark'].indexOf(theme) === -1) theme = 'auto';
@@ -17,7 +18,7 @@
     })();
   </script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@primer/css@22.3.0/dist/primer.css">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="./styles/style.css">
 </head>
 <body class="color-bg-default color-fg-default">
   <div class="gradient-bar"></div>
@@ -413,6 +414,6 @@
   </footer>
 
   <div class="toast" id="toast"></div>
-  <script src="generator.js"></script>
+  <script type="module" src="./js/main.js"></script>
 </body>
 </html>
