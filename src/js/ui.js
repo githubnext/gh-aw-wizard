@@ -29,7 +29,7 @@ function generateAndShow() {
   currentFormat = 'prompt';
   document.querySelectorAll('.format-btn').forEach(function (b) { b.classList.remove('active'); });
   document.getElementById('fmt-prompt').classList.add('active');
-  goToStep(5);
+  goToStep(6);
   showPreview(generatedPrompt);
   var answers = gatherAnswers();
   showNextSteps('prompt', workflowName(answers.archetype, answers.customDescription), answers.engine);
@@ -70,11 +70,13 @@ function bindNavigation() {
   document.getElementById('next-1').addEventListener('click', function () { goToStep(2); });
   document.getElementById('next-2').addEventListener('click', function () { goToStep(3); });
   document.getElementById('next-3').addEventListener('click', function () { goToStep(4); });
-  document.getElementById('next-4').addEventListener('click', function () { generateAndShow(); });
+  document.getElementById('next-4').addEventListener('click', function () { goToStep(5); });
+  document.getElementById('next-5').addEventListener('click', function () { generateAndShow(); });
   document.getElementById('prev-2').addEventListener('click', function () { goToStep(1); });
   document.getElementById('prev-3').addEventListener('click', function () { goToStep(2); });
   document.getElementById('prev-4').addEventListener('click', function () { goToStep(3); });
   document.getElementById('prev-5').addEventListener('click', function () { goToStep(4); });
+  document.getElementById('prev-6').addEventListener('click', function () { goToStep(5); });
 
   document.getElementById('btn-copy').addEventListener('click', copyToClipboard);
   document.getElementById('btn-download').addEventListener('click', downloadFile);
