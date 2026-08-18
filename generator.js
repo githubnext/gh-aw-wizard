@@ -6,13 +6,59 @@
   let generatedMd = '';
   let generatedPrompt = '';
   let currentFormat = 'workflow';
+  let themeMode = 'auto';
 
   // ── Bootstrap ──────────────────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', function () {
+    initTheme();
     loadPatterns();
     bindNavigation();
     bindFormEvents();
   });
+
+  // ── Theme ──────────────────────────────────────────────────────────────────
+  function initTheme() {
+    try {
+      themeMode = localStorage.getItem('gh-aw-wizard-theme') || 'auto';
+    } catch (e) {
+      themeMode = 'auto';
+    }
+    applyTheme(themeMode);
+
+    var toggle = document.getElementById('theme-toggle');
+    if (!toggle) return;
+    toggle.addEventListener('click', function () {
+      var next = themeMode === 'auto' ? 'light' : themeMode === 'light' ? 'dark' : 'auto';
+      applyTheme(next);
+      try {
+        localStorage.setItem('gh-aw-wizard-theme', next);
+      } catch (e) {
+        // Ignore storage failures; the selected theme still applies for this page load.
+      }
+    });
+  }
+
+  function applyTheme(mode) {
+    themeMode = mode;
+    document.documentElement.setAttribute('data-color-mode', mode);
+    document.documentElement.style.colorScheme = mode === 'auto' ? 'light dark' : mode;
+
+    var label = document.getElementById('theme-toggle-label');
+    var toggle = document.getElementById('theme-toggle');
+    var icon = document.querySelector('.theme-toggle-icon');
+    var copy = {
+      auto: { label: 'Auto theme', icon: '◐' },
+      light: { label: 'Light theme', icon: '☀' },
+      dark: { label: 'Dark theme', icon: '☾' }
+    };
+    var state = copy[mode] || copy.auto;
+    if (label) label.textContent = state.label;
+    if (icon) icon.textContent = state.icon;
+    if (toggle) {
+      toggle.setAttribute('aria-label', 'Theme: ' + state.label + '. Click to change.');
+      toggle.setAttribute('aria-pressed', mode !== 'auto');
+    }
+  }
 
   // ── Data loading ───────────────────────────────────────────────────────────
   function loadPatterns() {
