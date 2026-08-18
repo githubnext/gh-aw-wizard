@@ -125,8 +125,13 @@ function updateProgress(from, to) {
   steps.forEach(function (el) {
     var s = parseInt(el.getAttribute('data-step'));
     el.classList.remove('active', 'completed');
+    el.removeAttribute('aria-current');
     if (s < to) el.classList.add('completed');
-    else if (s === to) el.classList.add('active');
+    else if (s === to) {
+      el.classList.add('active');
+      el.setAttribute('aria-current', 'step');
+    }
+    el.disabled = s > to;
   });
   // Update checkmarks
   steps.forEach(function (el) {
@@ -134,6 +139,7 @@ function updateProgress(from, to) {
     var s = parseInt(el.getAttribute('data-step'));
     ind.textContent = el.classList.contains('completed') ? '✓' : s;
   });
+  document.getElementById('recipe-step-status').textContent = 'Step ' + to + ' of ' + TOTAL_STEPS;
 }
 
 // ── Form events ────────────────────────────────────────────────────────────

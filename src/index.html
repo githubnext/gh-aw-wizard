@@ -43,63 +43,46 @@
   </header>
 
   <main class="container">
-    <!-- Progress bar -->
-    <div class="progress-bar" id="progress-bar">
-      <div class="progress-step active" data-step="1">
-        <div class="step-indicator">1</div>
-        <div class="step-label">What</div>
-      </div>
-      <div class="progress-step" data-step="2">
-        <div class="step-indicator">2</div>
-        <div class="step-label">When</div>
-      </div>
-      <div class="progress-step" data-step="3">
-        <div class="step-indicator">3</div>
-        <div class="step-label">Where</div>
-      </div>
-      <div class="progress-step" data-step="4">
-        <div class="step-indicator">4</div>
-        <div class="step-label">How</div>
-      </div>
-      <div class="progress-step" data-step="5">
-        <div class="step-indicator">5</div>
-        <div class="step-label">Agent</div>
-      </div>
-      <div class="progress-step" data-step="6">
-        <div class="step-indicator">6</div>
-        <div class="step-label">Preview</div>
-      </div>
-    </div>
-
     <section class="workflow-recipe" aria-labelledby="workflow-recipe-title">
       <div class="recipe-header">
-        <div>
-          <span class="recipe-eyebrow">Live recipe</span>
-          <h2 id="workflow-recipe-title">Your agentic workflow</h2>
-        </div>
-        <span class="recipe-status">Build it as you go</span>
+        <h2 id="workflow-recipe-title">Your agentic workflow</h2>
+        <span class="recipe-status" role="status">
+          <span class="recipe-status-dot" aria-hidden="true"></span>
+          <span>Live</span>
+          <span class="recipe-status-step" id="recipe-step-status">Step 1 of 6</span>
+        </span>
       </div>
-      <div class="recipe-clauses" id="workflow-summary" aria-live="polite">
-        <div class="recipe-clause is-placeholder">
+      <div class="recipe-clauses" id="progress-bar" aria-live="polite">
+        <button class="recipe-clause progress-step active is-placeholder" type="button" data-step="1" aria-current="step">
+          <span class="step-indicator" aria-hidden="true">1</span>
           <span class="recipe-key recipe-key-what">What</span>
           <span class="recipe-value" id="summary-purpose">choose what the agent should do</span>
-        </div>
-        <div class="recipe-clause is-placeholder">
+        </button>
+        <button class="recipe-clause progress-step is-placeholder" type="button" data-step="2" disabled>
+          <span class="step-indicator" aria-hidden="true">2</span>
           <span class="recipe-key recipe-key-when">When</span>
           <span class="recipe-value" id="summary-trigger">choose when it runs</span>
-        </div>
-        <div class="recipe-clause is-placeholder">
+        </button>
+        <button class="recipe-clause progress-step is-placeholder" type="button" data-step="3" disabled>
+          <span class="step-indicator" aria-hidden="true">3</span>
           <span class="recipe-key recipe-key-where">Where</span>
           <span class="recipe-value" id="summary-output">choose what it can write</span>
-        </div>
-        <div class="recipe-clause is-placeholder">
+        </button>
+        <button class="recipe-clause progress-step is-placeholder" type="button" data-step="4" disabled>
+          <span class="step-indicator" aria-hidden="true">4</span>
           <span class="recipe-key recipe-key-how">How</span>
           <span class="recipe-value" id="summary-context">choose how it works</span>
-        </div>
-        <div class="recipe-clause">
+        </button>
+        <button class="recipe-clause progress-step" type="button" data-step="5" disabled>
+          <span class="step-indicator" aria-hidden="true">5</span>
           <span class="recipe-key recipe-key-agent">Agent</span>
           <span class="recipe-value" id="summary-engine">Copilot</span>
-        </div>
+        </button>
+        <button class="recipe-clause progress-step" type="button" data-step="6" disabled>
+          <span class="step-indicator" aria-hidden="true">6</span>
+          <span class="recipe-key recipe-key-preview">Preview</span>
+          <span class="recipe-value">review and copy your generated prompt</span>
+        </button>
       </div>
     </section>
 
