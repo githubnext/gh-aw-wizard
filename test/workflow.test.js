@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   buildTriggerYaml,
+  fencedBlock,
   generateAgentPrompt,
   generateWorkflowFile,
   inferCapabilities,
@@ -199,5 +200,39 @@ describe('generateAgentPrompt', () => {
     expect(prompt).toContain('- Add a pre-step to fetch external data before the agent runs\n');
     expect(prompt).toContain('- Add cache-memory tool for persistent memory across runs\n');
     expect(prompt).toContain('- Additional project context: Uses pnpm\n');
+  });
+
+  it('inlines the generated workflow markdown as a suggestion at the bottom', () => {
+    const a = answers();
+    const prompt = generateAgentPrompt(a, patterns);
+    const md = generateWorkflowFile(a, patterns);
+    expect(prompt).toContain('## Suggested workflow file');
+    expect(prompt.indexOf('## Suggested workflow file')).toBeGreaterThan(
+      prompt.indexOf('.github/workflows/issue-triage.md')
+    );
+    expect(prompt).toContain('```markdown\n');
+    expect(prompt).toContain(md.trimEnd());
+  });
+});
+
+describe('fencedBlock', () => {
+  it('uses a longer fence when the content contains code fences', () => {
+    const block = fencedBlock('a\n```yaml\nb: 1\n```', 'markdown');
+    expect(block.startsWith('````markdown\n')).toBe(true);
+    expect(block.endsWith('\n````')).toBe(true);
+  });
+
+  it('widens the fence past longer nested runs', () => {
+    const block = fencedBlock('a\n````yaml\nb: 1\n````', 'markdown');
+    expect(block.startsWith('`````markdown\n')).toBe(true);
+    expect(block.endsWith('\n`````')).toBe(true);
+  });
+
+  it('uses a three-backtick fence for plain content', () => {
+    expect(fencedBlock('hello', 'markdown')).toBe('```markdown\nhello\n```');
+  });
+
+  it('trims trailing whitespace from the content', () => {
+    expect(fencedBlock('hello\n\n', 'markdown')).toBe('```markdown\nhello\n```');
   });
 });
