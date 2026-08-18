@@ -244,6 +244,26 @@ a:hover {
   display: grid;
   gap: 0.5rem;
 }
+/* Each accordion entry: a clickable header (.recipe-clause) plus its
+   collapsible content panel (.wizard-step) rendered directly beneath it. */
+.recipe-item {
+  overflow: hidden;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.recipe-item.is-placeholder {
+  border-style: dashed;
+}
+.recipe-item.active {
+  border-color: var(--accent-blue);
+  border-style: solid;
+  box-shadow: 0 0 0 1px var(--accent-blue);
+}
+.recipe-item.completed:hover {
+  border-color: var(--accent-green);
+}
 .recipe-clause {
   display: grid;
   grid-template-columns: 2.75rem 4.5rem minmax(0, 1fr);
@@ -251,28 +271,18 @@ a:hover {
   width: 100%;
   min-height: 2.75rem;
   padding: 0;
-  overflow: hidden;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
+  background: transparent;
+  border: none;
   color: inherit;
   font: inherit;
   text-align: left;
-  transition: opacity var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+  transition: opacity var(--transition-fast);
 }
 .recipe-clause.is-placeholder {
   opacity: 0.62;
-  border-style: dashed;
-}
-.recipe-clause.active {
-  border-color: var(--accent-blue);
-  box-shadow: 0 0 0 1px var(--accent-blue);
 }
 .recipe-clause.completed {
   cursor: pointer;
-}
-.recipe-clause.completed:hover {
-  border-color: var(--accent-green);
 }
 .recipe-clause:disabled {
   cursor: default;
@@ -337,42 +347,42 @@ a:hover {
   color: var(--text-muted);
   font-weight: 500;
 }
-/* Steps */
+/* Steps: rendered as collapsible content panels beneath each recipe item's
+   clickable header row. */
 .wizard-step {
   display: none;
 }
 .wizard-step.active {
   display: block;
-  animation: slideIn 0.3s ease;
+  padding: 1.1rem 1rem 1.25rem;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border-color);
+  animation: accordionOpen 0.3s ease;
 }
 .wizard-step.slide-out-left {
-  animation: slideOutLeft 0.2s ease forwards;
+  animation: accordionOpenReverse 0.2s ease reverse forwards;
 }
 .wizard-step.slide-out-right {
-  animation: slideOutRight 0.2s ease forwards;
+  animation: accordionOpen 0.2s ease reverse forwards;
+}
+@keyframes accordionOpen {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes accordionOpenReverse {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 @keyframes slideIn {
-  from { opacity: 0; transform: translateX(30px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-@keyframes slideInReverse {
-  from { opacity: 0; transform: translateX(-30px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-@keyframes slideOutLeft {
-  from { opacity: 1; transform: translateX(0); }
-  to   { opacity: 0; transform: translateX(-30px); }
-}
-@keyframes slideOutRight {
-  from { opacity: 1; transform: translateX(0); }
-  to   { opacity: 0; transform: translateX(30px); }
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .step-title {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.3rem;
   letter-spacing: -0.01em;
 }
 .step-description {
