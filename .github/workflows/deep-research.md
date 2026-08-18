@@ -926,7 +926,19 @@ steps:
         console.log(`     ${triggerCombos.length} trigger combos, ${archetypeHealth.length} archetypes, ${recommendations.length} recommendations`);
         console.log('═'.repeat(60));
     with:
-      script: await eval(`(async () => {\n${process.env.ANALYSIS_SCRIPT}\n${process.env.ANALYSIS_SCRIPT_2}\n})()`)
+      script: |
+        const fs = require('fs');
+        const path = require('path');
+        const scriptPath = path.join(process.env.RUNNER_TEMP, 'deep-research-analysis.cjs');
+        fs.writeFileSync(
+          scriptPath,
+          `module.exports = async ({ github }) => {\n${process.env.ANALYSIS_SCRIPT}\n${process.env.ANALYSIS_SCRIPT_2}\n};\n`,
+        );
+        try {
+          await require(scriptPath)({ github });
+        } finally {
+          fs.unlinkSync(scriptPath);
+        }
 ---
 
 # Deep Research Agent
