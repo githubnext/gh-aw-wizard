@@ -267,14 +267,14 @@ function gatherAnswers() {
 
 function renderWorkflowSummary() {
   var summary = buildWorkflowSummary(gatherAnswers(), patterns);
-  updateSummaryClause('summary-trigger', summary.trigger);
   updateSummaryClause('summary-purpose', summary.purpose);
+  updateSummaryClause('summary-trigger', summary.trigger);
   updateSummaryClause('summary-output', summary.output);
+  updateSummaryClause('summary-context', {
+    value: summary.context ? 'With ' + summary.context + '.' : 'choose how it works',
+    complete: Boolean(summary.context)
+  });
   updateSummaryClause('summary-engine', summary.engine);
-
-  var context = document.getElementById('summary-context');
-  context.hidden = !summary.context;
-  context.textContent = summary.context ? 'With ' + summary.context + '.' : '';
 }
 
 function updateSummaryClause(id, clause) {
