@@ -15,6 +15,7 @@ var patterns = null;
 var currentStep = 1;
 var generatedPrompt = '';
 var TOTAL_STEPS = 6;
+var SELECTION_STORAGE_KEY = 'gh-aw-wizard-selection';
 
 export function initWizard() {
   initTheme();
@@ -24,6 +25,7 @@ export function initWizard() {
   });
   bindNavigation();
   bindFormEvents();
+  restoreSelectionState();
   initNavigationHistory();
   renderWorkflowSummary();
 }
@@ -151,6 +153,8 @@ function bindFormEvents() {
       document.getElementById('next-1').disabled = false;
       var customField = document.getElementById('custom-description-field');
       customField.classList.toggle('visible', radio.value === 'custom');
+      // Selecting a new "what" scenario invalidates any downstream choices made for the previous one.
+      clearDownstreamSelections(radio.value);
       // Auto-fill triggers/outputs from archetype data
       prefillFromArchetype(radio.value);
       if (radio.value !== 'custom') goToStep(2);
@@ -190,11 +194,26 @@ function bindFormEvents() {
   updateCardSelection('#engine-options', 'radio');
 
   document.querySelectorAll('input').forEach(function (input) {
-    input.addEventListener('change', renderWorkflowSummary);
+    input.addEventListener('change', function () {
+      renderWorkflowSummary();
+      saveSelectionState();
+    });
   });
   document.querySelectorAll('textarea').forEach(function (textarea) {
-    textarea.addEventListener('input', renderWorkflowSummary);
+    textarea.addEventListener('input', function () {
+      renderWorkflowSummary();
+      saveSelectionState();
+    });
   });
+}
+
+// Reset any selections that depend on the "what" (archetype) choice, since they
+// no longer apply once a different scenario is picked.
+function clearDownstreamSelections(archetypeId) {
+  if (archetypeId !== 'custom') {
+    document.getElementById('custom-description').value = '';
+  }
+  document.getElementById('data-description').value = '';
 }
 
 function updateCardSelection(containerSel, type) {
@@ -257,6 +276,87 @@ function gatherAnswers() {
     needsData: inferNeedsPreSteps(archetypeId),
     dataDescription: document.getElementById('data-description').value.trim()
   };
+}
+
+// ── Selection persistence (localStorage) ────────────────────────────────────
+function currentSelectionState() {
+  var arch = document.querySelector('input[name="archetype"]:checked');
+  var triggers = [];
+  document.querySelectorAll('input[name="trigger"]:checked').forEach(function (cb) { triggers.push(cb.value); });
+  var outputs = [];
+  document.querySelectorAll('input[name="output"]:checked').forEach(function (cb) { outputs.push(cb.value); });
+  var extras = [];
+  document.querySelectorAll('input[name="extra"]:checked').forEach(function (cb) { extras.push(cb.value); });
+  var engine = document.querySelector('input[name="engine"]:checked');
+
+  return {
+    archetype: arch ? arch.value : null,
+    customDescription: document.getElementById('custom-description').value,
+    triggers: triggers,
+    outputs: outputs,
+    extras: extras,
+    engine: engine ? engine.value : null,
+    dataDescription: document.getElementById('data-description').value
+  };
+}
+
+function saveSelectionState() {
+  try {
+    localStorage.setItem(SELECTION_STORAGE_KEY, JSON.stringify(currentSelectionState()));
+  } catch (e) {
+    // Ignore storage failures; the selections still apply for this page load.
+  }
+}
+
+function loadSelectionState() {
+  try {
+    var raw = localStorage.getItem(SELECTION_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function restoreSelectionState() {
+  var state = loadSelectionState();
+  if (!state) return;
+
+  if (state.archetype) {
+    var archRadio = document.querySelector('input[name="archetype"][value="' + state.archetype + '"]');
+    if (archRadio) archRadio.checked = true;
+  }
+  updateCardSelection('#archetype-options', 'radio');
+  document.getElementById('next-1').disabled = !state.archetype;
+  document.getElementById('custom-description-field').classList.toggle('visible', state.archetype === 'custom');
+  if (state.customDescription) document.getElementById('custom-description').value = state.customDescription;
+
+  (state.triggers || []).forEach(function (trigger) {
+    var cb = document.querySelector('input[name="trigger"][value="' + trigger + '"]');
+    if (cb) cb.checked = true;
+  });
+  updateCardSelection('#trigger-options', 'checkbox');
+  document.getElementById('next-2').disabled = !hasChecked('trigger');
+
+  (state.outputs || []).forEach(function (output) {
+    var cb = document.querySelector('input[name="output"][value="' + output + '"]');
+    if (cb) cb.checked = true;
+  });
+  updateCardSelection('#output-options', 'checkbox');
+  document.getElementById('next-3').disabled = !hasChecked('output');
+
+  (state.extras || []).forEach(function (extra) {
+    var cb = document.querySelector('input[name="extra"][value="' + extra + '"]');
+    if (cb) cb.checked = true;
+  });
+  updateCardSelection('#data-options', 'checkbox');
+
+  if (state.dataDescription) document.getElementById('data-description').value = state.dataDescription;
+
+  if (state.engine) {
+    var engineRadio = document.querySelector('input[name="engine"][value="' + state.engine + '"]');
+    if (engineRadio) engineRadio.checked = true;
+  }
+  updateCardSelection('#engine-options', 'radio');
 }
 
 function renderWorkflowSummary() {
