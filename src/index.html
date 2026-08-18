@@ -71,6 +71,35 @@
       </div>
     </div>
 
+    <section class="workflow-recipe" aria-labelledby="workflow-recipe-title">
+      <div class="recipe-header">
+        <div>
+          <span class="recipe-eyebrow">Live recipe</span>
+          <h2 id="workflow-recipe-title">Your agentic workflow</h2>
+        </div>
+        <span class="recipe-status">Build it as you go</span>
+      </div>
+      <div class="recipe-clauses" id="workflow-summary" aria-live="polite">
+        <div class="recipe-clause is-placeholder">
+          <span class="recipe-key recipe-key-if">If</span>
+          <span class="recipe-value" id="summary-trigger">choose when it runs</span>
+        </div>
+        <div class="recipe-clause is-placeholder">
+          <span class="recipe-key recipe-key-then">Then</span>
+          <span class="recipe-value" id="summary-purpose">choose what the agent should do</span>
+        </div>
+        <div class="recipe-clause is-placeholder">
+          <span class="recipe-key recipe-key-can">Can</span>
+          <span class="recipe-value" id="summary-output">choose what it can write</span>
+        </div>
+        <div class="recipe-clause">
+          <span class="recipe-key recipe-key-using">Using</span>
+          <span class="recipe-value" id="summary-engine">Copilot</span>
+        </div>
+        <p class="recipe-context" id="summary-context" hidden></p>
+      </div>
+    </section>
+
     <!-- Step 1: Archetype -->
     <section class="wizard-step active" id="step-1">
       <h2 class="step-title">What should this workflow do?</h2>
