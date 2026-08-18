@@ -23,7 +23,7 @@ on:
           - both
 permissions:
   contents: read
-  pull-requests: write
+  pull-requests: read
   copilot-requests: write
 safe-outputs:
   create-pull-request-review-comment:
