@@ -457,7 +457,7 @@
     if (!panel) return;
 
     var html = '<h3>Next steps</h3>';
-    var name = workflowName(gatherAnswers().archetype, gatherAnswers().customDescription);
+    var name = escapeHtml(workflowName(gatherAnswers().archetype, gatherAnswers().customDescription));
 
     if (format === 'workflow') {
       html += step(1, 'Make sure <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository" target="_blank">GitHub Actions is enabled</a> on your repository');
