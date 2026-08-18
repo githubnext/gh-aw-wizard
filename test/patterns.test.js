@@ -27,7 +27,7 @@ describe('nextStepsHtml', () => {
 
   it('renders coding agent instructions for the prompt format', () => {
     const html = nextStepsHtml('prompt', 'issue-triage');
-    expect(html).toContain('Copy the prompt above');
+    expect(html).toContain('run it in your favorite agent');
     expect(html).not.toContain('Download the <code>.md</code> file');
   });
 
