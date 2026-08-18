@@ -32,7 +32,7 @@ function generateAndShow() {
   goToStep(5);
   showPreview(generatedPrompt);
   var answers = gatherAnswers();
-  showNextSteps('prompt', answers.engine);
+  showNextSteps('prompt', workflowName(answers.archetype, answers.customDescription), answers.engine);
   document.getElementById('preview-filename').textContent = 'prompt.txt';
   document.getElementById('btn-download').style.display = 'none';
 }
@@ -50,18 +50,13 @@ function switchFormat(fmt) {
     document.getElementById('preview-filename').textContent = name + '.md';
     document.getElementById('btn-download').style.display = '';
   }
-  showNextSteps(fmt, answers.engine);
+  showNextSteps(fmt, name, answers.engine);
 }
 
-function showNextSteps(format, engine) {
+function showNextSteps(format, name, engine) {
   var panel = document.getElementById('next-steps-panel');
   if (!panel) return;
-  var answers = gatherAnswers();
-  panel.innerHTML = nextStepsHtml(
-    format,
-    workflowName(answers.archetype, answers.customDescription),
-    engine || answers.engine
-  );
+  panel.innerHTML = nextStepsHtml(format, name, engine);
 }
 
 function refreshGeneratedContent() {

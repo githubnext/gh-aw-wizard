@@ -13,7 +13,7 @@ import {
   buildCustom
 } from './bodies.js';
 
-function normalizeEngine(engine) {
+export function normalizeEngine(engine) {
   return ['copilot', 'claude', 'codex'].indexOf(engine) !== -1 ? engine : 'copilot';
 }
 

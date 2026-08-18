@@ -1,13 +1,14 @@
 // "Next steps" panel markup — pure string builders.
 
 import { escapeHtml } from './highlight.js';
+import { normalizeEngine } from './workflow.js';
 
 export function step(n, content) {
   return '<div class="next-step"><div class="next-step-num">' + n + '</div><div>' + content + '</div></div>';
 }
 
 function getEngineMeta(engine) {
-  var selected = ['copilot', 'claude', 'codex'].indexOf(engine) !== -1 ? engine : 'copilot';
+  var selected = normalizeEngine(engine);
   var engines = {
     copilot: {
       label: 'Copilot',
