@@ -1,5 +1,6 @@
 // Statistical analysis of scan results. Reads data/scan-results.json and patterns.json,
-// writes data/analysis-report.json. Invoked from actions/github-script with the octokit client.
+// writes data/analysis-report.json. Exported as a CommonJS module taking `{ github }`
+// (an authenticated Octokit client), so it is called from actions/github-script.
 module.exports = async ({ github }) => {
   const fs = require('fs');
   const path = require('path');
