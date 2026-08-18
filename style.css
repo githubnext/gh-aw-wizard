@@ -28,6 +28,7 @@
   --warning: var(--color-attention-fg, #9a6700);
   --danger: var(--color-danger-fg, #cf222e);
   --control-fg-on-emphasis: var(--color-fg-on-emphasis, #ffffff);
+  --header-gradient-start: rgba(246, 248, 250, 0.85);
   --glow-blue: rgba(9, 105, 218, 0.12);
   --glow-purple: rgba(130, 80, 223, 0.08);
   --shadow-card: var(--color-shadow-medium, 0 3px 12px rgba(27,31,36,0.15));
@@ -69,6 +70,7 @@
   --success: #3fb950;
   --warning: #d29922;
   --danger: #f85149;
+  --header-gradient-start: rgba(22, 27, 34, 0.8);
   --glow-blue: rgba(88, 166, 255, 0.15);
   --glow-purple: rgba(188, 140, 255, 0.1);
   --shadow-card: 0 2px 8px rgba(0,0,0,0.2);
@@ -141,7 +143,7 @@ a:hover {
 .site-header {
   padding: 2.5rem 0 1.75rem;
   text-align: center;
-  background: linear-gradient(180deg, var(--bg-secondary) 0%, transparent 100%);
+  background: linear-gradient(180deg, var(--header-gradient-start) 0%, transparent 100%);
   border-bottom: 1px solid var(--border-color);
   margin-bottom: 2.5rem;
 }

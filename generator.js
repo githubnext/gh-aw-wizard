@@ -54,14 +54,13 @@
     var colorMode = mode === 'auto' ? (systemDark ? 'dark' : 'light') : mode;
     document.documentElement.setAttribute('data-theme-preference', mode);
     document.documentElement.setAttribute('data-color-mode', colorMode);
-    document.documentElement.style.colorScheme = colorMode;
 
     var label = document.getElementById('theme-toggle-label');
     var toggle = document.getElementById('theme-toggle');
     var icon = document.querySelector('.theme-toggle-icon');
     var copy = {
       auto: { label: 'Auto theme', icon: '◐' },
-      light: { label: 'Light theme', icon: '☀' },
+      light: { label: 'Light theme', icon: '☀️' },
       dark: { label: 'Dark theme', icon: '☾' }
     };
     var state = copy[mode] || copy.auto;
