@@ -1,6 +1,6 @@
 // DOM wiring for the wizard UI.
 
-import { loadPatterns, getArchetype } from './patterns.js';
+import { loadPatterns, getRecommendedConfiguration } from './patterns.js';
 import {
   workflowName,
   inferNeedsPreSteps,
@@ -210,36 +210,24 @@ function hasChecked(name) {
 }
 
 function prefillFromArchetype(id) {
-  var arch = getArchetype(patterns, id);
-  if (!arch) return;
+  var recommendation = getRecommendedConfiguration(patterns, id);
+  if (!recommendation.triggers.length && !recommendation.outputs.length) return;
 
   // Pre-check recommended triggers
   document.querySelectorAll('input[name="trigger"]').forEach(function (cb) { cb.checked = false; });
-  if (arch.recommended_triggers) {
-    arch.recommended_triggers.forEach(function (t) {
-      var cb = document.querySelector('input[name="trigger"][value="' + t.type + '"]');
-      if (cb) cb.checked = true;
-    });
-  }
+  recommendation.triggers.forEach(function (trigger) {
+    var cb = document.querySelector('input[name="trigger"][value="' + trigger + '"]');
+    if (cb) cb.checked = true;
+  });
   updateCardSelection('#trigger-options', 'checkbox');
   document.getElementById('next-2').disabled = !hasChecked('trigger');
 
   // Pre-check recommended outputs
-  var outputMap = {
-    'issues': ['comments', 'labels', 'new-issues'],
-    'pull-requests': ['pull-requests', 'comments'],
-    'contents': ['commits']
-  };
   document.querySelectorAll('input[name="output"]').forEach(function (cb) { cb.checked = false; });
-  if (arch.recommended_safe_outputs) {
-    arch.recommended_safe_outputs.forEach(function (so) {
-      var vals = outputMap[so] || [];
-      vals.forEach(function (v) {
-        var cb = document.querySelector('input[name="output"][value="' + v + '"]');
-        if (cb) cb.checked = true;
-      });
-    });
-  }
+  recommendation.outputs.forEach(function (output) {
+    var cb = document.querySelector('input[name="output"][value="' + output + '"]');
+    if (cb) cb.checked = true;
+  });
   updateCardSelection('#output-options', 'checkbox');
   document.getElementById('next-3').disabled = !hasChecked('output');
 

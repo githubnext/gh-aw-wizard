@@ -137,9 +137,8 @@ describe('generateWorkflowFile', () => {
     expect(md).toContain('name: issue-triage\n');
     expect(md).toContain('description: Classify and label incoming issues\n');
     expect(md).toContain('engine: copilot\n');
-    expect(md).toContain('  - add-label\n');
-    expect(md).toContain('  - add-comment\n');
-    expect(md).toContain('safe-outputs:\n');
+    expect(md).toContain('safe-outputs:\n  add-labels:\n  add-comment:\n');
+    expect(md).not.toContain('tools:\n');
     expect(md).toContain('timeout-minutes: 15\n');
     expect(md).toContain('# Issue Triage');
   });
@@ -163,6 +162,7 @@ describe('generateWorkflowFile', () => {
       }),
       patterns
     );
+    expect(md).toContain('permissions:\n  actions: read\n  contents: read\n');
     expect(md).toContain('  github:\n');
     expect(md).toContain('  cache-memory:\n');
     expect(md).toContain('## Pre-steps');
@@ -197,8 +197,15 @@ describe('generateWorkflowFile', () => {
 
   it('deduplicates safe outputs', () => {
     const md = generateWorkflowFile(answers({ outputs: ['comments', 'labels'] }), patterns);
-    const issuesCount = md.split('\n').filter((line) => line === '  - issues').length;
-    expect(issuesCount).toBe(1);
+    const commentsCount = md.split('\n').filter((line) => line === '  add-comment:').length;
+    expect(commentsCount).toBe(1);
+  });
+
+  it('routes file changes through pull requests instead of direct commits', () => {
+    const md = generateWorkflowFile(answers({ outputs: ['pull-requests', 'commits'] }), patterns);
+    const pullRequestCount = md.split('\n').filter((line) => line === '  create-pull-request:').length;
+    expect(pullRequestCount).toBe(1);
+    expect(md).not.toContain('commit-files');
   });
 });
 

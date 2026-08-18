@@ -282,6 +282,41 @@ echo "Step 3 — Analysis: fetching workflow definitions..."
 python3 << 'PYEOF'
 import json, subprocess, time, sys, re
 
+def frontmatter_entries(frontmatter, key):
+    match = re.search(rf'^{re.escape(key)}:[ \t]*(.*?)[ \t]*$', frontmatter, re.MULTILINE)
+    if not match:
+        return []
+
+    inline = match.group(1)
+    if inline.startswith("[") and inline.endswith("]"):
+        return [item.strip().strip("'\"") for item in inline[1:-1].split(",") if item.strip()]
+    if inline and not inline.startswith(("#", "{")):
+        return [inline.strip().strip("'\"")]
+
+    tail = frontmatter[match.end():]
+    block_lines = []
+    for line in tail.splitlines():
+        if line and not line[0].isspace():
+            break
+        block_lines.append(line)
+
+    populated = [line for line in block_lines if line.strip() and not line.lstrip().startswith("#")]
+    if not populated:
+        return []
+    base_indent = min(len(line) - len(line.lstrip()) for line in populated)
+
+    entries = []
+    for line in populated:
+        if len(line) - len(line.lstrip()) != base_indent:
+            continue
+        value = line.strip()
+        if value.startswith("-"):
+            value = value[1:].strip()
+        entry = re.match(r'([A-Za-z0-9_-]+)', value)
+        if entry:
+            entries.append(entry.group(1))
+    return sorted(set(entries))
+
 with open("/tmp/aw-scan/verified.json") as f:
     repos = json.load(f)
 
@@ -323,14 +358,12 @@ for i, (name, info) in enumerate(sorted(repos.items())):
                     wf["model"] = m.group(1)
                 
                 # Trigger
-                triggers = re.findall(r'on:\s*\n((?:\s+\w+.*\n)*)', content)
-                trigger_types = re.findall(r'^\s+(issues|pull_request|push|schedule|workflow_dispatch|workflow_run|slash_command|discussion)', content, re.MULTILINE)
-                if trigger_types: wf["triggers"] = list(set(trigger_types))
+                trigger_types = frontmatter_entries(fm_text, "on")
+                if trigger_types: wf["triggers"] = trigger_types
                 
                 # Safe outputs
-                outputs = re.findall(r'safe-outputs:\s*\n((?:\s+-\s+\w+.*\n)*)', content)
-                output_types = re.findall(r'^\s+-\s+(add-comment|add-labels|create-issue|create-pull-request|create-discussion|upload-asset|dispatch-workflow)', content, re.MULTILINE)
-                if output_types: wf["safe_outputs"] = list(set(output_types))
+                output_types = frontmatter_entries(fm_text, "safe-outputs")
+                if output_types: wf["safe_outputs"] = output_types
                 
                 # Stop-after
                 m = re.search(r'stop-after:\s*(\S+)', content)

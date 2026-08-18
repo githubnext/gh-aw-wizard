@@ -126,6 +126,15 @@ steps:
             except Exception:
                 return None
 
+        def wilson_lower(successes, total, z=1.96):
+            if total == 0:
+                return 0.0
+            rate = successes / total
+            denominator = 1 + z * z / total
+            centre = rate + z * z / (2 * total)
+            margin = z * ((rate * (1 - rate) / total + z * z / (4 * total * total)) ** 0.5)
+            return (centre - margin) / denominator
+
         # Classify workflows into archetypes
         def classify(wf):
             name = (wf.get("name", "") + " " + wf.get("file", "")).lower()
@@ -195,7 +204,7 @@ steps:
             archetype_config = {
                 "issue-triage": {
                     "safe_outputs": ["issues"],
-                    "tools": ["add-comment", "add-label"],
+                    "tools": ["add-comment", "add-labels"],
                     "prompt_style": "role-steps",
                     "size_range": [3000, 7000],
                     "tips": [
@@ -205,8 +214,8 @@ steps:
                     ],
                 },
                 "code-improvement": {
-                    "safe_outputs": ["pull-requests", "contents"],
-                    "tools": ["create-pull-request", "commit-files"],
+                    "safe_outputs": ["pull-requests"],
+                    "tools": ["create-pull-request"],
                     "prompt_style": "phase-based",
                     "size_range": [5000, 12000],
                     "tips": [
@@ -239,7 +248,7 @@ steps:
                 },
                 "content-moderation": {
                     "safe_outputs": ["issues", "pull-requests"],
-                    "tools": ["add-comment", "add-label"],
+                    "tools": ["add-comment", "add-labels"],
                     "prompt_style": "role-rules",
                     "size_range": [4000, 7000],
                     "tips": [
@@ -249,8 +258,8 @@ steps:
                     ],
                 },
                 "documentation-updater": {
-                    "safe_outputs": ["pull-requests", "contents"],
-                    "tools": ["create-pull-request", "commit-files"],
+                    "safe_outputs": ["pull-requests"],
+                    "tools": ["create-pull-request"],
                     "prompt_style": "phase-based",
                     "size_range": [3000, 7000],
                     "tips": [
@@ -342,6 +351,64 @@ steps:
                 })
         trigger_combos.sort(key=lambda x: -x["success_rate"])
 
+        # Rank trigger + safe-output configurations together. Requiring evidence
+        # across multiple workflows and repositories prevents a single template
+        # or unusually successful run from becoming a wizard default.
+        profile_stats = defaultdict(lambda: {
+            "s": 0, "t": 0, "workflows": set(), "repos": set()
+        })
+        for wf in workflows:
+            triggers = sorted(set(wf.get("triggers", [])))
+            safe_outputs = sorted(set(wf.get("safe_outputs", [])))
+            if not triggers or not safe_outputs:
+                continue
+            arch_id = classify(wf)[0]
+            key = (arch_id, tuple(triggers), tuple(safe_outputs))
+            stats = profile_stats[key]
+            stats["workflows"].add(f"{wf['_repo']}/{wf.get('file', wf.get('name', ''))}")
+            stats["repos"].add(wf["_repo"])
+            runs = wf.get("recent_runs_detail", [])
+            if runs:
+                stats["t"] += len(runs)
+                stats["s"] += sum(1 for run in runs if run.get("conclusion") == "success")
+            else:
+                sr_str = wf.get("success_rate", "0/0")
+                parts = sr_str.split("/")
+                if len(parts) == 2:
+                    stats["s"] += int(parts[0])
+                    stats["t"] += int(parts[1])
+
+        configuration_profiles = []
+        for (arch_id, triggers, safe_outputs), stats in profile_stats.items():
+            n_workflows = len(stats["workflows"])
+            n_repos = len(stats["repos"])
+            if stats["t"] < 20 or n_workflows < 3 or n_repos < 3:
+                continue
+            configuration_profiles.append({
+                "archetype": arch_id,
+                "triggers": list(triggers),
+                "safe_outputs": list(safe_outputs),
+                "success_rate": round(stats["s"] / stats["t"], 3),
+                "confidence_score": round(wilson_lower(stats["s"], stats["t"]), 3),
+                "total_runs": stats["t"],
+                "n_workflows": n_workflows,
+                "n_repos": n_repos,
+            })
+
+        configuration_profiles.sort(key=lambda profile: (
+            profile["archetype"],
+            -profile["confidence_score"],
+            -profile["total_runs"],
+        ))
+        ranked_profiles = []
+        profile_ranks = defaultdict(int)
+        for profile in configuration_profiles:
+            profile_ranks[profile["archetype"]] += 1
+            if profile_ranks[profile["archetype"]] > 3:
+                continue
+            profile["rank"] = profile_ranks[profile["archetype"]]
+            ranked_profiles.append(profile)
+
         # Build output
         output = {
             "metadata": {
@@ -367,6 +434,7 @@ steps:
                 "prompt_size_sweet_spot": [3000, 8000]
             },
             "trigger_combos": trigger_combos[:15],
+            "configuration_profiles": ranked_profiles,
             "research_findings": {
                 "bimodal_distribution": "38% of workflows always succeed, 21% always fail, 41% are mixed. The average hides this.",
                 "do_not_constraints": "Workflows with explicit DO NOT instructions are 61% more likely to be healthy (p=0.009).",
@@ -402,6 +470,14 @@ steps:
         const maxLogRepos = 100;
 
         const round = (value, digits = 3) => Number(value.toFixed(digits));
+        const wilsonLower = (successes, total, z = 1.96) => {
+          if (!total) return 0;
+          const rate = successes / total;
+          const denominator = 1 + z ** 2 / total;
+          const centre = rate + z ** 2 / (2 * total);
+          const margin = z * Math.sqrt(rate * (1 - rate) / total + z ** 2 / (4 * total ** 2));
+          return (centre - margin) / denominator;
+        };
         const parseSuccessRate = (value) => {
           if (!value || value === '0/0') return null;
           const [successes, total] = value.split('/').map(Number);
@@ -641,20 +717,22 @@ steps:
           const triggers = [...new Set(workflow.triggers || [])].sort();
           if (!triggers.length) continue;
           const key = triggers.join('+');
-          if (!comboStats.has(key)) comboStats.set(key, { successes: 0, total: 0, repos: new Set() });
+          if (!comboStats.has(key)) {
+            comboStats.set(key, { successes: 0, total: 0, workflows: new Set(), repos: new Set() });
+          }
           const stats = comboStats.get(key);
+          stats.workflows.add(`${workflow._repo}/${workflow.file || workflow.name || ''}`);
+          stats.repos.add(workflow._repo);
           const runs = workflow.recent_runs_detail || [];
           if (runs.length) {
             for (const run of runs) {
               stats.total += 1;
               if (run.conclusion === 'success') stats.successes += 1;
-              stats.repos.add(workflow._repo);
             }
           } else if (parseSuccessRate(workflow.success_rate) !== null) {
             const [successes, total] = workflow.success_rate.split('/').map(Number);
             stats.successes += successes;
             stats.total += total;
-            stats.repos.add(workflow._repo);
           }
         }
         const triggerCombos = sortedEntries(comboStats, ([, a], [, b]) => b.total - a.total)
@@ -665,12 +743,67 @@ steps:
               success_rate: round(rate),
               successes: stats.successes,
               total_runs: stats.total,
-              n_workflows: stats.repos.size,
+              n_workflows: stats.workflows.size,
+              n_repos: stats.repos.size,
               risk: rate < 0.3 ? 'high' : rate < 0.6 ? 'medium' : 'low',
             };
           })
           .sort((a, b) => b.total_runs - a.total_runs);
         console.log(`    Found ${triggerCombos.length} unique trigger combinations`);
+
+        const profileStats = new Map();
+        for (const workflow of allWorkflows) {
+          const triggers = [...new Set(workflow.triggers || [])].sort();
+          const safeOutputs = [...new Set(workflow.safe_outputs || [])].sort();
+          if (!triggers.length || !safeOutputs.length) continue;
+          const archetype = classifyWorkflow(workflow);
+          const key = JSON.stringify([archetype, triggers, safeOutputs]);
+          if (!profileStats.has(key)) {
+            profileStats.set(key, {
+              archetype,
+              triggers,
+              safeOutputs,
+              successes: 0,
+              total: 0,
+              workflows: new Set(),
+              repos: new Set(),
+            });
+          }
+          const stats = profileStats.get(key);
+          stats.workflows.add(`${workflow._repo}/${workflow.file || workflow.name || ''}`);
+          stats.repos.add(workflow._repo);
+          const runs = workflow.recent_runs_detail || [];
+          if (runs.length) {
+            stats.total += runs.length;
+            stats.successes += runs.filter((run) => run.conclusion === 'success').length;
+          } else if (parseSuccessRate(workflow.success_rate) !== null) {
+            const [successes, total] = workflow.success_rate.split('/').map(Number);
+            stats.successes += successes;
+            stats.total += total;
+          }
+        }
+        const profileRanks = new Map();
+        const configurationProfiles = [...profileStats.values()]
+          .filter((stats) => stats.total >= 20 && stats.workflows.size >= 3 && stats.repos.size >= 3)
+          .map((stats) => ({
+            archetype: stats.archetype,
+            triggers: stats.triggers,
+            safe_outputs: stats.safeOutputs,
+            success_rate: round(stats.successes / stats.total),
+            confidence_score: round(wilsonLower(stats.successes, stats.total)),
+            total_runs: stats.total,
+            n_workflows: stats.workflows.size,
+            n_repos: stats.repos.size,
+          }))
+          .sort((a, b) => a.archetype.localeCompare(b.archetype)
+            || b.confidence_score - a.confidence_score
+            || b.total_runs - a.total_runs)
+          .flatMap((profile) => {
+            const rank = (profileRanks.get(profile.archetype) || 0) + 1;
+            profileRanks.set(profile.archetype, rank);
+            return rank <= 3 ? [{ ...profile, rank }] : [];
+          });
+        console.log(`    Found ${configurationProfiles.length} supported trigger + safe-output profiles`);
 
         console.log('  [2/10] Archetype health...');
         const archetypeStats = new Map();
@@ -921,6 +1054,13 @@ steps:
             });
           }
         }
+        for (const profile of configurationProfiles.filter(({ rank }) => rank === 1)) {
+          recommendations.push({
+            type: 'configuration_profile',
+            message: `Best supported '${profile.archetype}' mix uses triggers [${profile.triggers.join(', ')}] and safe outputs [${profile.safe_outputs.join(', ')}]: ${(profile.success_rate * 100).toFixed(0)}% success across ${profile.total_runs} runs (${profile.n_workflows} workflows in ${profile.n_repos} repos)`,
+            data: profile,
+          });
+        }
         for (const archetype of archetypeHealth) {
           if (archetype.significant_change) {
             recommendations.push({
@@ -969,6 +1109,10 @@ steps:
             ),
           },
           trigger_analysis: { combos: triggerCombos.slice(0, 30) },
+          configuration_analysis: {
+            methodology: 'Ranked by the Wilson 95% lower confidence bound; requires at least 20 runs, 3 workflows, and 3 repositories.',
+            profiles: configurationProfiles,
+          },
           archetype_health: archetypeHealth,
           engine_analysis: engineAnalysis,
           feature_correlation: featureCorrelation,
@@ -1064,6 +1208,7 @@ You also have the `agentic-workflows` tools available (`status`, `compile`, `log
 4. Read the cache-memory folder (`reports/analysis-report.json` and `scan/state.json`) to see what the previous run found and which data was reused
 5. Inspect `logs/` for failure evidence when the report flags degraded workflows
 6. Understand what changed: look at the `recommendations` array in the report
+7. Review `configuration_analysis.profiles` for supported trigger and safe-output combinations; rank 1 is the wizard default for each archetype
 
 ### Step 2: Evaluate recommendations
 
@@ -1074,6 +1219,7 @@ For each recommendation in the report, decide if it warrants a change to `patter
 - A trigger combination has <20% success rate across 10+ runs (add to anti-patterns)
 - A new workflow pattern appears in 5+ repos with >70% success rate (consider new archetype or update existing tips)
 - A feature correlation is significant (10+ pp delta with n≥10 in both groups)
+- A trigger + safe-output profile covers at least 20 runs, 3 workflows, and 3 repositories
 - Degradation is widespread (3+ repos showing same pattern degrading)
 
 **DO NOT change patterns.json when:**
@@ -1093,6 +1239,7 @@ If changes are warranted:
    - Update `tips` arrays with new findings (e.g., "Adding workflow_dispatch improves success by X%")
    - Update `trigger_success_rates` if present, or add the section
    - Update `engine_success_rates` if engine data has shifted
+   - Preserve the generated `configuration_profiles`; these are consumed directly by the wizard to select trigger and safe-output defaults
 3. Commit the changes with a descriptive message
 
 ### Step 4: Open a PR
@@ -1106,6 +1253,7 @@ Open a pull request with:
   - A table of archetype health changes
   - Any new anti-patterns added
   - Trigger combo insights
+  - Trigger + safe-output configuration profiles adopted by the wizard
 
 ### Step 5: Skip if no changes needed
 
@@ -1115,7 +1263,7 @@ If the analysis report shows no significant changes (all deltas within noise), d
 
 - Do not invent data. Every change must be traceable to a number in `analysis-report.json`.
 - Do not remove existing archetypes or anti-patterns unless the data strongly contradicts them (n≥50, >20pp shift).
-- Do not change the structure or schema of `patterns.json` — only update values within the existing schema.
+- Do not change the structure or schema of `patterns.json` beyond the generated `configuration_profiles` section.
 - Do not reference internal or private repositories. All data comes from public repos.
 - Keep PR descriptions concise — focus on what changed and the supporting numbers.
 - Prefer conservative changes. When in doubt, don't change.
