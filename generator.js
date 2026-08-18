@@ -18,11 +18,7 @@
 
   // ── Theme ──────────────────────────────────────────────────────────────────
   function initTheme() {
-    try {
-      themeMode = localStorage.getItem('gh-aw-wizard-theme') || 'auto';
-    } catch (e) {
-      themeMode = 'auto';
-    }
+    themeMode = document.documentElement.getAttribute('data-theme-preference') || 'auto';
     if (['auto', 'light', 'dark'].indexOf(themeMode) === -1) themeMode = 'auto';
     applyTheme(themeMode);
 
@@ -67,7 +63,7 @@
     if (label) label.textContent = state.label;
     if (icon) icon.textContent = state.icon;
     if (toggle) {
-      toggle.setAttribute('aria-label', 'Theme: ' + state.label + '. Click to change.');
+      toggle.setAttribute('title', state.label + '. Click to change.');
     }
   }
 

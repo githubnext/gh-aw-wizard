@@ -2,7 +2,7 @@
   color-scheme: light;
   --bg-primary: var(--color-canvas-default, #ffffff);
   --bg-secondary: var(--color-canvas-subtle, #f6f8fa);
-  --bg-tertiary: var(--color-neutral-subtle, #f6f8fa);
+  --bg-tertiary: var(--color-neutral-subtle, rgba(175, 184, 193, 0.2));
   --bg-card: var(--color-canvas-default, #ffffff);
   --bg-subtle: var(--color-canvas-subtle, #f6f8fa);
   --bg-inset: var(--color-canvas-inset, #f6f8fa);
@@ -33,6 +33,7 @@
   --glow-purple: rgba(130, 80, 223, 0.08);
   --shadow-card: var(--color-shadow-medium, 0 3px 12px rgba(27,31,36,0.15));
   --shadow-floating: var(--color-shadow-large, 0 8px 24px rgba(140,149,159,0.2));
+  --shadow-btn-primary-hover: 0 2px 6px rgba(31, 136, 61, 0.25);
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
   --radius-md: var(--borderRadius-medium, 8px);
@@ -75,6 +76,7 @@
   --glow-purple: rgba(188, 140, 255, 0.1);
   --shadow-card: 0 2px 8px rgba(0,0,0,0.2);
   --shadow-floating: 0 4px 16px rgba(0,0,0,0.3);
+  --shadow-btn-primary-hover: 0 2px 6px rgba(46,160,67,0.25);
 }
 
 *, *::before, *::after {
@@ -105,7 +107,6 @@ body::before {
   width: 800px;
   height: 600px;
   background: radial-gradient(ellipse, var(--glow-blue) 0%, var(--glow-purple) 40%, transparent 70%);
-  opacity: 0.45;
   pointer-events: none;
   z-index: 0;
 }
@@ -543,7 +544,7 @@ a:hover {
 }
 .btn-primary:hover {
   background: var(--accent-green-hover);
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-btn-primary-hover);
 }
 .btn-primary:disabled {
   opacity: 0.4;
