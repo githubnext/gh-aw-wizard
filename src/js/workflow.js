@@ -13,6 +13,10 @@ import {
   buildCustom
 } from './bodies.js';
 
+function normalizeEngine(engine) {
+  return ['copilot', 'claude', 'codex'].indexOf(engine) !== -1 ? engine : 'copilot';
+}
+
 export function workflowName(archetype, customDesc) {
   if (archetype === 'custom' && customDesc) {
     return customDesc.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'custom-workflow';
@@ -107,10 +111,12 @@ export function generateWorkflowFile(answers, patterns) {
   // Frontmatter — auto-infer capabilities from archetype
   var inferred = inferCapabilities(answers.archetype);
   var extras = answers.extras || [];
+  var engine = normalizeEngine(answers.engine);
   var fm = '---\n';
   fm += 'name: ' + name + '\n';
   fm += 'description: ' + desc + '\n';
   fm += 'on:\n' + triggerYaml;
+  fm += 'engine: ' + engine + '\n';
 
   // Tools section
   fm += 'tools:\n';
@@ -188,6 +194,7 @@ export function generateAgentPrompt(answers, patterns) {
   var arch = getArchetype(patterns, answers.archetype);
   var name = workflowName(answers.archetype, answers.customDescription);
   var desc = arch ? arch.description : answers.customDescription || 'Custom agentic workflow';
+  var engine = normalizeEngine(answers.engine);
 
   var triggersReadable = answers.triggers.map(function (t) {
     var map = {
@@ -223,6 +230,7 @@ export function generateAgentPrompt(answers, patterns) {
   prompt += '- Use those findings to tailor the workflow prompt, tools, and instructions to this repository\n\n';
   prompt += 'Requirements:\n';
   prompt += '- Name: ' + name + '\n';
+  prompt += '- Engine: ' + engine + '\n';
   prompt += '- Triggers: ' + triggersReadable + '\n';
   prompt += '- Allowed outputs: ' + outputsReadable + '\n';
 
