@@ -834,9 +834,9 @@ a:hover {
   padding: 1.25rem;
   border-left: 4px solid var(--border-default);
 }
-.anti-pattern-card.critical { border-left-color: #f85149; }
-.anti-pattern-card.high { border-left-color: #d29922; }
-.anti-pattern-card.medium { border-left-color: #e3b341; }
+.anti-pattern-card.critical { border-left-color: var(--danger); }
+.anti-pattern-card.high { border-left-color: var(--warning); }
+.anti-pattern-card.medium { border-left-color: var(--warning); }
 .anti-pattern-card h3 {
   font-size: 1rem;
   font-weight: 600;
