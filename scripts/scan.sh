@@ -7,8 +7,12 @@
 #   ./scripts/scan.sh --active-only --run-history  # Also fetch last 10 runs per workflow
 #   ./scripts/scan.sh --cutoff-days 90         # Custom activity window (default: 90)
 #   ./scripts/scan.sh --no-verify              # Skip activity check (step 1 + 3 only)
+#   ./scripts/scan.sh --resume                 # Reuse fresh intermediate files in /tmp/aw-scan
+#   ./scripts/scan.sh --resume --max-age-days 3  # Custom freshness window for resumed data
 #
 # Output: data/scan-results.json
+#
+# Intermediate files (reusable with --resume): /tmp/aw-scan/{discovered,verified,analyzed}.json
 #
 # Requires: gh CLI (authenticated), python3, jq
 
@@ -18,6 +22,8 @@ ACTIVE_ONLY=true
 RUN_HISTORY=false
 CUTOFF_DAYS=90
 NO_VERIFY=false
+RESUME=false
+MAX_AGE_DAYS=7
 
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -26,9 +32,22 @@ while [[ $# -gt 0 ]]; do
     --run-history) RUN_HISTORY=true; shift ;;
     --cutoff-days) CUTOFF_DAYS="$2"; shift 2 ;;
     --no-verify) NO_VERIFY=true; shift ;;
+    --resume) RESUME=true; shift ;;
+    --max-age-days) MAX_AGE_DAYS="$2"; shift 2 ;;
     *) echo "Unknown option: $1"; exit 1 ;;
   esac
 done
+
+# is_reusable <file> — true when --resume is set and the file exists, is valid JSON,
+# and was modified within the last MAX_AGE_DAYS days.
+is_reusable() {
+  local file="$1"
+  [ "$RESUME" = "true" ] || return 1
+  [ -s "$file" ] || return 1
+  python3 -c "import json,sys; json.load(open(sys.argv[1]))" "$file" >/dev/null 2>&1 || return 1
+  find "$file" -mtime "-${MAX_AGE_DAYS}" -print -quit 2>/dev/null | grep -q . || return 1
+  return 0
+}
 
 CUTOFF_DATE=$(date -v-${CUTOFF_DAYS}d +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -d "-${CUTOFF_DAYS} days" --iso-8601=seconds 2>/dev/null)
 OUTDIR="$(cd "$(dirname "$0")/.." && pwd)/data"
@@ -41,6 +60,9 @@ echo "════════════════════════�
 
 # ─── Step 1: Discovery via GitHub Code Search ──────────────────────
 echo ""
+if is_reusable /tmp/aw-scan/discovered.json; then
+  echo "Step 1 — Discovery: reusing cached /tmp/aw-scan/discovered.json (--resume)"
+else
 echo "Step 1 — Discovery: searching for .lock.yml files..."
 
 QUERIES=(
@@ -149,13 +171,17 @@ if skipped:
     for k in sorted(skipped):
         print(f"    ⚠️  Skipped: {k} (visibility: {skipped[k].get('visibility', 'unknown')})")
 PYEOF
+fi
 
 echo ""
 REPO_COUNT=$(python3 -c "import json; print(len(json.load(open('/tmp/aw-scan/discovered.json'))))")
 echo "  ✅ Discovered $REPO_COUNT public repos with .lock.yml files"
 
 # ─── Step 2: Activity Verification ─────────────────────────────────
-if [ "$NO_VERIFY" = "false" ]; then
+if is_reusable /tmp/aw-scan/verified.json; then
+  echo ""
+  echo "Step 2 — Activity verification: reusing cached /tmp/aw-scan/verified.json (--resume)"
+elif [ "$NO_VERIFY" = "false" ]; then
   echo ""
   echo "Step 2 — Activity verification (cutoff: ${CUTOFF_DAYS} days)..."
   
@@ -225,6 +251,9 @@ fi
 
 # ─── Step 3: Analysis — fetch .md sources and extract patterns ─────
 echo ""
+if is_reusable /tmp/aw-scan/analyzed.json; then
+  echo "Step 3 — Analysis: reusing cached /tmp/aw-scan/analyzed.json (--resume)"
+else
 echo "Step 3 — Analysis: fetching workflow definitions..."
 
 python3 << 'PYEOF'
@@ -349,6 +378,7 @@ print(f"  Outputs: {dict(sorted(outputs.items(), key=lambda x: -x[1]))}")
 with open("/tmp/aw-scan/analyzed.json", "w") as f:
     json.dump(analyzed, f, indent=2)
 PYEOF
+fi
 
 # ─── Step 4 (optional): Run History ────────────────────────────────
 if [ "$RUN_HISTORY" = "true" ]; then

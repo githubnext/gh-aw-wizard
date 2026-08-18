@@ -6,18 +6,87 @@ on:
   schedule: daily
   skip-if-match: 'is:pr is:open in:title "Pattern library update"'
 permissions:
+  actions: read
   contents: read
   copilot-requests: write
 safe-outputs:
   create-pull-request:
 strict: true
 timeout-minutes: 30
+tools:
+  agentic-workflows:
+  cache-memory:
+    key: deep-research-state
+    retention-days: 30
+    description: |
+      Persistent state for the Deep Research scan. Contains:
+      - `scan/discovered.json`, `scan/verified.json`, `scan/analyzed.json` — intermediate
+        scan stages reused across runs so a scan can resume instead of starting over
+      - `scan/state.json` — timestamps describing when each stage was last refreshed
+      - `logs/` — agentic workflow run logs downloaded with `gh aw logs`
+      - `reports/analysis-report.json` — the previous run's analysis report
 steps:
+  - name: Restore scan state from cache-memory
+    uses: actions/github-script@v9
+    with:
+      script: |
+        const fs = require('fs');
+        const path = require('path');
+        const cacheDir = '/tmp/gh-aw/cache-memory';
+        const scanDir = '/tmp/aw-scan';
+        fs.mkdirSync(scanDir, { recursive: true });
+        const cachedScan = path.join(cacheDir, 'scan');
+        if (!fs.existsSync(cachedScan)) {
+          console.log('No cached scan state found — starting a fresh scan');
+          return;
+        }
+        for (const file of fs.readdirSync(cachedScan)) {
+          if (!file.endsWith('.json')) continue;
+          fs.copyFileSync(path.join(cachedScan, file), path.join(scanDir, file));
+          console.log(`Restored ${file} from cache-memory`);
+        }
+
   - name: Run scan
     uses: actions/github-script@v9
     with:
       script: |
-        await exec.exec('./scripts/scan.sh', ['--active-only', '--run-history']);
+        await exec.exec('./scripts/scan.sh', ['--active-only', '--run-history', '--resume']);
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  - name: Install gh-aw CLI
+    uses: github/gh-aw-actions/setup-cli@v0.87.0
+    with:
+      version: 'v0.87.0'
+      github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  - name: Download agentic workflow logs
+    continue-on-error: true
+    uses: actions/github-script@v9
+    with:
+      script: |
+        const fs = require('fs');
+        const path = require('path');
+        const logsDir = '/tmp/gh-aw/cache-memory/logs';
+        fs.mkdirSync(logsDir, { recursive: true });
+        const scan = JSON.parse(fs.readFileSync('data/scan-results.json', 'utf8'));
+        const repos = Object.entries(scan.repos || {})
+          .filter(([, repo]) => (repo.recent_runs || 0) > 0)
+          .sort((a, b) => (b[1].stars || 0) - (a[1].stars || 0))
+          .slice(0, 10)
+          .map(([name]) => name);
+        for (const repo of repos) {
+          const outDir = path.join(logsDir, repo.replace('/', '__'));
+          const code = await exec.exec(
+            'gh',
+            ['aw', 'logs', '--repo', repo, '--count', '10', '--start-date', '-7d',
+             '--json', '--output', outDir, '--cache-before', '-30d'],
+            { ignoreReturnCode: true },
+          );
+          if (code !== 0) {
+            console.log(`Skipping ${repo} — gh aw logs exited with code ${code}`);
+          }
+        }
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -940,6 +1009,33 @@ steps:
         } finally {
           fs.unlinkSync(scriptPath);
         }
+
+  - name: Persist scan state to cache-memory
+    uses: actions/github-script@v9
+    with:
+      script: |
+        const fs = require('fs');
+        const path = require('path');
+        const cacheDir = '/tmp/gh-aw/cache-memory';
+        const scanDir = '/tmp/aw-scan';
+        const cachedScan = path.join(cacheDir, 'scan');
+        const cachedReports = path.join(cacheDir, 'reports');
+        fs.mkdirSync(cachedScan, { recursive: true });
+        fs.mkdirSync(cachedReports, { recursive: true });
+        const state = { updated_at: new Date().toISOString(), stages: {} };
+        for (const file of ['discovered.json', 'verified.json', 'analyzed.json']) {
+          const src = path.join(scanDir, file);
+          if (!fs.existsSync(src)) continue;
+          fs.copyFileSync(src, path.join(cachedScan, file));
+          state.stages[file] = fs.statSync(src).mtime.toISOString();
+          console.log(`Cached ${file}`);
+        }
+        fs.writeFileSync(path.join(cachedScan, 'state.json'), `${JSON.stringify(state, null, 2)}\n`);
+        for (const file of ['data/analysis-report.json', 'data/scan-results.json']) {
+          if (!fs.existsSync(file)) continue;
+          fs.copyFileSync(file, path.join(cachedReports, path.basename(file)));
+          console.log(`Cached ${file}`);
+        }
 ---
 
 # Deep Research Agent
@@ -952,7 +1048,20 @@ Your job is to read the statistical analysis report, compare it with the current
 
 This repository contains a prompt generator for agentic workflows. It uses `patterns.json` as its knowledge base — a file that defines archetypes (types of workflows), their success rates, recommended configurations, tips, and anti-patterns.
 
-The workflow first runs `scripts/scan.sh --active-only --run-history` to collect data from real public repositories, then rebuilds `patterns.json`, and then produces `data/analysis-report.json` with fresh statistics.
+The workflow first restores cached intermediate scan data, then runs `scripts/scan.sh --active-only --run-history --resume` to collect data from real public repositories, downloads agentic workflow run logs with `gh aw logs`, rebuilds `patterns.json`, and produces `data/analysis-report.json` with fresh statistics.
+
+Because the scan is incremental, this workflow is designed to run repeatedly: intermediate stages that are still fresh (less than 7 days old) are reused from the cache instead of being re-fetched.
+
+## Persistent state (cache-memory)
+
+The cache-memory folder is restored at the start of every run and saved at the end. Use it to compare this run against previous ones:
+
+- `scan/discovered.json`, `scan/verified.json`, `scan/analyzed.json` — intermediate scan stages
+- `scan/state.json` — when each stage was last refreshed
+- `logs/<owner>__<repo>/` — run logs downloaded with `gh aw logs`, including `summary.json` with per-run metrics
+- `reports/analysis-report.json` — the analysis report from the previous run
+
+You also have the `agentic-workflows` tools available (`status`, `compile`, `logs`, `audit`, `inspect`). Use `logs` to download or inspect additional run logs when a finding needs more evidence, and `audit` to investigate a specific failing run.
 
 ## Instructions
 
@@ -961,7 +1070,9 @@ The workflow first runs `scripts/scan.sh --active-only --run-history` to collect
 1. Read `data/scan-results.json` — this is the fresh scan output
 2. Read `data/analysis-report.json` — this is the statistical analysis output
 3. Read `patterns.json` — this is the current pattern library rebuilt from the scan
-4. Understand what changed: look at the `recommendations` array in the report
+4. Read the cache-memory folder (`reports/analysis-report.json` and `scan/state.json`) to see what the previous run found and which data was reused
+5. Inspect `logs/` for failure evidence when the report flags degraded workflows
+6. Understand what changed: look at the `recommendations` array in the report
 
 ### Step 2: Evaluate recommendations
 
