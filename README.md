@@ -39,7 +39,6 @@ Want the full research details? See [DISCOVERY.md](DISCOVERY.md).
 | `test/` | Vitest unit tests for the pure generation logic |
 | `patterns.json` | Pattern data powering the wizard — archetypes, triggers, tips |
 | `scripts/scan.sh` | Weekly scanner that discovers agentic workflows across GitHub |
-| `scripts/analyze.py` | Analysis script — processes scan results into patterns |
 | `.github/workflows/deep-research.md` | Agentic workflow that analyzes trends and opens PRs with updates |
 
 ### Development
@@ -60,11 +59,6 @@ development and copied into `dist/` at build time.
 ### Self-updating pipeline
 
 A weekly GitHub Actions scan discovers new repos, refreshes run history, and updates the dataset. A [deep research agent](.github/workflows/deep-research.md) then analyzes the results and opens PRs when patterns shift.
-
-```bash
-# Run analysis locally
-python3 scripts/analyze.py --skip-logs
-```
 
 ## License
 
