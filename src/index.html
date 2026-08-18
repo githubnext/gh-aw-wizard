@@ -72,6 +72,14 @@
       <h2 class="step-title">What should this workflow do?</h2>
       <p class="step-description">Choose the type of agentic workflow you want to create.</p>
       <div class="option-group archetype-grid" id="archetype-options">
+        <label class="option-card" data-value="pr-review">
+          <input type="radio" name="archetype" value="pr-review">
+          <div class="archetype-icon">👀</div>
+          <div class="option-info">
+            <div class="option-label">PR Review</div>
+            <div class="option-desc">Review PRs for quality and issues</div>
+          </div>
+        </label>
         <label class="option-card" data-value="issue-triage">
           <input type="radio" name="archetype" value="issue-triage">
           <div class="archetype-icon">🏷️</div>
@@ -110,14 +118,6 @@
           <div class="option-info">
             <div class="option-label">Dependency Monitor</div>
             <div class="option-desc">Track and update project dependencies</div>
-          </div>
-        </label>
-        <label class="option-card" data-value="pr-review">
-          <input type="radio" name="archetype" value="pr-review">
-          <div class="archetype-icon">👀</div>
-          <div class="option-info">
-            <div class="option-label">PR Review</div>
-            <div class="option-desc">Review PRs for quality and issues</div>
           </div>
         </label>
         <label class="option-card" data-value="documentation-updater">
