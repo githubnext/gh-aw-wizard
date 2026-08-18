@@ -30,12 +30,11 @@ var SAFE_OUTPUT_MAP = {
   'pull-requests': ['pull-requests', 'comments'],
   'contents': ['pull-requests']
 };
-var WIZARD_TRIGGERS = [
+var RECOMMENDABLE_TRIGGERS = [
   'issues',
   'pull_request',
   'schedule',
   'workflow_dispatch',
-  'slash_command',
   'label_command',
   'push'
 ];
@@ -58,7 +57,7 @@ export function getRecommendedConfiguration(patterns, id) {
     .filter(function (profile) {
       return profile.archetype === id &&
         Array.isArray(profile.triggers) &&
-        profile.triggers.every(function (trigger) { return WIZARD_TRIGGERS.indexOf(trigger) !== -1; }) &&
+        profile.triggers.every(function (trigger) { return RECOMMENDABLE_TRIGGERS.indexOf(trigger) !== -1; }) &&
         Array.isArray(profile.safe_outputs) &&
         profile.safe_outputs.length > 0 &&
         profile.safe_outputs.every(function (safeOutput) { return SAFE_OUTPUT_MAP[safeOutput]; });
