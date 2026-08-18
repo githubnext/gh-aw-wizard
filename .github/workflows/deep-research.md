@@ -1,6 +1,7 @@
 ---
 name: deep-research
 description: Analyze agentic workflow trends and open PRs to improve the pattern library
+engine: copilot
 on:
   workflow_run:
     workflows: ["Weekly Scan"]
@@ -11,6 +12,10 @@ on:
   workflow_dispatch:
 safe-outputs:
   create-pull-request:
+permissions:
+  contents: write
+  pull-requests: write
+strict: true
 timeout-minutes: 30
 steps:
   - name: Run statistical analysis
