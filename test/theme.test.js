@@ -37,8 +37,10 @@ describe('resolveColorMode', () => {
 
 describe('themeCopy', () => {
   it('returns label and icon per mode', () => {
+    expect(themeCopy('auto').label).toBe('Auto theme');
     expect(themeCopy('light').label).toBe('Light theme');
     expect(themeCopy('dark').label).toBe('Dark theme');
+    expect(themeCopy('auto').icon).toBe('◐');
     expect(themeCopy('nope')).toEqual(themeCopy('auto'));
   });
 });

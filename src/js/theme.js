@@ -1,5 +1,6 @@
 // Theme toggling — keeps the Primer color mode in sync with the user preference.
 
+// Keep this key in sync with the inline theme bootstrap script in index.html.
 var THEME_STORAGE_KEY = 'gh-aw-wizard-theme';
 var THEME_MODES = ['auto', 'light', 'dark'];
 var THEME_COPY = {
