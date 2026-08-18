@@ -659,6 +659,7 @@ steps:
           });
         console.log(`    ${archetypeHealth.length} archetypes analyzed`);
 
+      # Split only for GitHub's 21 KB scalar limit; both parts run in one module scope.
       ANALYSIS_SCRIPT_2: |
         console.log('  [3/10] Engine analysis...');
         const engineStats = new Map();
