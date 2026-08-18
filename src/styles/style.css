@@ -310,7 +310,7 @@ a:hover {
   align-items: center;
   justify-content: center;
   padding: 0.65rem;
-  color: #ffffff;
+  color: var(--control-fg-on-emphasis, #ffffff);
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.06em;
