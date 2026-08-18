@@ -63,7 +63,11 @@
       </div>
       <div class="progress-step" data-step="5">
         <div class="step-indicator">5</div>
-        <div class="step-label">Review</div>
+        <div class="step-label">Agent</div>
+      </div>
+      <div class="progress-step" data-step="6">
+        <div class="step-indicator">6</div>
+        <div class="step-label">Preview</div>
       </div>
     </div>
 
@@ -282,15 +286,14 @@
       </div>
       <div class="step-nav">
         <button class="btn btn-secondary" id="prev-4">← Back</button>
-        <button class="btn btn-primary" id="next-4">Generate →</button>
+        <button class="btn btn-primary" id="next-4">Next →</button>
       </div>
     </section>
 
-    <!-- Step 5: Preview -->
+    <!-- Step 5: Agent -->
     <section class="wizard-step" id="step-5">
-      <h2 class="step-title">Preview &amp; Download</h2>
-      <p class="step-description">Choose how you want to use your workflow.</p>
-
+      <h2 class="step-title">Choose your agent</h2>
+      <p class="step-description">Select the agentic engine that will run your workflow.</p>
       <div class="engine-selector">
         <h3>Choose your agentic engine</h3>
         <div class="option-group" id="engine-options">
@@ -348,6 +351,17 @@
         </div>
       </div>
 
+      <div class="step-nav">
+        <button class="btn btn-secondary" id="prev-5">← Back</button>
+        <button class="btn btn-primary" id="next-5">Generate →</button>
+      </div>
+    </section>
+
+    <!-- Step 6: Preview -->
+    <section class="wizard-step" id="step-6">
+      <h2 class="step-title">Preview &amp; Download</h2>
+      <p class="step-description">Choose how you want to use your workflow.</p>
+
       <!-- Format toggle -->
       <div class="format-toggle" id="format-toggle">
         <button class="format-btn active" data-format="prompt" id="fmt-prompt">
@@ -377,7 +391,7 @@
       <div class="next-steps-panel" id="next-steps-panel"></div>
 
       <div class="step-nav">
-        <button class="btn btn-secondary" id="prev-5">← Back to edit</button>
+        <button class="btn btn-secondary" id="prev-6">← Back to edit</button>
         <div></div>
       </div>
     </section>
