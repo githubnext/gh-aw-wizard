@@ -10,6 +10,8 @@ on:
       - main
       - master
   workflow_dispatch:
+permissions:
+  copilot-requests: write
 safe-outputs:
   create-pull-request:
 strict: true
