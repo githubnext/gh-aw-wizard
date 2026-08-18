@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-color-mode="auto" data-light-theme="light" data-dark-theme="dark">
+<html lang="en" data-color-mode="light" data-theme-preference="auto" data-light-theme="light" data-dark-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +11,9 @@
         theme = localStorage.getItem('gh-aw-wizard-theme') || 'auto';
       } catch (e) {}
       if (['auto', 'light', 'dark'].indexOf(theme) === -1) theme = 'auto';
-      document.documentElement.setAttribute('data-color-mode', theme);
+      var systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.setAttribute('data-theme-preference', theme);
+      document.documentElement.setAttribute('data-color-mode', theme === 'auto' ? (systemDark ? 'dark' : 'light') : theme);
     })();
   </script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@primer/css@22.3.0/dist/primer.css">
@@ -30,7 +32,7 @@
       </div>
       <p class="subtitle">Create GitHub Copilot agentic workflow prompts in minutes</p>
       <div class="header-actions">
-        <button class="btn btn-sm theme-toggle" id="theme-toggle" type="button" aria-pressed="false">
+        <button class="btn btn-sm theme-toggle" id="theme-toggle" type="button">
           <span class="theme-toggle-icon" aria-hidden="true">◐</span>
           <span id="theme-toggle-label">Auto theme</span>
         </button>

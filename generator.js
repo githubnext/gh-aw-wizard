@@ -37,12 +37,24 @@
         // Ignore storage failures; the selected theme still applies for this page load.
       }
     });
+
+    if (window.matchMedia) {
+      var media = window.matchMedia('(prefers-color-scheme: dark)');
+      var updateAutoTheme = function () {
+        if (themeMode === 'auto') applyTheme('auto');
+      };
+      if (media.addEventListener) media.addEventListener('change', updateAutoTheme);
+      else if (media.addListener) media.addListener(updateAutoTheme);
+    }
   }
 
   function applyTheme(mode) {
     themeMode = mode;
-    document.documentElement.setAttribute('data-color-mode', mode);
-    document.documentElement.style.colorScheme = mode === 'auto' ? 'light dark' : mode;
+    var systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var colorMode = mode === 'auto' ? (systemDark ? 'dark' : 'light') : mode;
+    document.documentElement.setAttribute('data-theme-preference', mode);
+    document.documentElement.setAttribute('data-color-mode', colorMode);
+    document.documentElement.style.colorScheme = colorMode;
 
     var label = document.getElementById('theme-toggle-label');
     var toggle = document.getElementById('theme-toggle');
@@ -57,7 +69,6 @@
     if (icon) icon.textContent = state.icon;
     if (toggle) {
       toggle.setAttribute('aria-label', 'Theme: ' + state.label + '. Click to change.');
-      toggle.setAttribute('aria-pressed', mode !== 'auto');
     }
   }
 
