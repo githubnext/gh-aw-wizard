@@ -4,7 +4,6 @@ import { loadPatterns, getArchetype } from './patterns.js';
 import {
   workflowName,
   inferNeedsPreSteps,
-  generateWorkflowFile,
   generateAgentPrompt
 } from './workflow.js';
 import { highlightMarkdown } from './highlight.js';
@@ -13,9 +12,7 @@ import { initTheme } from './theme.js';
 
 var patterns = null;
 var currentStep = 1;
-var generatedMd = '';
 var generatedPrompt = '';
-var currentFormat = 'prompt';
 var TOTAL_STEPS = 5;
 
 export function initWizard() {
@@ -28,31 +25,18 @@ export function initWizard() {
 
 function generateAndShow() {
   refreshGeneratedContent();
-  currentFormat = 'prompt';
-  document.querySelectorAll('.format-btn').forEach(function (b) { b.classList.remove('active'); });
-  document.getElementById('fmt-prompt').classList.add('active');
   goToStep(6);
   showPreview(generatedPrompt);
   var answers = gatherAnswers();
   showNextSteps('prompt', workflowName(answers.archetype, answers.customDescription), answers.engine);
   document.getElementById('preview-filename').textContent = 'prompt.txt';
-  document.getElementById('btn-download').style.display = 'none';
 }
 
-function switchFormat(fmt) {
+function refreshPreview() {
   refreshGeneratedContent();
+  showPreview(generatedPrompt);
   var answers = gatherAnswers();
-  var name = workflowName(answers.archetype, answers.customDescription);
-  if (fmt === 'prompt') {
-    showPreview(generatedPrompt);
-    document.getElementById('preview-filename').textContent = 'prompt.txt';
-    document.getElementById('btn-download').style.display = 'none';
-  } else {
-    showPreview(generatedMd);
-    document.getElementById('preview-filename').textContent = name + '.md';
-    document.getElementById('btn-download').style.display = '';
-  }
-  showNextSteps(fmt, name, answers.engine);
+  showNextSteps('prompt', workflowName(answers.archetype, answers.customDescription), answers.engine);
 }
 
 function showNextSteps(format, name, engine) {
@@ -63,7 +47,6 @@ function showNextSteps(format, name, engine) {
 
 function refreshGeneratedContent() {
   var answers = gatherAnswers();
-  generatedMd = generateWorkflowFile(answers, patterns);
   generatedPrompt = generateAgentPrompt(answers, patterns);
 }
 
@@ -81,19 +64,6 @@ function bindNavigation() {
   document.getElementById('prev-6').addEventListener('click', function () { goToStep(5); });
 
   document.getElementById('btn-copy').addEventListener('click', copyToClipboard);
-  document.getElementById('btn-download').addEventListener('click', downloadFile);
-
-  // Format toggle
-  document.querySelectorAll('.format-btn').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var fmt = btn.getAttribute('data-format');
-      if (fmt === currentFormat) return;
-      currentFormat = fmt;
-      document.querySelectorAll('.format-btn').forEach(function (b) { b.classList.remove('active'); });
-      btn.classList.add('active');
-      switchFormat(fmt);
-    });
-  });
 
   // Clickable progress steps
   var steps = document.querySelectorAll('.progress-step');
@@ -203,7 +173,7 @@ function bindFormEvents() {
   document.querySelectorAll('input[name="engine"]').forEach(function (radio) {
     radio.addEventListener('change', function () {
       updateCardSelection('#engine-options', 'radio');
-      switchFormat(currentFormat);
+      if (currentStep === 6) refreshPreview();
     });
   });
   updateCardSelection('#engine-options', 'radio');
@@ -292,9 +262,9 @@ function showPreview(md) {
 }
 
 
-// ── Clipboard & download ───────────────────────────────────────────────────
+// ── Clipboard ──────────────────────────────────────────────────────────────
 function copyToClipboard() {
-  var text = currentFormat === 'prompt' ? generatedPrompt : generatedMd;
+  var text = generatedPrompt;
   navigator.clipboard.writeText(text).then(function () {
     showToast('Copied to clipboard!');
   }).catch(function () {
@@ -308,21 +278,6 @@ function copyToClipboard() {
     document.body.removeChild(ta);
     showToast('Copied to clipboard!');
   });
-}
-
-function downloadFile() {
-  var answers = gatherAnswers();
-  var name = workflowName(answers.archetype, answers.customDescription);
-  var blob = new Blob([generatedMd], { type: 'text/markdown' });
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url;
-  a.download = name + '.md';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  showToast('Downloaded ' + name + '.md');
 }
 
 function showToast(msg) {
