@@ -23,6 +23,7 @@
     } catch (e) {
       themeMode = 'auto';
     }
+    if (['auto', 'light', 'dark'].indexOf(themeMode) === -1) themeMode = 'auto';
     applyTheme(themeMode);
 
     var toggle = document.getElementById('theme-toggle');

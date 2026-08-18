@@ -6,7 +6,11 @@
   <title>GitHub Agentic Workflow Generator</title>
   <script>
     (function () {
-      var theme = localStorage.getItem('gh-aw-wizard-theme') || 'auto';
+      var theme = 'auto';
+      try {
+        theme = localStorage.getItem('gh-aw-wizard-theme') || 'auto';
+      } catch (e) {}
+      if (['auto', 'light', 'dark'].indexOf(theme) === -1) theme = 'auto';
       document.documentElement.setAttribute('data-color-mode', theme);
     })();
   </script>
