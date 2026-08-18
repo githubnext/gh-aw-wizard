@@ -222,7 +222,17 @@ describe('fencedBlock', () => {
     expect(block.endsWith('\n````')).toBe(true);
   });
 
+  it('widens the fence past longer nested runs', () => {
+    const block = fencedBlock('a\n````yaml\nb: 1\n````', 'markdown');
+    expect(block.startsWith('`````markdown\n')).toBe(true);
+    expect(block.endsWith('\n`````')).toBe(true);
+  });
+
   it('uses a three-backtick fence for plain content', () => {
     expect(fencedBlock('hello', 'markdown')).toBe('```markdown\nhello\n```');
+  });
+
+  it('trims trailing whitespace from the content', () => {
+    expect(fencedBlock('hello\n\n', 'markdown')).toBe('```markdown\nhello\n```');
   });
 });
