@@ -30,7 +30,7 @@ describe('getRecommendedConfiguration', () => {
           archetype: 'status-report',
           triggers: ['slash_command'],
           safe_outputs: ['create-issue'],
-          confidence_score: 0.95,
+          confidence_score: 0.1,
           total_runs: 400
         },
         {
@@ -58,9 +58,9 @@ describe('getRecommendedConfiguration', () => {
     };
 
     expect(getRecommendedConfiguration(patterns, 'status-report')).toEqual({
-      triggers: ['slash_command'],
-      outputs: ['new-issues'],
-      profile: patterns.configuration_profiles[0]
+      triggers: ['schedule', 'workflow_dispatch'],
+      outputs: ['new-issues', 'comments'],
+      profile: patterns.configuration_profiles[3]
     });
   });
 
