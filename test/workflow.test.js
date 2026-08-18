@@ -190,6 +190,7 @@ describe('generateAgentPrompt', () => {
     expect(prompt).toContain('when a new issue is opened, on manual dispatch');
     expect(prompt).toContain('add/remove labels, post comments on issues/PRs');
     expect(prompt).toContain('.github/workflows/issue-triage.md');
+    expect(prompt).toContain('Create a pull request with the generated agentic workflow files.');
   });
 
   it('mentions pre-steps, memory and project context when requested', () => {

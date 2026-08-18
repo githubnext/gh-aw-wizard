@@ -27,8 +27,10 @@ describe('nextStepsHtml', () => {
 
   it('renders coding agent instructions for the prompt format', () => {
     const html = nextStepsHtml('prompt', 'issue-triage');
-    expect(html).toContain('run it in your favorite agent');
+    expect(html).toContain('Open your favorite agent in your repository');
+    expect(html).toContain('Run this prompt');
     expect(html).not.toContain('Download the <code>.md</code> file');
+    expect(html).not.toContain('gh aw compile');
   });
 
   it('escapes the workflow name', () => {
