@@ -25,6 +25,7 @@
      id="path1-9"
      style="fill:#c06eff;fill-opacity:1;stroke:#c06eff;stroke-width:0.716786;stroke-dasharray:none;stroke-opacity:1" />
   <style>
+    #path1 { fill: #010409; }
     @media (prefers-color-scheme:dark) {
       #path1 { fill: #ffffff; }
     }
