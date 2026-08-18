@@ -46,8 +46,11 @@ describe('nextStepsHtml', () => {
   });
 
   it('renders setup links for additional supported engines', () => {
-    const html = nextStepsHtml('workflow', 'issue-triage', 'gemini');
-    expect(html).toContain('Set up the <strong>Gemini</strong> engine');
-    expect(html).toContain('reference/engines/#gemini');
+    const geminiHtml = nextStepsHtml('workflow', 'issue-triage', 'gemini');
+    const piHtml = nextStepsHtml('workflow', 'issue-triage', 'pi');
+    expect(geminiHtml).toContain('Set up the <strong>Gemini</strong> engine');
+    expect(geminiHtml).toContain('reference/engines/#gemini');
+    expect(piHtml).toContain('Set up the <strong>Pi</strong> engine');
+    expect(piHtml).toContain('reference/engines/#pi');
   });
 });

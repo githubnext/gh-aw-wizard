@@ -184,8 +184,10 @@ describe('generateWorkflowFile', () => {
   });
 
   it('accepts all supported built-in engines', () => {
-    const md = generateWorkflowFile(answers({ engine: 'gemini' }), patterns);
-    expect(md).toContain('engine: gemini\n');
+    const geminiMd = generateWorkflowFile(answers({ engine: 'gemini' }), patterns);
+    const piMd = generateWorkflowFile(answers({ engine: 'pi' }), patterns);
+    expect(geminiMd).toContain('engine: gemini\n');
+    expect(piMd).toContain('engine: pi\n');
   });
 
   it('deduplicates safe outputs', () => {
