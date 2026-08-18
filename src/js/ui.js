@@ -228,9 +228,10 @@ function bindFormEvents() {
 
 function openTaskDialog(archetypeId) {
   var archetype = getArchetype(patterns, archetypeId);
+  var selectedCard = document.querySelector('input[name="archetype"][value="' + archetypeId + '"]').closest('.option-card');
   var description = archetypeId === 'custom'
     ? ''
-    : (archetype && archetype.description) || '';
+    : (archetype && archetype.description) || selectedCard.querySelector('.option-desc').textContent.trim();
   document.getElementById('custom-description').value = description;
   document.getElementById('task-dialog-description').value = description;
   document.getElementById('next-1').disabled = !description;
