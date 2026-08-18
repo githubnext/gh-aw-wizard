@@ -94,7 +94,7 @@ function goToStep(n, options) {
   var next = document.getElementById('step-' + n);
   next.style.animation = 'none';
   next.offsetHeight; // reflow
-  next.style.animation = direction === 'forward' ? 'slideIn 0.3s ease' : 'slideInReverse 0.3s ease';
+  next.style.animation = direction === 'forward' ? 'accordionOpen 0.3s ease' : 'accordionOpenReverse 0.3s ease';
   next.classList.add('active');
   if (!skipHistory) {
     window.history.pushState({ step: n }, '');
@@ -128,12 +128,18 @@ function updateProgress(from, to) {
     var s = parseInt(el.getAttribute('data-step'));
     el.classList.remove('active', 'completed');
     el.removeAttribute('aria-current');
+    el.setAttribute('aria-expanded', s === to ? 'true' : 'false');
     if (s < to) el.classList.add('completed');
     else if (s === to) {
       el.classList.add('active');
       el.setAttribute('aria-current', 'step');
     }
     el.disabled = s > to;
+    var item = el.closest('.recipe-item');
+    if (item) {
+      item.classList.toggle('active', s === to);
+      item.classList.toggle('completed', s < to);
+    }
   });
   // Update checkmarks
   steps.forEach(function (el) {
@@ -375,6 +381,8 @@ function updateSummaryClause(id, clause) {
   var value = document.getElementById(id);
   value.textContent = clause.value;
   value.parentElement.classList.toggle('is-placeholder', !clause.complete);
+  var item = value.closest('.recipe-item');
+  if (item) item.classList.toggle('is-placeholder', !clause.complete);
 }
 
 // ── Preview rendering ──────────────────────────────────────────────────────

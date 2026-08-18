@@ -53,331 +53,341 @@
         </span>
       </div>
       <div class="recipe-clauses" id="progress-bar" aria-live="polite">
-        <button class="recipe-clause progress-step active is-placeholder" type="button" data-step="1" aria-current="step">
-          <span class="step-indicator" aria-hidden="true">1</span>
-          <span class="recipe-key recipe-key-what">What</span>
-          <span class="recipe-value" id="summary-purpose">choose what the agent should do</span>
-        </button>
-        <button class="recipe-clause progress-step is-placeholder" type="button" data-step="2" disabled>
-          <span class="step-indicator" aria-hidden="true">2</span>
-          <span class="recipe-key recipe-key-when">When</span>
-          <span class="recipe-value" id="summary-trigger">choose when it runs</span>
-        </button>
-        <button class="recipe-clause progress-step is-placeholder" type="button" data-step="3" disabled>
-          <span class="step-indicator" aria-hidden="true">3</span>
-          <span class="recipe-key recipe-key-where">Where</span>
-          <span class="recipe-value" id="summary-output">choose what it can write</span>
-        </button>
-        <button class="recipe-clause progress-step is-placeholder" type="button" data-step="4" disabled>
-          <span class="step-indicator" aria-hidden="true">4</span>
-          <span class="recipe-key recipe-key-how">How</span>
-          <span class="recipe-value" id="summary-context">choose how it works</span>
-        </button>
-        <button class="recipe-clause progress-step" type="button" data-step="5" disabled>
-          <span class="step-indicator" aria-hidden="true">5</span>
-          <span class="recipe-key recipe-key-agent">Agent</span>
-          <span class="recipe-value" id="summary-engine">Copilot</span>
-        </button>
-        <button class="recipe-clause progress-step" type="button" data-step="6" disabled>
-          <span class="step-indicator" aria-hidden="true">6</span>
-          <span class="recipe-key recipe-key-preview">Preview</span>
-          <span class="recipe-value">review and copy your generated prompt</span>
-        </button>
-      </div>
-    </section>
-
-    <!-- Step 1: Archetype -->
-    <section class="wizard-step active" id="step-1">
-      <h2 class="step-title">What should this workflow do?</h2>
-      <p class="step-description">Choose the type of agentic workflow you want to create.</p>
-      <div class="option-group archetype-grid" id="archetype-options">
-        <label class="option-card" data-value="pr-review">
-          <input type="radio" name="archetype" value="pr-review">
-          <div class="archetype-icon">👀</div>
-          <div class="option-info">
-            <div class="option-label">PR Review</div>
-            <div class="option-desc">Review PRs for quality and issues</div>
-          </div>
-        </label>
-        <label class="option-card" data-value="issue-triage">
-          <input type="radio" name="archetype" value="issue-triage">
-          <div class="archetype-icon">🏷️</div>
-          <div class="option-info">
-            <div class="option-label">Issue Triage</div>
-            <div class="option-desc">Classify and label new issues</div>
-          </div>
-        </label>
-        <label class="option-card" data-value="code-improvement">
-          <input type="radio" name="archetype" value="code-improvement">
-          <div class="archetype-icon">🔧</div>
-          <div class="option-info">
-            <div class="option-label">Code Improvement</div>
-            <div class="option-desc">Daily code quality improvements</div>
-          </div>
-        </label>
-        <label class="option-card" data-value="status-report">
-          <input type="radio" name="archetype" value="status-report">
-          <div class="archetype-icon">📊</div>
-          <div class="option-info">
-            <div class="option-label">Status Report</div>
-            <div class="option-desc">Periodic status/activity reports</div>
-          </div>
-        </label>
-        <label class="option-card" data-value="dependency-monitor">
-          <input type="radio" name="archetype" value="dependency-monitor">
-          <div class="archetype-icon">📦</div>
-          <div class="option-info">
-            <div class="option-label">Dependency Monitor</div>
-            <div class="option-desc">Track and update project dependencies</div>
-          </div>
-        </label>
-        <label class="option-card" data-value="documentation-updater">
-          <input type="radio" name="archetype" value="documentation-updater">
-          <div class="archetype-icon">📝</div>
-          <div class="option-info">
-            <div class="option-label">Documentation Updater</div>
-            <div class="option-desc">Keep docs accurate and up-to-date</div>
-          </div>
-        </label>
-        <label class="option-card" data-value="content-moderation">
-          <input type="radio" name="archetype" value="content-moderation">
-          <div class="archetype-icon">🛡️</div>
-          <div class="option-info">
-            <div class="option-label">Content Moderation</div>
-            <div class="option-desc">Check PRs/issues for spam or policy violations</div>
-          </div>
-        </label>
-        <label class="option-card" data-value="custom" style="grid-column: 1 / -1;">
-          <input type="radio" name="archetype" value="custom">
-          <div class="archetype-icon">⚡</div>
-          <div class="option-info">
-            <div class="option-label">Custom</div>
-            <div class="option-desc">Describe your own workflow — start from scratch</div>
-          </div>
-        </label>
-      </div>
-      <div class="conditional-field" id="custom-description-field">
-        <label for="custom-description">Describe what you want the workflow to do:</label>
-        <textarea class="text-area" id="custom-description" placeholder="e.g., Review pull requests for security vulnerabilities and leave comments on risky patterns…"></textarea>
-      </div>
-      <div class="step-nav">
-        <div></div>
-        <button class="btn btn-primary" id="next-1" disabled>Next →</button>
-      </div>
-    </section>
-
-    <!-- Step 2: Triggers -->
-    <section class="wizard-step" id="step-2">
-      <h2 class="step-title">What triggers it?</h2>
-      <p class="step-description">Select one or more events that start this workflow.</p>
-      <div class="option-group" id="trigger-options">
-        <label class="option-card">
-          <input type="checkbox" name="trigger" value="issues">
-          <div class="option-info">
-            <div class="option-label">New issue opened</div>
-            <div class="option-desc">Runs when an issue is created</div>
-          </div>
-        </label>
-        <label class="option-card">
-          <input type="checkbox" name="trigger" value="pull_request">
-          <div class="option-info">
-            <div class="option-label">Pull request opened</div>
-            <div class="option-desc">Runs when a PR is created</div>
-          </div>
-        </label>
-        <label class="option-card">
-          <input type="checkbox" name="trigger" value="schedule">
-          <div class="option-info">
-            <div class="option-label">On a schedule (daily/weekly)</div>
-            <div class="option-desc">Runs on a cron schedule</div>
-          </div>
-        </label>
-        <label class="option-card">
-          <input type="checkbox" name="trigger" value="workflow_dispatch">
-          <div class="option-info">
-            <div class="option-label">Manual dispatch</div>
-            <div class="option-desc">Triggered manually from the Actions tab</div>
-          </div>
-        </label>
-        <label class="option-card">
-          <input type="checkbox" name="trigger" value="slash_command">
-          <div class="option-info">
-            <div class="option-label">Slash command (/slash-command in comments)</div>
-            <div class="option-desc">Runs when a matching slash command is posted</div>
-          </div>
-        </label>
-        <label class="option-card">
-          <input type="checkbox" name="trigger" value="label_command">
-          <div class="option-info">
-            <div class="option-label">Label command (/label-command)</div>
-            <div class="option-desc">Runs when a matching label is added</div>
-          </div>
-        </label>
-        <label class="option-card">
-          <input type="checkbox" name="trigger" value="push">
-          <div class="option-info">
-            <div class="option-label">Push to branch</div>
-            <div class="option-desc">Runs when code is pushed</div>
-          </div>
-        </label>
-      </div>
-      <div class="step-nav">
-        <button class="btn btn-secondary" id="prev-2">← Back</button>
-        <button class="btn btn-primary" id="next-2" disabled>Next →</button>
-      </div>
-    </section>
-
-    <!-- Step 3: Outputs -->
-    <section class="wizard-step" id="step-3">
-      <h2 class="step-title">What can it write?</h2>
-      <p class="step-description">Select the actions the workflow is allowed to perform.</p>
-      <div class="option-group" id="output-options">
-        <label class="option-card">
-          <input type="checkbox" name="output" value="comments">
-          <div class="option-info">
-            <div class="option-label">Comments on issues/PRs</div>
-            <div class="option-desc">Post comments with analysis, feedback, or results</div>
-          </div>
-        </label>
-        <label class="option-card">
-          <input type="checkbox" name="output" value="labels">
-          <div class="option-info">
-            <div class="option-label">Labels</div>
-            <div class="option-desc">Add or remove labels on issues</div>
-          </div>
-        </label>
-        <label class="option-card">
-          <input type="checkbox" name="output" value="new-issues">
-          <div class="option-info">
-            <div class="option-label">New issues</div>
-            <div class="option-desc">Create new issues for tracking or reporting</div>
-          </div>
-        </label>
-        <label class="option-card">
-          <input type="checkbox" name="output" value="pull-requests">
-          <div class="option-info">
-            <div class="option-label">Pull requests</div>
-            <div class="option-desc">Open pull requests with code changes</div>
-          </div>
-        </label>
-      </div>
-      <div class="step-nav">
-        <button class="btn btn-secondary" id="prev-3">← Back</button>
-        <button class="btn btn-primary" id="next-3" disabled>Next →</button>
-      </div>
-    </section>
-
-    <!-- Step 4: Customize -->
-    <section class="wizard-step" id="step-4">
-      <h2 class="step-title">Any extra context?</h2>
-      <p class="step-description">Optional — add details to make the workflow fit your project. Leave blank for a solid default.</p>
-      <div class="option-group" id="data-options">
-        <label class="option-card">
-          <input type="checkbox" name="extra" value="memory">
-          <div class="option-info">
-            <div class="option-label">🧠 Remember across runs</div>
-            <div class="option-desc">Track trends and context between workflow executions</div>
-          </div>
-        </label>
-      </div>
-      <div class="customize-field">
-        <label for="data-description">Anything specific the workflow should know about your project?</label>
-        <textarea class="text-area" id="data-description" placeholder="e.g., We use a monorepo with packages in /packages/*, the main API is in /src/api/, we follow conventional commits…"></textarea>
-      </div>
-      <div class="step-nav">
-        <button class="btn btn-secondary" id="prev-4">← Back</button>
-        <button class="btn btn-primary" id="next-4">Next →</button>
-      </div>
-    </section>
-
-    <!-- Step 5: Agent -->
-    <section class="wizard-step" id="step-5">
-      <h2 class="step-title">Choose your agent</h2>
-      <p class="step-description">Select the agentic engine that will run your workflow.</p>
-      <div class="engine-selector">
-        <h3>Choose your agentic engine</h3>
-        <div class="option-group" id="engine-options">
-          <label class="option-card selected">
-            <input type="radio" name="engine" value="copilot" checked>
-            <div class="option-info">
-              <div class="option-label">Copilot (default)</div>
-              <div class="option-desc">
-                Quick docs: <a href="https://github.github.com/gh-aw/reference/engines/#copilot" target="_blank">Engine reference</a> ·
-                Setup: <a href="https://github.github.com/gh-aw/setup/quick-start/" target="_blank">Quick start</a>
-              </div>
+        <!-- Step 1: Archetype -->
+        <div class="recipe-item active is-placeholder">
+          <button class="recipe-clause progress-step active is-placeholder" type="button" data-step="1" aria-expanded="true" aria-controls="step-1" aria-current="step">
+            <span class="step-indicator" aria-hidden="true">1</span>
+            <span class="recipe-key recipe-key-what">What</span>
+            <span class="recipe-value" id="summary-purpose">choose what the agent should do</span>
+          </button>
+          <section class="wizard-step active" id="step-1">
+            <h2 class="step-title">What should this workflow do?</h2>
+            <p class="step-description">Choose the type of agentic workflow you want to create.</p>
+            <div class="option-group archetype-grid" id="archetype-options">
+              <label class="option-card" data-value="pr-review">
+                <input type="radio" name="archetype" value="pr-review">
+                <div class="archetype-icon">👀</div>
+                <div class="option-info">
+                  <div class="option-label">PR Review</div>
+                  <div class="option-desc">Review PRs for quality and issues</div>
+                </div>
+              </label>
+              <label class="option-card" data-value="issue-triage">
+                <input type="radio" name="archetype" value="issue-triage">
+                <div class="archetype-icon">🏷️</div>
+                <div class="option-info">
+                  <div class="option-label">Issue Triage</div>
+                  <div class="option-desc">Classify and label new issues</div>
+                </div>
+              </label>
+              <label class="option-card" data-value="code-improvement">
+                <input type="radio" name="archetype" value="code-improvement">
+                <div class="archetype-icon">🔧</div>
+                <div class="option-info">
+                  <div class="option-label">Code Improvement</div>
+                  <div class="option-desc">Daily code quality improvements</div>
+                </div>
+              </label>
+              <label class="option-card" data-value="status-report">
+                <input type="radio" name="archetype" value="status-report">
+                <div class="archetype-icon">📊</div>
+                <div class="option-info">
+                  <div class="option-label">Status Report</div>
+                  <div class="option-desc">Periodic status/activity reports</div>
+                </div>
+              </label>
+              <label class="option-card" data-value="dependency-monitor">
+                <input type="radio" name="archetype" value="dependency-monitor">
+                <div class="archetype-icon">📦</div>
+                <div class="option-info">
+                  <div class="option-label">Dependency Monitor</div>
+                  <div class="option-desc">Track and update project dependencies</div>
+                </div>
+              </label>
+              <label class="option-card" data-value="documentation-updater">
+                <input type="radio" name="archetype" value="documentation-updater">
+                <div class="archetype-icon">📝</div>
+                <div class="option-info">
+                  <div class="option-label">Documentation Updater</div>
+                  <div class="option-desc">Keep docs accurate and up-to-date</div>
+                </div>
+              </label>
+              <label class="option-card" data-value="content-moderation">
+                <input type="radio" name="archetype" value="content-moderation">
+                <div class="archetype-icon">🛡️</div>
+                <div class="option-info">
+                  <div class="option-label">Content Moderation</div>
+                  <div class="option-desc">Check PRs/issues for spam or policy violations</div>
+                </div>
+              </label>
+              <label class="option-card" data-value="custom" style="grid-column: 1 / -1;">
+                <input type="radio" name="archetype" value="custom">
+                <div class="archetype-icon">⚡</div>
+                <div class="option-info">
+                  <div class="option-label">Custom</div>
+                  <div class="option-desc">Describe your own workflow — start from scratch</div>
+                </div>
+              </label>
             </div>
-          </label>
-          <label class="option-card">
-            <input type="radio" name="engine" value="claude">
-            <div class="option-info">
-              <div class="option-label">Claude</div>
-              <div class="option-desc">
-                Quick docs: <a href="https://github.github.com/gh-aw/reference/engines/#claude" target="_blank">Engine reference</a> ·
-                Setup: <a href="https://github.github.com/gh-aw/setup/quick-start/" target="_blank">Quick start</a>
-              </div>
+            <div class="conditional-field" id="custom-description-field">
+              <label for="custom-description">Describe what you want the workflow to do:</label>
+              <textarea class="text-area" id="custom-description" placeholder="e.g., Review pull requests for security vulnerabilities and leave comments on risky patterns…"></textarea>
             </div>
-          </label>
-          <label class="option-card">
-            <input type="radio" name="engine" value="codex">
-            <div class="option-info">
-              <div class="option-label">Codex</div>
-              <div class="option-desc">
-                Lower success rate in sampled workflows. 
-                Quick docs: <a href="https://github.github.com/gh-aw/reference/engines/#codex" target="_blank">Engine reference</a> ·
-                Setup: <a href="https://github.github.com/gh-aw/setup/quick-start/" target="_blank">Quick start</a>
-              </div>
+            <div class="step-nav">
+              <div></div>
+              <button class="btn btn-primary" id="next-1" disabled>Next →</button>
             </div>
-          </label>
-          <label class="option-card">
-            <input type="radio" name="engine" value="gemini">
-            <div class="option-info">
-              <div class="option-label">Gemini</div>
-              <div class="option-desc">
-                Quick docs: <a href="https://github.github.com/gh-aw/reference/engines/#gemini" target="_blank">Engine reference</a> ·
-                Setup: <a href="https://github.github.com/gh-aw/setup/quick-start/" target="_blank">Quick start</a>
-              </div>
-            </div>
-          </label>
-          <label class="option-card">
-            <input type="radio" name="engine" value="pi">
-            <div class="option-info">
-              <div class="option-label">Pi</div>
-              <div class="option-desc">
-                Quick docs: <a href="https://github.github.com/gh-aw/reference/engines/#pi" target="_blank">Engine reference</a> ·
-                Setup: <a href="https://github.github.com/gh-aw/setup/quick-start/" target="_blank">Quick start</a>
-              </div>
-            </div>
-          </label>
+          </section>
         </div>
-      </div>
 
-      <div class="step-nav">
-        <button class="btn btn-secondary" id="prev-5">← Back</button>
-        <button class="btn btn-primary" id="next-5">Generate →</button>
-      </div>
-    </section>
-
-    <!-- Step 6: Preview -->
-    <section class="wizard-step" id="step-6">
-      <h2 class="step-title">Preview</h2>
-      <p class="step-description">Paste this prompt into Copilot, Claude, or Codex to create the workflow.</p>
-
-      <div class="preview-container">
-        <div class="preview-header">
-          <h3 id="preview-filename">prompt.txt</h3>
-          <div class="preview-actions">
-            <button class="btn btn-secondary btn-sm" id="btn-copy">📋 Copy</button>
-          </div>
+        <!-- Step 2: Triggers -->
+        <div class="recipe-item is-placeholder">
+          <button class="recipe-clause progress-step is-placeholder" type="button" data-step="2" aria-expanded="false" aria-controls="step-2" disabled>
+            <span class="step-indicator" aria-hidden="true">2</span>
+            <span class="recipe-key recipe-key-when">When</span>
+            <span class="recipe-value" id="summary-trigger">choose when it runs</span>
+          </button>
+          <section class="wizard-step" id="step-2">
+            <h2 class="step-title">What triggers it?</h2>
+            <p class="step-description">Select one or more events that start this workflow.</p>
+            <div class="option-group" id="trigger-options">
+              <label class="option-card">
+                <input type="checkbox" name="trigger" value="issues">
+                <div class="option-info">
+                  <div class="option-label">New issue opened</div>
+                  <div class="option-desc">Runs when an issue is created</div>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="checkbox" name="trigger" value="pull_request">
+                <div class="option-info">
+                  <div class="option-label">Pull request opened</div>
+                  <div class="option-desc">Runs when a PR is created</div>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="checkbox" name="trigger" value="schedule">
+                <div class="option-info">
+                  <div class="option-label">On a schedule (daily/weekly)</div>
+                  <div class="option-desc">Runs on a cron schedule</div>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="checkbox" name="trigger" value="workflow_dispatch">
+                <div class="option-info">
+                  <div class="option-label">Manual dispatch</div>
+                  <div class="option-desc">Triggered manually from the Actions tab</div>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="checkbox" name="trigger" value="slash_command">
+                <div class="option-info">
+                  <div class="option-label">Slash command (/slash-command in comments)</div>
+                  <div class="option-desc">Runs when a matching slash command is posted</div>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="checkbox" name="trigger" value="label_command">
+                <div class="option-info">
+                  <div class="option-label">Label command (/label-command)</div>
+                  <div class="option-desc">Runs when a matching label is added</div>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="checkbox" name="trigger" value="push">
+                <div class="option-info">
+                  <div class="option-label">Push to branch</div>
+                  <div class="option-desc">Runs when code is pushed</div>
+                </div>
+              </label>
+            </div>
+            <div class="step-nav">
+              <button class="btn btn-secondary" id="prev-2">← Back</button>
+              <button class="btn btn-primary" id="next-2" disabled>Next →</button>
+            </div>
+          </section>
         </div>
-        <div class="preview-code" id="preview-code"></div>
-      </div>
 
-      <!-- Next steps -->
-      <div class="next-steps-panel" id="next-steps-panel"></div>
+        <!-- Step 3: Outputs -->
+        <div class="recipe-item is-placeholder">
+          <button class="recipe-clause progress-step is-placeholder" type="button" data-step="3" aria-expanded="false" aria-controls="step-3" disabled>
+            <span class="step-indicator" aria-hidden="true">3</span>
+            <span class="recipe-key recipe-key-where">Where</span>
+            <span class="recipe-value" id="summary-output">choose what it can write</span>
+          </button>
+          <section class="wizard-step" id="step-3">
+            <h2 class="step-title">What can it write?</h2>
+            <p class="step-description">Select the actions the workflow is allowed to perform.</p>
+            <div class="option-group" id="output-options">
+              <label class="option-card">
+                <input type="checkbox" name="output" value="comments">
+                <div class="option-info">
+                  <div class="option-label">Comments on issues/PRs</div>
+                  <div class="option-desc">Post comments with analysis, feedback, or results</div>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="checkbox" name="output" value="labels">
+                <div class="option-info">
+                  <div class="option-label">Labels</div>
+                  <div class="option-desc">Add or remove labels on issues</div>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="checkbox" name="output" value="new-issues">
+                <div class="option-info">
+                  <div class="option-label">New issues</div>
+                  <div class="option-desc">Create new issues for tracking or reporting</div>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="checkbox" name="output" value="pull-requests">
+                <div class="option-info">
+                  <div class="option-label">Pull requests</div>
+                  <div class="option-desc">Open pull requests with code changes</div>
+                </div>
+              </label>
+            </div>
+            <div class="step-nav">
+              <button class="btn btn-secondary" id="prev-3">← Back</button>
+              <button class="btn btn-primary" id="next-3" disabled>Next →</button>
+            </div>
+          </section>
+        </div>
 
-      <div class="step-nav">
-        <button class="btn btn-secondary" id="prev-6">← Back to edit</button>
-        <div></div>
+        <!-- Step 4: Customize -->
+        <div class="recipe-item is-placeholder">
+          <button class="recipe-clause progress-step is-placeholder" type="button" data-step="4" aria-expanded="false" aria-controls="step-4" disabled>
+            <span class="step-indicator" aria-hidden="true">4</span>
+            <span class="recipe-key recipe-key-how">How</span>
+            <span class="recipe-value" id="summary-context">choose how it works</span>
+          </button>
+          <section class="wizard-step" id="step-4">
+            <h2 class="step-title">Any extra context?</h2>
+            <p class="step-description">Optional — add details to make the workflow fit your project. Leave blank for a solid default.</p>
+            <div class="option-group" id="data-options">
+              <label class="option-card">
+                <input type="checkbox" name="extra" value="memory">
+                <div class="option-info">
+                  <div class="option-label">🧠 Remember across runs</div>
+                  <div class="option-desc">Track trends and context between workflow executions</div>
+                </div>
+              </label>
+            </div>
+            <div class="customize-field">
+              <label for="data-description">Anything specific the workflow should know about your project?</label>
+              <textarea class="text-area" id="data-description" placeholder="e.g., We use a monorepo with packages in /packages/*, the main API is in /src/api/, we follow conventional commits…"></textarea>
+            </div>
+            <div class="step-nav">
+              <button class="btn btn-secondary" id="prev-4">← Back</button>
+              <button class="btn btn-primary" id="next-4">Next →</button>
+            </div>
+          </section>
+        </div>
+
+        <!-- Step 5: Agent -->
+        <div class="recipe-item">
+          <button class="recipe-clause progress-step" type="button" data-step="5" aria-expanded="false" aria-controls="step-5" disabled>
+            <span class="step-indicator" aria-hidden="true">5</span>
+            <span class="recipe-key recipe-key-agent">Agent</span>
+            <span class="recipe-value" id="summary-engine">Copilot</span>
+          </button>
+          <section class="wizard-step" id="step-5">
+            <h2 class="step-title">Choose your agent</h2>
+            <p class="step-description">Select the agentic engine that will run your workflow.</p>
+            <div class="engine-selector">
+              <div class="option-group" id="engine-options">
+                <label class="option-card selected">
+                  <input type="radio" name="engine" value="copilot" checked>
+                  <div class="option-info">
+                    <div class="option-label">Copilot (default)</div>
+                    <div class="option-desc">
+                      Quick docs: <a href="https://github.github.com/gh-aw/reference/engines/#copilot" target="_blank">Engine reference</a> ·
+                      Setup: <a href="https://github.github.com/gh-aw/setup/quick-start/" target="_blank">Quick start</a>
+                    </div>
+                  </div>
+                </label>
+                <label class="option-card">
+                  <input type="radio" name="engine" value="claude">
+                  <div class="option-info">
+                    <div class="option-label">Claude</div>
+                    <div class="option-desc">
+                      Quick docs: <a href="https://github.github.com/gh-aw/reference/engines/#claude" target="_blank">Engine reference</a> ·
+                      Setup: <a href="https://github.github.com/gh-aw/setup/quick-start/" target="_blank">Quick start</a>
+                    </div>
+                  </div>
+                </label>
+                <label class="option-card">
+                  <input type="radio" name="engine" value="codex">
+                  <div class="option-info">
+                    <div class="option-label">Codex</div>
+                    <div class="option-desc">
+                      Lower success rate in sampled workflows. 
+                      Quick docs: <a href="https://github.github.com/gh-aw/reference/engines/#codex" target="_blank">Engine reference</a> ·
+                      Setup: <a href="https://github.github.com/gh-aw/setup/quick-start/" target="_blank">Quick start</a>
+                    </div>
+                  </div>
+                </label>
+                <label class="option-card">
+                  <input type="radio" name="engine" value="gemini">
+                  <div class="option-info">
+                    <div class="option-label">Gemini</div>
+                    <div class="option-desc">
+                      Quick docs: <a href="https://github.github.com/gh-aw/reference/engines/#gemini" target="_blank">Engine reference</a> ·
+                      Setup: <a href="https://github.github.com/gh-aw/setup/quick-start/" target="_blank">Quick start</a>
+                    </div>
+                  </div>
+                </label>
+                <label class="option-card">
+                  <input type="radio" name="engine" value="pi">
+                  <div class="option-info">
+                    <div class="option-label">Pi</div>
+                    <div class="option-desc">
+                      Quick docs: <a href="https://github.github.com/gh-aw/reference/engines/#pi" target="_blank">Engine reference</a> ·
+                      Setup: <a href="https://github.github.com/gh-aw/setup/quick-start/" target="_blank">Quick start</a>
+                    </div>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <div class="step-nav">
+              <button class="btn btn-secondary" id="prev-5">← Back</button>
+              <button class="btn btn-primary" id="next-5">Generate →</button>
+            </div>
+          </section>
+        </div>
+
+        <!-- Step 6: Preview -->
+        <div class="recipe-item">
+          <button class="recipe-clause progress-step" type="button" data-step="6" aria-expanded="false" aria-controls="step-6" disabled>
+            <span class="step-indicator" aria-hidden="true">6</span>
+            <span class="recipe-key recipe-key-preview">Preview</span>
+            <span class="recipe-value">review and copy your generated prompt</span>
+          </button>
+          <section class="wizard-step" id="step-6">
+            <h2 class="step-title">Preview</h2>
+            <p class="step-description">Paste this prompt into Copilot, Claude, or Codex to create the workflow.</p>
+
+            <div class="preview-container">
+              <div class="preview-header">
+                <h3 id="preview-filename">prompt.txt</h3>
+                <div class="preview-actions">
+                  <button class="btn btn-secondary btn-sm" id="btn-copy">📋 Copy</button>
+                </div>
+              </div>
+              <div class="preview-code" id="preview-code"></div>
+            </div>
+
+            <!-- Next steps -->
+            <div class="next-steps-panel" id="next-steps-panel"></div>
+
+            <div class="step-nav">
+              <button class="btn btn-secondary" id="prev-6">← Back to edit</button>
+              <div></div>
+            </div>
+          </section>
+        </div>
       </div>
     </section>
   </main>
