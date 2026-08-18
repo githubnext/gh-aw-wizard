@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Agentic Workflow Generator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="gradient-bar"></div>
+  <header class="site-header">
+    <div class="container">
+      <div class="header-title">
+        <svg class="header-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L14.09 8.26L20 9.27L15.55 13.97L16.91 20L12 16.9L7.09 20L8.45 13.97L4 9.27L9.91 8.26L12 2Z" fill="url(#sparkle-grad)" opacity="0.9"/>
+          <defs><linearGradient id="sparkle-grad" x1="4" y1="2" x2="20" y2="20"><stop offset="0%" stop-color="#58a6ff"/><stop offset="100%" stop-color="#bc8cff"/></linearGradient></defs>
+        </svg>
+        <h1>GitHub Agentic Workflow Generator</h1>
+      </div>
+      <p class="subtitle">Create GitHub Copilot agentic workflow prompts in minutes</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Progress bar -->
+    <div class="progress-bar" id="progress-bar">
+      <div class="progress-step active" data-step="1">
+        <div class="step-indicator">1</div>
+        <div class="step-label">Archetype</div>
+      </div>
+      <div class="progress-step" data-step="2">
+        <div class="step-indicator">2</div>
+        <div class="step-label">Triggers</div>
+      </div>
+      <div class="progress-step" data-step="3">
+        <div class="step-indicator">3</div>
+        <div class="step-label">Outputs</div>
+      </div>
+      <div class="progress-step" data-step="4">
+        <div class="step-indicator">4</div>
+        <div class="step-label">Customize</div>
+      </div>
+      <div class="progress-step" data-step="5">
+        <div class="step-indicator">5</div>
+        <div class="step-label">Preview</div>
+      </div>
+    </div>
+
+    <!-- Step 1: Archetype -->
+    <section class="wizard-step active" id="step-1">
+      <h2 class="step-title">What should this workflow do?</h2>
+      <p class="step-description">Choose the type of agentic workflow you want to create.</p>
+      <div class="option-group archetype-grid" id="archetype-options">
+        <label class="option-card" data-value="issue-triage">
+          <input type="radio" name="archetype" value="issue-triage">
+          <div class="archetype-icon">🏷️</div>
+          <div class="option-info">
+            <div class="option-label">Issue Triage</div>
+            <div class="option-desc">Classify and label new issues</div>
+          </div>
+        </label>
+        <label class="option-card" data-value="code-improvement">
+          <input type="radio" name="archetype" value="code-improvement">
+          <div class="archetype-icon">🔧</div>
+          <div class="option-info">
+            <div class="option-label">Code Improvement</div>
+            <div class="option-desc">Daily code quality improvements</div>
+          </div>
+        </label>
+        <label class="option-card" data-value="status-report">
+          <input type="radio" name="archetype" value="status-report">
+          <div class="archetype-icon">📊</div>
+          <div class="option-info">
+            <div class="option-label">Status Report</div>
+            <div class="option-desc">Periodic status/activity reports</div>
+          </div>
+        </label>
+        <label class="option-card" data-value="upstream-monitor">
+          <input type="radio" name="archetype" value="upstream-monitor">
+          <div class="archetype-icon">🔭</div>
+          <div class="option-info">
+            <div class="option-label">Upstream Monitor</div>
+            <div class="option-desc">Track upstream deps and sync changes</div>
+          </div>
+        </label>
+        <label class="option-card" data-value="dependency-monitor">
+          <input type="radio" name="archetype" value="dependency-monitor">
+          <div class="archetype-icon">📦</div>
+          <div class="option-info">
+            <div class="option-label">Dependency Monitor</div>
+            <div class="option-desc">Track and update project dependencies</div>
+          </div>
+        </label>
+        <label class="option-card" data-value="pr-review">
+          <input type="radio" name="archetype" value="pr-review">
+          <div class="archetype-icon">👀</div>
+          <div class="option-info">
+            <div class="option-label">PR Review</div>
+            <div class="option-desc">Review PRs for quality and issues</div>
+          </div>
+        </label>
+        <label class="option-card" data-value="documentation-updater">
+          <input type="radio" name="archetype" value="documentation-updater">
+          <div class="archetype-icon">📝</div>
+          <div class="option-info">
+            <div class="option-label">Documentation Updater</div>
+            <div class="option-desc">Keep docs accurate and up-to-date</div>
+          </div>
+        </label>
+        <label class="option-card" data-value="content-moderation">
+          <input type="radio" name="archetype" value="content-moderation">
+          <div class="archetype-icon">🛡️</div>
+          <div class="option-info">
+            <div class="option-label">Content Moderation</div>
+            <div class="option-desc">Check PRs/issues for spam or policy violations</div>
+          </div>
+        </label>
+        <label class="option-card" data-value="custom" style="grid-column: 1 / -1;">
+          <input type="radio" name="archetype" value="custom">
+          <div class="archetype-icon">⚡</div>
+          <div class="option-info">
+            <div class="option-label">Custom</div>
+            <div class="option-desc">Describe your own workflow — start from scratch</div>
+          </div>
+        </label>
+      </div>
+      <div class="conditional-field" id="custom-description-field">
+        <label for="custom-description">Describe what you want the workflow to do:</label>
+        <textarea class="text-area" id="custom-description" placeholder="e.g., Review pull requests for security vulnerabilities and leave comments on risky patterns…"></textarea>
+      </div>
+      <div class="step-nav">
+        <div></div>
+        <button class="btn btn-primary" id="next-1" disabled>Next →</button>
+      </div>
+    </section>
+
+    <!-- Step 2: Triggers -->
+    <section class="wizard-step" id="step-2">
+      <h2 class="step-title">What triggers it?</h2>
+      <p class="step-description">Select one or more events that start this workflow.</p>
+      <div class="option-group" id="trigger-options">
+        <label class="option-card">
+          <input type="checkbox" name="trigger" value="issues">
+          <div class="option-info">
+            <div class="option-label">New issue opened</div>
+            <div class="option-desc">Runs when an issue is created</div>
+          </div>
+        </label>
+        <label class="option-card">
+          <input type="checkbox" name="trigger" value="pull_request">
+          <div class="option-info">
+            <div class="option-label">Pull request opened</div>
+            <div class="option-desc">Runs when a PR is created</div>
+          </div>
+        </label>
+        <label class="option-card">
+          <input type="checkbox" name="trigger" value="schedule">
+          <div class="option-info">
+            <div class="option-label">On a schedule (daily/weekly)</div>
+            <div class="option-desc">Runs on a cron schedule</div>
+          </div>
+        </label>
+        <label class="option-card">
+          <input type="checkbox" name="trigger" value="workflow_dispatch">
+          <div class="option-info">
+            <div class="option-label">Manual dispatch</div>
+            <div class="option-desc">Triggered manually from the Actions tab</div>
+          </div>
+        </label>
+        <label class="option-card">
+          <input type="checkbox" name="trigger" value="issue_comment">
+          <div class="option-info">
+            <div class="option-label">Slash command (/command in comments)</div>
+            <div class="option-desc">Runs when a specific comment is posted</div>
+          </div>
+        </label>
+        <label class="option-card">
+          <input type="checkbox" name="trigger" value="push">
+          <div class="option-info">
+            <div class="option-label">Push to branch</div>
+            <div class="option-desc">Runs when code is pushed</div>
+          </div>
+        </label>
+      </div>
+      <div class="step-nav">
+        <button class="btn btn-secondary" id="prev-2">← Back</button>
+        <button class="btn btn-primary" id="next-2" disabled>Next →</button>
+      </div>
+    </section>
+
+    <!-- Step 3: Outputs -->
+    <section class="wizard-step" id="step-3">
+      <h2 class="step-title">What can it write?</h2>
+      <p class="step-description">Select the actions the workflow is allowed to perform.</p>
+      <div class="option-group" id="output-options">
+        <label class="option-card">
+          <input type="checkbox" name="output" value="comments">
+          <div class="option-info">
+            <div class="option-label">Comments on issues/PRs</div>
+            <div class="option-desc">Post comments with analysis, feedback, or results</div>
+          </div>
+        </label>
+        <label class="option-card">
+          <input type="checkbox" name="output" value="labels">
+          <div class="option-info">
+            <div class="option-label">Labels</div>
+            <div class="option-desc">Add or remove labels on issues</div>
+          </div>
+        </label>
+        <label class="option-card">
+          <input type="checkbox" name="output" value="new-issues">
+          <div class="option-info">
+            <div class="option-label">New issues</div>
+            <div class="option-desc">Create new issues for tracking or reporting</div>
+          </div>
+        </label>
+        <label class="option-card">
+          <input type="checkbox" name="output" value="pull-requests">
+          <div class="option-info">
+            <div class="option-label">Pull requests</div>
+            <div class="option-desc">Open pull requests with code changes</div>
+          </div>
+        </label>
+        <label class="option-card">
+          <input type="checkbox" name="output" value="commits">
+          <div class="option-info">
+            <div class="option-label">Commits to branches</div>
+            <div class="option-desc">Commit file changes directly to a branch</div>
+          </div>
+        </label>
+      </div>
+      <div class="step-nav">
+        <button class="btn btn-secondary" id="prev-3">← Back</button>
+        <button class="btn btn-primary" id="next-3" disabled>Next →</button>
+      </div>
+    </section>
+
+    <!-- Step 4: Customize -->
+    <section class="wizard-step" id="step-4">
+      <h2 class="step-title">Any extra context?</h2>
+      <p class="step-description">Optional — add details to make the workflow fit your project. Leave blank for a solid default.</p>
+      <div class="option-group" id="data-options">
+        <label class="option-card">
+          <input type="checkbox" name="extra" value="memory">
+          <div class="option-info">
+            <div class="option-label">🧠 Remember across runs</div>
+            <div class="option-desc">Track trends and context between workflow executions</div>
+          </div>
+        </label>
+      </div>
+      <div class="customize-field">
+        <label for="data-description">Anything specific the workflow should know about your project?</label>
+        <textarea class="text-area" id="data-description" placeholder="e.g., We use a monorepo with packages in /packages/*, the main API is in /src/api/, we follow conventional commits…"></textarea>
+      </div>
+      <div class="step-nav">
+        <button class="btn btn-secondary" id="prev-4">← Back</button>
+        <button class="btn btn-primary" id="next-4">Generate →</button>
+      </div>
+    </section>
+
+    <!-- Step 5: Preview -->
+    <section class="wizard-step" id="step-5">
+      <h2 class="step-title">Preview &amp; Download</h2>
+      <p class="step-description">Choose how you want to use your workflow.</p>
+
+      <!-- Format toggle -->
+      <div class="format-toggle" id="format-toggle">
+        <button class="format-btn active" data-format="workflow" id="fmt-workflow">
+          <span class="format-icon">📄</span>
+          <span class="format-label">Workflow file</span>
+          <span class="format-desc">Ready-to-use <code>.md</code> file for GitHub Actions</span>
+        </button>
+        <button class="format-btn" data-format="prompt" id="fmt-prompt">
+          <span class="format-icon">💬</span>
+          <span class="format-label">Coding agent prompt</span>
+          <span class="format-desc">Paste into Copilot, Claude, or Codex to create the workflow</span>
+        </button>
+      </div>
+
+      <div class="preview-container">
+        <div class="preview-header">
+          <h3 id="preview-filename">workflow.md</h3>
+          <div class="preview-actions">
+            <button class="btn btn-secondary btn-sm" id="btn-copy">📋 Copy</button>
+            <button class="btn btn-primary btn-sm" id="btn-download">⬇ Download .md</button>
+          </div>
+        </div>
+        <div class="preview-code" id="preview-code"></div>
+      </div>
+
+      <!-- Next steps -->
+      <div class="next-steps-panel" id="next-steps-panel"></div>
+
+      <div class="step-nav">
+        <button class="btn btn-secondary" id="prev-5">← Back to edit</button>
+        <div></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Anti-Patterns Reference -->
+  <section class="anti-patterns-section" id="anti-patterns">
+    <div class="container">
+      <h2 class="section-title">⚠️ Anti-Patterns & Lessons Learned</h2>
+      <p class="section-subtitle">Based on analysis of 679 workflows × 4,888 runs. Avoid these patterns to improve workflow reliability.</p>
+
+      <div class="anti-pattern-grid">
+        <div class="anti-pattern-card critical">
+          <div class="ap-header">
+            <span class="ap-severity">🔴 Critical</span>
+            <span class="ap-rate">0–2% success</span>
+          </div>
+          <h3>slash_command trigger</h3>
+          <p>The <code>slash_command</code> trigger has a near-zero success rate across all combos (n=204). It is effectively broken.</p>
+          <div class="ap-fix">
+            <strong>Fix:</strong> Remove <code>slash_command</code>. Use <code>issues + workflow_dispatch</code> instead for user-initiated workflows.
+          </div>
+        </div>
+
+        <div class="anti-pattern-card critical">
+          <div class="ap-header">
+            <span class="ap-severity">🔴 Critical</span>
+            <span class="ap-rate">13% success</span>
+          </div>
+          <h3>workflow_run chaining</h3>
+          <p>Using <code>workflow_run</code> as the sole trigger results in 13% success (n=76). Chain-of-workflow patterns are fragile.</p>
+          <div class="ap-fix">
+            <strong>Fix:</strong> Use <code>schedule + workflow_dispatch</code> with pre-steps for data gathering instead of workflow chaining.
+          </div>
+        </div>
+
+        <div class="anti-pattern-card high">
+          <div class="ap-header">
+            <span class="ap-severity">🟡 High</span>
+            <span class="ap-rate">47% vs 67%</span>
+          </div>
+          <h3>codex model selection</h3>
+          <p>The <code>codex</code> model has a 47% success rate vs 67% for the default model. Use default unless you specifically need code generation.</p>
+          <div class="ap-fix">
+            <strong>Fix:</strong> Remove <code>model: codex</code>. For complex synthesis, use <code>claude-opus-4.5</code> instead.
+          </div>
+        </div>
+
+        <div class="anti-pattern-card high">
+          <div class="ap-header">
+            <span class="ap-severity">🟡 High</span>
+            <span class="ap-rate">−21pp success</span>
+          </div>
+          <h3>Missing workflow_dispatch</h3>
+          <p>Workflows without <code>workflow_dispatch</code> have 21 percentage points lower success (n=3,476 vs n=1,412). Also blocks manual re-runs for debugging.</p>
+          <div class="ap-fix">
+            <strong>Fix:</strong> Always add <code>workflow_dispatch:</code> to your trigger config.
+          </div>
+        </div>
+
+        <div class="anti-pattern-card medium">
+          <div class="ap-header">
+            <span class="ap-severity">🟠 Medium</span>
+            <span class="ap-rate">32% prevalence</span>
+          </div>
+          <h3>Template cloning without adaptation</h3>
+          <p>32% of all workflows are unmodified template copies. Copied workflows have lower success because permissions, context, and timeouts don't match the target repo.</p>
+          <div class="ap-fix">
+            <strong>Fix:</strong> After copying a template, customize triggers, timeout, safe-outputs, and all repo-specific references.
+          </div>
+        </div>
+
+        <div class="anti-pattern-card medium">
+          <div class="ap-header">
+            <span class="ap-severity">🟠 Medium</span>
+            <span class="ap-rate">Context overflow</span>
+          </div>
+          <h3>Oversized prompt on default model</h3>
+          <p>Prompts exceeding 30KB on the default model risk context limits and degraded performance. The sweet spot is 3–8KB.</p>
+          <div class="ap-fix">
+            <strong>Fix:</strong> Split into multiple workflows, or upgrade to <code>claude-opus-4.5</code> for prompts &gt;20KB.
+          </div>
+        </div>
+      </div>
+
+      <div class="ap-data-source">
+        📊 Data: <a href="https://github.com/githubnext/gh-aw-wizard/blob/main/data/analysis-report.json">analysis-report.json</a> ·
+        📖 Full guide: <a href="https://github.com/github/ospo-aw/blob/main/docs/agentic-workflow-best-practices.md">Best Practices</a> ·
+        🔬 Research: <a href="https://github.com/github/ospo-aw/issues/885">Issue #885</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      Built from real-world analysis of GitHub Copilot agentic workflows.<br>
+      <a href="https://github.com/githubnext/gh-aw-wizard">View source</a> · <a href="https://github.com/githubnext/gh-aw-wizard/issues">Report an issue</a>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+  <script src="generator.js"></script>
+</body>
+</html>

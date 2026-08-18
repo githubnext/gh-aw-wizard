@@ -1,0 +1,997 @@
+{
+  "generated_at": "2026-02-21T07:49:06.248334+00:00",
+  "dataset": {
+    "repos": 269,
+    "workflows": 679,
+    "with_runs": 657,
+    "total_runs_analyzed": 4888
+  },
+  "trigger_analysis": {
+    "combos": [
+      {
+        "combo": "issues+schedule+workflow_dispatch",
+        "success_rate": 0.761,
+        "successes": 1186,
+        "total_runs": 1559,
+        "n_workflows": 97,
+        "risk": "low"
+      },
+      {
+        "combo": "schedule+workflow_dispatch",
+        "success_rate": 0.747,
+        "successes": 378,
+        "total_runs": 506,
+        "n_workflows": 57,
+        "risk": "low"
+      },
+      {
+        "combo": "issues+workflow_dispatch",
+        "success_rate": 0.612,
+        "successes": 156,
+        "total_runs": 255,
+        "n_workflows": 21,
+        "risk": "low"
+      },
+      {
+        "combo": "pull_request",
+        "success_rate": 0.498,
+        "successes": 120,
+        "total_runs": 241,
+        "n_workflows": 24,
+        "risk": "medium"
+      },
+      {
+        "combo": "discussion+issues+schedule+workflow_dispatch",
+        "success_rate": 0.812,
+        "successes": 190,
+        "total_runs": 234,
+        "n_workflows": 10,
+        "risk": "low"
+      },
+      {
+        "combo": "issues",
+        "success_rate": 0.643,
+        "successes": 148,
+        "total_runs": 230,
+        "n_workflows": 33,
+        "risk": "low"
+      },
+      {
+        "combo": "issues+schedule",
+        "success_rate": 0.81,
+        "successes": 162,
+        "total_runs": 200,
+        "n_workflows": 27,
+        "risk": "low"
+      },
+      {
+        "combo": "issues+pull_request+workflow_dispatch",
+        "success_rate": 0.511,
+        "successes": 72,
+        "total_runs": 141,
+        "n_workflows": 9,
+        "risk": "medium"
+      },
+      {
+        "combo": "issues+pull_request+schedule+workflow_dispatch",
+        "success_rate": 0.548,
+        "successes": 57,
+        "total_runs": 104,
+        "n_workflows": 8,
+        "risk": "medium"
+      },
+      {
+        "combo": "push+workflow_dispatch",
+        "success_rate": 0.815,
+        "successes": 75,
+        "total_runs": 92,
+        "n_workflows": 14,
+        "risk": "low"
+      },
+      {
+        "combo": "discussion+issues+slash_command",
+        "success_rate": 0.011,
+        "successes": 1,
+        "total_runs": 90,
+        "n_workflows": 6,
+        "risk": "high"
+      },
+      {
+        "combo": "issues+pull_request",
+        "success_rate": 0.476,
+        "successes": 40,
+        "total_runs": 84,
+        "n_workflows": 11,
+        "risk": "medium"
+      },
+      {
+        "combo": "discussion+issues+pull_request+schedule+workflow_dispatch",
+        "success_rate": 0.25,
+        "successes": 20,
+        "total_runs": 80,
+        "n_workflows": 4,
+        "risk": "high"
+      },
+      {
+        "combo": "workflow_run",
+        "success_rate": 0.158,
+        "successes": 12,
+        "total_runs": 76,
+        "n_workflows": 11,
+        "risk": "high"
+      },
+      {
+        "combo": "issues+slash_command",
+        "success_rate": 0.013,
+        "successes": 1,
+        "total_runs": 76,
+        "n_workflows": 8,
+        "risk": "high"
+      },
+      {
+        "combo": "discussion+schedule+workflow_dispatch",
+        "success_rate": 0.58,
+        "successes": 40,
+        "total_runs": 69,
+        "n_workflows": 9,
+        "risk": "medium"
+      },
+      {
+        "combo": "discussion+issues",
+        "success_rate": 0.731,
+        "successes": 49,
+        "total_runs": 67,
+        "n_workflows": 4,
+        "risk": "low"
+      },
+      {
+        "combo": "workflow_dispatch",
+        "success_rate": 0.967,
+        "successes": 59,
+        "total_runs": 61,
+        "n_workflows": 10,
+        "risk": "low"
+      },
+      {
+        "combo": "push+slash_command",
+        "success_rate": 0.017,
+        "successes": 1,
+        "total_runs": 58,
+        "n_workflows": 6,
+        "risk": "high"
+      },
+      {
+        "combo": "issues+push+workflow_dispatch",
+        "success_rate": 0.796,
+        "successes": 43,
+        "total_runs": 54,
+        "n_workflows": 7,
+        "risk": "low"
+      },
+      {
+        "combo": "issues+pull_request+push+workflow_dispatch",
+        "success_rate": 0.76,
+        "successes": 38,
+        "total_runs": 50,
+        "n_workflows": 2,
+        "risk": "low"
+      },
+      {
+        "combo": "slash_command",
+        "success_rate": 0.0,
+        "successes": 0,
+        "total_runs": 38,
+        "n_workflows": 3,
+        "risk": "high"
+      },
+      {
+        "combo": "pull_request+schedule+workflow_dispatch",
+        "success_rate": 0.571,
+        "successes": 20,
+        "total_runs": 35,
+        "n_workflows": 3,
+        "risk": "medium"
+      },
+      {
+        "combo": "issues+workflow_run",
+        "success_rate": 0.265,
+        "successes": 9,
+        "total_runs": 34,
+        "n_workflows": 4,
+        "risk": "high"
+      },
+      {
+        "combo": "issues+push+schedule+workflow_dispatch",
+        "success_rate": 0.29,
+        "successes": 9,
+        "total_runs": 31,
+        "n_workflows": 3,
+        "risk": "high"
+      },
+      {
+        "combo": "push+schedule+workflow_dispatch",
+        "success_rate": 0.3,
+        "successes": 9,
+        "total_runs": 30,
+        "n_workflows": 2,
+        "risk": "medium"
+      },
+      {
+        "combo": "issues+push",
+        "success_rate": 0.724,
+        "successes": 21,
+        "total_runs": 29,
+        "n_workflows": 5,
+        "risk": "low"
+      },
+      {
+        "combo": "schedule",
+        "success_rate": 0.952,
+        "successes": 20,
+        "total_runs": 21,
+        "n_workflows": 2,
+        "risk": "low"
+      },
+      {
+        "combo": "discussion+workflow_dispatch",
+        "success_rate": 0.85,
+        "successes": 17,
+        "total_runs": 20,
+        "n_workflows": 2,
+        "risk": "low"
+      },
+      {
+        "combo": "discussion+issues+pull_request+push+schedule+workflow_dispatch",
+        "success_rate": 0.1,
+        "successes": 2,
+        "total_runs": 20,
+        "n_workflows": 2,
+        "risk": "high"
+      }
+    ]
+  },
+  "archetype_health": [
+    {
+      "id": "code-improvement",
+      "current_rate": 0.65,
+      "computed_rate": 0.511,
+      "delta": -0.139,
+      "n_runs": 556,
+      "n_workflows": 73,
+      "n_repos": 55,
+      "significant_change": true
+    },
+    {
+      "id": "content-moderation",
+      "current_rate": 0.75,
+      "computed_rate": 0.456,
+      "delta": -0.294,
+      "n_runs": 160,
+      "n_workflows": 25,
+      "n_repos": 19,
+      "significant_change": true
+    },
+    {
+      "id": "custom",
+      "current_rate": 0.62,
+      "computed_rate": 0.636,
+      "delta": 0.016,
+      "n_runs": 2833,
+      "n_workflows": 375,
+      "n_repos": 131,
+      "significant_change": false
+    },
+    {
+      "id": "dependency-monitor",
+      "current_rate": 0.64,
+      "computed_rate": 0.799,
+      "delta": 0.159,
+      "n_runs": 324,
+      "n_workflows": 44,
+      "n_repos": 40,
+      "significant_change": true
+    },
+    {
+      "id": "issue-triage",
+      "current_rate": 0.72,
+      "computed_rate": 0.72,
+      "delta": 0.0,
+      "n_runs": 261,
+      "n_workflows": 42,
+      "n_repos": 41,
+      "significant_change": false
+    },
+    {
+      "id": "status-report",
+      "current_rate": 0.7,
+      "computed_rate": 0.676,
+      "delta": -0.024,
+      "n_runs": 754,
+      "n_workflows": 120,
+      "n_repos": 102,
+      "significant_change": false
+    }
+  ],
+  "engine_analysis": [
+    {
+      "engine": "default",
+      "success_rate": 0.667,
+      "total_runs": 2529,
+      "n_workflows": 385
+    },
+    {
+      "engine": "copilot",
+      "success_rate": 0.587,
+      "total_runs": 1349,
+      "n_workflows": 170
+    },
+    {
+      "engine": "id:",
+      "success_rate": 0.596,
+      "total_runs": 473,
+      "n_workflows": 60
+    },
+    {
+      "engine": "claude",
+      "success_rate": 0.706,
+      "total_runs": 374,
+      "n_workflows": 46
+    },
+    {
+      "engine": "codex",
+      "success_rate": 0.569,
+      "total_runs": 123,
+      "n_workflows": 14
+    },
+    {
+      "engine": "model:",
+      "success_rate": 1.0,
+      "total_runs": 20,
+      "n_workflows": 2
+    },
+    {
+      "engine": "copilot-sdk",
+      "success_rate": 0.0,
+      "total_runs": 10,
+      "n_workflows": 1
+    },
+    {
+      "engine": "gemini",
+      "success_rate": 0.1,
+      "total_runs": 10,
+      "n_workflows": 1
+    }
+  ],
+  "feature_correlation": [
+    {
+      "feature": "has_safe_outputs",
+      "with_rate": 0.875,
+      "with_n": 16,
+      "without_rate": 0.637,
+      "without_n": 4872,
+      "delta": 0.238,
+      "significant": true
+    },
+    {
+      "feature": "has_workflow_dispatch",
+      "with_rate": 0.698,
+      "with_n": 3476,
+      "without_rate": 0.489,
+      "without_n": 1412,
+      "delta": 0.208,
+      "significant": true
+    },
+    {
+      "feature": "has_schedule",
+      "with_rate": 0.715,
+      "with_n": 2980,
+      "without_rate": 0.516,
+      "without_n": 1908,
+      "delta": 0.2,
+      "significant": true
+    },
+    {
+      "feature": "has_tools",
+      "with_rate": 0.516,
+      "with_n": 31,
+      "without_rate": 0.638,
+      "without_n": 4857,
+      "delta": -0.122,
+      "significant": true
+    },
+    {
+      "feature": "source_available",
+      "with_rate": 0.638,
+      "with_n": 4803,
+      "without_rate": 0.612,
+      "without_n": 85,
+      "delta": 0.026,
+      "significant": false
+    },
+    {
+      "feature": "has_pre_steps",
+      "with_rate": 0.618,
+      "with_n": 842,
+      "without_rate": 0.642,
+      "without_n": 4046,
+      "delta": -0.024,
+      "significant": false
+    }
+  ],
+  "failure_analysis": {
+    "total_failures": 976,
+    "categories": {
+      "unknown": {
+        "count": 976,
+        "pct": 1.0
+      }
+    },
+    "by_archetype": {
+      "custom": {
+        "unknown": 490
+      },
+      "status-report": {
+        "unknown": 237
+      },
+      "dependency-monitor": {
+        "unknown": 53
+      },
+      "code-improvement": {
+        "unknown": 113
+      },
+      "content-moderation": {
+        "unknown": 28
+      },
+      "issue-triage": {
+        "unknown": 55
+      }
+    },
+    "log_samples": {}
+  },
+  "degraded_workflows": [
+    {
+      "repo": "github/gh-aw",
+      "workflow": "issue-triage-agent",
+      "older_rate": 1.0,
+      "recent_rate": 0.0,
+      "runs_analyzed": 10
+    },
+    {
+      "repo": "jramalho/test-stuff",
+      "workflow": "weekly-research",
+      "older_rate": 1.0,
+      "recent_rate": 0.0,
+      "runs_analyzed": 10
+    },
+    {
+      "repo": "llm-d-incubation/llm-d-async",
+      "workflow": "typo-checker",
+      "older_rate": 0.8,
+      "recent_rate": 0.0,
+      "runs_analyzed": 10
+    },
+    {
+      "repo": "adrianmg/test-repo",
+      "workflow": "issue-triage",
+      "older_rate": 1.0,
+      "recent_rate": 0.2,
+      "runs_analyzed": 10
+    },
+    {
+      "repo": "adrianmg/test-repo",
+      "workflow": "dad-jokes",
+      "older_rate": 1.0,
+      "recent_rate": 0.2,
+      "runs_analyzed": 10
+    },
+    {
+      "repo": "elastic/opentelemetry-collector-components",
+      "workflow": "pr-review",
+      "older_rate": 0.8,
+      "recent_rate": 0.2,
+      "runs_analyzed": 10
+    },
+    {
+      "repo": "github/gh-aw",
+      "workflow": "ai-moderator",
+      "older_rate": 1.0,
+      "recent_rate": 0.2,
+      "runs_analyzed": 10
+    },
+    {
+      "repo": "yuma-722/gh-aw-test",
+      "workflow": "github-changelog-report",
+      "older_rate": 1.0,
+      "recent_rate": 0.2,
+      "runs_analyzed": 10
+    },
+    {
+      "repo": "Okyerema/.github",
+      "workflow": "continuous-triage",
+      "older_rate": 0.8,
+      "recent_rate": 0.25,
+      "runs_analyzed": 9
+    }
+  ],
+  "new_patterns": [
+    {
+      "name": "daily-repo-status",
+      "current_archetype": "status-report",
+      "repos_seen": 57,
+      "total_runs": 331,
+      "success_rate": 0.698
+    },
+    {
+      "name": "issue-triage",
+      "current_archetype": "issue-triage",
+      "repos_seen": 26,
+      "total_runs": 154,
+      "success_rate": 0.76
+    },
+    {
+      "name": "weekly-research",
+      "current_archetype": "status-report",
+      "repos_seen": 17,
+      "total_runs": 144,
+      "success_rate": 0.618
+    },
+    {
+      "name": "ci-doctor",
+      "current_archetype": "code-improvement",
+      "repos_seen": 16,
+      "total_runs": 97,
+      "success_rate": 0.186
+    },
+    {
+      "name": "update-docs",
+      "current_archetype": "dependency-monitor",
+      "repos_seen": 14,
+      "total_runs": 90,
+      "success_rate": 0.8
+    },
+    {
+      "name": "daily-test-improver",
+      "current_archetype": "custom",
+      "repos_seen": 13,
+      "total_runs": 101,
+      "success_rate": 0.515
+    },
+    {
+      "name": "code-simplifier",
+      "current_archetype": "code-improvement",
+      "repos_seen": 13,
+      "total_runs": 100,
+      "success_rate": 0.75
+    },
+    {
+      "name": "upstream-monitor",
+      "current_archetype": "custom",
+      "repos_seen": 11,
+      "total_runs": 45,
+      "success_rate": 0.978
+    },
+    {
+      "name": "typo-checker",
+      "current_archetype": "custom",
+      "repos_seen": 10,
+      "total_runs": 100,
+      "success_rate": 0.4
+    },
+    {
+      "name": "daily-perf-improver",
+      "current_archetype": "custom",
+      "repos_seen": 9,
+      "total_runs": 73,
+      "success_rate": 0.548
+    },
+    {
+      "name": "daily-doc-updater",
+      "current_archetype": "dependency-monitor",
+      "repos_seen": 9,
+      "total_runs": 62,
+      "success_rate": 0.742
+    },
+    {
+      "name": "daily-team-status",
+      "current_archetype": "status-report",
+      "repos_seen": 8,
+      "total_runs": 61,
+      "success_rate": 0.803
+    },
+    {
+      "name": "plan",
+      "current_archetype": "custom",
+      "repos_seen": 8,
+      "total_runs": 71,
+      "success_rate": 0.056
+    },
+    {
+      "name": "daily-qa",
+      "current_archetype": "custom",
+      "repos_seen": 7,
+      "total_runs": 32,
+      "success_rate": 1.0
+    },
+    {
+      "name": "pr-fix",
+      "current_archetype": "code-improvement",
+      "repos_seen": 6,
+      "total_runs": 48,
+      "success_rate": 0.021
+    },
+    {
+      "name": "link-checker",
+      "current_archetype": "custom",
+      "repos_seen": 5,
+      "total_runs": 46,
+      "success_rate": 0.304
+    },
+    {
+      "name": "daily-backlog-burner",
+      "current_archetype": "custom",
+      "repos_seen": 4,
+      "total_runs": 21,
+      "success_rate": 1.0
+    },
+    {
+      "name": "issue-monster",
+      "current_archetype": "custom",
+      "repos_seen": 4,
+      "total_runs": 40,
+      "success_rate": 0.775
+    },
+    {
+      "name": "sdk-consistency-review",
+      "current_archetype": "content-moderation",
+      "repos_seen": 4,
+      "total_runs": 20,
+      "success_rate": 0.15
+    },
+    {
+      "name": "smoke-copilot",
+      "current_archetype": "custom",
+      "repos_seen": 4,
+      "total_runs": 40,
+      "success_rate": 0.5
+    }
+  ],
+  "recommendations": [
+    {
+      "type": "warn_trigger",
+      "message": "Trigger combo 'discussion+issues+slash_command' has 1% success rate across 90 runs \u2014 consider adding to anti-patterns",
+      "data": {
+        "combo": "discussion+issues+slash_command",
+        "success_rate": 0.011,
+        "successes": 1,
+        "total_runs": 90,
+        "n_workflows": 6,
+        "risk": "high"
+      }
+    },
+    {
+      "type": "warn_trigger",
+      "message": "Trigger combo 'workflow_run' has 16% success rate across 76 runs \u2014 consider adding to anti-patterns",
+      "data": {
+        "combo": "workflow_run",
+        "success_rate": 0.158,
+        "successes": 12,
+        "total_runs": 76,
+        "n_workflows": 11,
+        "risk": "high"
+      }
+    },
+    {
+      "type": "warn_trigger",
+      "message": "Trigger combo 'issues+slash_command' has 1% success rate across 76 runs \u2014 consider adding to anti-patterns",
+      "data": {
+        "combo": "issues+slash_command",
+        "success_rate": 0.013,
+        "successes": 1,
+        "total_runs": 76,
+        "n_workflows": 8,
+        "risk": "high"
+      }
+    },
+    {
+      "type": "warn_trigger",
+      "message": "Trigger combo 'push+slash_command' has 2% success rate across 58 runs \u2014 consider adding to anti-patterns",
+      "data": {
+        "combo": "push+slash_command",
+        "success_rate": 0.017,
+        "successes": 1,
+        "total_runs": 58,
+        "n_workflows": 6,
+        "risk": "high"
+      }
+    },
+    {
+      "type": "warn_trigger",
+      "message": "Trigger combo 'slash_command' has 0% success rate across 38 runs \u2014 consider adding to anti-patterns",
+      "data": {
+        "combo": "slash_command",
+        "success_rate": 0.0,
+        "successes": 0,
+        "total_runs": 38,
+        "n_workflows": 3,
+        "risk": "high"
+      }
+    },
+    {
+      "type": "warn_trigger",
+      "message": "Trigger combo 'discussion+issues+pull_request+push+schedule+workflow_dispatch' has 10% success rate across 20 runs \u2014 consider adding to anti-patterns",
+      "data": {
+        "combo": "discussion+issues+pull_request+push+schedule+workflow_dispatch",
+        "success_rate": 0.1,
+        "successes": 2,
+        "total_runs": 20,
+        "n_workflows": 2,
+        "risk": "high"
+      }
+    },
+    {
+      "type": "warn_trigger",
+      "message": "Trigger combo 'discussion+issues+pull_request+workflow_dispatch' has 6% success rate across 17 runs \u2014 consider adding to anti-patterns",
+      "data": {
+        "combo": "discussion+issues+pull_request+workflow_dispatch",
+        "success_rate": 0.059,
+        "successes": 1,
+        "total_runs": 17,
+        "n_workflows": 2,
+        "risk": "high"
+      }
+    },
+    {
+      "type": "warn_trigger",
+      "message": "Trigger combo 'issues+push+schedule+slash_command+workflow_dispatch' has 9% success rate across 11 runs \u2014 consider adding to anti-patterns",
+      "data": {
+        "combo": "issues+push+schedule+slash_command+workflow_dispatch",
+        "success_rate": 0.091,
+        "successes": 1,
+        "total_runs": 11,
+        "n_workflows": 2,
+        "risk": "high"
+      }
+    },
+    {
+      "type": "warn_trigger",
+      "message": "Trigger combo 'issues+push+slash_command+workflow_dispatch' has 0% success rate across 10 runs \u2014 consider adding to anti-patterns",
+      "data": {
+        "combo": "issues+push+slash_command+workflow_dispatch",
+        "success_rate": 0.0,
+        "successes": 0,
+        "total_runs": 10,
+        "n_workflows": 1,
+        "risk": "high"
+      }
+    },
+    {
+      "type": "warn_trigger",
+      "message": "Trigger combo 'issues+schedule+slash_command+workflow_dispatch' has 0% success rate across 10 runs \u2014 consider adding to anti-patterns",
+      "data": {
+        "combo": "issues+schedule+slash_command+workflow_dispatch",
+        "success_rate": 0.0,
+        "successes": 0,
+        "total_runs": 10,
+        "n_workflows": 1,
+        "risk": "high"
+      }
+    },
+    {
+      "type": "warn_trigger",
+      "message": "Trigger combo 'issues+slash_command+workflow_dispatch' has 0% success rate across 10 runs \u2014 consider adding to anti-patterns",
+      "data": {
+        "combo": "issues+slash_command+workflow_dispatch",
+        "success_rate": 0.0,
+        "successes": 0,
+        "total_runs": 10,
+        "n_workflows": 1,
+        "risk": "high"
+      }
+    },
+    {
+      "type": "warn_trigger",
+      "message": "Trigger combo 'issues+pull_request+push+schedule+slash_command' has 0% success rate across 10 runs \u2014 consider adding to anti-patterns",
+      "data": {
+        "combo": "issues+pull_request+push+schedule+slash_command",
+        "success_rate": 0.0,
+        "successes": 0,
+        "total_runs": 10,
+        "n_workflows": 1,
+        "risk": "high"
+      }
+    },
+    {
+      "type": "archetype_drift",
+      "message": "Archetype 'code-improvement' has degraded: 65% \u2192 51% (\u0394-13.9pp, n=556)",
+      "data": {
+        "id": "code-improvement",
+        "current_rate": 0.65,
+        "computed_rate": 0.511,
+        "delta": -0.139,
+        "n_runs": 556,
+        "n_workflows": 73,
+        "n_repos": 55,
+        "significant_change": true
+      }
+    },
+    {
+      "type": "archetype_drift",
+      "message": "Archetype 'content-moderation' has degraded: 75% \u2192 46% (\u0394-29.4pp, n=160)",
+      "data": {
+        "id": "content-moderation",
+        "current_rate": 0.75,
+        "computed_rate": 0.456,
+        "delta": -0.294,
+        "n_runs": 160,
+        "n_workflows": 25,
+        "n_repos": 19,
+        "significant_change": true
+      }
+    },
+    {
+      "type": "archetype_drift",
+      "message": "Archetype 'dependency-monitor' has improved: 64% \u2192 80% (\u0394+15.9pp, n=324)",
+      "data": {
+        "id": "dependency-monitor",
+        "current_rate": 0.64,
+        "computed_rate": 0.799,
+        "delta": 0.159,
+        "n_runs": 324,
+        "n_workflows": 44,
+        "n_repos": 40,
+        "significant_change": true
+      }
+    },
+    {
+      "type": "feature_correlation",
+      "message": "Feature 'has_safe_outputs' improves success rate by 23.8pp (88% vs 64%)",
+      "data": {
+        "feature": "has_safe_outputs",
+        "with_rate": 0.875,
+        "with_n": 16,
+        "without_rate": 0.637,
+        "without_n": 4872,
+        "delta": 0.238,
+        "significant": true
+      }
+    },
+    {
+      "type": "feature_correlation",
+      "message": "Feature 'has_workflow_dispatch' improves success rate by 20.8pp (70% vs 49%)",
+      "data": {
+        "feature": "has_workflow_dispatch",
+        "with_rate": 0.698,
+        "with_n": 3476,
+        "without_rate": 0.489,
+        "without_n": 1412,
+        "delta": 0.208,
+        "significant": true
+      }
+    },
+    {
+      "type": "feature_correlation",
+      "message": "Feature 'has_schedule' improves success rate by 20.0pp (72% vs 52%)",
+      "data": {
+        "feature": "has_schedule",
+        "with_rate": 0.715,
+        "with_n": 2980,
+        "without_rate": 0.516,
+        "without_n": 1908,
+        "delta": 0.2,
+        "significant": true
+      }
+    },
+    {
+      "type": "feature_correlation",
+      "message": "Feature 'has_tools' hurts success rate by 12.2pp (52% vs 64%)",
+      "data": {
+        "feature": "has_tools",
+        "with_rate": 0.516,
+        "with_n": 31,
+        "without_rate": 0.638,
+        "without_n": 4857,
+        "delta": -0.122,
+        "significant": true
+      }
+    },
+    {
+      "type": "degradation",
+      "message": "Workflow 'issue-triage-agent' in github/gh-aw degraded from 100% to 0%",
+      "data": {
+        "repo": "github/gh-aw",
+        "workflow": "issue-triage-agent",
+        "older_rate": 1.0,
+        "recent_rate": 0.0,
+        "runs_analyzed": 10
+      }
+    },
+    {
+      "type": "degradation",
+      "message": "Workflow 'weekly-research' in jramalho/test-stuff degraded from 100% to 0%",
+      "data": {
+        "repo": "jramalho/test-stuff",
+        "workflow": "weekly-research",
+        "older_rate": 1.0,
+        "recent_rate": 0.0,
+        "runs_analyzed": 10
+      }
+    },
+    {
+      "type": "degradation",
+      "message": "Workflow 'typo-checker' in llm-d-incubation/llm-d-async degraded from 80% to 0%",
+      "data": {
+        "repo": "llm-d-incubation/llm-d-async",
+        "workflow": "typo-checker",
+        "older_rate": 0.8,
+        "recent_rate": 0.0,
+        "runs_analyzed": 10
+      }
+    },
+    {
+      "type": "degradation",
+      "message": "Workflow 'issue-triage' in adrianmg/test-repo degraded from 100% to 20%",
+      "data": {
+        "repo": "adrianmg/test-repo",
+        "workflow": "issue-triage",
+        "older_rate": 1.0,
+        "recent_rate": 0.2,
+        "runs_analyzed": 10
+      }
+    },
+    {
+      "type": "degradation",
+      "message": "Workflow 'dad-jokes' in adrianmg/test-repo degraded from 100% to 20%",
+      "data": {
+        "repo": "adrianmg/test-repo",
+        "workflow": "dad-jokes",
+        "older_rate": 1.0,
+        "recent_rate": 0.2,
+        "runs_analyzed": 10
+      }
+    },
+    {
+      "type": "degradation",
+      "message": "Workflow 'pr-review' in elastic/opentelemetry-collector-components degraded from 80% to 20%",
+      "data": {
+        "repo": "elastic/opentelemetry-collector-components",
+        "workflow": "pr-review",
+        "older_rate": 0.8,
+        "recent_rate": 0.2,
+        "runs_analyzed": 10
+      }
+    },
+    {
+      "type": "degradation",
+      "message": "Workflow 'ai-moderator' in github/gh-aw degraded from 100% to 20%",
+      "data": {
+        "repo": "github/gh-aw",
+        "workflow": "ai-moderator",
+        "older_rate": 1.0,
+        "recent_rate": 0.2,
+        "runs_analyzed": 10
+      }
+    },
+    {
+      "type": "degradation",
+      "message": "Workflow 'github-changelog-report' in yuma-722/gh-aw-test degraded from 100% to 20%",
+      "data": {
+        "repo": "yuma-722/gh-aw-test",
+        "workflow": "github-changelog-report",
+        "older_rate": 1.0,
+        "recent_rate": 0.2,
+        "runs_analyzed": 10
+      }
+    },
+    {
+      "type": "degradation",
+      "message": "Workflow 'continuous-triage' in Okyerema/.github degraded from 80% to 25%",
+      "data": {
+        "repo": "Okyerema/.github",
+        "workflow": "continuous-triage",
+        "older_rate": 0.8,
+        "recent_rate": 0.25,
+        "runs_analyzed": 9
+      }
+    }
+  ]
+}
