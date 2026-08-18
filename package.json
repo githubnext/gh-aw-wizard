@@ -1,0 +1,19 @@
+{
+  "name": "gh-aw-wizard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A wizard interface to create GitHub Agentic Workflows",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "vite": "^8.2.1",
+    "vitest": "^4.1.11"
+  }
+}
