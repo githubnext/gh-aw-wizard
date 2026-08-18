@@ -15,7 +15,7 @@ var patterns = null;
 var currentStep = 1;
 var generatedMd = '';
 var generatedPrompt = '';
-var currentFormat = 'workflow';
+var currentFormat = 'prompt';
 
 export function initWizard() {
   initTheme();
@@ -28,15 +28,14 @@ function generateAndShow() {
   var answers = gatherAnswers();
   generatedMd = generateWorkflowFile(answers, patterns);
   generatedPrompt = generateAgentPrompt(answers, patterns);
-  currentFormat = 'workflow';
+  currentFormat = 'prompt';
   document.querySelectorAll('.format-btn').forEach(function (b) { b.classList.remove('active'); });
-  document.getElementById('fmt-workflow').classList.add('active');
+  document.getElementById('fmt-prompt').classList.add('active');
   goToStep(5);
-  showPreview(generatedMd);
-  showNextSteps('workflow');
-  var name = workflowName(answers.archetype, answers.customDescription);
-  document.getElementById('preview-filename').textContent = name + '.md';
-  document.getElementById('btn-download').style.display = '';
+  showPreview(generatedPrompt);
+  showNextSteps('prompt');
+  document.getElementById('preview-filename').textContent = 'prompt.txt';
+  document.getElementById('btn-download').style.display = 'none';
 }
 
 function switchFormat(fmt) {

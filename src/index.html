@@ -285,24 +285,24 @@
 
       <!-- Format toggle -->
       <div class="format-toggle" id="format-toggle">
-        <button class="format-btn active" data-format="workflow" id="fmt-workflow">
-          <span class="format-icon">📄</span>
-          <span class="format-label">Workflow file</span>
-          <span class="format-desc">Ready-to-use <code>.md</code> file for GitHub Actions</span>
-        </button>
-        <button class="format-btn" data-format="prompt" id="fmt-prompt">
+        <button class="format-btn active" data-format="prompt" id="fmt-prompt">
           <span class="format-icon">💬</span>
           <span class="format-label">Coding agent prompt</span>
           <span class="format-desc">Paste into Copilot, Claude, or Codex to create the workflow</span>
+        </button>
+        <button class="format-btn" data-format="workflow" id="fmt-workflow">
+          <span class="format-icon">📄</span>
+          <span class="format-label">Workflow file</span>
+          <span class="format-desc">Ready-to-use <code>.md</code> file for GitHub Actions</span>
         </button>
       </div>
 
       <div class="preview-container">
         <div class="preview-header">
-          <h3 id="preview-filename">workflow.md</h3>
+          <h3 id="preview-filename">prompt.txt</h3>
           <div class="preview-actions">
             <button class="btn btn-secondary btn-sm" id="btn-copy">📋 Copy</button>
-            <button class="btn btn-primary btn-sm" id="btn-download">⬇ Download .md</button>
+            <button class="btn btn-primary btn-sm" id="btn-download" style="display: none;">⬇ Download .md</button>
           </div>
         </div>
         <div class="preview-code" id="preview-code"></div>
