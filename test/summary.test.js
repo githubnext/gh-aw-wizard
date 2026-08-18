@@ -57,6 +57,15 @@ describe('buildWorkflowSummary', () => {
     expect(summary.context).toBe('memory between runs and project-specific context');
   });
 
+  it('describes the pull request review trigger accurately', () => {
+    const summary = buildWorkflowSummary(answers({
+      archetype: 'pr-review',
+      triggers: ['pull_request']
+    }), patterns);
+
+    expect(summary.trigger.value).toBe('a pull request is ready for review');
+  });
+
   it('uses custom descriptions as they are entered', () => {
     const summary = buildWorkflowSummary(answers({
       customDescription: 'Check release notes for breaking changes'

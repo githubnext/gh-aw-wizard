@@ -7,7 +7,7 @@ var triggerLabels = {
   pull_request: 'a pull request is opened',
   schedule: 'the schedule runs',
   workflow_dispatch: 'it is started manually',
-  slash_command: 'a slash command is posted',
+  slash_command: 'a slash command is posted (not recommended)',
   label_command: 'a matching label is added',
   push: 'code is pushed to main'
 };
@@ -56,7 +56,12 @@ export function buildWorkflowSummary(answers, patterns) {
   return {
     trigger: {
       value: answers.triggers.length
-        ? mapLabels(answers.triggers, triggerLabels)
+        ? readableList(answers.triggers.map(function (trigger) {
+          if (trigger === 'pull_request' && answers.archetype === 'pr-review') {
+            return 'a pull request is ready for review';
+          }
+          return triggerLabels[trigger] || trigger;
+        }))
         : 'choose when it runs',
       complete: answers.triggers.length > 0
     },
