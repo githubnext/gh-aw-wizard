@@ -9,18 +9,23 @@ import {
 import { highlightMarkdown } from './highlight.js';
 import { nextStepsHtml } from './next-steps.js';
 import { initTheme } from './theme.js';
+import { buildWorkflowSummary } from './summary.js';
 
 var patterns = null;
 var currentStep = 1;
 var generatedPrompt = '';
-var TOTAL_STEPS = 5;
+var TOTAL_STEPS = 6;
 
 export function initWizard() {
   initTheme();
-  loadPatterns().then(function (data) { patterns = data; });
+  loadPatterns().then(function (data) {
+    patterns = data;
+    renderWorkflowSummary();
+  });
   bindNavigation();
   bindFormEvents();
   initNavigationHistory();
+  renderWorkflowSummary();
 }
 
 function generateAndShow() {
@@ -177,6 +182,13 @@ function bindFormEvents() {
     });
   });
   updateCardSelection('#engine-options', 'radio');
+
+  document.querySelectorAll('input').forEach(function (input) {
+    input.addEventListener('change', renderWorkflowSummary);
+  });
+  document.querySelectorAll('textarea').forEach(function (textarea) {
+    textarea.addEventListener('input', renderWorkflowSummary);
+  });
 }
 
 function updateCardSelection(containerSel, type) {
@@ -253,7 +265,23 @@ function gatherAnswers() {
   };
 }
 
+function renderWorkflowSummary() {
+  var summary = buildWorkflowSummary(gatherAnswers(), patterns);
+  updateSummaryClause('summary-trigger', summary.trigger);
+  updateSummaryClause('summary-purpose', summary.purpose);
+  updateSummaryClause('summary-output', summary.output);
+  updateSummaryClause('summary-engine', summary.engine);
 
+  var context = document.getElementById('summary-context');
+  context.hidden = !summary.context;
+  context.textContent = summary.context ? 'With ' + summary.context + '.' : '';
+}
+
+function updateSummaryClause(id, clause) {
+  var value = document.getElementById(id);
+  value.textContent = clause.value;
+  value.parentElement.classList.toggle('is-placeholder', !clause.complete);
+}
 
 // ── Preview rendering ──────────────────────────────────────────────────────
 function showPreview(md) {
