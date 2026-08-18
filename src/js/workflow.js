@@ -41,8 +41,9 @@ export function inferCapabilities(archetype) {
   return caps;
 }
 
-export function buildTriggerYaml(triggers) {
+export function buildTriggerYaml(triggers, commandName) {
   var lines = '';
+  var name = commandName || 'agentic-workflow';
   triggers.forEach(function (t) {
     switch (t) {
       case 'issues':
@@ -53,8 +54,11 @@ export function buildTriggerYaml(triggers) {
         lines += '  schedule:\n    - cron: "0 9 * * 1-5"\n'; break;
       case 'workflow_dispatch':
         lines += '  workflow_dispatch:\n'; break;
+      case 'slash_command':
       case 'issue_comment':
-        lines += '  issue_comment:\n    types: [created]\n'; break;
+        lines += '  slash_command:\n    name: ' + name + '\n'; break;
+      case 'label_command':
+        lines += '  label_command:\n    name: ' + name + '\n'; break;
       case 'push':
         lines += '  push:\n    branches: [main]\n'; break;
     }
@@ -98,7 +102,7 @@ export function generateWorkflowFile(answers, patterns) {
   }
 
   // Trigger config YAML
-  var triggerYaml = buildTriggerYaml(answers.triggers);
+  var triggerYaml = buildTriggerYaml(answers.triggers, name);
 
   // Frontmatter — auto-infer capabilities from archetype
   var inferred = inferCapabilities(answers.archetype);
@@ -180,6 +184,8 @@ export function generateAgentPrompt(answers, patterns) {
       'pull_request': 'when a pull request is opened',
       'schedule': 'on a daily/weekly schedule',
       'workflow_dispatch': 'on manual dispatch',
+      'slash_command': 'on slash commands in comments',
+      'label_command': 'when a matching label is added',
       'issue_comment': 'on slash commands in comments',
       'push': 'on push to main'
     };

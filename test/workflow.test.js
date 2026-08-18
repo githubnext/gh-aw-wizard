@@ -101,19 +101,25 @@ describe('buildTriggerYaml', () => {
       'pull_request',
       'schedule',
       'workflow_dispatch',
-      'issue_comment',
+      'slash_command',
+      'label_command',
       'push'
-    ]);
+    ], 'triage-agent');
     expect(yaml).toContain('  issues:\n    types: [opened]\n');
     expect(yaml).toContain('  pull_request:\n    types: [opened]\n');
     expect(yaml).toContain('  schedule:\n    - cron: "0 9 * * 1-5"\n');
     expect(yaml).toContain('  workflow_dispatch:\n');
-    expect(yaml).toContain('  issue_comment:\n    types: [created]\n');
+    expect(yaml).toContain('  slash_command:\n    name: triage-agent\n');
+    expect(yaml).toContain('  label_command:\n    name: triage-agent\n');
     expect(yaml).toContain('  push:\n    branches: [main]\n');
   });
 
+  it('maps the old issue comment trigger to slash command syntax', () => {
+    expect(buildTriggerYaml(['issue_comment'], 'triage-agent')).toBe('  slash_command:\n    name: triage-agent\n');
+  });
+
   it('ignores unknown triggers', () => {
-    expect(buildTriggerYaml(['slash_command'])).toBe('');
+    expect(buildTriggerYaml(['unknown_trigger'])).toBe('');
   });
 });
 
