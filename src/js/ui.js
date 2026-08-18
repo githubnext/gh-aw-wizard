@@ -105,6 +105,7 @@ function bindNavigation() {
 
 function goToStep(n, options) {
   if (n === currentStep || n < 1 || n > TOTAL_STEPS) return;
+  var skipHistory = options && options.skipHistory === true;
   var direction = n > currentStep ? 'forward' : 'back';
   var current = document.getElementById('step-' + currentStep);
   current.classList.remove('active');
@@ -116,22 +117,22 @@ function goToStep(n, options) {
   next.offsetHeight; // reflow
   next.style.animation = direction === 'forward' ? 'slideIn 0.3s ease' : 'slideInReverse 0.3s ease';
   next.classList.add('active');
-  if (!options || options.updateHistory !== false) {
-    window.history.pushState({ step: n }, '', window.location.href);
+  if (!skipHistory) {
+    window.history.pushState({ step: n }, '');
   }
 }
 
 function initNavigationHistory() {
   var stateStep = getStepFromHistoryState(window.history.state);
   if (stateStep === null) {
-    window.history.replaceState({ step: currentStep }, '', window.location.href);
+    window.history.replaceState({ step: currentStep }, '');
   } else if (stateStep !== currentStep) {
-    goToStep(stateStep, { updateHistory: false });
+    goToStep(stateStep, { skipHistory: true });
   }
   window.addEventListener('popstate', function (event) {
     var step = getStepFromHistoryState(event.state);
     if (step !== null) {
-      goToStep(step, { updateHistory: false });
+      goToStep(step, { skipHistory: true });
     }
   });
 }
