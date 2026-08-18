@@ -58,9 +58,28 @@ describe('getRecommendedConfiguration', () => {
     };
 
     expect(getRecommendedConfiguration(patterns, 'status-report')).toEqual({
-      triggers: ['schedule', 'workflow_dispatch'],
-      outputs: ['new-issues', 'comments'],
-      profile: patterns.configuration_profiles[3]
+      triggers: ['slash_command'],
+      outputs: ['new-issues'],
+      profile: patterns.configuration_profiles[0]
+    });
+  });
+
+  it('keeps a slash-command profile regardless of performance', () => {
+    const patterns = {
+      archetypes: [{ id: 'issue-triage' }],
+      configuration_profiles: [{
+        archetype: 'issue-triage',
+        triggers: ['slash_command'],
+        safe_outputs: ['add-comment'],
+        confidence_score: 0,
+        total_runs: 38
+      }]
+    };
+
+    expect(getRecommendedConfiguration(patterns, 'issue-triage')).toEqual({
+      triggers: ['slash_command'],
+      outputs: ['comments'],
+      profile: patterns.configuration_profiles[0]
     });
   });
 

@@ -35,6 +35,7 @@ var RECOMMENDABLE_TRIGGERS = [
   'pull_request',
   'schedule',
   'workflow_dispatch',
+  'slash_command',
   'label_command',
   'push'
 ];
