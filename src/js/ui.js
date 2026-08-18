@@ -328,7 +328,7 @@ function restoreSelectionState() {
   updateCardSelection('#archetype-options', 'radio');
   document.getElementById('next-1').disabled = !state.archetype;
   document.getElementById('custom-description-field').classList.toggle('visible', state.archetype === 'custom');
-  if (state.customDescription) document.getElementById('custom-description').value = state.customDescription;
+  if (state.customDescription != null) document.getElementById('custom-description').value = state.customDescription;
 
   (state.triggers || []).forEach(function (trigger) {
     var cb = document.querySelector('input[name="trigger"][value="' + trigger + '"]');
@@ -350,7 +350,7 @@ function restoreSelectionState() {
   });
   updateCardSelection('#data-options', 'checkbox');
 
-  if (state.dataDescription) document.getElementById('data-description').value = state.dataDescription;
+  if (state.dataDescription != null) document.getElementById('data-description').value = state.dataDescription;
 
   if (state.engine) {
     var engineRadio = document.querySelector('input[name="engine"][value="' + state.engine + '"]');
