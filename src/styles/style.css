@@ -144,25 +144,25 @@ a:hover {
 
 /* Header */
 .site-header {
-  padding: 2.5rem 0 1.75rem;
+  padding: 1.5rem 0 1.25rem;
   text-align: center;
   background: linear-gradient(180deg, var(--header-gradient-start) 0%, transparent 100%);
   border-bottom: 1px solid var(--border-color);
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.5rem;
 }
 .header-title {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
 }
 .header-icon {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   flex-shrink: 0;
 }
 .site-header h1 {
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: -0.02em;
@@ -171,13 +171,13 @@ a:hover {
   font-size: 0.95rem;
   color: var(--text-secondary);
   max-width: 500px;
-  margin: 0 auto 0.75rem;
+  margin: 0 auto;
   line-height: 1.5;
 }
-.header-actions {
+.footer-actions {
   display: flex;
   justify-content: center;
-  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 .theme-toggle {
   background: var(--bg-card);
@@ -804,7 +804,7 @@ a:hover {
 
 /* Responsive */
 @media (max-width: 640px) {
-  .site-header { padding: 2rem 0 1.5rem; }
+  .site-header { padding: 1.25rem 0 1rem; }
   .site-header h1 { font-size: 1.35rem; }
   .header-icon { width: 26px; height: 26px; }
   .option-group.archetype-grid { grid-template-columns: 1fr; }
