@@ -88,7 +88,6 @@ If the analysis report shows no significant changes (all deltas within noise), d
 - Do not remove existing archetypes or anti-patterns unless the data strongly contradicts them (n≥50, >20pp shift).
 - Do not change the structure or schema of `patterns.json` — only update values within the existing schema.
 - Do not reference internal or private repositories. All data comes from public repos.
-- Do not cite `github/ospo-aw` or any internal research. All findings come from the scan pipeline.
 - Keep PR descriptions concise — focus on what changed and the supporting numbers.
 - Prefer conservative changes. When in doubt, don't change.
 - Round success rates to 2 decimal places.
