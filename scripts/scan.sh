@@ -72,28 +72,51 @@ QUERIES=(
 )
 
 > /tmp/aw-scan/raw-results.jsonl
+SEARCH_ERRORS=0
 
 for i in "${!QUERIES[@]}"; do
   Q="${QUERIES[$i]}"
   echo "  Query $((i+1))/${#QUERIES[@]}: $Q"
-  
+
+  ENCODED_Q=$(Q="$Q" python3 -c "import os, urllib.parse; print(urllib.parse.quote(os.environ['Q']))")
+
   PAGE=1
   while true; do
-    RESULT=$(gh api "search/code?q=$(python3 -c "import urllib.parse; print(urllib.parse.quote('$Q'))")&per_page=100&page=$PAGE" 2>/dev/null || echo '{"items":[]}')
-    
-    ITEMS=$(echo "$RESULT" | python3 -c "import sys,json; items=json.load(sys.stdin).get('items',[]); print(len(items))")
-    
+    # gh api writes the response body to stdout even on HTTP errors, so capture
+    # stdout and stderr separately and only trust the body on a zero exit code.
+    if ! RESULT=$(gh api "search/code?q=${ENCODED_Q}&per_page=100&page=$PAGE" 2>/tmp/aw-scan/search-error.txt); then
+      echo "    Code search request failed (page $PAGE):"
+      sed 's/^/      /' /tmp/aw-scan/search-error.txt
+      SEARCH_ERRORS=$((SEARCH_ERRORS + 1))
+      break
+    fi
+
+    if ! ITEMS=$(printf '%s' "$RESULT" | python3 -c "import sys,json; print(len(json.load(sys.stdin).get('items',[])))" 2>/dev/null); then
+      echo "    Code search returned an unexpected response (page $PAGE), skipping query"
+      SEARCH_ERRORS=$((SEARCH_ERRORS + 1))
+      break
+    fi
+
     if [ "$ITEMS" = "0" ]; then break; fi
-    
+
     echo "$RESULT" >> /tmp/aw-scan/raw-results.jsonl
     echo "    Page $PAGE: $ITEMS results"
-    
+
     PAGE=$((PAGE + 1))
     if [ "$PAGE" -gt 10 ]; then break; fi
     sleep 2
   done
   sleep 3
 done
+
+if [ ! -s /tmp/aw-scan/raw-results.jsonl ] && [ "$SEARCH_ERRORS" -gt 0 ]; then
+  echo ""
+  echo "Error: every code search request failed, so no repos could be discovered."
+  echo "The GitHub code search API requires a user token (a PAT with public_repo scope);"
+  echo "the default GITHUB_TOKEN available to GitHub Actions cannot access it."
+  echo "Set GH_TOKEN to such a token (in Actions, store it as the GH_AW_GITHUB_TOKEN secret)."
+  exit 1
+fi
 
 # Parse into unique repos + workflow files
 python3 << 'PYEOF'

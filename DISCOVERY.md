@@ -51,7 +51,10 @@ Parse job logs from failed runs to categorize errors: `auth_error`, `not_found`,
 | `--active-only` | Only include repos with workflow runs in the last 90 days |
 | `--run-history` | Fetch run history and compute success rates (slower, more data) |
 
-Requires the `gh` CLI, authenticated with a token that has `public_repo` scope.
+Requires the `gh` CLI, authenticated with a token that has `public_repo` scope. The code
+search API used in step 1 only accepts user tokens, so the default `GITHUB_TOKEN` available
+to GitHub Actions cannot run the scan — store a PAT as the `GH_AW_GITHUB_TOKEN` secret and
+the workflow will use it.
 
 ## Data schema
 

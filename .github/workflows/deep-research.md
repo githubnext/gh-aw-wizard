@@ -52,7 +52,8 @@ steps:
       script: |
         await exec.exec('./scripts/scan.sh', ['--active-only', '--run-history', '--resume']);
     env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Code search requires a user token; the default GITHUB_TOKEN cannot call it.
+      GH_TOKEN: ${{ secrets.GH_AW_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
 
   - name: Install gh-aw CLI
     uses: github/gh-aw-actions/setup-cli@v0.87.0
@@ -88,7 +89,8 @@ steps:
           }
         }
     env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Reading runs from other repos needs a token with cross-repo read access.
+      GH_TOKEN: ${{ secrets.GH_AW_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
 
   - name: Rebuild patterns.json
     uses: actions/github-script@v9
