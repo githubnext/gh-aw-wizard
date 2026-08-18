@@ -1,12 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-color-mode="light" data-theme-preference="auto" data-light-theme="light" data-dark-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GitHub Agentic Workflow Generator</title>
+  <script>
+    (function () {
+      var theme = 'auto';
+      try {
+        theme = localStorage.getItem('gh-aw-wizard-theme') || 'auto';
+      } catch (e) {}
+      if (['auto', 'light', 'dark'].indexOf(theme) === -1) theme = 'auto';
+      var systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.setAttribute('data-theme-preference', theme);
+      document.documentElement.setAttribute('data-color-mode', theme === 'auto' ? (systemDark ? 'dark' : 'light') : theme);
+    })();
+  </script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@primer/css@22.3.0/dist/primer.css">
   <link rel="stylesheet" href="./styles/style.css">
 </head>
-<body>
+<body class="color-bg-default color-fg-default">
   <div class="gradient-bar"></div>
   <header class="site-header">
     <div class="container">
@@ -18,6 +31,12 @@
         <h1>GitHub Agentic Workflow Generator</h1>
       </div>
       <p class="subtitle">Create GitHub Copilot agentic workflow prompts in minutes</p>
+      <div class="header-actions">
+        <button class="btn btn-sm theme-toggle" id="theme-toggle" type="button">
+          <span class="theme-toggle-icon" aria-hidden="true">◐</span>
+          <span id="theme-toggle-label">Auto theme</span>
+        </button>
+      </div>
     </div>
   </header>
 

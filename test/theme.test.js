@@ -1,0 +1,44 @@
+import { describe, expect, it } from 'vitest';
+
+import { nextThemeMode, normalizeThemeMode, resolveColorMode, themeCopy } from '../src/js/theme.js';
+
+describe('normalizeThemeMode', () => {
+  it('keeps supported modes', () => {
+    expect(normalizeThemeMode('light')).toBe('light');
+    expect(normalizeThemeMode('dark')).toBe('dark');
+    expect(normalizeThemeMode('auto')).toBe('auto');
+  });
+
+  it('falls back to auto for unknown modes', () => {
+    expect(normalizeThemeMode('sepia')).toBe('auto');
+    expect(normalizeThemeMode(null)).toBe('auto');
+  });
+});
+
+describe('nextThemeMode', () => {
+  it('cycles auto to light to dark and back', () => {
+    expect(nextThemeMode('auto')).toBe('light');
+    expect(nextThemeMode('light')).toBe('dark');
+    expect(nextThemeMode('dark')).toBe('auto');
+  });
+});
+
+describe('resolveColorMode', () => {
+  it('follows the system preference in auto mode', () => {
+    expect(resolveColorMode('auto', true)).toBe('dark');
+    expect(resolveColorMode('auto', false)).toBe('light');
+  });
+
+  it('ignores the system preference for explicit modes', () => {
+    expect(resolveColorMode('light', true)).toBe('light');
+    expect(resolveColorMode('dark', false)).toBe('dark');
+  });
+});
+
+describe('themeCopy', () => {
+  it('returns label and icon per mode', () => {
+    expect(themeCopy('light').label).toBe('Light theme');
+    expect(themeCopy('dark').label).toBe('Dark theme');
+    expect(themeCopy('nope')).toEqual(themeCopy('auto'));
+  });
+});

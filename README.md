@@ -35,7 +35,7 @@ Want the full research details? See [DISCOVERY.md](DISCOVERY.md).
 |------|-------------|
 | `src/index.html` | The generator site markup |
 | `src/styles/style.css` | Site styles |
-| `src/js/` | ES modules — `main.js` (entry), `ui.js` (DOM wiring), `workflow.js` (workflow/prompt generation), `bodies.js` (archetype prompt bodies), `highlight.js`, `next-steps.js`, `patterns.js` |
+| `src/js/` | ES modules — `main.js` (entry), `ui.js` (DOM wiring), `workflow.js` (workflow/prompt generation), `bodies.js` (archetype prompt bodies), `highlight.js`, `next-steps.js`, `patterns.js`, `theme.js` |
 | `test/` | Vitest unit tests for the pure generation logic |
 | `patterns.json` | Pattern data powering the wizard — archetypes, triggers, tips |
 | `scripts/scan.sh` | Weekly scanner that discovers agentic workflows across GitHub |

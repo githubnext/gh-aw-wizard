@@ -1,16 +1,13 @@
 ---
-name: deep-research
+name: "🔬 Deep Research"
 description: Analyze agentic workflow trends and open PRs to improve the pattern library
-on:
-  workflow_run:
-    workflows: ["Weekly Scan"]
-    types: [completed]
-    branches:
-      - main
-      - master
-  workflow_dispatch:
+engine: copilot
+on: weekly
+permissions:
+  copilot-requests: write
 safe-outputs:
   create-pull-request:
+strict: true
 timeout-minutes: 30
 steps:
   - name: Run statistical analysis

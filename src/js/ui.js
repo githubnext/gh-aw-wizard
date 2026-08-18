@@ -9,6 +9,7 @@ import {
 } from './workflow.js';
 import { highlightMarkdown } from './highlight.js';
 import { nextStepsHtml } from './next-steps.js';
+import { initTheme } from './theme.js';
 
 var patterns = null;
 var currentStep = 1;
@@ -17,6 +18,7 @@ var generatedPrompt = '';
 var currentFormat = 'workflow';
 
 export function initWizard() {
+  initTheme();
   loadPatterns().then(function (data) { patterns = data; });
   bindNavigation();
   bindFormEvents();
