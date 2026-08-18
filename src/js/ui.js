@@ -156,11 +156,12 @@ function bindFormEvents() {
   document.querySelectorAll('input[name="archetype"]').forEach(function (radio) {
     // Native radio inputs cannot be unchecked by clicking them again. Track whether
     // the radio was already selected before the click so we can toggle it off.
+    var wasChecked = false;
     radio.addEventListener('mousedown', function () {
-      radio._wasChecked = radio.checked;
+      wasChecked = radio.checked;
     });
     radio.addEventListener('click', function (e) {
-      if (radio._wasChecked) {
+      if (wasChecked) {
         e.preventDefault();
         radio.checked = false;
         clearArchetypeSelection();
