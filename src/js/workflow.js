@@ -173,6 +173,16 @@ export function generateWorkflowFile(answers, patterns) {
   return fm + body + contextSection;
 }
 
+export function fencedBlock(content, lang) {
+  // Use a fence longer than the longest backtick run inside the content so
+  // nested code blocks in the generated markdown stay intact.
+  var longest = 0;
+  var matches = String(content).match(/`+/g) || [];
+  matches.forEach(function (m) { if (m.length > longest) longest = m.length; });
+  var fence = '`'.repeat(Math.max(3, longest + 1));
+  return fence + (lang || '') + '\n' + content + '\n' + fence;
+}
+
 export function generateAgentPrompt(answers, patterns) {
   var arch = getArchetype(patterns, answers.archetype);
   var name = workflowName(answers.archetype, answers.customDescription);
@@ -223,5 +233,13 @@ export function generateAgentPrompt(answers, patterns) {
   }
 
   prompt += '\nThe workflow should be saved to .github/workflows/' + name + '.md';
+
+  // Inline the generated workflow markdown as a starting-point suggestion.
+  var suggestion = generateWorkflowFile(answers, patterns);
+  prompt += '\n\n## Suggested workflow file\n\n' +
+    'Use this generated draft as a starting point for `.github/workflows/' + name + '.md`, ' +
+    'adapting it to the repository as needed:\n\n' +
+    fencedBlock(suggestion.replace(/\s+$/, ''), 'markdown') + '\n';
+
   return prompt;
 }
