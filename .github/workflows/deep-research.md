@@ -16,7 +16,7 @@ steps:
   - name: Check for existing deep research PR
     id: existing-pr
     run: |
-      count=$(gh pr list --state open --limit 100 --json number,title,headRefName --jq '[.[] | select((.headRefName | startswith("deep-research/")) or (.title | test("Pattern library update")))] | length')
+      count=$(gh pr list --state open --limit 100 --json number,headRefName --jq '[.[] | select(.headRefName | startswith("deep-research/"))] | length')
       if [ "$count" != "0" ]; then
         echo "exists=true" >> "$GITHUB_OUTPUT"
         printf '%s\n' "An open deep research pull request already exists. Call noop and do not scan, modify files, commit, or open another PR." > .deep-research-skip
@@ -68,7 +68,6 @@ steps:
       # Classify workflows into archetypes
       def classify(wf):
           name = (wf.get("name", "") + " " + wf.get("file", "")).lower()
-          triggers = set(wf.get("triggers", []))
           if "triage" in name or "label" in name:
               return ("issue-triage", "Issue Triage", "Classify and label new issues")
           if "upstream" in name or "sync" in name or "monitor" in name:
