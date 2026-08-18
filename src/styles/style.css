@@ -386,19 +386,6 @@ a:hover {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-.step-title {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 0.3rem;
-  letter-spacing: -0.01em;
-}
-.step-description {
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-  margin-bottom: 1.75rem;
-}
-
 /* Form elements */
 .option-group {
   display: flex;
@@ -821,7 +808,6 @@ a:hover {
   .preview-actions .btn { flex: 1; justify-content: center; }
   .insights-grid { gap: 1rem; }
   .insight-item { min-width: 70px; }
-  .step-title { font-size: 1.2rem; }
 }
 
 /* Focus visible for a11y */
