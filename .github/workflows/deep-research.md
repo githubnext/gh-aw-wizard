@@ -359,7 +359,7 @@ The workflow first runs `scripts/scan.sh --active-only --run-history` to collect
 
 ### Step 0: Skip when a PR is already open
 
-If `.deep-research-skip` exists, call `noop` and stop. Do not scan, modify files, commit changes, or open another pull request.
+If `.deep-research-skip` exists, call `noop` and stop. Do not open another pull request.
 
 ### Step 1: Read the data
 
