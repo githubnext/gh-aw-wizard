@@ -11,7 +11,7 @@
   --text-muted: var(--color-fg-subtle, #6e7781);
   --accent-blue: var(--color-accent-fg, #0969da);
   --accent-blue-rgb: 9, 105, 218;
-  --accent-purple: var(--color-done-fg, #8250df);
+  --accent-purple: var(--color-success-emphasis, #1f883d);
   --accent-green: var(--color-success-emphasis, #1f883d);
   --accent-green-hover: #1a7f37;
   --border-color: var(--color-border-default, #d0d7de);
@@ -24,14 +24,14 @@
   --yaml-value: var(--color-prettylights-syntax-string, #0a3069);
   --yaml-string: var(--color-prettylights-syntax-string, #0a3069);
   --yaml-comment: var(--color-prettylights-syntax-comment, #6e7781);
-  --heading-color: var(--color-done-fg, #8250df);
+  --heading-color: var(--color-success-fg, #1a7f37);
   --success: var(--color-success-fg, #1a7f37);
   --warning: var(--color-attention-fg, #9a6700);
   --danger: var(--color-danger-fg, #cf222e);
   --control-fg-on-emphasis: var(--color-fg-on-emphasis, #ffffff);
   --header-gradient-start: rgba(246, 248, 250, 0.85);
   --glow-blue: rgba(9, 105, 218, 0.12);
-  --glow-purple: rgba(130, 80, 223, 0.08);
+  --glow-purple: rgba(31, 136, 61, 0.08);
   --shadow-card: var(--color-shadow-medium, 0 3px 12px rgba(27,31,36,0.15));
   --shadow-floating: var(--color-shadow-large, 0 8px 24px rgba(140,149,159,0.2));
   --shadow-btn-primary-hover: 0 2px 6px rgba(31, 136, 61, 0.25);
@@ -56,7 +56,7 @@
   --text-muted: #6e7681;
   --accent-blue: #58a6ff;
   --accent-blue-rgb: 88, 166, 255;
-  --accent-purple: #bc8cff;
+  --accent-purple: #3fb950;
   --accent-green: #238636;
   --accent-green-hover: #2ea043;
   --border-color: #30363d;
@@ -69,13 +69,13 @@
   --yaml-value: #a5d6ff;
   --yaml-string: #a5d6ff;
   --yaml-comment: #8b949e;
-  --heading-color: #d2a8ff;
+  --heading-color: #3fb950;
   --success: #3fb950;
   --warning: #d29922;
   --danger: #f85149;
   --header-gradient-start: rgba(22, 27, 34, 0.8);
   --glow-blue: rgba(var(--accent-blue-rgb), 0.15);
-  --glow-purple: rgba(188, 140, 255, 0.1);
+  --glow-purple: rgba(63, 185, 80, 0.1);
   --shadow-card: 0 2px 8px rgba(0,0,0,0.2);
   --shadow-floating: 0 4px 16px rgba(0,0,0,0.3);
   --shadow-btn-primary-hover: 0 2px 6px rgba(46,160,67,0.25);
@@ -194,94 +194,149 @@ a:hover {
   text-align: center;
 }
 
-/* Progress bar */
-.progress-bar {
-  display: flex;
-  gap: 0;
+/* IFTTT-inspired workflow recipe and progress */
+.workflow-recipe {
   margin-bottom: 2.5rem;
-  position: relative;
-  padding: 0 2rem;
+  padding: 1.25rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
 }
-.progress-step {
-  flex: 1;
+.recipe-header {
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.recipe-header h2 {
+  font-size: 1rem;
+  font-weight: 650;
+  color: var(--text-primary);
+}
+.recipe-status {
+  flex-shrink: 0;
+  padding: 0.25rem 0.6rem;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+.recipe-status-dot {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-right: 0.25rem;
+  background: var(--accent-green);
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px rgba(31, 136, 61, 0.12);
+}
+.recipe-status-step {
+  margin-left: 0.3rem;
+  padding-left: 0.45rem;
+  border-left: 1px solid var(--border-color);
+  color: var(--text-muted);
+}
+.recipe-clauses {
+  display: grid;
   gap: 0.5rem;
+}
+.recipe-clause {
+  display: grid;
+  grid-template-columns: 2.75rem 4.5rem minmax(0, 1fr);
+  align-items: stretch;
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0;
+  overflow: hidden;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  transition: opacity var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.recipe-clause.is-placeholder {
+  opacity: 0.62;
+  border-style: dashed;
+}
+.recipe-clause.active {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 1px var(--accent-blue);
+}
+.recipe-clause.completed {
   cursor: pointer;
-  position: relative;
-  z-index: 1;
+}
+.recipe-clause.completed:hover {
+  border-color: var(--accent-green);
+}
+.recipe-clause:disabled {
+  cursor: default;
+}
+.recipe-clause:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
 }
 .progress-step .step-indicator {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 2px solid var(--border-color);
+  align-self: center;
+  justify-self: center;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.8rem;
-  font-weight: 600;
+  width: 1.75rem;
+  height: 1.75rem;
   color: var(--text-muted);
-  background: var(--bg-secondary);
-  transition: all var(--transition-med);
-  position: relative;
-}
-.progress-step .step-label {
+  background: var(--bg-card);
+  border: 2px solid var(--border-color);
+  border-radius: 50%;
   font-size: 0.72rem;
-  font-weight: 500;
-  color: var(--text-muted);
-  text-align: center;
-  transition: color var(--transition-med);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  font-weight: 700;
+  transition: all var(--transition-med);
 }
 .progress-step.active .step-indicator {
-  border-color: var(--accent-blue);
   color: var(--accent-blue);
   background: rgba(var(--accent-blue-rgb), 0.1);
-  box-shadow: 0 0 0 4px rgba(var(--accent-blue-rgb), 0.08);
-  animation: pulseRing 2s ease-in-out infinite;
-}
-@keyframes pulseRing {
-  0%, 100% { box-shadow: 0 0 0 4px rgba(var(--accent-blue-rgb), 0.08); }
-  50% { box-shadow: 0 0 0 8px rgba(var(--accent-blue-rgb), 0.04); }
-}
-.progress-step.active .step-label {
-  color: var(--accent-blue);
-  font-weight: 600;
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(var(--accent-blue-rgb), 0.08);
 }
 .progress-step.completed .step-indicator {
-  border-color: var(--accent-green);
-  background: var(--accent-green);
   color: var(--control-fg-on-emphasis);
-  box-shadow: none;
-  animation: none;
+  background: var(--accent-green);
+  border-color: var(--accent-green);
 }
-.progress-step.completed .step-label {
-  color: var(--success);
+.recipe-key {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
-/* Connecting line between steps */
-.progress-step::after {
-  content: '';
-  position: absolute;
-  top: 18px;
-  left: calc(50% + 22px);
-  width: calc(100% - 44px);
-  height: 2px;
-  background: var(--border-color);
-  transition: background var(--transition-med);
+.recipe-key-what { background: #ef476f; }
+.recipe-key-when { background: #5b5bd6; }
+.recipe-key-where { background: #168f63; }
+.recipe-key-how { background: #9a6700; }
+.recipe-key-agent { background: #5b6573; }
+.recipe-key-preview { background: #8250df; }
+.recipe-value {
+  align-self: center;
+  padding: 0.6rem 0.8rem;
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.4;
 }
-.progress-step:last-child::after {
-  display: none;
+.recipe-clause.is-placeholder .recipe-value {
+  color: var(--text-muted);
+  font-weight: 500;
 }
-.progress-step.completed::after {
-  background: linear-gradient(90deg, var(--accent-green), var(--accent-green));
-}
-.progress-step.active::after {
-  background: var(--border-color);
-}
-
 /* Steps */
 .wizard-step {
   display: none;
@@ -674,62 +729,6 @@ a:hover {
   color: var(--accent-blue);
 }
 
-/* Format toggle */
-.format-toggle {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.65rem;
-  margin-bottom: 1.5rem;
-}
-.format-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.15rem;
-  padding: 0.85rem 1rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  text-align: left;
-  color: var(--text-primary);
-  font-family: var(--font-sans);
-}
-.format-btn:hover {
-  border-color: var(--border-hover);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-card);
-}
-.format-btn.active {
-  border-color: var(--accent-blue);
-  background: rgba(var(--accent-blue-rgb), 0.05);
-  box-shadow: 0 0 0 1px var(--accent-blue);
-}
-.format-btn.active::after {
-  content: '';
-}
-.format-icon {
-  font-size: 1.2rem;
-  margin-bottom: 0.15rem;
-}
-.format-label {
-  font-weight: 600;
-  font-size: 0.92rem;
-}
-.format-desc {
-  font-size: 0.78rem;
-  color: var(--text-secondary);
-  line-height: 1.3;
-}
-.format-desc code {
-  background: var(--bg-tertiary);
-  padding: 1px 4px;
-  border-radius: 3px;
-  font-size: 0.75rem;
-  font-family: var(--font-mono);
-}
-
 /* Next steps panel */
 .next-steps-panel {
   margin-top: 1.25rem;
@@ -791,12 +790,12 @@ a:hover {
   .site-header h1 { font-size: 1.35rem; }
   .header-icon { width: 26px; height: 26px; }
   .option-group.archetype-grid { grid-template-columns: 1fr; }
-  .format-toggle { grid-template-columns: 1fr; }
   .archetype-icon { width: 34px; height: 34px; font-size: 1rem; }
-  .progress-step .step-label { display: none; }
-  .progress-step .step-indicator { width: 30px; height: 30px; font-size: 0.75rem; }
-  .progress-step::after { top: 15px; left: calc(50% + 19px); width: calc(100% - 38px); }
-  .progress-bar { padding: 0 0.5rem; }
+  .recipe-header { align-items: flex-start; }
+  .recipe-status { font-size: 0.65rem; }
+  .recipe-clause { grid-template-columns: 2.25rem 3.75rem minmax(0, 1fr); }
+  .progress-step .step-indicator { width: 1.5rem; height: 1.5rem; font-size: 0.65rem; }
+  .recipe-key { padding: 0.55rem 0.35rem; }
   .step-nav { flex-direction: column-reverse; gap: 0.75rem; }
   .step-nav .btn { width: 100%; justify-content: center; }
   .preview-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }

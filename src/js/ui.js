@@ -4,55 +4,44 @@ import { loadPatterns, getRecommendedConfiguration } from './patterns.js';
 import {
   workflowName,
   inferNeedsPreSteps,
-  generateWorkflowFile,
   generateAgentPrompt
 } from './workflow.js';
 import { highlightMarkdown } from './highlight.js';
 import { nextStepsHtml } from './next-steps.js';
 import { initTheme } from './theme.js';
+import { buildWorkflowSummary } from './summary.js';
 
 var patterns = null;
 var currentStep = 1;
-var generatedMd = '';
 var generatedPrompt = '';
-var currentFormat = 'prompt';
-var TOTAL_STEPS = 5;
+var TOTAL_STEPS = 6;
 
 export function initWizard() {
   initTheme();
-  loadPatterns().then(function (data) { patterns = data; });
+  loadPatterns().then(function (data) {
+    patterns = data;
+    renderWorkflowSummary();
+  });
   bindNavigation();
   bindFormEvents();
   initNavigationHistory();
+  renderWorkflowSummary();
 }
 
 function generateAndShow() {
   refreshGeneratedContent();
-  currentFormat = 'prompt';
-  document.querySelectorAll('.format-btn').forEach(function (b) { b.classList.remove('active'); });
-  document.getElementById('fmt-prompt').classList.add('active');
   goToStep(6);
   showPreview(generatedPrompt);
   var answers = gatherAnswers();
   showNextSteps('prompt', workflowName(answers.archetype, answers.customDescription), answers.engine);
   document.getElementById('preview-filename').textContent = 'prompt.txt';
-  document.getElementById('btn-download').style.display = 'none';
 }
 
-function switchFormat(fmt) {
+function refreshPreview() {
   refreshGeneratedContent();
+  showPreview(generatedPrompt);
   var answers = gatherAnswers();
-  var name = workflowName(answers.archetype, answers.customDescription);
-  if (fmt === 'prompt') {
-    showPreview(generatedPrompt);
-    document.getElementById('preview-filename').textContent = 'prompt.txt';
-    document.getElementById('btn-download').style.display = 'none';
-  } else {
-    showPreview(generatedMd);
-    document.getElementById('preview-filename').textContent = name + '.md';
-    document.getElementById('btn-download').style.display = '';
-  }
-  showNextSteps(fmt, name, answers.engine);
+  showNextSteps('prompt', workflowName(answers.archetype, answers.customDescription), answers.engine);
 }
 
 function showNextSteps(format, name, engine) {
@@ -63,7 +52,6 @@ function showNextSteps(format, name, engine) {
 
 function refreshGeneratedContent() {
   var answers = gatherAnswers();
-  generatedMd = generateWorkflowFile(answers, patterns);
   generatedPrompt = generateAgentPrompt(answers, patterns);
 }
 
@@ -81,19 +69,6 @@ function bindNavigation() {
   document.getElementById('prev-6').addEventListener('click', function () { goToStep(5); });
 
   document.getElementById('btn-copy').addEventListener('click', copyToClipboard);
-  document.getElementById('btn-download').addEventListener('click', downloadFile);
-
-  // Format toggle
-  document.querySelectorAll('.format-btn').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var fmt = btn.getAttribute('data-format');
-      if (fmt === currentFormat) return;
-      currentFormat = fmt;
-      document.querySelectorAll('.format-btn').forEach(function (b) { b.classList.remove('active'); });
-      btn.classList.add('active');
-      switchFormat(fmt);
-    });
-  });
 
   // Clickable progress steps
   var steps = document.querySelectorAll('.progress-step');
@@ -150,8 +125,13 @@ function updateProgress(from, to) {
   steps.forEach(function (el) {
     var s = parseInt(el.getAttribute('data-step'));
     el.classList.remove('active', 'completed');
+    el.removeAttribute('aria-current');
     if (s < to) el.classList.add('completed');
-    else if (s === to) el.classList.add('active');
+    else if (s === to) {
+      el.classList.add('active');
+      el.setAttribute('aria-current', 'step');
+    }
+    el.disabled = s > to;
   });
   // Update checkmarks
   steps.forEach(function (el) {
@@ -159,6 +139,7 @@ function updateProgress(from, to) {
     var s = parseInt(el.getAttribute('data-step'));
     ind.textContent = el.classList.contains('completed') ? '✓' : s;
   });
+  document.getElementById('recipe-step-status').textContent = 'Step ' + to + ' of ' + TOTAL_STEPS;
 }
 
 // ── Form events ────────────────────────────────────────────────────────────
@@ -203,10 +184,17 @@ function bindFormEvents() {
   document.querySelectorAll('input[name="engine"]').forEach(function (radio) {
     radio.addEventListener('change', function () {
       updateCardSelection('#engine-options', 'radio');
-      switchFormat(currentFormat);
+      if (currentStep === 6) refreshPreview();
     });
   });
   updateCardSelection('#engine-options', 'radio');
+
+  document.querySelectorAll('input').forEach(function (input) {
+    input.addEventListener('change', renderWorkflowSummary);
+  });
+  document.querySelectorAll('textarea').forEach(function (textarea) {
+    textarea.addEventListener('input', renderWorkflowSummary);
+  });
 }
 
 function updateCardSelection(containerSel, type) {
@@ -271,7 +259,23 @@ function gatherAnswers() {
   };
 }
 
+function renderWorkflowSummary() {
+  var summary = buildWorkflowSummary(gatherAnswers(), patterns);
+  updateSummaryClause('summary-purpose', summary.purpose);
+  updateSummaryClause('summary-trigger', summary.trigger);
+  updateSummaryClause('summary-output', summary.output);
+  updateSummaryClause('summary-context', {
+    value: summary.context ? 'With ' + summary.context + '.' : 'choose how it works',
+    complete: Boolean(summary.context)
+  });
+  updateSummaryClause('summary-engine', summary.engine);
+}
 
+function updateSummaryClause(id, clause) {
+  var value = document.getElementById(id);
+  value.textContent = clause.value;
+  value.parentElement.classList.toggle('is-placeholder', !clause.complete);
+}
 
 // ── Preview rendering ──────────────────────────────────────────────────────
 function showPreview(md) {
@@ -280,9 +284,9 @@ function showPreview(md) {
 }
 
 
-// ── Clipboard & download ───────────────────────────────────────────────────
+// ── Clipboard ──────────────────────────────────────────────────────────────
 function copyToClipboard() {
-  var text = currentFormat === 'prompt' ? generatedPrompt : generatedMd;
+  var text = generatedPrompt;
   navigator.clipboard.writeText(text).then(function () {
     showToast('Copied to clipboard!');
   }).catch(function () {
@@ -296,21 +300,6 @@ function copyToClipboard() {
     document.body.removeChild(ta);
     showToast('Copied to clipboard!');
   });
-}
-
-function downloadFile() {
-  var answers = gatherAnswers();
-  var name = workflowName(answers.archetype, answers.customDescription);
-  var blob = new Blob([generatedMd], { type: 'text/markdown' });
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url;
-  a.download = name + '.md';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  showToast('Downloaded ' + name + '.md');
 }
 
 function showToast(msg) {

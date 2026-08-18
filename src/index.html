@@ -28,7 +28,7 @@
       <div class="header-title">
         <svg class="header-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M12 2L14.09 8.26L20 9.27L15.55 13.97L16.91 20L12 16.9L7.09 20L8.45 13.97L4 9.27L9.91 8.26L12 2Z" fill="url(#sparkle-grad)" opacity="0.9"/>
-          <defs><linearGradient id="sparkle-grad" x1="4" y1="2" x2="20" y2="20"><stop offset="0%" stop-color="#58a6ff"/><stop offset="100%" stop-color="#bc8cff"/></linearGradient></defs>
+          <defs><linearGradient id="sparkle-grad" x1="4" y1="2" x2="20" y2="20"><stop offset="0%" stop-color="#58a6ff"/><stop offset="100%" stop-color="#3fb950"/></linearGradient></defs>
         </svg>
         <h1>GitHub Agentic Workflow Generator</h1>
       </div>
@@ -43,33 +43,48 @@
   </header>
 
   <main class="container">
-    <!-- Progress bar -->
-    <div class="progress-bar" id="progress-bar">
-      <div class="progress-step active" data-step="1">
-        <div class="step-indicator">1</div>
-        <div class="step-label">What</div>
+    <section class="workflow-recipe" aria-labelledby="workflow-recipe-title">
+      <div class="recipe-header">
+        <h2 id="workflow-recipe-title">Your agentic workflow</h2>
+        <span class="recipe-status" role="status">
+          <span class="recipe-status-dot" aria-hidden="true"></span>
+          <span>Live</span>
+          <span class="recipe-status-step" id="recipe-step-status">Step 1 of 6</span>
+        </span>
       </div>
-      <div class="progress-step" data-step="2">
-        <div class="step-indicator">2</div>
-        <div class="step-label">When</div>
+      <div class="recipe-clauses" id="progress-bar" aria-live="polite">
+        <button class="recipe-clause progress-step active is-placeholder" type="button" data-step="1" aria-current="step">
+          <span class="step-indicator" aria-hidden="true">1</span>
+          <span class="recipe-key recipe-key-what">What</span>
+          <span class="recipe-value" id="summary-purpose">choose what the agent should do</span>
+        </button>
+        <button class="recipe-clause progress-step is-placeholder" type="button" data-step="2" disabled>
+          <span class="step-indicator" aria-hidden="true">2</span>
+          <span class="recipe-key recipe-key-when">When</span>
+          <span class="recipe-value" id="summary-trigger">choose when it runs</span>
+        </button>
+        <button class="recipe-clause progress-step is-placeholder" type="button" data-step="3" disabled>
+          <span class="step-indicator" aria-hidden="true">3</span>
+          <span class="recipe-key recipe-key-where">Where</span>
+          <span class="recipe-value" id="summary-output">choose what it can write</span>
+        </button>
+        <button class="recipe-clause progress-step is-placeholder" type="button" data-step="4" disabled>
+          <span class="step-indicator" aria-hidden="true">4</span>
+          <span class="recipe-key recipe-key-how">How</span>
+          <span class="recipe-value" id="summary-context">choose how it works</span>
+        </button>
+        <button class="recipe-clause progress-step" type="button" data-step="5" disabled>
+          <span class="step-indicator" aria-hidden="true">5</span>
+          <span class="recipe-key recipe-key-agent">Agent</span>
+          <span class="recipe-value" id="summary-engine">Copilot</span>
+        </button>
+        <button class="recipe-clause progress-step" type="button" data-step="6" disabled>
+          <span class="step-indicator" aria-hidden="true">6</span>
+          <span class="recipe-key recipe-key-preview">Preview</span>
+          <span class="recipe-value">review and copy your generated prompt</span>
+        </button>
       </div>
-      <div class="progress-step" data-step="3">
-        <div class="step-indicator">3</div>
-        <div class="step-label">Where</div>
-      </div>
-      <div class="progress-step" data-step="4">
-        <div class="step-indicator">4</div>
-        <div class="step-label">How</div>
-      </div>
-      <div class="progress-step" data-step="5">
-        <div class="step-indicator">5</div>
-        <div class="step-label">Agent</div>
-      </div>
-      <div class="progress-step" data-step="6">
-        <div class="step-indicator">6</div>
-        <div class="step-label">Preview</div>
-      </div>
-    </div>
+    </section>
 
     <!-- Step 1: Archetype -->
     <section class="wizard-step active" id="step-1">
@@ -344,29 +359,14 @@
 
     <!-- Step 6: Preview -->
     <section class="wizard-step" id="step-6">
-      <h2 class="step-title">Preview &amp; Download</h2>
-      <p class="step-description">Choose how you want to use your workflow.</p>
-
-      <!-- Format toggle -->
-      <div class="format-toggle" id="format-toggle">
-        <button class="format-btn active" data-format="prompt" id="fmt-prompt">
-          <span class="format-icon">💬</span>
-          <span class="format-label">Coding agent prompt</span>
-          <span class="format-desc">Paste into Copilot, Claude, or Codex to create the workflow</span>
-        </button>
-        <button class="format-btn" data-format="workflow" id="fmt-workflow">
-          <span class="format-icon">📄</span>
-          <span class="format-label">Workflow file</span>
-          <span class="format-desc">Ready-to-use <code>.md</code> file for GitHub Actions</span>
-        </button>
-      </div>
+      <h2 class="step-title">Preview</h2>
+      <p class="step-description">Paste this prompt into Copilot, Claude, or Codex to create the workflow.</p>
 
       <div class="preview-container">
         <div class="preview-header">
           <h3 id="preview-filename">prompt.txt</h3>
           <div class="preview-actions">
             <button class="btn btn-secondary btn-sm" id="btn-copy">📋 Copy</button>
-            <button class="btn btn-primary btn-sm" id="btn-download" style="display: none;">⬇ Download .md</button>
           </div>
         </div>
         <div class="preview-code" id="preview-code"></div>
