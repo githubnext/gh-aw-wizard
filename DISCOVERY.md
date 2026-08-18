@@ -53,6 +53,20 @@ Parse job logs from failed runs to categorize errors: `auth_error`, `not_found`,
 
 Requires the `gh` CLI, authenticated with a token that has `public_repo` scope.
 
+The full refresh pipeline (scan, rebuild, analyze) also runs unattended:
+
+```bash
+./scripts/scan.sh --active-only --run-history   # data/scan-results.json
+python3 scripts/build-patterns.py               # patterns.json
+node scripts/validate-data.mjs patterns.json data/*.json
+```
+
+`scripts/analyze.cjs` produces `data/analysis-report.json` and needs an authenticated Octokit
+client, so it runs from `actions/github-script`. The
+[`Refresh Data`](.github/workflows/refresh-data.yml) workflow chains all four steps daily and
+pushes the regenerated files to `main`. Every generated file must be well-formed JSON and stay
+at or below 10 MB, otherwise `scripts/validate-data.mjs` fails the run before anything is pushed.
+
 ## Data schema
 
 Results are written to `data/scan-results.json` with two top-level keys:

@@ -1,0 +1,71 @@
+name: Refresh Data
+
+# Deterministic scan/refresh pipeline extracted from the Deep Research agentic
+# workflow. Runs daily, regenerates the data files and pushes them to main.
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: refresh-data
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Run scan
+        run: ./scripts/scan.sh --active-only --run-history
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Rebuild patterns.json
+        run: python3 scripts/build-patterns.py
+
+      - name: Run statistical analysis
+        uses: actions/github-script@v9
+        with:
+          script: |
+            await require(`${process.env.GITHUB_WORKSPACE}/scripts/analyze.cjs`)({ github });
+
+      - name: Validate generated data
+        run: |
+          shopt -s nullglob
+          node scripts/validate-data.mjs \
+            patterns.json \
+            data/scan-results.json \
+            data/analysis-report.json \
+            data/scan-history/*.json
+
+      - name: Commit and push to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add patterns.json data/
+          if git diff --cached --quiet; then
+            echo "No data changes to push"
+            exit 0
+          fi
+          git commit -m "chore: refresh scan data and patterns [skip ci]"
+          git push origin HEAD:main
