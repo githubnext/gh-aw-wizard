@@ -122,6 +122,11 @@ describe('buildTriggerYaml', () => {
   it('ignores unknown triggers', () => {
     expect(buildTriggerYaml(['unknown_trigger'])).toBe('');
   });
+
+  it('uses ready_for_review for pull_request on the pr-review archetype', () => {
+    const yaml = buildTriggerYaml(['pull_request'], 'pr-review-agent', 'pr-review');
+    expect(yaml).toBe('  pull_request:\n    types: [ready_for_review]\n');
+  });
 });
 
 describe('generateWorkflowFile', () => {

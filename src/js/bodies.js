@@ -251,7 +251,7 @@ export function buildDocumentationUpdater(answers, label) {
 export function buildPrReview(answers, label) {
   return '# ' + label + '\n\n' +
     'You are a **pull request reviewer** for this repository.\n\n' +
-    'Your job is to review opened pull requests for code quality, potential bugs, and adherence to project standards.\n\n' +
+    'Your job is to review pull requests marked ready for review for code quality, potential bugs, and adherence to project standards.\n\n' +
     preStepsBlock(answers) +
     '## Instructions\n\n' +
     '1. **Read** the PR diff, title, and description\n' +

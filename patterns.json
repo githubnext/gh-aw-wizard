@@ -291,15 +291,11 @@
       "count": 30,
       "recommended_triggers": [
         {
-          "type": "issues",
+          "type": "pull_request",
           "config": {}
         },
         {
           "type": "workflow_dispatch",
-          "config": {}
-        },
-        {
-          "type": "pull_request",
           "config": {}
         }
       ],

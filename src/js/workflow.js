@@ -41,7 +41,7 @@ export function inferCapabilities(archetype) {
   return caps;
 }
 
-export function buildTriggerYaml(triggers, commandName) {
+export function buildTriggerYaml(triggers, commandName, archetype) {
   var lines = '';
   var name = commandName || 'agentic-workflow';
   triggers.forEach(function (t) {
@@ -49,7 +49,11 @@ export function buildTriggerYaml(triggers, commandName) {
       case 'issues':
         lines += '  issues:\n    types: [opened]\n'; break;
       case 'pull_request':
-        lines += '  pull_request:\n    types: [opened]\n'; break;
+        // PR reviewers should act once a PR is actually ready (not while still a draft).
+        lines += (archetype === 'pr-review')
+          ? '  pull_request:\n    types: [ready_for_review]\n'
+          : '  pull_request:\n    types: [opened]\n';
+        break;
       case 'schedule':
         lines += '  schedule:\n    - cron: "0 9 * * 1-5"\n'; break;
       case 'workflow_dispatch':
@@ -102,7 +106,7 @@ export function generateWorkflowFile(answers, patterns) {
   }
 
   // Trigger config YAML
-  var triggerYaml = buildTriggerYaml(answers.triggers, name);
+  var triggerYaml = buildTriggerYaml(answers.triggers, name, answers.archetype);
 
   // Frontmatter — auto-infer capabilities from archetype
   var inferred = inferCapabilities(answers.archetype);
@@ -192,7 +196,9 @@ export function generateAgentPrompt(answers, patterns) {
   var triggersReadable = answers.triggers.map(function (t) {
     var map = {
       'issues': 'when a new issue is opened',
-      'pull_request': 'when a pull request is opened',
+      'pull_request': (answers.archetype === 'pr-review')
+        ? 'when a pull request is marked ready for review'
+        : 'when a pull request is opened',
       'schedule': 'on a daily/weekly schedule',
       'workflow_dispatch': 'on manual dispatch',
       'slash_command': 'on slash commands in comments',
