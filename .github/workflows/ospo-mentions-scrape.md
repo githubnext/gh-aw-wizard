@@ -8,6 +8,7 @@ on:
   workflow_dispatch:
 permissions:
   copilot-requests: write
+  issues: write
 safe-outputs:
   create-issue:
 strict: false
@@ -21,7 +22,7 @@ steps:
       import subprocess
 
       repos = ["github/ospo", "github/ospo-aw"]
-      mention_re = re.compile(r'@([A-Za-z0-9](?:[A-Za-z0-9-]{0,38}))')
+      mention_re = re.compile(r'@([A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?)')
 
       def gh_json(path):
           result = subprocess.run(
@@ -32,14 +33,21 @@ steps:
           )
           if result.returncode != 0:
               return []
-          blobs = [b for b in result.stdout.split("\n\n") if b.strip()]
           data = []
-          for blob in blobs:
-              parsed = json.loads(blob)
+          decoder = json.JSONDecoder()
+          raw = result.stdout.strip()
+          pos = 0
+          while pos < len(raw):
+              while pos < len(raw) and raw[pos].isspace():
+                  pos += 1
+              if pos >= len(raw):
+                  break
+              parsed, next_pos = decoder.raw_decode(raw, pos)
               if isinstance(parsed, list):
                   data.extend(parsed)
               else:
                   data.append(parsed)
+              pos = next_pos
           return data
 
       def find_mentions(text):
