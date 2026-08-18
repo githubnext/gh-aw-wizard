@@ -661,6 +661,19 @@ a:hover {
   margin-bottom: 0.4rem;
 }
 
+/* Engine selector on review step */
+.engine-selector {
+  margin-bottom: 1.25rem;
+}
+.engine-selector h3 {
+  font-size: 0.92rem;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+}
+.engine-selector .option-desc a {
+  color: var(--accent-blue);
+}
+
 /* Format toggle */
 .format-toggle {
   display: grid;

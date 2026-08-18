@@ -25,20 +25,20 @@ export function initWizard() {
 }
 
 function generateAndShow() {
-  var answers = gatherAnswers();
-  generatedMd = generateWorkflowFile(answers, patterns);
-  generatedPrompt = generateAgentPrompt(answers, patterns);
+  refreshGeneratedContent();
   currentFormat = 'prompt';
   document.querySelectorAll('.format-btn').forEach(function (b) { b.classList.remove('active'); });
   document.getElementById('fmt-prompt').classList.add('active');
   goToStep(5);
   showPreview(generatedPrompt);
-  showNextSteps('prompt');
+  var answers = gatherAnswers();
+  showNextSteps('prompt', workflowName(answers.archetype, answers.customDescription), answers.engine);
   document.getElementById('preview-filename').textContent = 'prompt.txt';
   document.getElementById('btn-download').style.display = 'none';
 }
 
 function switchFormat(fmt) {
+  refreshGeneratedContent();
   var answers = gatherAnswers();
   var name = workflowName(answers.archetype, answers.customDescription);
   if (fmt === 'prompt') {
@@ -50,14 +50,19 @@ function switchFormat(fmt) {
     document.getElementById('preview-filename').textContent = name + '.md';
     document.getElementById('btn-download').style.display = '';
   }
-  showNextSteps(fmt);
+  showNextSteps(fmt, name, answers.engine);
 }
 
-function showNextSteps(format) {
+function showNextSteps(format, name, engine) {
   var panel = document.getElementById('next-steps-panel');
   if (!panel) return;
+  panel.innerHTML = nextStepsHtml(format, name, engine);
+}
+
+function refreshGeneratedContent() {
   var answers = gatherAnswers();
-  panel.innerHTML = nextStepsHtml(format, workflowName(answers.archetype, answers.customDescription));
+  generatedMd = generateWorkflowFile(answers, patterns);
+  generatedPrompt = generateAgentPrompt(answers, patterns);
 }
 
 // ── Navigation ─────────────────────────────────────────────────────────────
@@ -163,6 +168,15 @@ function bindFormEvents() {
       updateCardSelection('#data-options', 'checkbox');
     });
   });
+
+  // Step 5: engine radio cards
+  document.querySelectorAll('input[name="engine"]').forEach(function (radio) {
+    radio.addEventListener('change', function () {
+      updateCardSelection('#engine-options', 'radio');
+      switchFormat(currentFormat);
+    });
+  });
+  updateCardSelection('#engine-options', 'radio');
 }
 
 function updateCardSelection(containerSel, type) {
@@ -232,6 +246,7 @@ function gatherAnswers() {
     customDescription: document.getElementById('custom-description').value.trim(),
     triggers: triggers,
     outputs: outputs,
+    engine: (document.querySelector('input[name="engine"]:checked') || { value: 'copilot' }).value,
     extras: extras,
     needsData: inferNeedsPreSteps(archetypeId),
     dataDescription: document.getElementById('data-description').value.trim()

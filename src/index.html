@@ -291,6 +291,63 @@
       <h2 class="step-title">Preview &amp; Download</h2>
       <p class="step-description">Choose how you want to use your workflow.</p>
 
+      <div class="engine-selector">
+        <h3>Choose your agentic engine</h3>
+        <div class="option-group" id="engine-options">
+          <label class="option-card selected">
+            <input type="radio" name="engine" value="copilot" checked>
+            <div class="option-info">
+              <div class="option-label">Copilot (default)</div>
+              <div class="option-desc">
+                Quick docs: <a href="https://github.github.com/gh-aw/reference/engines/#copilot" target="_blank">Engine reference</a> ·
+                Setup: <a href="https://github.github.com/gh-aw/setup/quick-start/" target="_blank">Quick start</a>
+              </div>
+            </div>
+          </label>
+          <label class="option-card">
+            <input type="radio" name="engine" value="claude">
+            <div class="option-info">
+              <div class="option-label">Claude</div>
+              <div class="option-desc">
+                Quick docs: <a href="https://github.github.com/gh-aw/reference/engines/#claude" target="_blank">Engine reference</a> ·
+                Setup: <a href="https://github.github.com/gh-aw/setup/quick-start/" target="_blank">Quick start</a>
+              </div>
+            </div>
+          </label>
+          <label class="option-card">
+            <input type="radio" name="engine" value="codex">
+            <div class="option-info">
+              <div class="option-label">Codex</div>
+              <div class="option-desc">
+                Lower success rate in sampled workflows. 
+                Quick docs: <a href="https://github.github.com/gh-aw/reference/engines/#codex" target="_blank">Engine reference</a> ·
+                Setup: <a href="https://github.github.com/gh-aw/setup/quick-start/" target="_blank">Quick start</a>
+              </div>
+            </div>
+          </label>
+          <label class="option-card">
+            <input type="radio" name="engine" value="gemini">
+            <div class="option-info">
+              <div class="option-label">Gemini</div>
+              <div class="option-desc">
+                Quick docs: <a href="https://github.github.com/gh-aw/reference/engines/#gemini" target="_blank">Engine reference</a> ·
+                Setup: <a href="https://github.github.com/gh-aw/setup/quick-start/" target="_blank">Quick start</a>
+              </div>
+            </div>
+          </label>
+          <label class="option-card">
+            <input type="radio" name="engine" value="pi">
+            <div class="option-info">
+              <div class="option-label">Pi</div>
+              <div class="option-desc">
+                Quick docs: <a href="https://github.github.com/gh-aw/reference/engines/#pi" target="_blank">Engine reference</a> ·
+                Setup: <a href="https://github.github.com/gh-aw/setup/quick-start/" target="_blank">Quick start</a>
+              </div>
+            </div>
+          </label>
+        </div>
+      </div>
+
       <!-- Format toggle -->
       <div class="format-toggle" id="format-toggle">
         <button class="format-btn active" data-format="prompt" id="fmt-prompt">

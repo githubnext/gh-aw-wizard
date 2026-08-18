@@ -19,21 +19,38 @@ describe('getArchetype', () => {
 
 describe('nextStepsHtml', () => {
   it('renders workflow download instructions', () => {
-    const html = nextStepsHtml('workflow', 'issue-triage');
+    const html = nextStepsHtml('workflow', 'issue-triage', 'claude');
     expect(html).toContain('.github/workflows/issue-triage.md');
     expect(html).toContain('gh aw compile');
     expect(html).toContain('gh aw run issue-triage');
+    expect(html).toContain('Set up the <strong>Claude</strong> engine');
+    expect(html).toContain('reference/engines/#claude');
   });
 
   it('renders coding agent instructions for the prompt format', () => {
-    const html = nextStepsHtml('prompt', 'issue-triage');
-    expect(html).toContain('Open your favorite agent in your repository');
+    const html = nextStepsHtml('prompt', 'issue-triage', 'codex');
+    expect(html).toContain('Open <strong>Codex</strong> in your repository');
     expect(html).toContain('Run this prompt');
     expect(html).not.toContain('Download the <code>.md</code> file');
     expect(html).not.toContain('gh aw compile');
   });
 
   it('escapes the workflow name', () => {
-    expect(nextStepsHtml('workflow', '<img>')).toContain('&lt;img&gt;');
+    expect(nextStepsHtml('workflow', '<img>', 'copilot')).toContain('&lt;img&gt;');
+  });
+
+  it('defaults to copilot when engine is invalid', () => {
+    const html = nextStepsHtml('workflow', 'issue-triage', 'invalid');
+    expect(html).toContain('Set up the <strong>Copilot</strong> engine');
+    expect(html).toContain('reference/engines/#copilot');
+  });
+
+  it('renders setup links for additional supported engines', () => {
+    const geminiHtml = nextStepsHtml('workflow', 'issue-triage', 'gemini');
+    const piHtml = nextStepsHtml('workflow', 'issue-triage', 'pi');
+    expect(geminiHtml).toContain('Set up the <strong>Gemini</strong> engine');
+    expect(geminiHtml).toContain('reference/engines/#gemini');
+    expect(piHtml).toContain('Set up the <strong>Pi</strong> engine');
+    expect(piHtml).toContain('reference/engines/#pi');
   });
 });

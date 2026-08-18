@@ -36,6 +36,7 @@ function answers(overrides) {
     customDescription: '',
     triggers: ['issues', 'workflow_dispatch'],
     outputs: ['labels', 'comments'],
+    engine: 'copilot',
     extras: [],
     needsData: false,
     dataDescription: '',
@@ -135,6 +136,7 @@ describe('generateWorkflowFile', () => {
     expect(md.startsWith('---\n')).toBe(true);
     expect(md).toContain('name: issue-triage\n');
     expect(md).toContain('description: Classify and label incoming issues\n');
+    expect(md).toContain('engine: copilot\n');
     expect(md).toContain('  - add-label\n');
     expect(md).toContain('  - add-comment\n');
     expect(md).toContain('safe-outputs:\n');
@@ -181,6 +183,18 @@ describe('generateWorkflowFile', () => {
     expect(md).toContain('timeout-minutes: 30\n');
   });
 
+  it('falls back to copilot engine for unknown values', () => {
+    const md = generateWorkflowFile(answers({ engine: 'invalid' }), patterns);
+    expect(md).toContain('engine: copilot\n');
+  });
+
+  it('accepts all supported built-in engines', () => {
+    const geminiMd = generateWorkflowFile(answers({ engine: 'gemini' }), patterns);
+    const piMd = generateWorkflowFile(answers({ engine: 'pi' }), patterns);
+    expect(geminiMd).toContain('engine: gemini\n');
+    expect(piMd).toContain('engine: pi\n');
+  });
+
   it('deduplicates safe outputs', () => {
     const md = generateWorkflowFile(answers({ outputs: ['comments', 'labels'] }), patterns);
     const issuesCount = md.split('\n').filter((line) => line === '  - issues').length;
@@ -192,6 +206,7 @@ describe('generateAgentPrompt', () => {
   it('describes triggers and outputs in plain language', () => {
     const prompt = generateAgentPrompt(answers(), patterns);
     expect(prompt).toContain('- Name: issue-triage\n');
+    expect(prompt).toContain('- Engine: copilot\n');
     expect(prompt).toContain('when a new issue is opened, on manual dispatch');
     expect(prompt).toContain('add/remove labels, post comments on issues/PRs');
     expect(prompt).toContain('.github/workflows/issue-triage.md');
@@ -214,6 +229,11 @@ describe('generateAgentPrompt', () => {
     expect(prompt).toContain('- Add a pre-step to fetch external data before the agent runs\n');
     expect(prompt).toContain('- Add cache-memory tool for persistent memory across runs\n');
     expect(prompt).toContain('- Additional project context: Uses pnpm\n');
+  });
+
+  it('includes the selected engine requirement', () => {
+    const prompt = generateAgentPrompt(answers({ engine: 'claude' }), patterns);
+    expect(prompt).toContain('- Engine: claude\n');
   });
 
   it('inlines the generated workflow markdown as a suggestion at the bottom', () => {
