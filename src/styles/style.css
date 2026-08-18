@@ -360,10 +360,10 @@ a:hover {
   animation: accordionOpen 0.3s ease;
 }
 .wizard-step.slide-out-left {
-  animation: accordionOpenReverse 0.2s ease reverse forwards;
+  animation: accordionCloseUp 0.2s ease forwards;
 }
 .wizard-step.slide-out-right {
-  animation: accordionOpen 0.2s ease reverse forwards;
+  animation: accordionCloseDown 0.2s ease forwards;
 }
 @keyframes accordionOpen {
   from { opacity: 0; transform: translateY(-8px); }
@@ -372,6 +372,14 @@ a:hover {
 @keyframes accordionOpenReverse {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes accordionCloseUp {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-8px); }
+}
+@keyframes accordionCloseDown {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(8px); }
 }
 @keyframes slideIn {
   from { opacity: 0; transform: translateY(-6px); }
