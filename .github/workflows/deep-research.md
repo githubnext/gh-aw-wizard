@@ -2,10 +2,7 @@
 name: deep-research
 description: Analyze agentic workflow trends and open PRs to improve the pattern library
 engine: copilot
-on:
-  schedule:
-    - cron: "0 10 * * 1"
-  workflow_dispatch:
+on: weekly
 permissions:
   copilot-requests: write
 safe-outputs:
