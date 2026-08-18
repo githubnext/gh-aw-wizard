@@ -44,4 +44,10 @@ describe('nextStepsHtml', () => {
     expect(html).toContain('Set up the <strong>Copilot</strong> engine');
     expect(html).toContain('reference/engines/#copilot');
   });
+
+  it('renders setup links for additional supported engines', () => {
+    const html = nextStepsHtml('workflow', 'issue-triage', 'gemini');
+    expect(html).toContain('Set up the <strong>Gemini</strong> engine');
+    expect(html).toContain('reference/engines/#gemini');
+  });
 });

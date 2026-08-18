@@ -24,6 +24,16 @@ function getEngineMeta(engine) {
       label: 'Codex',
       quickDocs: 'https://github.github.com/gh-aw/reference/engines/#codex',
       setup: 'https://github.github.com/gh-aw/setup/quick-start/'
+    },
+    gemini: {
+      label: 'Gemini',
+      quickDocs: 'https://github.github.com/gh-aw/reference/engines/#gemini',
+      setup: 'https://github.github.com/gh-aw/setup/quick-start/'
+    },
+    pi: {
+      label: 'Pi',
+      quickDocs: 'https://github.github.com/gh-aw/reference/engines/#pi',
+      setup: 'https://github.github.com/gh-aw/setup/quick-start/'
     }
   };
   return engines[selected];

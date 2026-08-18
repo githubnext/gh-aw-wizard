@@ -183,6 +183,11 @@ describe('generateWorkflowFile', () => {
     expect(md).toContain('engine: copilot\n');
   });
 
+  it('accepts all supported built-in engines', () => {
+    const md = generateWorkflowFile(answers({ engine: 'gemini' }), patterns);
+    expect(md).toContain('engine: gemini\n');
+  });
+
   it('deduplicates safe outputs', () => {
     const md = generateWorkflowFile(answers({ outputs: ['comments', 'labels'] }), patterns);
     const issuesCount = md.split('\n').filter((line) => line === '  - issues').length;
