@@ -16,12 +16,14 @@ var currentStep = 1;
 var generatedMd = '';
 var generatedPrompt = '';
 var currentFormat = 'prompt';
+var TOTAL_STEPS = 5;
 
 export function initWizard() {
   initTheme();
   loadPatterns().then(function (data) { patterns = data; });
   bindNavigation();
   bindFormEvents();
+  initNavigationHistory();
 }
 
 function generateAndShow() {
@@ -101,7 +103,8 @@ function bindNavigation() {
   });
 }
 
-function goToStep(n) {
+function goToStep(n, options) {
+  if (n === currentStep || n < 1 || n > TOTAL_STEPS) return;
   var direction = n > currentStep ? 'forward' : 'back';
   var current = document.getElementById('step-' + currentStep);
   current.classList.remove('active');
@@ -113,6 +116,30 @@ function goToStep(n) {
   next.offsetHeight; // reflow
   next.style.animation = direction === 'forward' ? 'slideIn 0.3s ease' : 'slideInReverse 0.3s ease';
   next.classList.add('active');
+  if (!options || options.updateHistory !== false) {
+    window.history.pushState({ step: n }, '', window.location.href);
+  }
+}
+
+function initNavigationHistory() {
+  var stateStep = getStepFromHistoryState(window.history.state);
+  if (stateStep === null) {
+    window.history.replaceState({ step: currentStep }, '', window.location.href);
+  } else if (stateStep !== currentStep) {
+    goToStep(stateStep, { updateHistory: false });
+  }
+  window.addEventListener('popstate', function (event) {
+    var step = getStepFromHistoryState(event.state);
+    if (step !== null) {
+      goToStep(step, { updateHistory: false });
+    }
+  });
+}
+
+function getStepFromHistoryState(state) {
+  if (!state || typeof state.step !== 'number') return null;
+  if (state.step < 1 || state.step > TOTAL_STEPS) return null;
+  return state.step;
 }
 
 function updateProgress(from, to) {
