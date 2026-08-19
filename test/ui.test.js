@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { maxReachableStep, resetNavigationPane } from '../src/js/ui.js';
+import { maxReachableStep, resetNavigationPane, showCopySuccess } from '../src/js/ui.js';
 
 const originalDocument = globalThis.document;
 
@@ -12,6 +12,29 @@ describe('wizard navigation', () => {
   it('keeps only the What tab required', () => {
     expect(maxReachableStep(false)).toBe(1);
     expect(maxReachableStep(true)).toBe(6);
+  });
+
+  describe('copy prompt success', () => {
+    it('opens the success dialog after copying', () => {
+      let showCount = 0;
+      const modal = {
+        open: false,
+        showModal() {
+          showCount += 1;
+          this.open = true;
+        }
+      };
+      globalThis.document = {
+        getElementById(id) {
+          return id === 'copy-modal' ? modal : null;
+        }
+      };
+
+      showCopySuccess();
+      showCopySuccess();
+
+      expect(showCount).toBe(1);
+    });
   });
 
   it('resets the navigation pane to the opened What pane', () => {

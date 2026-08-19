@@ -75,16 +75,6 @@ function bindNavigation() {
         toggleCurrentStep();
         return;
       }
-
-      function bindCopyModal() {
-        const modal = document.getElementById('copy-modal');
-        modal.querySelectorAll('[data-copy-modal-close]').forEach((button) => {
-          button.addEventListener('click', () => modal.close());
-        });
-        modal.addEventListener('click', (event) => {
-          if (event.target === modal) modal.close();
-        });
-      }
       if (target < currentStep) {
         goToStep(target);
         return;
@@ -97,6 +87,16 @@ function bindNavigation() {
     });
   });
   syncProgressStepAvailability();
+}
+
+function bindCopyModal() {
+  const modal = document.getElementById('copy-modal');
+  modal.querySelectorAll('[data-copy-modal-close]').forEach((button) => {
+    button.addEventListener('click', () => modal.close());
+  });
+  modal.addEventListener('click', (event) => {
+    if (event.target === modal) modal.close();
+  });
 }
 
 function prefersReducedMotion() {
