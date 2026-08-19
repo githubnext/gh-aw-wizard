@@ -1,13 +1,32 @@
 import { describe, expect, it } from 'vitest';
+import { readFileSync } from 'node:fs';
 
 import { getArchetype, getRecommendedConfiguration } from '../src/js/patterns.js';
 import { nextStepsHtml } from '../src/js/next-steps.js';
+
+const generatedPatterns = JSON.parse(readFileSync(new URL('../patterns.json', import.meta.url), 'utf8'));
 
 describe('getArchetype', () => {
   const patterns = { archetypes: [{ id: 'pr-review', label: 'PR Review' }] };
 
   it('finds an archetype by id', () => {
     expect(getArchetype(patterns, 'pr-review').label).toBe('PR Review');
+  });
+
+  describe('curated archetypes', () => {
+    it.each([
+      'daily-test-improver',
+      'repo-maintainer',
+      'linter-miner',
+      'linter-refiner',
+      'linter-applier',
+      'skill-pr-reviewer'
+    ])('includes %s with triggers and safe outputs', (id) => {
+      const archetype = getArchetype(generatedPatterns, id);
+      expect(archetype).not.toBeNull();
+      expect(archetype.recommended_triggers.length).toBeGreaterThan(0);
+      expect(archetype.recommended_tools.length).toBeGreaterThan(0);
+    });
   });
 
   it('returns null for unknown ids or missing patterns', () => {

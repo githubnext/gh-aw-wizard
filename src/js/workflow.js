@@ -9,6 +9,12 @@ import {
   buildContentModeration,
   buildDocumentationUpdater,
   buildPrReview,
+  buildDailyTestImprover,
+  buildRepoMaintainer,
+  buildLinterMiner,
+  buildLinterRefiner,
+  buildLinterApplier,
+  buildSkillPrReviewer,
   buildCustom
 } from './bodies.js';
 
@@ -25,7 +31,7 @@ export function workflowName(archetype, customDesc) {
 
 export function inferNeedsPreSteps(archetype) {
   // These archetypes deal with lots of data — auto-add pre-steps
-  return ['status-report', 'dependency-monitor'].indexOf(archetype) !== -1;
+  return ['status-report', 'dependency-monitor', 'repo-maintainer', 'linter-miner'].indexOf(archetype) !== -1;
 }
 
 export function inferCapabilities(archetype) {
@@ -38,9 +44,16 @@ export function inferCapabilities(archetype) {
       caps.preSteps = true; caps.bash = true; break;
     case 'code-improvement':
     case 'documentation-updater':
+    case 'daily-test-improver':
+    case 'linter-refiner':
+    case 'linter-applier':
       caps.bash = true; break;
     case 'pr-review':
+    case 'skill-pr-reviewer':
       caps.githubToolsets = true; break;
+    case 'repo-maintainer':
+    case 'linter-miner':
+      caps.preSteps = true; caps.bash = true; caps.githubToolsets = true; break;
   }
   return caps;
 }
@@ -48,14 +61,16 @@ export function inferCapabilities(archetype) {
 // Per-archetype GitHub toolset scope — narrower than the default set so
 // reviewers only get the read access they actually need to see PR diffs.
 var GITHUB_TOOLSETS_BY_ARCHETYPE = {
-  'pr-review': ['repos', 'issues', 'pull_requests']
+  'pr-review': ['repos', 'issues', 'pull_requests'],
+  'skill-pr-reviewer': ['repos', 'issues', 'pull_requests']
 };
 var DEFAULT_GITHUB_TOOLSETS = ['repos', 'issues', 'pull_requests', 'actions', 'code_security', 'discussions'];
 
 // Per-archetype read permissions — pr-review only needs enough to read the
 // PR diff/metadata, not the full status-report surface (actions, security, discussions).
 var PERMISSIONS_BY_ARCHETYPE = {
-  'pr-review': ['contents', 'issues', 'pull-requests']
+  'pr-review': ['contents', 'issues', 'pull-requests'],
+  'skill-pr-reviewer': ['contents', 'issues', 'pull-requests']
 };
 var DEFAULT_PERMISSIONS = ['actions', 'contents', 'discussions', 'issues', 'pull-requests', 'security-events'];
 
@@ -68,7 +83,7 @@ export function buildTriggerYaml(triggers, commandName, archetype) {
         lines += '  issues:\n    types: [opened]\n'; break;
       case 'pull_request':
         // PR reviewers should act once a PR is actually ready (not while still a draft).
-        lines += (archetype === 'pr-review')
+        lines += (archetype === 'pr-review' || archetype === 'skill-pr-reviewer')
           ? '  pull_request:\n    types: [ready_for_review]\n'
           : '  pull_request:\n    types: [opened]\n';
         break;
@@ -200,6 +215,24 @@ export function generateWorkflowFile(answers, patterns) {
     case 'pr-review':
       body = buildPrReview(answers, label);
       break;
+    case 'daily-test-improver':
+      body = buildDailyTestImprover(answers, label);
+      break;
+    case 'repo-maintainer':
+      body = buildRepoMaintainer(answers, label);
+      break;
+    case 'linter-miner':
+      body = buildLinterMiner(answers, label);
+      break;
+    case 'linter-refiner':
+      body = buildLinterRefiner(answers, label);
+      break;
+    case 'linter-applier':
+      body = buildLinterApplier(answers, label);
+      break;
+    case 'skill-pr-reviewer':
+      body = buildSkillPrReviewer(answers, label);
+      break;
     default:
       body = buildCustom(answers, label);
   }
@@ -220,18 +253,26 @@ export function fencedBlock(content, lang) {
 
 var GH_AW_INSTRUCTIONS_BASE = 'https://raw.githubusercontent.com/github/gh-aw/main/.github/aw/';
 var SCENARIO_INSTRUCTIONS = {
-  'issue-triage': 'maintainer.md',
-  'code-improvement': 'maintainer.md',
-  'status-report': 'report.md',
-  'dependency-monitor': 'maintainer.md',
-  'documentation-updater': 'maintainer.md',
-  'pr-review': 'pr-reviewer.md'
+  'issue-triage': ['maintainer.md'],
+  'code-improvement': ['maintainer.md'],
+  'status-report': ['report.md'],
+  'dependency-monitor': ['maintainer.md'],
+  'documentation-updater': ['maintainer.md'],
+  'pr-review': ['pr-reviewer.md'],
+  'daily-test-improver': ['test-coverage.md'],
+  'repo-maintainer': ['maintainer.md'],
+  'linter-miner': ['linter-workflows.md'],
+  'linter-refiner': ['linter-workflows.md'],
+  'linter-applier': ['linter-workflows.md'],
+  'skill-pr-reviewer': ['pr-reviewer.md', 'skills.md']
 };
 
 function instructionUrls(archetype) {
   var urls = [GH_AW_INSTRUCTIONS_BASE + 'create-agentic-workflow.md'];
-  var scenarioInstructions = SCENARIO_INSTRUCTIONS[archetype];
-  if (scenarioInstructions) urls.push(GH_AW_INSTRUCTIONS_BASE + scenarioInstructions);
+  var scenarioInstructions = SCENARIO_INSTRUCTIONS[archetype] || [];
+  scenarioInstructions.forEach(function (instruction) {
+    urls.push(GH_AW_INSTRUCTIONS_BASE + instruction);
+  });
   return urls;
 }
 
@@ -252,7 +293,7 @@ export function generateAgentPrompt(answers, patterns) {
   var triggersReadable = answers.triggers.map(function (t) {
     var map = {
       'issues': 'when a new issue is opened',
-      'pull_request': (answers.archetype === 'pr-review')
+      'pull_request': (answers.archetype === 'pr-review' || answers.archetype === 'skill-pr-reviewer')
         ? 'when a pull request is marked ready for review'
         : 'when a pull request is opened',
       'schedule': 'on a daily/weekly schedule',

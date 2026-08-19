@@ -29,6 +29,36 @@ const patterns = {
       label: 'PR Review',
       description: 'Review pull requests for quality and issues',
       timeout_minutes: 30
+    },
+    {
+      id: 'daily-test-improver',
+      label: 'Daily Test Improver',
+      description: 'Add high-value tests and improve test quality'
+    },
+    {
+      id: 'repo-maintainer',
+      label: 'Repo Maintainer',
+      description: 'Proactively triage, fix, and maintain a repository'
+    },
+    {
+      id: 'linter-miner',
+      label: 'Linter Miner',
+      description: 'Discover recurring defects and create custom lint rules'
+    },
+    {
+      id: 'linter-refiner',
+      label: 'Linter Refiner',
+      description: 'Improve lint rule accuracy, diagnostics, and performance'
+    },
+    {
+      id: 'linter-applier',
+      label: 'Linter Applier',
+      description: 'Fix a focused group of existing lint findings'
+    },
+    {
+      id: 'skill-pr-reviewer',
+      label: 'Skill PR Reviewer',
+      description: 'Review pull requests with installed expert skills'
     }
   ],
   config_defaults: {
@@ -73,6 +103,8 @@ describe('inferNeedsPreSteps', () => {
   it('enables pre-steps for data heavy archetypes', () => {
     expect(inferNeedsPreSteps('status-report')).toBe(true);
     expect(inferNeedsPreSteps('dependency-monitor')).toBe(true);
+    expect(inferNeedsPreSteps('repo-maintainer')).toBe(true);
+    expect(inferNeedsPreSteps('linter-miner')).toBe(true);
   });
 
   it('leaves other archetypes without pre-steps', () => {
@@ -108,6 +140,23 @@ describe('inferCapabilities', () => {
       githubToolsets: true
     });
   });
+
+  it('infers capabilities for the new maintenance and review archetypes', () => {
+    expect(inferCapabilities('daily-test-improver').bash).toBe(true);
+    expect(inferCapabilities('repo-maintainer')).toEqual({
+      preSteps: true,
+      bash: true,
+      githubToolsets: true
+    });
+    expect(inferCapabilities('linter-miner')).toEqual({
+      preSteps: true,
+      bash: true,
+      githubToolsets: true
+    });
+    expect(inferCapabilities('linter-refiner').bash).toBe(true);
+    expect(inferCapabilities('linter-applier').bash).toBe(true);
+    expect(inferCapabilities('skill-pr-reviewer').githubToolsets).toBe(true);
+  });
 });
 
 describe('buildTriggerYaml', () => {
@@ -140,6 +189,11 @@ describe('buildTriggerYaml', () => {
 
   it('uses ready_for_review for pull_request on the pr-review archetype', () => {
     const yaml = buildTriggerYaml(['pull_request'], 'pr-review-agent', 'pr-review');
+    expect(yaml).toBe('  pull_request:\n    types: [ready_for_review]\n');
+  });
+
+  it('uses ready_for_review for pull_request on the skill reviewer archetype', () => {
+    const yaml = buildTriggerYaml(['pull_request'], 'skill-pr-reviewer', 'skill-pr-reviewer');
     expect(yaml).toBe('  pull_request:\n    types: [ready_for_review]\n');
   });
 });
@@ -236,6 +290,26 @@ describe('generateWorkflowFile', () => {
     expect(pullRequestCount).toBe(1);
     expect(md).not.toContain('commit-files');
   });
+
+  it.each([
+    ['daily-test-improver', 'test improvement engineer'],
+    ['repo-maintainer', 'proactive repository maintainer'],
+    ['linter-miner', 'static-analysis rule miner'],
+    ['linter-refiner', 'lint rule quality engineer'],
+    ['linter-applier', 'lint remediation engineer'],
+    ['skill-pr-reviewer', 'skills-based pull request reviewer']
+  ])('generates the tailored %s workflow body', (archetype, role) => {
+    const md = generateWorkflowFile(
+      answers({
+        archetype,
+        triggers: ['workflow_dispatch'],
+        outputs: ['create-pull-request']
+      }),
+      patterns
+    );
+    expect(md).toContain(`You are a **${role}**`);
+    expect(md).not.toContain('# Custom Workflow');
+  });
 });
 
 describe('generateAgentPrompt', () => {
@@ -281,12 +355,19 @@ describe('generateAgentPrompt', () => {
     ['status-report', 'report.md'],
     ['dependency-monitor', 'maintainer.md'],
     ['documentation-updater', 'maintainer.md'],
-    ['pr-review', 'pr-reviewer.md']
-  ])('links the %s scenario instructions directly', (archetype, instructionFile) => {
+    ['pr-review', 'pr-reviewer.md'],
+    ['daily-test-improver', 'test-coverage.md'],
+    ['repo-maintainer', 'maintainer.md'],
+    ['linter-miner', 'linter-workflows.md'],
+    ['linter-refiner', 'linter-workflows.md'],
+    ['linter-applier', 'linter-workflows.md'],
+    ['skill-pr-reviewer', ['pr-reviewer.md', 'skills.md']]
+  ])('links the %s scenario instructions directly', (archetype, instructionFiles) => {
     const prompt = generateAgentPrompt(answers({ archetype }), patterns);
     const base = 'https://raw.githubusercontent.com/github/gh-aw/main/.github/aw/';
     expect(prompt).toContain(base + 'create-agentic-workflow.md');
-    expect(prompt).toContain(base + instructionFile);
+    const expectedFiles = Array.isArray(instructionFiles) ? instructionFiles : [instructionFiles];
+    expectedFiles.forEach((instructionFile) => expect(prompt).toContain(base + instructionFile));
     expect(prompt).not.toContain('github/gh-aw/main/create.md');
   });
 
@@ -317,6 +398,12 @@ describe('generateAgentPrompt', () => {
     'content-moderation',
     'documentation-updater',
     'pr-review',
+    'daily-test-improver',
+    'repo-maintainer',
+    'linter-miner',
+    'linter-refiner',
+    'linter-applier',
+    'skill-pr-reviewer',
     'custom'
   ])('limits the %s sample prompt body to one line plus ellipsis', (archetype) => {
     const prompt = generateAgentPrompt(answers({ archetype }), patterns);
