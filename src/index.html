@@ -333,16 +333,23 @@
 
             <div class="preview-container prompt-panel">
               <div class="finish-cta">
+                <div class="finish-icon" aria-hidden="true">✓</div>
                 <div class="finish-cta-copy">
-                  <p class="finish-eyebrow">Your prompts are ready</p>
-                  <h3>Copy the prompts</h3>
-                  <p>Paste them into your agent to create and submit the workflow files.</p>
+                  <p class="finish-eyebrow">Ready to build</p>
+                  <h2>Your workflow prompt is ready</h2>
+                  <p>Copy it, then paste it into your agent from the repository you want to automate.</p>
                 </div>
-                <button class="btn btn-primary btn-copy-prompt" id="btn-copy">Copy prompts</button>
+                <button class="btn btn-primary btn-copy-prompt" id="btn-copy" type="button">Copy prompt</button>
               </div>
 
-              <div class="prompt-preview" aria-label="Generated prompt preview">
-                <div class="preview-code" id="preview-code"></div>
+              <div class="prompt-card">
+                <div class="prompt-card-header">
+                  <span>Prompt preview</span>
+                  <span class="prompt-card-hint">Review before copying</span>
+                </div>
+                <div class="prompt-preview" aria-label="Generated prompt preview">
+                  <div class="preview-code" id="preview-code"></div>
+                </div>
               </div>
 
               <div class="next-steps-panel" id="next-steps-panel"></div>
