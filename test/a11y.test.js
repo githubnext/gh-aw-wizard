@@ -114,6 +114,12 @@ describe('Copy prompt success modal', () => {
     expect(html).toContain('Open your coding agent from the repository you want to automate');
     expect(html).toContain('<strong>Run it in your repository</strong>');
   });
+
+  it('announces clipboard failures without opening the success modal', () => {
+    const statusTag = html.slice(html.indexOf('id="copy-status"') - 40, html.indexOf('>', html.indexOf('id="copy-status"')) + 1);
+    expect(statusTag).toMatch(/role="status"/);
+    expect(statusTag).toMatch(/aria-live="polite"/);
+  });
 });
 
 describe('Archetype radiogroup arrow-key focus', () => {

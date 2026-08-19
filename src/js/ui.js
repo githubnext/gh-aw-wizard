@@ -14,6 +14,7 @@ import { engineIconMarkup, formatEngineOptionLabel, loadDefinitionEngines, regis
 let patterns = null;
 let currentStep = 1;
 let generatedPrompt = '';
+let copyFeedbackTimer = null;
 const TOTAL_STEPS = 6;
 const ACCORDION_OPEN_ANIMATION = 'accordionOpen 0.3s ease';
 const ACCORDION_OPEN_REVERSE_ANIMATION = 'accordionOpenReverse 0.3s ease';
@@ -549,22 +550,59 @@ function showPreview(md) {
 // ── Clipboard ──────────────────────────────────────────────────────────────
 function copyToClipboard() {
   const text = generatedPrompt;
+  if (!navigator.clipboard?.writeText) {
+    fallbackCopyToClipboard(text);
+    return;
+  }
   navigator.clipboard.writeText(text).then(() => {
     showCopySuccess();
-  }).catch(() => {
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
+  }).catch(() => fallbackCopyToClipboard(text));
+}
+
+function fallbackCopyToClipboard(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try {
+    if (!document.execCommand('copy')) {
+      showCopyFailure();
+      return;
+    }
     showCopySuccess();
-  });
+  } catch {
+    showCopyFailure();
+  } finally {
+    document.body.removeChild(ta);
+  }
 }
 
 export function showCopySuccess() {
+  resetCopyFeedback();
   const modal = document.getElementById('copy-modal');
   if (!modal.open) modal.showModal();
+}
+
+function showCopyFailure() {
+  const button = document.getElementById('btn-copy');
+  const status = document.getElementById('copy-status');
+  clearTimeout(copyFeedbackTimer);
+  button.textContent = 'Copy failed — try again';
+  button.classList.add('copy-error');
+  status.textContent = 'Prompt could not be copied. Please try again.';
+  copyFeedbackTimer = setTimeout(resetCopyFeedback, 3000);
+}
+
+function resetCopyFeedback() {
+  clearTimeout(copyFeedbackTimer);
+  copyFeedbackTimer = null;
+  const button = document.getElementById('btn-copy');
+  const status = document.getElementById('copy-status');
+  if (button) {
+    button.textContent = 'Copy prompt';
+    button.classList.remove('copy-error');
+  }
+  if (status) status.textContent = '';
 }

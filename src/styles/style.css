@@ -827,6 +827,11 @@ a:hover {
   padding: 0.75rem 1.25rem;
   font-size: 0.9rem;
 }
+.btn-copy-prompt.copy-error,
+.btn-copy-prompt.copy-error:hover {
+  background: var(--danger);
+  border-color: var(--danger);
+}
 
 /* Copy success modal */
 .copy-modal {
