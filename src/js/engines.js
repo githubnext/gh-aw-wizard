@@ -24,6 +24,7 @@ var extensionLogoText = {
   crush: 'CR',
   cursor: 'CU',
   'deepseek-harness': 'DS',
+  // gh-aw publishes a "custom" extension backed by GenAIScript.
   custom: 'CT',
   goose: 'GO',
   kiro: 'KI',
