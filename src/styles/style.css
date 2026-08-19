@@ -863,6 +863,7 @@ a:hover {
 }
 .footer-source {
   display: inline-flex;
+  align-items: center;
   vertical-align: middle;
 }
 .footer-separator,
