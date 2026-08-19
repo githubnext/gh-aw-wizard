@@ -9,6 +9,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "generate": "node src/js/cli.js",
     "test": "vitest run",
     "test:watch": "vitest"
   },
