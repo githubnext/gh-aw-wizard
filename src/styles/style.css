@@ -12,6 +12,7 @@
   --accent-blue: var(--color-accent-fg, #0969da);
   --accent-blue-rgb: 9, 105, 218;
   --accent-green: var(--color-success-emphasis, #1f883d);
+  --accent-green-rgb: 31, 136, 61;
   --accent-green-hover: #1a7f37;
   --border-color: var(--color-border-default, #d0d7de);
   --border-default: var(--color-border-default, #d0d7de);
@@ -48,43 +49,54 @@
 
 [data-color-mode="dark"] {
   color-scheme: dark;
-  --bg-primary: #0d1117;
-  --bg-secondary: #161b22;
-  --bg-tertiary: #21262d;
-  --bg-card: #151b23;
-  --bg-subtle: #161b22;
-  --bg-inset: #010409;
-  --text-primary: #e6edf3;
-  --text-secondary: #9198a1;
-  --text-muted: #8b949e;
-  --accent-blue: #58a6ff;
-  --accent-blue-rgb: 88, 166, 255;
-  --accent-green: #238636;
-  --accent-green-hover: #2ea043;
-  --border-color: #626b75;
-  --border-default: #626b75;
-  --border-subtle: #3d444d;
-  --border-hover: #8b949e;
-  --border-focus: #58a6ff;
-  --code-bg: #0d1117;
-  --yaml-key: #79c0ff;
-  --yaml-value: #a5d6ff;
-  --yaml-string: #a5d6ff;
-  --yaml-comment: #8b949e;
-  --heading-color: #3fb950;
-  --success: #3fb950;
-  --warning: #d29922;
-  --danger: #f85149;
-  --header-gradient-start: rgba(22, 27, 34, 0.8);
-  --label-blue: #1f6feb;
-  --label-purple: #8957e5;
-  --label-green: #238636;
-  --label-orange: #bd561d;
-  --label-pink: #bf4b8a;
-  --label-gray: #6e7681;
+  --bg-primary: #1c1c1e;
+  --bg-secondary: #2c2c2e;
+  --bg-tertiary: #3a3a3c;
+  --bg-card: #2c2c2e;
+  --bg-subtle: #2c2c2e;
+  --bg-inset: #000000;
+  --text-primary: #ffffff;
+  --text-secondary: #d1d1d6;
+  --text-muted: #8e8e93;
+  --accent-blue: #007aff;
+  --accent-blue-rgb: 0, 122, 255;
+  --accent-green: #34c759;
+  --accent-green-rgb: 52, 199, 89;
+  --accent-green-hover: #30b955;
+  --border-color: #48484a;
+  --border-default: #48484a;
+  --border-subtle: #3a3a3c;
+  --border-hover: #636366;
+  --border-focus: #007aff;
+  --code-bg: #1c1c1e;
+  --yaml-key: #007aff;
+  --yaml-value: #ffffff;
+  --yaml-string: #ffffff;
+  --yaml-comment: #8e8e93;
+  --heading-color: #34c759;
+  --success: #34c759;
+  --warning: #ffd60a;
+  --danger: #ff453a;
+  --header-gradient-start: rgba(0, 0, 0, 0.95);
+  --label-blue: #007aff;
+  --label-purple: #af52de;
+  --label-green: #34c759;
+  --label-orange: #ffd60a;
+  --label-pink: #ff375f;
+  --label-gray: #8e8e93;
   --shadow-card: 0 2px 8px rgba(0,0,0,0.2);
   --shadow-floating: 0 4px 16px rgba(0,0,0,0.3);
-  --shadow-btn-primary-hover: 0 2px 6px rgba(46,160,67,0.25);
+  --shadow-btn-primary-hover: 0 2px 6px rgba(52,199,89,0.3);
+}
+
+[data-color-mode="dark"] .site-header {
+  background: #000000;
+  border-bottom-color: var(--border-subtle);
+}
+
+[data-color-mode="dark"] .site-footer {
+  background: #000000;
+  border-top-color: var(--border-subtle);
 }
 
 *, *::before, *::after {
@@ -214,7 +226,7 @@ a:hover {
   margin-right: 0.25rem;
   background: var(--accent-green);
   border-radius: 50%;
-  box-shadow: 0 0 0 3px rgba(31, 136, 61, 0.12);
+  box-shadow: 0 0 0 3px rgba(var(--accent-green-rgb), 0.12);
 }
 .recipe-status-step {
   margin-left: 0.3rem;
@@ -314,7 +326,10 @@ a:hover {
 .recipe-key-what { background: var(--label-pink); }
 .recipe-key-when { background: var(--label-blue); }
 .recipe-key-where { background: var(--label-green); }
-.recipe-key-how { background: var(--label-orange); }
+.recipe-key-how {
+  background: var(--label-orange);
+  color: #000000;
+}
 .recipe-key-agent { background: var(--label-gray); }
 .recipe-key-preview { background: var(--label-purple); }
 .recipe-value {
@@ -667,7 +682,7 @@ a:hover {
   justify-content: space-between;
   gap: 1rem;
   padding: 1.25rem;
-  background: linear-gradient(135deg, rgba(var(--accent-blue-rgb), 0.12), rgba(31, 136, 61, 0.12));
+  background: linear-gradient(135deg, rgba(var(--accent-blue-rgb), 0.12), rgba(var(--accent-green-rgb), 0.12));
   border-bottom: 1px solid var(--border-color);
 }
 .finish-eyebrow {
@@ -722,7 +737,7 @@ a:hover {
   flex-shrink: 0;
   padding: 0.9rem 1.8rem;
   font-size: 1rem;
-  box-shadow: 0 8px 20px rgba(31, 136, 61, 0.25);
+  box-shadow: 0 8px 20px rgba(var(--accent-green-rgb), 0.25);
 }
 
 /* Toast */
