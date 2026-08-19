@@ -88,6 +88,7 @@ export function generateWorkflowFile(answers, patterns) {
       case 'create-pull-request':
       case 'create-pull-request-review-comment':
         safeSet.add(o); break;
+      // Keep older stored wizard values working for users with saved selections.
       case 'comments':
         safeSet.add('add-comment'); break;
       case 'labels':
@@ -259,6 +260,7 @@ export function generateAgentPrompt(answers, patterns) {
       'create-issue': 'create new issues',
       'create-pull-request': 'open pull requests',
       'create-pull-request-review-comment': 'add review comments on pull request diffs',
+      // Keep older stored wizard values readable for users with saved selections.
       'comments': 'add comments on issues/PRs',
       'labels': 'add labels',
       'new-issues': 'create new issues',
