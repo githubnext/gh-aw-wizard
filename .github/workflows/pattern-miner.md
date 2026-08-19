@@ -53,6 +53,9 @@ steps:
     env:
       GH_TOKEN: ${{ github.token }}
     run: |
+      # No -e: a partially available upstream must degrade gracefully, so every
+      # network call handles its own failure and the agent decides what to do
+      # with whatever was downloaded.
       set -uo pipefail
       out=/tmp/gh-aw/data/upstream
       mkdir -p "$out"
