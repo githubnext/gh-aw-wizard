@@ -8,11 +8,6 @@
   <script>
     (function () {
       var theme = 'auto';
-      try {
-        // Keep this key in sync with THEME_STORAGE_KEY in js/theme.js.
-        theme = localStorage.getItem('gh-aw-wizard-theme') || 'auto';
-      } catch (e) {}
-      if (['auto', 'light', 'dark'].indexOf(theme) === -1) theme = 'auto';
       var systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
       document.documentElement.setAttribute('data-theme-preference', theme);
       document.documentElement.setAttribute('data-color-mode', theme === 'auto' ? (systemDark ? 'dark' : 'light') : theme);

@@ -1,7 +1,4 @@
-// Theme toggling — keeps the Primer color mode in sync with the user preference.
-
-// Keep this key in sync with the inline theme bootstrap script in index.html.
-var THEME_STORAGE_KEY = 'gh-aw-wizard-theme';
+// Theme toggling — keeps the Primer color mode in sync with the current page state.
 var THEME_MODES = ['auto', 'light', 'dark'];
 var THEME_COPY = {
   auto: { label: 'Auto theme', icon: 'device-desktop' },
@@ -53,11 +50,6 @@ export function initTheme() {
   toggle.addEventListener('click', function () {
     var next = nextThemeMode(themeMode);
     applyTheme(next);
-    try {
-      localStorage.setItem(THEME_STORAGE_KEY, next);
-    } catch (e) {
-      // Ignore storage failures; the selected theme still applies for this page load.
-    }
   });
 
   if (window.matchMedia) {
