@@ -490,7 +490,7 @@ describe('generateAgentPrompt', () => {
   ])('links the %s scenario instructions directly', (archetype, instructionFiles) => {
     const prompt = generateAgentPrompt(answers({ archetype }), patterns);
     const base = 'https://raw.githubusercontent.com/github/gh-aw/main/.github/aw/';
-    expect(prompt).toContain(base + 'create-agentic-workflow.md');
+    expect(prompt).toContain(`${base  }create-agentic-workflow.md`);
     const expectedFiles = Array.isArray(instructionFiles) ? instructionFiles : [instructionFiles];
     expectedFiles.forEach((instructionFile) => {
       expect(prompt).toContain(instructionFile.indexOf('https://') === 0 ? instructionFile : base + instructionFile);
