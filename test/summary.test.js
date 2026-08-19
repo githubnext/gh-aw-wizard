@@ -42,7 +42,7 @@ describe('buildWorkflowSummary', () => {
       engine: 'claude'
     }), patterns);
 
-    expect(summary.trigger.value).toBe('a new issue is opened and it is started manually');
+    expect(summary.trigger.value).toBe('a new issue is opened or it is started manually');
     expect(summary.purpose).toEqual({ value: 'Classify and label new issues', complete: true });
     expect(summary.output.value).toBe('manage labels and post comments');
     expect(summary.engine.value).toBe('Claude');
@@ -64,6 +64,16 @@ describe('buildWorkflowSummary', () => {
     }), patterns);
 
     expect(summary.trigger.value).toBe('a pull request is ready for review');
+  });
+
+  it('joins three trigger conditions with OR', () => {
+    const summary = buildWorkflowSummary(answers({
+      triggers: ['issues', 'schedule', 'workflow_dispatch']
+    }), patterns);
+
+    expect(summary.trigger.value).toBe(
+      'a new issue is opened, the schedule runs, or it is started manually'
+    );
   });
 
   it('uses custom descriptions as they are entered', () => {
