@@ -192,7 +192,12 @@ describe('inferCapabilities', () => {
       githubToolsets: true,
       browser: false
     });
-    expect(inferCapabilities('performance-nut').bash).toBe(true);
+    expect(inferCapabilities('performance-nut')).toEqual({
+      preSteps: false,
+      bash: true,
+      githubToolsets: false,
+      browser: false
+    });
   });
 });
 
