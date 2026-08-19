@@ -3,7 +3,7 @@ name: "🔬 Deep Research"
 description: Analyze the committed agentic workflow pattern library
 engine: copilot
 on:
-  workflow_dispatch:
+  schedule: weekly
 permissions:
   contents: read
   copilot-requests: write

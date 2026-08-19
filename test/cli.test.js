@@ -28,7 +28,7 @@ describe('prompt generator CLI', () => {
   const answers = {
     archetype: 'custom',
     customDescription: 'Summarize new issues',
-    triggers: ['workflow_dispatch'],
+    triggers: ['schedule'],
     outputs: ['add-comment'],
     engine: 'copilot',
     extras: [],

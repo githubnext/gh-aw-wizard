@@ -117,8 +117,6 @@ export function buildTriggerYaml(triggers, commandName, archetype) {
         break;
       case 'schedule':
         lines += '  schedule:\n    - cron: "0 9 * * 1-5"\n'; break;
-      case 'workflow_dispatch':
-        lines += '  workflow_dispatch:\n'; break;
       case 'slash_command':
       case 'issue_comment':
         lines += '  slash_command:\n    name: ' + name + '\n'; break;
@@ -388,7 +386,6 @@ export function generateAgentPrompt(answers, patterns) {
         : 'when a pull request is opened',
       'pull_request_ready_for_review': 'when a pull request is marked ready for review',
       'schedule': 'on a daily/weekly schedule',
-      'workflow_dispatch': 'on manual dispatch',
       'slash_command': 'on slash commands in comments',
       'label_command': 'when a matching label is added',
       'issue_comment': 'on slash commands in comments',

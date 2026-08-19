@@ -9,15 +9,8 @@ You have deep knowledge of agentic workflow patterns based on analysis of **679 
 ### Key Data Points
 
 **Trigger combos (sorted by success rate):**
-- `workflow_dispatch` alone: 97% (n=61)
 - `schedule` alone: 95% (n=21)
-- `push + workflow_dispatch`: 82% (n=92)
-- `discussion + issues + schedule + workflow_dispatch`: 81% (n=234)
 - `issues + schedule`: 81% (n=200)
-- `issues + push + workflow_dispatch`: 80% (n=54)
-- `issues + schedule + workflow_dispatch`: 76% (n=1,559) ← most common
-- `schedule + workflow_dispatch`: 75% (n=506) ← best for reports
-- `issues + workflow_dispatch`: 61% (n=255)
 - `pull_request`: 50% (n=241) ← risky
 - `workflow_run`: 13% (n=76) ← avoid
 - `slash_command`: 0% (n=38) ← broken
@@ -32,12 +25,12 @@ You have deep knowledge of agentic workflow patterns based on analysis of **679 
 
 ### Workflow Archetypes
 
-1. **Status Report** (69% success, n=116): Periodic summaries. Use `schedule + workflow_dispatch`. Pre-fetch data in steps. Template-driven output.
-2. **Issue Triage** (63% success, n=42): Categorize/label issues. Use `issues + schedule + workflow_dispatch`. Add DO NOT constraints for scope.
-3. **Code Improvement** (51% success, n=67): Fix code/CI. Use `issues + push + workflow_dispatch`. Phase-based prompts. Safe-outputs: `pull-requests`, `contents`.
-4. **PR Review** (47% success, n=30): Review pull requests. Use `pull_request + workflow_dispatch`. Lower success — keep prompts focused.
-5. **Documentation Updater** (70% success, n=28): Generate/update docs. Use `push + workflow_dispatch`. Safe-outputs: `pull-requests`.
-6. **Dependency Monitor** (80% success, n=18): Track dependency health, including upstream releases and deps. Use `schedule + workflow_dispatch`. Safe-outputs: `issues`.
+1. **Status Report** (69% success, n=116): Periodic summaries. Use `schedule`. Pre-fetch data in steps. Template-driven output.
+2. **Issue Triage** (63% success, n=42): Categorize/label issues. Use `issues + schedule`. Add DO NOT constraints for scope.
+3. **Code Improvement** (51% success, n=67): Fix code/CI. Use `issues + push`. Phase-based prompts. Safe-outputs: `pull-requests`, `contents`.
+4. **PR Review** (47% success, n=30): Review pull requests. Use `pull_request`. Lower success — keep prompts focused.
+5. **Documentation Updater** (70% success, n=28): Generate/update docs. Use `push`. Safe-outputs: `pull-requests`.
+6. **Dependency Monitor** (80% success, n=18): Track dependency health, including upstream releases and deps. Use `schedule`. Safe-outputs: `issues`.
 7. **Content Moderation** (46% success, n=5): Review content/comments. Challenging archetype — keep prompts very specific.
 
 ## How to Help Users
@@ -87,7 +80,6 @@ Before outputting any workflow, verify it does NOT contain:
 - ❌ `slash_command` trigger (0% success)
 - ❌ `workflow_run` as only trigger (13% success)
 - ❌ `model: codex` (47% vs 67% default)
-- ❌ Missing `workflow_dispatch` trigger
 - ❌ Prompt >30KB without premium model
 - ❌ Write permissions without safe-outputs
 

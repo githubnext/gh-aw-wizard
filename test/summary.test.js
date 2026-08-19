@@ -37,12 +37,12 @@ describe('buildWorkflowSummary', () => {
   it('turns selected answers into a readable recipe', () => {
     const summary = buildWorkflowSummary(answers({
       archetype: 'issue-triage',
-      triggers: ['issues', 'workflow_dispatch'],
+      triggers: ['issues', 'schedule'],
       outputs: ['add-labels', 'add-comment'],
       engine: 'claude'
     }), patterns);
 
-    expect(summary.trigger.value).toBe('a new issue is opened or it is started manually');
+    expect(summary.trigger.value).toBe('a new issue is opened or the schedule runs');
     expect(summary.purpose).toEqual({ value: 'Classify and label new issues', complete: true });
     expect(summary.output.value).toBe('add label and add comment');
     expect(summary.engine.value).toBe('Claude');
@@ -84,11 +84,11 @@ describe('buildWorkflowSummary', () => {
 
   it('joins three trigger conditions with OR', () => {
     const summary = buildWorkflowSummary(answers({
-      triggers: ['issues', 'schedule', 'workflow_dispatch']
+      triggers: ['issues', 'schedule', 'push']
     }), patterns);
 
     expect(summary.trigger.value).toBe(
-      'a new issue is opened, the schedule runs, or it is started manually'
+      'a new issue is opened, the schedule runs, or code is pushed to main'
     );
   });
 

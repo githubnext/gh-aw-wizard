@@ -8,7 +8,6 @@ var triggerLabels = {
   pull_request: 'a pull request is opened',
   pull_request_ready_for_review: 'a pull request is ready for review',
   schedule: 'the schedule runs',
-  workflow_dispatch: 'it is started manually',
   slash_command: 'a slash command is posted (not recommended)',
   label_command: 'a matching label is added',
   push: 'code is pushed to main'

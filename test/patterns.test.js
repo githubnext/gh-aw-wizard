@@ -72,7 +72,7 @@ describe('getRecommendedConfiguration', () => {
         },
         {
           archetype: 'status-report',
-          triggers: ['workflow_dispatch', 'schedule'],
+          triggers: ['push', 'schedule'],
           safe_outputs: ['create-issue', 'add-comment'],
           confidence_score: 0.72,
           total_runs: 80
@@ -110,7 +110,7 @@ describe('getRecommendedConfiguration', () => {
     const patterns = {
       archetypes: [{
         id: 'issue-triage',
-        recommended_triggers: [{ type: 'issues' }, { type: 'workflow_dispatch' }],
+        recommended_triggers: [{ type: 'issues' }, { type: 'schedule' }],
         recommended_tools: ['add-labels', 'add-comment']
       }]
     };
