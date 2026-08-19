@@ -23,6 +23,12 @@ const patterns = {
       label: 'Status Report',
       description: 'Summarize repository activity',
       timeout_minutes: 20
+    },
+    {
+      id: 'pr-review',
+      label: 'PR Review',
+      description: 'Review pull requests for quality and issues',
+      timeout_minutes: 30
     }
   ],
   config_defaults: {
@@ -94,6 +100,14 @@ describe('inferCapabilities', () => {
       githubToolsets: false
     });
   });
+
+  it('adds github toolsets for pr-review so the agent can read PR diffs', () => {
+    expect(inferCapabilities('pr-review')).toEqual({
+      preSteps: false,
+      bash: false,
+      githubToolsets: true
+    });
+  });
 });
 
 describe('buildTriggerYaml', () => {
@@ -149,6 +163,19 @@ describe('generateWorkflowFile', () => {
       patterns
     );
     expect(md).toContain('timeout-minutes: 45\n');
+  });
+
+  it('gives pr-review read access to the PR diff via scoped permissions and github toolsets', () => {
+    const md = generateWorkflowFile(
+      answers({
+        archetype: 'pr-review',
+        triggers: ['pull_request', 'workflow_dispatch'],
+        outputs: ['create-pull-request-review-comment']
+      }),
+      patterns
+    );
+    expect(md).toContain('permissions:\n  contents: read\n  issues: read\n  pull-requests: read\n');
+    expect(md).toContain('  github:\n    toolsets: [repos, issues, pull_requests]\n');
   });
 
   it('adds inferred capabilities and optional agent capabilities', () => {
