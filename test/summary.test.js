@@ -48,13 +48,15 @@ describe('buildWorkflowSummary', () => {
     expect(summary.engine.value).toBe('Claude');
   });
 
-  it('summarizes optional memory and project context', () => {
+  it('summarizes optional agent capabilities with the selected engine', () => {
     const summary = buildWorkflowSummary(answers({
-      extras: ['memory'],
-      dataDescription: 'The API lives in src/api.'
+      engine: 'copilot',
+      extras: ['memory', 'charts', 'browser']
     }), patterns);
 
-    expect(summary.context).toBe('memory between runs and project-specific context');
+    expect(summary.engine.value).toBe(
+      'Copilot, memory between runs, chart generation with browser access'
+    );
   });
 
   it('describes the pull request review trigger accurately', () => {

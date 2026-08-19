@@ -14,7 +14,7 @@ import { buildWorkflowSummary } from './summary.js';
 var patterns = null;
 var currentStep = 1;
 var generatedPrompt = '';
-var TOTAL_STEPS = 6;
+var TOTAL_STEPS = 5;
 var SELECTION_STORAGE_KEY = 'gh-aw-wizard-selection';
 
 export function initWizard() {
@@ -32,7 +32,7 @@ export function initWizard() {
 
 function generateAndShow() {
   refreshGeneratedContent();
-  goToStep(6);
+  goToStep(5);
   showPreview(generatedPrompt);
   var answers = gatherAnswers();
   showNextSteps('prompt', workflowName(answers.archetype, answers.customDescription), answers.engine);
@@ -80,12 +80,12 @@ function bindNavigation() {
 }
 
 function advanceOneStepLikeNext() {
-  if (currentStep >= 1 && currentStep <= 4) {
+  if (currentStep >= 1 && currentStep <= 3) {
     if (currentStep + 1 > maxReachableStep()) return false;
     goToStep(currentStep + 1);
     return true;
   }
-  if (currentStep === 5) {
+  if (currentStep === 4) {
     generateAndShow();
     return true;
   }
@@ -167,9 +167,9 @@ function maxReachableStep() {
   if (!document.querySelector('input[name="archetype"]:checked')) return 1;
   if (!hasChecked('trigger')) return 2;
   if (!hasChecked('output')) return 3;
-  // Step 4 is optional context, so step 5 is always reachable once required steps are complete.
-  if (!hasChecked('engine')) return 5;
-  return 6;
+  // Step 4 includes optional capabilities; choosing an engine unlocks Finish.
+  if (!hasChecked('engine')) return 4;
+  return 5;
 }
 
 function syncProgressStepAvailability() {
@@ -238,18 +238,19 @@ function bindFormEvents() {
     });
   });
 
-  // Step 4: extras (optional checkboxes, no validation needed)
+  // Step 4: optional agent capabilities
   document.querySelectorAll('input[name="extra"]').forEach(function (cb) {
     cb.addEventListener('change', function () {
-      updateCardSelection('#data-options', 'checkbox');
+      updateCardSelection('#agent-options', 'checkbox');
+      if (currentStep === 5) refreshPreview();
     });
   });
 
-  // Step 5: engine radio cards
+  // Step 4: engine radio cards
   document.querySelectorAll('input[name="engine"]').forEach(function (radio) {
     radio.addEventListener('change', function () {
       updateCardSelection('#engine-options', 'radio');
-      if (currentStep === 6) refreshPreview();
+      if (currentStep === 5) refreshPreview();
     });
   });
   updateCardSelection('#engine-options', 'radio');
@@ -261,12 +262,6 @@ function bindFormEvents() {
       saveSelectionState();
     });
   });
-  document.querySelectorAll('textarea').forEach(function (textarea) {
-    textarea.addEventListener('input', function () {
-      renderWorkflowSummary();
-      saveSelectionState();
-    });
-  });
 }
 
 // Reset any selections that depend on the "what" (archetype) choice, since they
@@ -275,7 +270,6 @@ function clearDownstreamSelections(archetypeId) {
   if (archetypeId !== 'custom') {
     document.getElementById('custom-description').value = '';
   }
-  document.getElementById('data-description').value = '';
 }
 
 // Fully clear the "what" (archetype) choice and every downstream selection that
@@ -294,7 +288,7 @@ function clearArchetypeSelection() {
   updateCardSelection('#output-options', 'checkbox');
 
   document.querySelectorAll('input[name="extra"]').forEach(function (cb) { cb.checked = false; });
-  updateCardSelection('#data-options', 'checkbox');
+  updateCardSelection('#agent-options', 'checkbox');
 
   renderWorkflowSummary();
   syncProgressStepAvailability();
@@ -333,9 +327,9 @@ function prefillFromArchetype(id) {
   });
   updateCardSelection('#output-options', 'checkbox');
 
-  // Reset extras
+  // Reset optional agent capabilities
   document.querySelectorAll('input[name="extra"]').forEach(function (cb) { cb.checked = false; });
-  updateCardSelection('#data-options', 'checkbox');
+  updateCardSelection('#agent-options', 'checkbox');
 }
 
 // ── Gather answers ─────────────────────────────────────────────────────────
@@ -356,8 +350,7 @@ function gatherAnswers() {
     outputs: outputs,
     engine: (document.querySelector('input[name="engine"]:checked') || {}).value || null,
     extras: extras,
-    needsData: inferNeedsPreSteps(archetypeId),
-    dataDescription: document.getElementById('data-description').value.trim()
+    needsData: inferNeedsPreSteps(archetypeId)
   };
 }
 
@@ -378,8 +371,7 @@ function currentSelectionState() {
     triggers: triggers,
     outputs: outputs,
     extras: extras,
-    engine: engine ? engine.value : null,
-    dataDescription: document.getElementById('data-description').value
+    engine: engine ? engine.value : null
   };
 }
 
@@ -428,9 +420,7 @@ function restoreSelectionState() {
     var cb = document.querySelector('input[name="extra"][value="' + extra + '"]');
     if (cb) cb.checked = true;
   });
-  updateCardSelection('#data-options', 'checkbox');
-
-  if (state.dataDescription != null) document.getElementById('data-description').value = state.dataDescription;
+  updateCardSelection('#agent-options', 'checkbox');
 
   if (state.engine) {
     var engineRadio = document.querySelector('input[name="engine"][value="' + state.engine + '"]');
@@ -445,10 +435,6 @@ function renderWorkflowSummary() {
   updateSummaryClause('summary-purpose', summary.purpose);
   updateSummaryClause('summary-trigger', summary.trigger);
   updateSummaryClause('summary-output', summary.output);
-  updateSummaryClause('summary-context', {
-    value: summary.context ? 'With ' + summary.context + '.' : 'choose how it works',
-    complete: Boolean(summary.context)
-  });
   updateSummaryClause('summary-engine', summary.engine);
 }
 
