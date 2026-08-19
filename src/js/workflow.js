@@ -83,12 +83,11 @@ export function generateWorkflowFile(answers, patterns) {
   answers.outputs.forEach(function (o) {
     switch (o) {
       case 'add-comment':
+      case 'add-labels':
       case 'create-issue':
       case 'create-pull-request':
       case 'create-pull-request-review-comment':
         safeSet.add(o); break;
-      case 'add-labels':
-        safeSet.add('add-labels'); break;
       case 'comments':
         safeSet.add('add-comment'); break;
       case 'labels':

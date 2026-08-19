@@ -42,6 +42,7 @@ describe('Primer iconography', () => {
     expect(outputOptions).toContain('<use href="#octicon-tag"></use>');
     expect(outputOptions).toContain('<use href="#octicon-issue-opened"></use>');
     expect(outputOptions).toContain('<use href="#octicon-git-pull-request"></use>');
+    expect(outputOptions).toContain('<use href="#octicon-eye"></use>');
   });
 
   it('adds decorative Octicons to every trigger option', () => {
