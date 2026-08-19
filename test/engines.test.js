@@ -53,5 +53,6 @@ describe('definition-based engines', () => {
   it('uses updated marks for known extension engines', () => {
     expect(engineIconMarkup('pydantic-ai')).toContain('engine-logo-mark');
     expect(engineIconMarkup('pydantic-ai')).toContain('PY');
+    expect(engineIconMarkup('foo')).toContain('FO');
   });
 });

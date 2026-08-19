@@ -49,9 +49,11 @@ export function engineIconMarkup(engine) {
   if (symbol) {
     return '<span class="engine-vendor-icon" aria-hidden="true"><svg class="vendor-icon" focusable="false"><use href="#' + symbol + '"></use></svg></span>';
   }
-  var mark = extensionLogoText[engine] || formatEngineLabel(engine).split(/\s+/).slice(0, 2).map(function (part) {
+  var labelParts = formatEngineLabel(engine).split(/\s+/);
+  var fallbackMark = labelParts.length === 1 ? labelParts[0].slice(0, 2).toUpperCase() : labelParts.slice(0, 2).map(function (part) {
     return part.charAt(0);
   }).join('').toUpperCase();
+  var mark = extensionLogoText[engine] || fallbackMark;
   return '<span class="engine-vendor-icon engine-logo-mark" aria-hidden="true">' + mark + '</span>';
 }
 
