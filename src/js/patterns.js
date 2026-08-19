@@ -6,7 +6,6 @@
 // holds each archetype's data.
 
 export var PATTERNS_MANIFEST_URL = 'patterns/manifest.json';
-export var PATTERNS_ARCHETYPES_URL = 'patterns/archetypes/';
 
 // Combine a manifest (with an `archetypes` array of ids) and the loaded
 // archetype objects back into the shape the rest of the app expects.
@@ -19,13 +18,21 @@ export function mergePatterns(manifest, archetypes) {
   return merged;
 }
 
+function archetypesBaseUrlFor(manifestUrl) {
+  var lastSlash = manifestUrl.lastIndexOf('/');
+  var dir = lastSlash === -1 ? '' : manifestUrl.slice(0, lastSlash + 1);
+  return dir + 'archetypes/';
+}
+
 export function loadPatterns(manifestUrl) {
-  return fetch(manifestUrl || PATTERNS_MANIFEST_URL)
+  var resolvedManifestUrl = manifestUrl || PATTERNS_MANIFEST_URL;
+  var archetypesBaseUrl = archetypesBaseUrlFor(resolvedManifestUrl);
+  return fetch(resolvedManifestUrl)
     .then(function (r) { return r.json(); })
     .then(function (manifest) {
       var ids = Array.isArray(manifest.archetypes) ? manifest.archetypes : [];
       return Promise.all(ids.map(function (id) {
-        return fetch(PATTERNS_ARCHETYPES_URL + id + '.json').then(function (r) { return r.json(); });
+        return fetch(archetypesBaseUrl + id + '.json').then(function (r) { return r.json(); });
       })).then(function (archetypes) {
         return mergePatterns(manifest, archetypes);
       });

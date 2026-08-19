@@ -19,9 +19,10 @@ function patternsPlugin() {
   return {
     name: 'gh-aw-wizard:patterns-json',
     configureServer(server) {
+      const files = listPatternsFiles();
       server.middlewares.use('/patterns/', (req, res, next) => {
         const relativePath = decodeURIComponent(req.url.replace(/^\/+/, '').split('?')[0]);
-        if (!listPatternsFiles().includes(relativePath)) {
+        if (!files.includes(relativePath)) {
           next();
           return;
         }
