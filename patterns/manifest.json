@@ -23,7 +23,8 @@
     "status-report",
     "dependency-monitor",
     "documentation-updater",
-    "content-moderation"
+    "content-moderation",
+    "security-scanner"
   ],
   "anti_patterns": [
     {

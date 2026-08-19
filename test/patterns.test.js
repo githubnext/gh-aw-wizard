@@ -25,7 +25,8 @@ describe('getArchetype', () => {
       'linter-miner',
       'linter-refiner',
       'linter-applier',
-      'skill-pr-reviewer'
+      'skill-pr-reviewer',
+      'security-scanner'
     ])('includes %s with triggers and safe outputs', (id) => {
       const archetype = getArchetype(generatedPatterns, id);
       expect(archetype).not.toBeNull();
