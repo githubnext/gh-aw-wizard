@@ -144,13 +144,13 @@ a:hover {
 /* Header */
 .site-header {
   padding: 1.5rem 0 1.25rem;
-  text-align: center;
+  text-align: left;
   background: linear-gradient(180deg, var(--header-gradient-start) 0%, transparent 100%);
   border-bottom: 1px solid var(--border-color);
   margin-bottom: 1.5rem;
 }
 .header-title {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 0.6rem;
   margin-bottom: 0.35rem;
@@ -170,12 +170,12 @@ a:hover {
   font-size: 0.95rem;
   color: var(--text-secondary);
   max-width: 500px;
-  margin: 0 auto;
+  margin: 0;
   line-height: 1.5;
 }
 .footer-actions {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   margin-bottom: 1rem;
 }
 .theme-toggle {
@@ -765,7 +765,7 @@ a:hover {
 
 /* Footer */
 .site-footer {
-  text-align: center;
+  text-align: left;
   padding: 2rem 0;
   margin-top: 4rem;
   border-top: 1px solid var(--border-subtle);
@@ -859,11 +859,40 @@ a:hover {
   color: var(--accent-blue);
 }
 
-/* Responsive */
+/* Responsive — mobile layout follows the GitHub iOS app: left-aligned large
+   titles, edge-to-edge grouped lists, and 44px minimum tap targets. */
 @media (max-width: 640px) {
-  .site-header { padding: 1.25rem 0 1rem; }
-  .site-header h1 { font-size: 1.35rem; }
+  .container { padding: 0 1rem; }
+  .site-header {
+    padding: max(1rem, env(safe-area-inset-top)) 0 0.85rem;
+    text-align: left;
+    background: var(--bg-primary);
+    margin-bottom: 1.25rem;
+  }
+  .site-header h1 {
+    font-size: 1.6875rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+  }
+  .site-header .subtitle { font-size: 0.9rem; }
   .header-icon { width: 26px; height: 26px; }
+  .recipe-header h2 {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+  .option-card,
+  .btn { min-height: 44px; border-radius: 10px; }
+  .recipe-item { border-radius: 10px; }
+  .site-footer {
+    text-align: left;
+    margin-top: 2.5rem;
+    padding-bottom: max(2rem, env(safe-area-inset-bottom));
+  }
+  .footer-actions { justify-content: flex-start; }
   .option-group.archetype-grid { grid-template-columns: 1fr; }
   .archetype-icon { width: 34px; height: 34px; font-size: 1rem; }
   .recipe-header { align-items: flex-start; }
@@ -878,6 +907,17 @@ a:hover {
   .btn-copy-prompt { justify-content: center; }
   .insights-grid { gap: 1rem; }
   .insight-item { min-width: 70px; }
+}
+
+/* Touch devices: iOS-style press feedback instead of hover lift */
+@media (hover: none) {
+  .option-card:not(.selected):hover {
+    transform: none;
+    box-shadow: none;
+    background: var(--bg-card);
+    border-color: var(--border-color);
+  }
+  .option-card:active { background: var(--bg-tertiary); }
 }
 
 /* Focus visible for a11y */
@@ -969,7 +1009,7 @@ a:hover {
 .ap-data-source {
   font-size: 0.8125rem;
   color: var(--text-muted);
-  text-align: center;
+  text-align: left;
 }
 .ap-data-source a {
   color: var(--accent-blue);
