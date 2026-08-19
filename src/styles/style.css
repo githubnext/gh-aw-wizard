@@ -15,6 +15,9 @@
   --accent-green-rgb: 31, 136, 61;
   --accent-green-solid: #1f883d;
   --accent-green-hover: #1a7f37;
+  --agent-purple: #8250df;
+  --agent-purple-dark: #6639ba;
+  --agent-purple-rgb: 130, 80, 223;
   --border-color: var(--color-border-default, #d0d7de);
   --border-default: var(--color-border-default, #d0d7de);
   --border-subtle: var(--color-border-muted, #d8dee4);
@@ -65,6 +68,9 @@
   --accent-green-rgb: 52, 199, 89;
   --accent-green-solid: #1a7f37;
   --accent-green-hover: #157030;
+  --agent-purple: #a371f7;
+  --agent-purple-dark: #8250df;
+  --agent-purple-rgb: 163, 113, 247;
   --border-color: #48484a;
   --border-default: #48484a;
   --border-subtle: #3a3a3c;
@@ -821,28 +827,202 @@ a:hover {
   padding: 0.75rem 1.25rem;
   font-size: 0.9rem;
 }
-
-/* Toast */
-.toast {
-  position: fixed;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%) translateY(80px);
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
-  padding: 0.65rem 1.3rem;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-color);
-  font-size: 0.85rem;
-  font-weight: 500;
-  opacity: 0;
-  transition: all 0.3s ease;
-  z-index: 100;
-  box-shadow: var(--shadow-floating);
+.btn-copy-prompt.copy-error,
+.btn-copy-prompt.copy-error:hover {
+  background: var(--danger);
+  border-color: var(--danger);
 }
-.toast.show {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
+
+/* Copy success modal */
+.copy-modal {
+  width: min(31rem, calc(100% - 2rem));
+  max-width: none;
+  padding: 0;
+  margin: auto;
+  overflow: visible;
+  color: var(--text-primary);
+  background: transparent;
+  border: 0;
+}
+.copy-modal[open] {
+  animation: copyModalEnter 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.copy-modal::backdrop {
+  background: rgba(27, 18, 43, 0.68);
+  backdrop-filter: blur(4px);
+  animation: copyModalBackdrop 0.3s ease-out;
+}
+.copy-modal-card {
+  position: relative;
+  overflow: hidden;
+  padding: 2.25rem;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 0, rgba(var(--agent-purple-rgb), 0.17), transparent 46%),
+    var(--bg-card);
+  border: 1px solid rgba(var(--agent-purple-rgb), 0.5);
+  border-radius: 1rem;
+  box-shadow: 0 24px 80px rgba(20, 7, 44, 0.4);
+}
+.copy-modal-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 1;
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  place-items: center;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  font: 1.5rem/1 var(--font-sans);
+}
+.copy-modal-close:hover {
+  color: var(--text-primary);
+  background: rgba(var(--agent-purple-rgb), 0.12);
+}
+.copy-modal-close:focus-visible,
+.copy-modal-action:focus-visible {
+  outline: 2px solid var(--agent-purple);
+  outline-offset: 2px;
+}
+.copy-modal-celebration {
+  position: relative;
+  display: grid;
+  width: 6.5rem;
+  height: 6.5rem;
+  margin: -0.25rem auto 0.25rem;
+  place-items: center;
+}
+.copy-modal-celebration::before,
+.copy-modal-celebration::after {
+  position: absolute;
+  content: '';
+  border: 1px solid rgba(var(--agent-purple-rgb), 0.3);
+  border-radius: 50%;
+  animation: copyModalRing 2s ease-out infinite;
+}
+.copy-modal-celebration::before {
+  inset: 0.5rem;
+}
+.copy-modal-celebration::after {
+  inset: 1.25rem;
+  animation-delay: 0.35s;
+}
+.copy-modal-icon {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 3.75rem;
+  height: 3.75rem;
+  place-items: center;
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--agent-purple), var(--agent-purple-dark));
+  border-radius: 1.1rem;
+  box-shadow: 0 10px 28px rgba(var(--agent-purple-rgb), 0.42);
+  animation: copyModalIcon 0.6s 0.12s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.copy-modal-icon .octicon {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+.copy-modal-spark {
+  position: absolute;
+  z-index: 2;
+  width: 0.45rem;
+  height: 0.45rem;
+  background: var(--agent-purple);
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(var(--agent-purple-rgb), 0.8);
+  animation: copyModalSpark 1.8s ease-in-out infinite;
+}
+.copy-modal-spark-one { top: 0.5rem; right: 0.65rem; }
+.copy-modal-spark-two { bottom: 0.65rem; left: 0.45rem; animation-delay: 0.45s; }
+.copy-modal-spark-three { top: 1.2rem; left: 0.15rem; animation-delay: 0.9s; }
+.copy-modal-eyebrow {
+  margin-bottom: 0.35rem;
+  color: var(--agent-purple);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.copy-modal h2 {
+  margin-bottom: 0.6rem;
+  font-size: 1.55rem;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+}
+.copy-modal #copy-modal-description {
+  max-width: 25rem;
+  margin: 0 auto;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+.copy-modal-next-step {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  margin: 1.5rem 0;
+  padding: 0.9rem 1rem;
+  text-align: left;
+  background: rgba(var(--agent-purple-rgb), 0.09);
+  border: 1px solid rgba(var(--agent-purple-rgb), 0.28);
+  border-radius: var(--radius-md);
+}
+.copy-modal-next-step > .octicon {
+  width: 1.4rem;
+  height: 1.4rem;
+  color: var(--agent-purple);
+}
+.copy-modal-next-step strong,
+.copy-modal-next-step span {
+  display: block;
+}
+.copy-modal-next-step strong {
+  font-size: 0.9rem;
+}
+.copy-modal-next-step span {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+.copy-modal-action {
+  width: 100%;
+  justify-content: center;
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--agent-purple), var(--agent-purple-dark));
+  border-color: var(--agent-purple-dark);
+  box-shadow: 0 6px 18px rgba(var(--agent-purple-rgb), 0.28);
+}
+.copy-modal-action:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+@keyframes copyModalEnter {
+  from { opacity: 0; transform: translateY(18px) scale(0.92); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes copyModalBackdrop {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes copyModalIcon {
+  from { opacity: 0; transform: rotate(-12deg) scale(0.55); }
+  to { opacity: 1; transform: rotate(0) scale(1); }
+}
+@keyframes copyModalRing {
+  0% { opacity: 0; transform: scale(0.65); }
+  35% { opacity: 1; }
+  100% { opacity: 0; transform: scale(1.25); }
+}
+@keyframes copyModalSpark {
+  0%, 100% { opacity: 0.35; transform: scale(0.7); }
+  50% { opacity: 1; transform: scale(1.35); }
 }
 
 /* Footer */

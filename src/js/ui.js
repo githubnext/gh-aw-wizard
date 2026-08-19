@@ -14,6 +14,7 @@ import { engineIconMarkup, formatEngineOptionLabel, loadDefinitionEngines, regis
 let patterns = null;
 let currentStep = 1;
 let generatedPrompt = '';
+let copyFeedbackTimer = null;
 const TOTAL_STEPS = 6;
 const ACCORDION_OPEN_ANIMATION = 'accordionOpen 0.3s ease';
 const ACCORDION_OPEN_REVERSE_ANIMATION = 'accordionOpenReverse 0.3s ease';
@@ -64,6 +65,7 @@ function refreshGeneratedContent() {
 // ── Navigation ─────────────────────────────────────────────────────────────
 function bindNavigation() {
   document.getElementById('btn-copy').addEventListener('click', copyToClipboard);
+  bindCopyModal();
 
   // Clickable progress steps
   const steps = document.querySelectorAll('.progress-step');
@@ -86,6 +88,16 @@ function bindNavigation() {
     });
   });
   syncProgressStepAvailability();
+}
+
+function bindCopyModal() {
+  const modal = document.getElementById('copy-modal');
+  modal.querySelectorAll('[data-copy-modal-close]').forEach((button) => {
+    button.addEventListener('click', () => modal.close());
+  });
+  modal.addEventListener('click', (event) => {
+    if (event.target === modal) modal.close();
+  });
 }
 
 function prefersReducedMotion() {
@@ -538,24 +550,60 @@ function showPreview(md) {
 // ── Clipboard ──────────────────────────────────────────────────────────────
 function copyToClipboard() {
   const text = generatedPrompt;
+  if (!navigator.clipboard?.writeText) {
+    fallbackCopyToClipboard(text);
+    return;
+  }
   navigator.clipboard.writeText(text).then(() => {
-    showToast('Copied to clipboard!');
-  }).catch(() => {
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    showToast('Copied to clipboard!');
-  });
+    showCopySuccess();
+  }).catch(() => fallbackCopyToClipboard(text));
 }
 
-function showToast(msg) {
-  const toast = document.getElementById('toast');
-  toast.textContent = msg;
-  toast.classList.add('show');
-  setTimeout(() => { toast.classList.remove('show'); }, 2500);
+function fallbackCopyToClipboard(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try {
+    if (!document.execCommand('copy')) {
+      showCopyFailure();
+      return;
+    }
+    showCopySuccess();
+  } catch {
+    showCopyFailure();
+  } finally {
+    document.body.removeChild(ta);
+  }
+}
+
+export function showCopySuccess() {
+  resetCopyFeedback();
+  const modal = document.getElementById('copy-modal');
+  if (!modal.open) modal.showModal();
+}
+
+function showCopyFailure() {
+  const button = document.getElementById('btn-copy');
+  const status = document.getElementById('copy-status');
+  clearTimeout(copyFeedbackTimer);
+  button.dataset.defaultLabel ||= button.textContent;
+  button.textContent = 'Copy failed — try again';
+  button.classList.add('copy-error');
+  status.textContent = 'Prompt could not be copied. Please try again.';
+  copyFeedbackTimer = setTimeout(resetCopyFeedback, 3000);
+}
+
+function resetCopyFeedback() {
+  clearTimeout(copyFeedbackTimer);
+  copyFeedbackTimer = null;
+  const button = document.getElementById('btn-copy');
+  const status = document.getElementById('copy-status');
+  if (button) {
+    button.textContent = button.dataset.defaultLabel || button.textContent;
+    button.classList.remove('copy-error');
+  }
+  if (status) status.textContent = '';
 }

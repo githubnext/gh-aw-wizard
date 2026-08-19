@@ -101,11 +101,24 @@ describe('Copy prompt button focus indicator', () => {
   });
 });
 
-describe('Copy prompt toast status announcement', () => {
-  it('announces the toast to assistive technology via role=status and aria-live=polite', () => {
-    const toastTag = html.slice(html.indexOf('id="toast"') - 20, html.indexOf('>', html.indexOf('id="toast"')) + 1);
-    expect(toastTag).toMatch(/role="status"/);
-    expect(toastTag).toMatch(/aria-live="polite"/);
+describe('Copy prompt success modal', () => {
+  it('uses a native dialog with an accessible name and description', () => {
+    const dialogTag = html.slice(html.indexOf('<dialog'), html.indexOf('>', html.indexOf('<dialog')) + 1);
+    expect(dialogTag).toMatch(/id="copy-modal"/);
+    expect(dialogTag).toMatch(/aria-labelledby="copy-modal-title"/);
+    expect(dialogTag).toMatch(/aria-describedby="copy-modal-description"/);
+    expect(html).toContain('data-copy-modal-close aria-label="Close"');
+  });
+
+  it('tells users to run the copied prompt in their repository', () => {
+    expect(html).toContain('Open your coding agent from the repository you want to automate');
+    expect(html).toContain('<strong>Run it in your repository</strong>');
+  });
+
+  it('announces clipboard failures without opening the success modal', () => {
+    const statusTag = html.slice(html.indexOf('id="copy-status"') - 40, html.indexOf('>', html.indexOf('id="copy-status"')) + 1);
+    expect(statusTag).toMatch(/role="status"/);
+    expect(statusTag).toMatch(/aria-live="polite"/);
   });
 });
 
