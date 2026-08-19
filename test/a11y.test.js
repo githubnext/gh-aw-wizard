@@ -43,4 +43,16 @@ describe('Primer iconography', () => {
     expect(outputOptions).toContain('<use href="#octicon-issue-opened"></use>');
     expect(outputOptions).toContain('<use href="#octicon-git-pull-request"></use>');
   });
+
+  it('adds decorative Octicons to every trigger option', () => {
+    const triggerOptions = html.slice(html.indexOf('id="trigger-options"'), html.indexOf('</section>', html.indexOf('id="trigger-options"')));
+    expect(triggerOptions.match(/<svg class="octicon" aria-hidden="true">/g)).toHaveLength(7);
+    expect(triggerOptions).toContain('<use href="#octicon-issue-opened"></use>');
+    expect(triggerOptions).toContain('<use href="#octicon-git-pull-request"></use>');
+    expect(triggerOptions).toContain('<use href="#octicon-calendar"></use>');
+    expect(triggerOptions).toContain('<use href="#octicon-play"></use>');
+    expect(triggerOptions).toContain('<use href="#octicon-terminal"></use>');
+    expect(triggerOptions).toContain('<use href="#octicon-tag"></use>');
+    expect(triggerOptions).toContain('<use href="#octicon-git-commit"></use>');
+  });
 });
