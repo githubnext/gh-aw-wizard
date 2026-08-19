@@ -184,21 +184,28 @@ a:hover {
   margin: 0;
   line-height: 1.5;
 }
-.header-callout {
+.info-callout {
   display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin: 0.6rem 0 0;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin: 2rem 0 0;
+  padding: 0.85rem 1rem;
   font-size: 0.85rem;
+  line-height: 1.5;
   color: var(--text-secondary);
+  background: rgba(var(--accent-blue-rgb), 0.08);
+  border: 1px solid rgba(var(--accent-blue-rgb), 0.3);
+  border-left: 3px solid var(--accent-blue);
+  border-radius: var(--radius-md);
 }
-.header-callout .octicon {
-  width: 14px;
-  height: 14px;
+.info-callout .octicon {
+  width: 16px;
+  height: 16px;
   fill: var(--accent-blue);
   flex-shrink: 0;
+  margin-top: 0.1rem;
 }
-.header-callout a {
+.info-callout a {
   color: var(--accent-blue);
   font-weight: 600;
 }
@@ -981,6 +988,11 @@ a:hover {
     text-align: left;
     margin-top: 2.5rem;
     padding-bottom: max(2rem, env(safe-area-inset-bottom));
+  }
+  .info-callout {
+    margin-top: 1.5rem;
+    padding: 0.75rem 0.85rem;
+    font-size: 0.8rem;
   }
   .footer-actions { justify-content: flex-start; }
   .option-group.archetype-grid { grid-template-columns: 1fr; }
