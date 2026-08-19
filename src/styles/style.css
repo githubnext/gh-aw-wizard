@@ -1327,9 +1327,12 @@ a:hover {
   width: 0.8rem;
   height: 0.8rem;
 }
-.ld-phase-icon-multi .ld-phase-icon-lock {
+.ld-phase-icon-multi .octicon {
   width: 0.8rem;
   height: 0.8rem;
+}
+.ld-phase-icon-multi .ld-phase-icon-lock,
+.ld-phase-icon-multi .ld-phase-icon-shield {
   color: var(--accent-green);
 }
 .ld-phase-text {
