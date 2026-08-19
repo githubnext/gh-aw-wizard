@@ -24,7 +24,7 @@ var extensionLogoText = {
   crush: 'CR',
   cursor: 'CU',
   'deepseek-harness': 'DS',
-  custom: 'GS',
+  custom: 'CS',
   goose: 'GO',
   kiro: 'KI',
   'pydantic-ai': 'PY',
