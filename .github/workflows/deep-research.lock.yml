@@ -1,5 +1,5 @@
-# gh-aw-metadata: {"schema_version":"v4","frontmatter_hash":"c894f536cb9f25b2fd7ba3869a9047aaf4f00d779febdf2cc03a087e325d26dd","body_hash":"430477cf311dbd4f1376b5c8db2a8dba8a2de042ddcd34b16291974c1b27d58f","compiler_version":"v0.87.0","strict":true,"agent_id":"copilot","engine_versions":{"copilot":"1.0.80"}}
-# gh-aw-manifest: {"version":1,"secrets":["GH_AW_CI_TRIGGER_TOKEN","GH_AW_GITHUB_MCP_SERVER_TOKEN","GH_AW_GITHUB_TOKEN","GITHUB_TOKEN"],"actions":[{"repo":"actions/cache/restore","sha":"55cc8345863c7cc4c66a329aec7e433d2d1c52a9","version":"v6.1.0"},{"repo":"actions/cache/save","sha":"55cc8345863c7cc4c66a329aec7e433d2d1c52a9","version":"v6.1.0"},{"repo":"actions/checkout","sha":"3d3c42e5aac5ba805825da76410c181273ba90b1","version":"v7.0.1"},{"repo":"actions/download-artifact","sha":"3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c","version":"v8.0.1"},{"repo":"actions/github-script","sha":"3a2844b7e9c422d3c10d287c895573f7108da1b3","version":"v9.0.0"},{"repo":"actions/setup-node","sha":"820762786026740c76f36085b0efc47a31fe5020","version":"v7.0.0"},{"repo":"actions/upload-artifact","sha":"043fb46d1a93c77aae656e7c1c64a875d1fc6a0a","version":"v7.0.1"},{"repo":"github/gh-aw-actions/setup","sha":"v0.87.0","version":"v0.87.0"},{"repo":"github/gh-aw-actions/setup-cli","sha":"v0.87.0","version":"v0.87.0"}],"resolution_failures":[{"repo":"github/gh-aw-actions/setup-cli","ref":"v0.87.0","error_type":"dynamic_resolution_failed"}],"containers":[{"image":"alpine:latest"},{"image":"ghcr.io/github/gh-aw-firewall/agent:0.28.1","digest":"sha256:5e3f6ee27eeae07195838b97ac4aa2f8aea42a7c55f1c0d3e17d8e88e294ad0d","pinned_image":"ghcr.io/github/gh-aw-firewall/agent:0.28.1@sha256:5e3f6ee27eeae07195838b97ac4aa2f8aea42a7c55f1c0d3e17d8e88e294ad0d"},{"image":"ghcr.io/github/gh-aw-firewall/api-proxy:0.28.1","digest":"sha256:288e7d2a12d5b430500d739f9c16e20bb1ed51b91f986f3f3eccde189f489f5c","pinned_image":"ghcr.io/github/gh-aw-firewall/api-proxy:0.28.1@sha256:288e7d2a12d5b430500d739f9c16e20bb1ed51b91f986f3f3eccde189f489f5c"},{"image":"ghcr.io/github/gh-aw-firewall/squid:0.28.1","digest":"sha256:9d428af47899bf18ef2d5618075777d76ef344c91e76c1f44ec1aaa0ee347e5f","pinned_image":"ghcr.io/github/gh-aw-firewall/squid:0.28.1@sha256:9d428af47899bf18ef2d5618075777d76ef344c91e76c1f44ec1aaa0ee347e5f"},{"image":"ghcr.io/github/gh-aw-mcpg:v0.4.9","digest":"sha256:e5a1569aeaf41820fa7bdee3e94468cae448133cdbf00119ad24f5b74db1ab9f","pinned_image":"ghcr.io/github/gh-aw-mcpg:v0.4.9@sha256:e5a1569aeaf41820fa7bdee3e94468cae448133cdbf00119ad24f5b74db1ab9f"},{"image":"ghcr.io/github/gh-aw-node","digest":"sha256:0d9f1fb5fd6610c0ac1f5194a38e45a8a1e81f8a390d5142d8e4e6f26a4b3196","pinned_image":"ghcr.io/github/gh-aw-node@sha256:0d9f1fb5fd6610c0ac1f5194a38e45a8a1e81f8a390d5142d8e4e6f26a4b3196"},{"image":"ghcr.io/github/github-mcp-server:v1.9.0","digest":"sha256:881b53d6f75f69bdbc1b5b10fc2f1361717c19054143b3a8529fb5c32061a50e","pinned_image":"ghcr.io/github/github-mcp-server:v1.9.0@sha256:881b53d6f75f69bdbc1b5b10fc2f1361717c19054143b3a8529fb5c32061a50e"}]}
+# gh-aw-metadata: {"schema_version":"v4","frontmatter_hash":"076efc4e6487d865cf5fd0984ec08f1206c15e96f006d42e6ab865c9558154bd","body_hash":"1ca52fed659dca53b9ad70dc81f0b9304df95f5fba17bed4e2c3ef60427df1ca","compiler_version":"v0.87.0","strict":true,"agent_id":"copilot","engine_versions":{"copilot":"1.0.80"}}
+# gh-aw-manifest: {"version":1,"secrets":["GH_AW_GITHUB_MCP_SERVER_TOKEN","GH_AW_GITHUB_TOKEN","GITHUB_TOKEN"],"actions":[{"repo":"actions/cache/restore","sha":"55cc8345863c7cc4c66a329aec7e433d2d1c52a9","version":"v6.1.0"},{"repo":"actions/cache/save","sha":"55cc8345863c7cc4c66a329aec7e433d2d1c52a9","version":"v6.1.0"},{"repo":"actions/checkout","sha":"3d3c42e5aac5ba805825da76410c181273ba90b1","version":"v7.0.1"},{"repo":"actions/download-artifact","sha":"3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c","version":"v8.0.1"},{"repo":"actions/github-script","sha":"3a2844b7e9c422d3c10d287c895573f7108da1b3","version":"v9.0.0"},{"repo":"actions/setup-node","sha":"820762786026740c76f36085b0efc47a31fe5020","version":"v7.0.0"},{"repo":"actions/upload-artifact","sha":"043fb46d1a93c77aae656e7c1c64a875d1fc6a0a","version":"v7.0.1"},{"repo":"github/gh-aw-actions/setup","sha":"v0.87.0","version":"v0.87.0"}],"containers":[{"image":"ghcr.io/github/gh-aw-firewall/agent:0.28.1","digest":"sha256:5e3f6ee27eeae07195838b97ac4aa2f8aea42a7c55f1c0d3e17d8e88e294ad0d","pinned_image":"ghcr.io/github/gh-aw-firewall/agent:0.28.1@sha256:5e3f6ee27eeae07195838b97ac4aa2f8aea42a7c55f1c0d3e17d8e88e294ad0d"},{"image":"ghcr.io/github/gh-aw-firewall/api-proxy:0.28.1","digest":"sha256:288e7d2a12d5b430500d739f9c16e20bb1ed51b91f986f3f3eccde189f489f5c","pinned_image":"ghcr.io/github/gh-aw-firewall/api-proxy:0.28.1@sha256:288e7d2a12d5b430500d739f9c16e20bb1ed51b91f986f3f3eccde189f489f5c"},{"image":"ghcr.io/github/gh-aw-firewall/squid:0.28.1","digest":"sha256:9d428af47899bf18ef2d5618075777d76ef344c91e76c1f44ec1aaa0ee347e5f","pinned_image":"ghcr.io/github/gh-aw-firewall/squid:0.28.1@sha256:9d428af47899bf18ef2d5618075777d76ef344c91e76c1f44ec1aaa0ee347e5f"},{"image":"ghcr.io/github/gh-aw-mcpg:v0.4.9","digest":"sha256:e5a1569aeaf41820fa7bdee3e94468cae448133cdbf00119ad24f5b74db1ab9f","pinned_image":"ghcr.io/github/gh-aw-mcpg:v0.4.9@sha256:e5a1569aeaf41820fa7bdee3e94468cae448133cdbf00119ad24f5b74db1ab9f"},{"image":"ghcr.io/github/gh-aw-node","digest":"sha256:0d9f1fb5fd6610c0ac1f5194a38e45a8a1e81f8a390d5142d8e4e6f26a4b3196","pinned_image":"ghcr.io/github/gh-aw-node@sha256:0d9f1fb5fd6610c0ac1f5194a38e45a8a1e81f8a390d5142d8e4e6f26a4b3196"}]}
 # This file was automatically generated by gh-aw (v0.87.0). DO NOT EDIT. To debug this workflow, load the skill at https://github.com/github/gh-aw/blob/main/debug.md
 #
 #    ___                   _   _
@@ -23,10 +23,9 @@
 #
 # For more information: https://github.github.com/gh-aw/introduction/overview/
 #
-# Analyze agentic workflow trends and open PRs to improve the pattern library
+# Analyze the committed agentic workflow pattern library
 #
 # Secrets used:
-#   - GH_AW_CI_TRIGGER_TOKEN
 #   - GH_AW_GITHUB_MCP_SERVER_TOKEN
 #   - GH_AW_GITHUB_TOKEN
 #   - GITHUB_TOKEN
@@ -37,26 +36,19 @@
 #   - actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 #   - actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
 #   - actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
-#   - actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0 (source v9)
 #   - actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
 #   - actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-#   - github/gh-aw-actions/setup-cli@v0.87.0
 #   - github/gh-aw-actions/setup@v0.87.0
 #
 # Container images used:
-#   - alpine:latest
 #   - ghcr.io/github/gh-aw-firewall/agent:0.28.1@sha256:5e3f6ee27eeae07195838b97ac4aa2f8aea42a7c55f1c0d3e17d8e88e294ad0d
 #   - ghcr.io/github/gh-aw-firewall/api-proxy:0.28.1@sha256:288e7d2a12d5b430500d739f9c16e20bb1ed51b91f986f3f3eccde189f489f5c
 #   - ghcr.io/github/gh-aw-firewall/squid:0.28.1@sha256:9d428af47899bf18ef2d5618075777d76ef344c91e76c1f44ec1aaa0ee347e5f
 #   - ghcr.io/github/gh-aw-mcpg:v0.4.9@sha256:e5a1569aeaf41820fa7bdee3e94468cae448133cdbf00119ad24f5b74db1ab9f
 #   - ghcr.io/github/gh-aw-node@sha256:0d9f1fb5fd6610c0ac1f5194a38e45a8a1e81f8a390d5142d8e4e6f26a4b3196
-#   - ghcr.io/github/github-mcp-server:v1.9.0@sha256:881b53d6f75f69bdbc1b5b10fc2f1361717c19054143b3a8529fb5c32061a50e
 
 name: "🔬 Deep Research"
 on:
-  schedule:
-    - cron: "26 21 * * *"  # Friendly format: daily (scattered)
-  # skip-if-match: is:pr is:open in:title "Pattern library update" # Skip-if-match processed as search check in pre-activation job
   workflow_dispatch:
     inputs:
       aw_context:
@@ -74,8 +66,6 @@ run-name: "🔬 Deep Research"
 
 jobs:
   activation:
-    needs: pre_activation
-    if: needs.pre_activation.outputs.activated == 'true'
     runs-on: ubuntu-slim
     permissions:
       actions: read
@@ -105,8 +95,6 @@ jobs:
         with:
           destination: ${{ runner.temp }}/gh-aw/actions
           job-name: ${{ github.job }}
-          trace-id: ${{ needs.pre_activation.outputs.setup-trace-id }}
-          parent-span-id: ${{ needs.pre_activation.outputs.setup-parent-span-id || needs.pre_activation.outputs.setup-span-id }}
           safe-output-artifact-client: ${{ env.GH_AW_MAX_DAILY_AI_CREDITS != '' }}
         env:
           GH_AW_SETUP_WORKFLOW_NAME: "🔬 Deep Research"
@@ -241,21 +229,12 @@ jobs:
           GH_AW_ACTIONS_DIR: ${{ runner.temp }}/gh-aw/actions
           GH_AW_PROMPT: ${{ runner.temp }}/gh-aw/aw-prompts/prompt.txt
           GH_AW_SAFE_OUTPUTS: ${{ runner.temp }}/gh-aw/safeoutputs/outputs.jsonl
-          GH_AW_PROMPT_CONFIG: "{\"items\":[{\"content_env\":\"GH_AW_PROMPT_CONTENT_0000\"},{\"file\":\"xpia.md\"},{\"file\":\"temp_folder_prompt.md\"},{\"file\":\"markdown.md\"},{\"file\":\"cache_memory_prompt.md\"},{\"file\":\"safe_outputs_prompt.md\"},{\"content_env\":\"GH_AW_PROMPT_CONTENT_0001\"},{\"file\":\"safe_outputs_create_pull_request.md\"},{\"content_env\":\"GH_AW_PROMPT_CONTENT_0002\"},{\"file\":\"mcp_cli_tools_prompt.md\"},{\"content_env\":\"GH_AW_PROMPT_CONTENT_0003\"},{\"file\":\"github_mcp_tools_with_safeoutputs_prompt.md\"},{\"content_env\":\"GH_AW_PROMPT_CONTENT_0004\"},{\"content_env\":\"GH_AW_PROMPT_CONTENT_0005\"}]}"
-          GH_AW_EXPR_1A3A194A: ${{ github.event.discussion.number || (fromJSON(github.event.inputs.aw_context || github.event.client_payload.aw_context || '{}').item_type == 'discussion' && fromJSON(github.event.inputs.aw_context || github.event.client_payload.aw_context || '{}').item_number) }}
-          GH_AW_EXPR_463A214A: ${{ github.event.pull_request.number || (fromJSON(github.event.inputs.aw_context || github.event.client_payload.aw_context || '{}').item_type == 'pull_request' && fromJSON(github.event.inputs.aw_context || github.event.client_payload.aw_context || '{}').item_number) }}
-          GH_AW_EXPR_802A9F6A: ${{ github.event.issue.number || (fromJSON(github.event.inputs.aw_context || github.event.client_payload.aw_context || '{}').item_type == 'issue' && fromJSON(github.event.inputs.aw_context || github.event.client_payload.aw_context || '{}').item_number) }}
-          GH_AW_EXPR_FF1D34CE: ${{ github.event.comment.id || fromJSON(github.event.inputs.aw_context || github.event.client_payload.aw_context || '{}').comment_id }}
-          GH_AW_GITHUB_ACTOR: ${{ github.actor }}
-          GH_AW_GITHUB_REPOSITORY: ${{ github.repository }}
-          GH_AW_GITHUB_RUN_ID: ${{ github.run_id }}
-          GH_AW_GITHUB_WORKSPACE: ${{ github.workspace }}
+          GH_AW_PROMPT_CONFIG: "{\"items\":[{\"content_env\":\"GH_AW_PROMPT_CONTENT_0000\"},{\"file\":\"xpia.md\"},{\"file\":\"temp_folder_prompt.md\"},{\"file\":\"markdown.md\"},{\"file\":\"safe_outputs_prompt.md\"},{\"content_env\":\"GH_AW_PROMPT_CONTENT_0001\"},{\"file\":\"safe_outputs_auto_create_issue.md\"},{\"content_env\":\"GH_AW_PROMPT_CONTENT_0002\"},{\"file\":\"mcp_cli_tools_prompt.md\"},{\"content_env\":\"GH_AW_PROMPT_CONTENT_0003\"},{\"content_env\":\"GH_AW_PROMPT_CONTENT_0004\"}]}"
           GH_AW_PROMPT_CONTENT_0000: "<system>\n"
-          GH_AW_PROMPT_CONTENT_0001: "<safe-output-tools>\nTools: create_pull_request, missing_tool, missing_data, noop\n"
+          GH_AW_PROMPT_CONTENT_0001: "<safe-output-tools>\nTools: create_issue, noop\n"
           GH_AW_PROMPT_CONTENT_0002: "</safe-output-tools>\n"
-          GH_AW_PROMPT_CONTENT_0003: "<github-context>\nThe following GitHub context information is available for this workflow:\n{{#if github.actor}}\n- **actor**: __GH_AW_GITHUB_ACTOR__\n{{/if}}\n{{#if github.repository}}\n- **repository**: __GH_AW_GITHUB_REPOSITORY__\n{{/if}}\n{{#if github.workspace}}\n- **workspace**: __GH_AW_GITHUB_WORKSPACE__\n{{/if}}\n{{#if github.event.issue.number || (github.aw.context.item_type == 'issue' && github.aw.context.item_number)}}\n- **issue-number**: #__GH_AW_EXPR_802A9F6A__\n{{/if}}\n{{#if github.event.discussion.number || (github.aw.context.item_type == 'discussion' && github.aw.context.item_number)}}\n- **discussion-number**: #__GH_AW_EXPR_1A3A194A__\n{{/if}}\n{{#if github.event.pull_request.number || (github.aw.context.item_type == 'pull_request' && github.aw.context.item_number)}}\n- **pull-request-number**: #__GH_AW_EXPR_463A214A__\n{{/if}}\n{{#if github.event.comment.id || github.aw.context.comment_id}}\n- **comment-id**: __GH_AW_EXPR_FF1D34CE__\n{{/if}}\n{{#if github.run_id}}\n- **workflow-run-id**: __GH_AW_GITHUB_RUN_ID__\n{{/if}}\n</github-context>\n\n"
-          GH_AW_PROMPT_CONTENT_0004: "</system>\n"
-          GH_AW_PROMPT_CONTENT_0005: "{{#runtime-import .github/workflows/deep-research.md}}\n"
+          GH_AW_PROMPT_CONTENT_0003: "</system>\n"
+          GH_AW_PROMPT_CONTENT_0004: "{{#runtime-import .github/workflows/deep-research.md}}\n"
         with:
           script: |
             const { setupGlobals } = require(process.env.GH_AW_ACTIONS_DIR + '/setup_globals.cjs');
@@ -277,19 +256,7 @@ jobs:
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           GH_AW_PROMPT: ${{ runner.temp }}/gh-aw/aw-prompts/prompt.txt
-          GH_AW_ALLOWED_EXTENSIONS: ''
-          GH_AW_CACHE_DESCRIPTION: "Persistent state for the Deep Research scan. Contains:\n- `scan/discovered.json`, `scan/verified.json`, `scan/analyzed.json` — intermediate\n  scan stages reused across runs so a scan can resume instead of starting over\n- `scan/state.json` — timestamps describing when each stage was last refreshed\n- `logs/` — agentic workflow run logs downloaded with `gh aw logs`\n- `reports/analysis-report.json` — the previous run's analysis report\n"
-          GH_AW_CACHE_DIR: '/tmp/gh-aw/cache-memory/'
-          GH_AW_EXPR_1A3A194A: ${{ github.event.discussion.number || (fromJSON(github.event.inputs.aw_context || github.event.client_payload.aw_context || '{}').item_type == 'discussion' && fromJSON(github.event.inputs.aw_context || github.event.client_payload.aw_context || '{}').item_number) }}
-          GH_AW_EXPR_463A214A: ${{ github.event.pull_request.number || (fromJSON(github.event.inputs.aw_context || github.event.client_payload.aw_context || '{}').item_type == 'pull_request' && fromJSON(github.event.inputs.aw_context || github.event.client_payload.aw_context || '{}').item_number) }}
-          GH_AW_EXPR_802A9F6A: ${{ github.event.issue.number || (fromJSON(github.event.inputs.aw_context || github.event.client_payload.aw_context || '{}').item_type == 'issue' && fromJSON(github.event.inputs.aw_context || github.event.client_payload.aw_context || '{}').item_number) }}
-          GH_AW_EXPR_FF1D34CE: ${{ github.event.comment.id || fromJSON(github.event.inputs.aw_context || github.event.client_payload.aw_context || '{}').comment_id }}
-          GH_AW_GITHUB_ACTOR: ${{ github.actor }}
-          GH_AW_GITHUB_REPOSITORY: ${{ github.repository }}
-          GH_AW_GITHUB_RUN_ID: ${{ github.run_id }}
-          GH_AW_GITHUB_WORKSPACE: ${{ github.workspace }}
-          GH_AW_MCP_CLI_SERVERS_LIST: "- `github` — run `github --help` to see available tools\n- `safeoutputs` — run `safeoutputs --help` to see available tools"
-          GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_ACTIVATED: ${{ needs.pre_activation.outputs.activated }}
+          GH_AW_MCP_CLI_SERVERS_LIST: '- `safeoutputs` — run `safeoutputs --help` to see available tools'
         with:
           script: |
             const { setupGlobals } = require('${{ runner.temp }}/gh-aw/actions/setup_globals.cjs');
@@ -301,19 +268,7 @@ jobs:
             return await substitutePlaceholders({
               file: process.env.GH_AW_PROMPT,
               substitutions: {
-                GH_AW_ALLOWED_EXTENSIONS: process.env.GH_AW_ALLOWED_EXTENSIONS,
-                GH_AW_CACHE_DESCRIPTION: process.env.GH_AW_CACHE_DESCRIPTION,
-                GH_AW_CACHE_DIR: process.env.GH_AW_CACHE_DIR,
-                GH_AW_EXPR_1A3A194A: process.env.GH_AW_EXPR_1A3A194A,
-                GH_AW_EXPR_463A214A: process.env.GH_AW_EXPR_463A214A,
-                GH_AW_EXPR_802A9F6A: process.env.GH_AW_EXPR_802A9F6A,
-                GH_AW_EXPR_FF1D34CE: process.env.GH_AW_EXPR_FF1D34CE,
-                GH_AW_GITHUB_ACTOR: process.env.GH_AW_GITHUB_ACTOR,
-                GH_AW_GITHUB_REPOSITORY: process.env.GH_AW_GITHUB_REPOSITORY,
-                GH_AW_GITHUB_RUN_ID: process.env.GH_AW_GITHUB_RUN_ID,
-                GH_AW_GITHUB_WORKSPACE: process.env.GH_AW_GITHUB_WORKSPACE,
-                GH_AW_MCP_CLI_SERVERS_LIST: process.env.GH_AW_MCP_CLI_SERVERS_LIST,
-                GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_ACTIVATED: process.env.GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_ACTIVATED
+                GH_AW_MCP_CLI_SERVERS_LIST: process.env.GH_AW_MCP_CLI_SERVERS_LIST
               }
             });
       - name: Validate prompt placeholders
@@ -354,12 +309,8 @@ jobs:
     if: needs.activation.outputs.daily_ai_credits_exceeded != 'true'
     runs-on: ubuntu-latest
     permissions:
-      actions: read
       contents: read
       copilot-requests: write
-    concurrency:
-      group: "gh-aw-copilot-${{ github.workflow }}"
-      queue: max
     env:
       DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
       GH_AW_ASSETS_ALLOWED_EXTS: ""
@@ -373,8 +324,6 @@ jobs:
       ai_credits_rate_limit_error: ${{ steps.parse-mcp-gateway.outputs.ai_credits_rate_limit_error || 'false' }}
       aic: ${{ steps.parse-mcp-gateway.outputs.aic }}
       ambient_context: ${{ steps.parse-mcp-gateway.outputs.ambient_context }}
-      cache_memory_restore_0_cache_hit: ${{ steps.restore_cache_memory_0.outputs.cache-hit || 'false' }}
-      cache_memory_restore_0_matched_key: ${{ steps.restore_cache_memory_0.outputs.cache-matched-key || '' }}
       checkout_pr_success: ${{ steps.checkout-pr.outputs.checkout_pr_success || 'true' }}
       effective_tokens: ${{ steps.parse-mcp-gateway.outputs.effective_tokens }}
       has_patch: ${{ steps.collect_output.outputs.has_patch }}
@@ -432,69 +381,6 @@ jobs:
         with:
           name: activation
           path: /tmp/gh-aw
-      # Cache memory file share configuration from frontmatter processed below
-      - name: Create cache-memory directory
-        run: bash "${RUNNER_TEMP}/gh-aw/actions/create_cache_memory_dir.sh"
-      - name: Restore cache-memory file share data
-        id: restore_cache_memory_0
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          key: memory-none-nopolicy-deep-research-state-${{ github.run_id }}
-          path: /tmp/gh-aw/cache-memory
-          restore-keys: |
-            memory-none-nopolicy-deep-research-state-
-      - name: Setup cache-memory git repository
-        env:
-          GH_AW_CACHE_DIR: /tmp/gh-aw/cache-memory
-          GH_AW_MIN_INTEGRITY: none
-        run: bash "${RUNNER_TEMP}/gh-aw/actions/setup_cache_memory_git.sh"
-      - name: Restore shared agentic logs cache
-        id: restore-agentic-logs-cache
-        continue-on-error: true
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          key: agentic-logs
-          path: .github/aw/logs
-      - name: Restore scan state from cache-memory
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0 (source v9)
-        with:
-          script: "const fs = require('fs');\nconst path = require('path');\nconst cacheDir = '/tmp/gh-aw/cache-memory';\nconst scanDir = '/tmp/aw-scan';\nfs.mkdirSync(scanDir, { recursive: true });\nconst cachedScan = path.join(cacheDir, 'scan');\nif (!fs.existsSync(cachedScan)) {\n  console.log('No cached scan state found — starting a fresh scan');\n  return;\n}\nfor (const file of fs.readdirSync(cachedScan)) {\n  if (!file.endsWith('.json')) continue;\n  fs.copyFileSync(path.join(cachedScan, file), path.join(scanDir, file));\n  console.log(`Restored ${file} from cache-memory`);\n}\n"
-      - env:
-          GH_TOKEN: ${{ secrets.GH_AW_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
-        name: Run scan
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0 (source v9)
-        with:
-          script: |
-            await exec.exec('./scripts/scan.sh', ['--active-only', '--run-history', '--resume']);
-      - name: Install gh-aw CLI
-        uses: github/gh-aw-actions/setup-cli@v0.87.0
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          version: v0.87.0
-      - continue-on-error: true
-        env:
-          GH_TOKEN: ${{ secrets.GH_AW_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
-        name: Download agentic workflow logs
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0 (source v9)
-        with:
-          script: "const fs = require('fs');\nconst path = require('path');\nconst logsDir = '/tmp/gh-aw/cache-memory/logs';\nfs.mkdirSync(logsDir, { recursive: true });\nconst scan = JSON.parse(fs.readFileSync('data/scan-results.json', 'utf8'));\nconst repos = Object.entries(scan.repos || {})\n  .filter(([, repo]) => (repo.recent_runs || 0) > 0)\n  .sort((a, b) => (b[1].stars || 0) - (a[1].stars || 0))\n  .slice(0, 10)\n  .map(([name]) => name);\nfor (const repo of repos) {\n  const outDir = path.join(logsDir, repo.replace('/', '__'));\n  const code = await exec.exec(\n    'gh',\n    ['aw', 'logs', '--repo', repo, '--count', '10', '--start-date', '-7d',\n     '--json', '--output', outDir, '--cache-before', '-30d'],\n    { ignoreReturnCode: true },\n  );\n  if (code !== 0) {\n    console.log(`Skipping ${repo} — gh aw logs exited with code ${code}`);\n  }\n}\n"
-      - name: Rebuild patterns.json
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0 (source v9)
-        with:
-          script: "const script = String.raw`\nimport json\nfrom collections import Counter, defaultdict\nfrom datetime import datetime, timezone\n\nwith open(\"data/scan-results.json\") as f:\n    data = json.load(f)\n\nmetadata = data.get(\"metadata\", {})\nrepos = data.get(\"repos\", {})\n\n# Collect all workflows with their repo context\nworkflows = []\nfor repo_key, repo in repos.items():\n    for wf in repo.get(\"workflows\", []):\n        wf[\"_repo\"] = repo_key\n        wf[\"_stars\"] = repo.get(\"stars\", 0)\n        wf[\"_priority\"] = repo.get(\"priority\", False)\n        workflows.append(wf)\n\n# Parse success rate from \"N/M\" string\ndef parse_sr(sr_str):\n    if not sr_str or sr_str == \"0/0\":\n        return None\n    try:\n        parts = sr_str.split(\"/\")\n        num, den = int(parts[0]), int(parts[1])\n        return num / den if den > 0 else None\n    except Exception:\n        return None\n\ndef wilson_lower(successes, total, z=1.96):\n    if total == 0:\n        return 0.0\n    rate = successes / total\n    denominator = 1 + z * z / total\n    centre = rate + z * z / (2 * total)\n    margin = z * ((rate * (1 - rate) / total + z * z / (4 * total * total)) ** 0.5)\n    return (centre - margin) / denominator\n\n# Classify workflows into archetypes\ndef classify(wf):\n    name = (wf.get(\"name\", \"\") + \" \" + wf.get(\"file\", \"\")).lower()\n    if \"triage\" in name or \"label\" in name:\n        return (\"issue-triage\", \"Issue Triage\", \"Classify and label new issues\")\n    if \"upstream\" in name or \"sync\" in name or \"monitor\" in name:\n        return (\"dependency-monitor\", \"Dependency Monitor\", \"Track and update dependencies\")\n    if \"doc\" in name and (\"updat\" in name or \"improv\" in name or \"generat\" in name or \"clean\" in name):\n        return (\"documentation-updater\", \"Documentation Updater\", \"Keep docs accurate and up-to-date\")\n    if \"review\" in name or \"pr-review\" in name or \"pr-check\" in name:\n        return (\"pr-review\", \"PR Review\", \"Review pull requests for quality and issues\")\n    if \"fix\" in name or \"doctor\" in name or \"ci\" in name or \"code\" in name:\n        return (\"code-improvement\", \"Code Improvement\", \"Diagnose and fix code or CI issues\")\n    if \"report\" in name or \"summary\" in name or \"weekly\" in name or \"status\" in name:\n        return (\"status-report\", \"Status Report\", \"Generate periodic status summaries\")\n    if \"depend\" in name or \"update\" in name or \"renovate\" in name:\n        return (\"dependency-monitor\", \"Dependency Monitor\", \"Track and update dependencies\")\n    if \"moderat\" in name or \"content\" in name:\n        return (\"content-moderation\", \"Content Moderation\", \"Review content for quality or policy\")\n    return (\"custom\", \"Custom\", \"Custom or uncategorized workflow\")\n\n# Aggregate by archetype\narch_data = defaultdict(lambda: {\n    \"workflows\": [], \"success_rates\": [], \"triggers\": Counter(),\n    \"repos\": [], \"priority_workflows\": 0, \"tips\": set(), \"anti_patterns\": []\n})\n\nfor wf in workflows:\n    arch_id, label, desc = classify(wf)\n    ad = arch_data[arch_id]\n    ad[\"label\"] = label\n    ad[\"description\"] = desc\n    ad[\"workflows\"].append(wf)\n    if wf[\"_priority\"]:\n        ad[\"priority_workflows\"] += 1\n    sr = parse_sr(wf.get(\"success_rate\"))\n    if sr is not None:\n        ad[\"success_rates\"].append(sr)\n    for t in wf.get(\"triggers\", []):\n        ad[\"triggers\"][t] += 1\n    ad[\"repos\"].append((wf[\"_repo\"], wf[\"_stars\"], wf[\"_priority\"]))\n\n# Build archetypes list\narchetypes = []\nfor arch_id, ad in sorted(\n    arch_data.items(),\n    key=lambda x: (-x[1][\"priority_workflows\"], -len(x[1][\"workflows\"]))\n):\n    rates = ad[\"success_rates\"]\n    avg_sr = round(sum(rates) / len(rates), 2) if rates else 0.0\n\n    # Top triggers\n    top_triggers = []\n    for t, _ in ad[\"triggers\"].most_common(3):\n        top_triggers.append({\"type\": t, \"config\": {}})\n\n    # Top repos by stars\n    top_repos = sorted(set(ad[\"repos\"]), key=lambda x: (-x[2], -x[1]))[:5]\n    top_repos = [{\"repo\": r, \"stars\": s} for r, s, _ in top_repos]\n\n    # Anti-patterns: workflows with very low success rates\n    for wf in ad[\"workflows\"]:\n        sr = parse_sr(wf.get(\"success_rate\"))\n        if sr is not None and sr < 0.1 and wf.get(\"name\"):\n            ad[\"anti_patterns\"].append({\n                \"pattern\": wf[\"name\"],\n                \"success_rate\": round(sr, 3),\n                \"repo\": wf[\"_repo\"]\n            })\n\n    # Data-driven tips and config per archetype\n    archetype_config = {\n        \"issue-triage\": {\n            \"safe_outputs\": [\"issues\"],\n            \"tools\": [\"add-comment\", \"add-labels\"],\n            \"prompt_style\": \"role-steps\",\n            \"size_range\": [3000, 7000],\n            \"tips\": [\n                \"Add workflow_dispatch as a fallback trigger — adds ~21pp to success rate\",\n                \"Include explicit label taxonomy in your prompt so the agent knows valid options\",\n                \"Use DO NOT constraints (e.g., 'Do NOT close issues') — 61% more likely to be healthy\",\n            ],\n        },\n        \"code-improvement\": {\n            \"safe_outputs\": [\"pull-requests\"],\n            \"tools\": [\"create-pull-request\"],\n            \"prompt_style\": \"phase-based\",\n            \"size_range\": [5000, 12000],\n            \"tips\": [\n                \"Use schedule+workflow_dispatch triggers (80% success rate)\",\n                \"Add pre-steps to run tests/linters before the agent starts — validates baseline\",\n                \"Avoid pr-fix and ci-doctor templates — both have <20% success in practice\",\n            ],\n        },\n        \"status-report\": {\n            \"safe_outputs\": [\"issues\"],\n            \"tools\": [\"create-issue\"],\n            \"prompt_style\": \"template-driven\",\n            \"size_range\": [2000, 5000],\n            \"tips\": [\n                \"Pre-fetch data in a steps: block — #1 predictor of workflow health\",\n                \"Use schedule+workflow_dispatch triggers (80% success rate)\",\n                \"Keep prompts focused on one report — multi-source reports need pre-steps\",\n            ],\n        },\n        \"dependency-monitor\": {\n            \"safe_outputs\": [\"issues\", \"pull-requests\"],\n            \"tools\": [\"create-issue\", \"create-pull-request\"],\n            \"prompt_style\": \"checklist\",\n            \"size_range\": [3000, 6000],\n            \"tips\": [\n                \"Use schedule+workflow_dispatch triggers for reliable periodic checks\",\n                \"Include a checklist of specific dependencies to monitor — don't leave it open-ended\",\n                \"Enable network access for fetching upstream release data\",\n            ],\n        },\n        \"content-moderation\": {\n            \"safe_outputs\": [\"issues\", \"pull-requests\"],\n            \"tools\": [\"add-comment\", \"add-labels\"],\n            \"prompt_style\": \"role-rules\",\n            \"size_range\": [4000, 7000],\n            \"tips\": [\n                \"Never auto-close or lock — label and comment only\",\n                \"Include explicit rules for what IS legitimate to reduce false positives\",\n                \"Use DO NOT constraints for actions the agent should never take\",\n            ],\n        },\n        \"documentation-updater\": {\n            \"safe_outputs\": [\"pull-requests\"],\n            \"tools\": [\"create-pull-request\"],\n            \"prompt_style\": \"phase-based\",\n            \"size_range\": [3000, 7000],\n            \"tips\": [\n                \"80% success rate — reliable when scoped to specific doc areas\",\n                \"Add pre-steps to validate docs build before the agent starts\",\n                \"Use DO NOT constraints to prevent deleting existing content\",\n            ],\n        },\n        \"pr-review\": {\n            \"safe_outputs\": [\"pull-requests\"],\n            \"tools\": [\"add-comment\"],\n            \"prompt_style\": \"role-rules\",\n            \"size_range\": [3000, 7000],\n            \"tips\": [\n                \"Focus on specific review criteria (security, performance, style)\",\n                \"Use pull_request+workflow_dispatch triggers for flexibility\",\n                \"Include DO NOT constraints to avoid false positive comments\",\n            ],\n        },\n        \"custom\": {\n            \"safe_outputs\": [],\n            \"tools\": [],\n            \"prompt_style\": \"role-steps\",\n            \"size_range\": [3000, 8000],\n            \"tips\": [\n                \"Add workflow_dispatch as a trigger — adds ~21pp to success rate\",\n                \"Prompts between 3-8KB perform best — too short lacks context, too long has diminishing returns\",\n                \"Use DO NOT constraints to bound agent behavior — 61% more likely to be healthy\",\n            ],\n        },\n    }\n\n    archetypes.append({\n        \"id\": arch_id,\n        \"label\": ad[\"label\"],\n        \"description\": ad[\"description\"],\n        \"success_rate\": avg_sr,\n        \"count\": len(ad[\"workflows\"]),\n        \"recommended_triggers\": top_triggers,\n        \"recommended_safe_outputs\": archetype_config.get(arch_id, {}).get(\"safe_outputs\", []),\n        \"recommended_tools\": archetype_config.get(arch_id, {}).get(\"tools\", []),\n        \"timeout_minutes\": 30 if \"schedule\" in ad[\"triggers\"] else 15,\n        \"prompt_style\": archetype_config.get(arch_id, {}).get(\"prompt_style\"),\n        \"size_range_bytes\": archetype_config.get(arch_id, {}).get(\"size_range\"),\n        \"top_repos\": top_repos,\n        \"tips\": archetype_config.get(arch_id, {}).get(\"tips\", []),\n        \"anti_patterns\": [ap[\"pattern\"] if isinstance(ap, dict) else ap for ap in ad[\"anti_patterns\"][:5]]\n    })\n\n# Global anti-patterns: lowest success rate workflows\nall_anti = []\nfor wf in workflows:\n    sr = parse_sr(wf.get(\"success_rate\"))\n    if sr is not None and sr < 0.05 and wf.get(\"name\"):\n        all_anti.append({\n            \"pattern\": wf[\"name\"],\n            \"success_rate\": round(sr, 3),\n            \"repos_seen\": 1,\n            \"reason\": f\"Very low success rate in {wf['_repo']}\"\n        })\nall_anti.sort(key=lambda x: x[\"success_rate\"])\n\n# Compute trigger combo success rates\ncombo_stats = defaultdict(lambda: {\"s\": 0, \"t\": 0})\nfor wf in workflows:\n    triggers = sorted(set(wf.get(\"triggers\", [])))\n    if not triggers: continue\n    combo_key = \"+\".join(triggers)\n    for run in wf.get(\"recent_runs_detail\", []):\n        combo_stats[combo_key][\"t\"] += 1\n        if run.get(\"conclusion\") == \"success\":\n            combo_stats[combo_key][\"s\"] += 1\n    if not wf.get(\"recent_runs_detail\"):\n        sr_str = wf.get(\"success_rate\", \"0/0\")\n        parts = sr_str.split(\"/\")\n        if len(parts) == 2:\n            combo_stats[combo_key][\"s\"] += int(parts[0])\n            combo_stats[combo_key][\"t\"] += int(parts[1])\n\ntrigger_combos = []\nfor combo, stats in sorted(combo_stats.items(), key=lambda x: -x[1][\"t\"]):\n    if stats[\"t\"] >= 10:\n        rate = stats[\"s\"] / stats[\"t\"]\n        risk = \"high\" if rate < 0.3 else (\"medium\" if rate < 0.6 else \"low\")\n        rec = \"Avoid\" if risk == \"high\" else (\"Use with caution\" if risk == \"medium\" else \"Recommended\")\n        trigger_combos.append({\n            \"combo\": combo, \"success_rate\": round(rate, 2),\n            \"count\": stats[\"t\"], \"risk\": risk, \"recommendation\": rec\n        })\ntrigger_combos.sort(key=lambda x: -x[\"success_rate\"])\n\n# Rank trigger + safe-output configurations together. Requiring evidence\n# across multiple workflows and repositories prevents a single template\n# or unusually successful run from becoming a wizard default.\nprofile_stats = defaultdict(lambda: {\n    \"s\": 0, \"t\": 0, \"workflows\": set(), \"repos\": set()\n})\nfor wf in workflows:\n    triggers = sorted(set(wf.get(\"triggers\", [])))\n    safe_outputs = sorted(set(wf.get(\"safe_outputs\", [])))\n    if not triggers or not safe_outputs:\n        continue\n    arch_id = classify(wf)[0]\n    key = (arch_id, tuple(triggers), tuple(safe_outputs))\n    stats = profile_stats[key]\n    stats[\"workflows\"].add(f\"{wf['_repo']}/{wf.get('file', wf.get('name', ''))}\")\n    stats[\"repos\"].add(wf[\"_repo\"])\n    runs = wf.get(\"recent_runs_detail\", [])\n    if runs:\n        stats[\"t\"] += len(runs)\n        stats[\"s\"] += sum(1 for run in runs if run.get(\"conclusion\") == \"success\")\n    else:\n        sr_str = wf.get(\"success_rate\", \"0/0\")\n        parts = sr_str.split(\"/\")\n        if len(parts) == 2:\n            stats[\"s\"] += int(parts[0])\n            stats[\"t\"] += int(parts[1])\n\nconfiguration_profiles = []\nfor (arch_id, triggers, safe_outputs), stats in profile_stats.items():\n    n_workflows = len(stats[\"workflows\"])\n    n_repos = len(stats[\"repos\"])\n    if stats[\"t\"] < 20 or n_workflows < 3 or n_repos < 3:\n        continue\n    configuration_profiles.append({\n        \"archetype\": arch_id,\n        \"triggers\": list(triggers),\n        \"safe_outputs\": list(safe_outputs),\n        \"success_rate\": round(stats[\"s\"] / stats[\"t\"], 3),\n        \"confidence_score\": round(wilson_lower(stats[\"s\"], stats[\"t\"]), 3),\n        \"total_runs\": stats[\"t\"],\n        \"n_workflows\": n_workflows,\n        \"n_repos\": n_repos,\n    })\n\nconfiguration_profiles.sort(key=lambda profile: (\n    profile[\"archetype\"],\n    -profile[\"confidence_score\"],\n    -profile[\"total_runs\"],\n))\nranked_profiles = []\nprofile_ranks = defaultdict(int)\nfor profile in configuration_profiles:\n    profile_ranks[profile[\"archetype\"]] += 1\n    if profile_ranks[profile[\"archetype\"]] > 3:\n        continue\n    profile[\"rank\"] = profile_ranks[profile[\"archetype\"]]\n    ranked_profiles.append(profile)\n\n# Build output\noutput = {\n    \"metadata\": {\n        \"generated_at\": datetime.now(timezone.utc).isoformat(),\n        \"source_repos\": metadata.get(\"total_repos\", len(repos)),\n        \"active_workflows\": metadata.get(\"active_repos\", 0),\n        \"total_workflows\": metadata.get(\"total_workflows\", len(workflows))\n    },\n    \"archetypes\": archetypes,\n    \"anti_patterns\": all_anti[:20],\n    \"config_defaults\": {\n        \"model\": None,\n        \"timeout_by_trigger\": {\n            \"issues\": 15,\n            \"schedule\": 30,\n            \"workflow_dispatch\": 30,\n            \"push\": 15,\n            \"slash_command\": 15,\n            \"workflow_run\": 15,\n            \"discussion\": 15,\n            \"pull_request\": 15\n        },\n        \"prompt_size_sweet_spot\": [3000, 8000]\n    },\n    \"trigger_combos\": trigger_combos[:15],\n    \"configuration_profiles\": ranked_profiles,\n    \"research_findings\": {\n        \"bimodal_distribution\": \"38% of workflows always succeed, 21% always fail, 41% are mixed. The average hides this.\",\n        \"do_not_constraints\": \"Workflows with explicit DO NOT instructions are 61% more likely to be healthy (p=0.009).\",\n        \"slash_command_broken\": \"slash_command triggers have 0-2% success rate across all combos. Avoid until platform stabilizes.\",\n        \"workflow_run_risky\": \"workflow_run chaining has 13-16% success rate. Use pre-steps or schedule instead.\",\n        \"pre_steps_help\": \"Workflows with pre-steps are more likely to be active (+13pp internal, +5pp community).\",\n        \"prompt_size_matters\": \"Active workflows have 35-48% larger prompts. More detail = better outcomes.\",\n        \"template_clones_fragile\": \"32% of workflows are template copies. Copied templates have lower success than customized ones.\"\n    },\n    \"degraded_workflows\": []\n}\n\nwith open(\"patterns.json\", \"w\") as f:\n    json.dump(output, f, indent=2)\n    f.write(\"\\n\")\n\nprint(f\"Built patterns.json: {len(archetypes)} archetypes, {len(all_anti[:20])} anti-patterns\")\n`;\nawait exec.exec('python3', ['-c', script]);\n"
-      - env:
-          ANALYSIS_SCRIPT: "const fs = require('fs');\nconst path = require('path');\n\nconst scanData = 'data/scan-results.json';\nconst patternsFile = 'patterns.json';\nconst reportFile = 'data/analysis-report.json';\nconst historyDir = 'data/scan-history';\nconst maxLogRepos = 100;\n\nconst round = (value, digits = 3) => Number(value.toFixed(digits));\nconst wilsonLower = (successes, total, z = 1.96) => {\n  if (!total) return 0;\n  const rate = successes / total;\n  const denominator = 1 + z ** 2 / total;\n  const centre = rate + z ** 2 / (2 * total);\n  const margin = z * Math.sqrt(rate * (1 - rate) / total + z ** 2 / (4 * total ** 2));\n  return (centre - margin) / denominator;\n};\nconst parseSuccessRate = (value) => {\n  if (!value || value === '0/0') return null;\n  const [successes, total] = value.split('/').map(Number);\n  return total > 0 && Number.isFinite(successes) ? successes / total : null;\n};\nconst classifyWorkflow = (workflow) => {\n  const name = `${workflow.name || ''} ${workflow.file || ''}`.toLowerCase();\n  if (name.includes('triage') || name.includes('label')) return 'issue-triage';\n  if (name.includes('upstream') || name.includes('sync') || name.includes('monitor')) return 'dependency-monitor';\n  if (name.includes('doc') && ['updat', 'improv', 'generat', 'clean'].some((word) => name.includes(word))) return 'documentation-updater';\n  if (name.includes('review') || name.includes('pr-review') || name.includes('pr-check')) return 'pr-review';\n  if (['fix', 'doctor', 'ci', 'code'].some((word) => name.includes(word))) return 'code-improvement';\n  if (['report', 'summary', 'weekly', 'status'].some((word) => name.includes(word))) return 'status-report';\n  if (['depend', 'update', 'renovate'].some((word) => name.includes(word))) return 'dependency-monitor';\n  if (name.includes('moderat') || name.includes('content')) return 'content-moderation';\n  return 'custom';\n};\nconst increment = (map, key, amount = 1) => map.set(key, (map.get(key) || 0) + amount);\nconst sortedEntries = (map, compare) => [...map.entries()].sort(compare);\n\nconst errorPatterns = {\n  safe_output_denied: /safe.?output|output.*denied|not allowed.*write|permission.*output/i,\n  auth_error: /401|403|authentication|authorization|SAML|permission denied|Resource not accessible/i,\n  not_found: /404|not found|does not exist|no such/i,\n  mcp_error: /MCP.*error|MCP.*fail|tool.*error|tool call failed/i,\n  timeout: /timed? ?out|deadline exceeded|execution time|Job was cancelled/i,\n  rate_limit: /rate limit|API rate|secondary rate|abuse detection|429/i,\n  payload_too_large: /payload was too large|exceeds.*threshold|response too large/i,\n  token_limit: /token limit|context.*too long|max.*tokens|context window/i,\n  network_error: /ECONNREFUSED|ENOTFOUND|DNS|network.*error|connection.*refused|fetch failed/i,\n  empty_results: /total_count.*:.*0|no results found|0 items|empty response/i,\n  agent_stuck: /no progress|stuck|loop detected|repeated.*same|identical.*response/i,\n};\nconst categorizeLog = (text) => {\n  if (!text) return ['unknown'];\n  const categories = Object.entries(errorPatterns)\n    .filter(([, pattern]) => pattern.test(text))\n    .map(([name]) => name);\n  return categories.length ? categories : ['unknown'];\n};\nconst fetchFailedLogs = async (repo, runId) => {\n  try {\n    const [owner, repoName] = repo.split('/');\n    const jobs = await github.paginate('GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs', {\n      owner,\n      repo: repoName,\n      run_id: runId,\n      per_page: 100,\n    });\n    const job = jobs.find(({ conclusion }) => conclusion === 'failure');\n    if (!job) return null;\n    const response = await github.request('GET /repos/{owner}/{repo}/actions/jobs/{job_id}/logs', {\n      owner,\n      repo: repoName,\n      job_id: job.id,\n    });\n    const text = Buffer.isBuffer(response.data)\n      ? response.data.toString()\n      : typeof response.data === 'string'\n        ? response.data\n        : Buffer.from(response.data).toString();\n    return text.slice(-2000);\n  } catch {\n    return null;\n  }\n};\n\nconst historyFiles = () => {\n  if (!fs.existsSync(historyDir)) return [];\n  return fs.readdirSync(historyDir)\n    .filter((name) => /^scan-.*\\.json$/.test(name))\n    .sort();\n};\nconst loadPreviousScan = () => {\n  const snapshots = historyFiles();\n  if (snapshots.length < 2) return [null, null];\n  const filename = snapshots.at(-2);\n  try {\n    return [\n      JSON.parse(fs.readFileSync(path.join(historyDir, filename), 'utf8')),\n      filename.replace(/^scan-/, '').replace(/\\.json$/, ''),\n    ];\n  } catch {\n    return [null, null];\n  }\n};\nconst detectCrossScanDegradation = (currentRepos, previousRepos) => {\n  const degraded = [];\n  for (const [repoKey, repo] of Object.entries(currentRepos)) {\n    const previousRepo = previousRepos[repoKey];\n    if (!previousRepo) continue;\n    const previousWorkflows = new Map(\n      (previousRepo.workflows || []).map((workflow) => [workflow.name || '', workflow]),\n    );\n    for (const workflow of repo.workflows || []) {\n      const previousWorkflow = previousWorkflows.get(workflow.name || '');\n      if (!previousWorkflow) continue;\n      const currentRate = parseSuccessRate(workflow.success_rate);\n      const previousRate = parseSuccessRate(previousWorkflow.success_rate);\n      if (currentRate === null || previousRate === null) continue;\n      if (previousRate >= 0.6 && currentRate < previousRate - 0.25) {\n        degraded.push({\n          repo: repoKey,\n          workflow: workflow.name || '',\n          previous_rate: round(previousRate),\n          current_rate: round(currentRate),\n          delta: round(currentRate - previousRate),\n        });\n      }\n    }\n  }\n  return degraded.sort((a, b) => a.delta - b.delta);\n};\nconst computeAdoptionVelocity = (currentRepos, previousRepos) => {\n  const currentRepoNames = Object.keys(currentRepos);\n  const previousRepoNames = Object.keys(previousRepos);\n  const currentRepoSet = new Set(currentRepoNames);\n  const previousRepoSet = new Set(previousRepoNames);\n  const newRepos = currentRepoNames.filter((name) => !previousRepoSet.has(name)).sort();\n  const removedRepos = previousRepoNames.filter((name) => !currentRepoSet.has(name)).sort();\n  const newWorkflows = [];\n  const disappearedWorkflows = [];\n\n  for (const repoKey of currentRepoNames.filter((name) => previousRepoSet.has(name))) {\n    const previousNames = new Set((previousRepos[repoKey].workflows || []).map((workflow) => workflow.name || ''));\n    const currentNames = new Set((currentRepos[repoKey].workflows || []).map((workflow) => workflow.name || ''));\n    for (const workflow of currentNames) {\n      if (!previousNames.has(workflow)) newWorkflows.push({ repo: repoKey, workflow });\n    }\n    for (const workflow of previousNames) {\n      if (!currentNames.has(workflow)) disappearedWorkflows.push({ repo: repoKey, workflow });\n    }\n  }\n  return {\n    new_repos: newRepos,\n    removed_repos: removedRepos,\n    new_repos_count: newRepos.length,\n    removed_repos_count: removedRepos.length,\n    new_workflows: newWorkflows,\n    disappeared_workflows: disappearedWorkflows,\n    new_workflows_count: newWorkflows.length,\n    disappeared_workflows_count: disappearedWorkflows.length,\n  };\n};\nconst computeTemporalTrends = () => {\n  const snapshots = historyFiles();\n  if (snapshots.length < 2) return null;\n  const timeline = [];\n  for (const filename of snapshots) {\n    try {\n      const data = JSON.parse(fs.readFileSync(path.join(historyDir, filename), 'utf8'));\n      const repos = Object.values(data);\n      timeline.push({\n        timestamp: filename.replace(/^scan-/, '').replace(/\\.json$/, ''),\n        repos: repos.length,\n        workflows: repos.reduce((total, repo) => total + (repo.workflows || []).length, 0),\n      });\n    } catch {\n      // Ignore invalid historical snapshots.\n    }\n  }\n  if (timeline.length < 2) return null;\n  const latest = timeline.at(-1);\n  const previous = timeline.at(-2);\n  const repoGrowth = latest.repos - previous.repos;\n  const workflowGrowth = latest.workflows - previous.workflows;\n  return {\n    snapshots_available: timeline.length,\n    latest,\n    previous,\n    repo_growth: repoGrowth,\n    repo_growth_pct: previous.repos > 0 ? round(repoGrowth / previous.repos * 100, 1) : 0,\n    workflow_growth: workflowGrowth,\n    workflow_growth_pct: previous.workflows > 0 ? round(workflowGrowth / previous.workflows * 100, 1) : 0,\n    timeline,\n  };\n};\nconst buildWhatChangedSummary = (adoption, crossScanDegraded, temporal) => {\n  const lines = [];\n  if (adoption) {\n    if (adoption.new_repos_count) {\n      lines.push(`📈 ${adoption.new_repos_count} new repo(s) adopted agentic workflows`);\n      lines.push(...adoption.new_repos.slice(0, 5).map((repo) => `   + ${repo}`));\n    }\n    if (adoption.removed_repos_count) lines.push(`📉 ${adoption.removed_repos_count} repo(s) removed`);\n    if (adoption.new_workflows_count) lines.push(`🆕 ${adoption.new_workflows_count} new workflow(s) added in existing repos`);\n    if (adoption.disappeared_workflows_count) lines.push(`🗑️  ${adoption.disappeared_workflows_count} workflow(s) disappeared`);\n  }\n  if (temporal) {\n    const signed = (value, digits = 0) => `${value >= 0 ? '+' : ''}${value.toFixed(digits)}`;\n    lines.push(`📊 Repo growth: ${signed(temporal.repo_growth)} (${signed(temporal.repo_growth_pct, 1)}%)`);\n    lines.push(`📊 Workflow growth: ${signed(temporal.workflow_growth)} (${signed(temporal.workflow_growth_pct, 1)}%)`);\n  }\n  if (crossScanDegraded.length) {\n    lines.push(`⚠️  ${crossScanDegraded.length} workflow(s) degraded since last scan:`);\n    lines.push(...crossScanDegraded.slice(0, 5).map(\n      (item) => `   ${item.repo}/${item.workflow}: ${(item.previous_rate * 100).toFixed(0)}% → ${(item.current_rate * 100).toFixed(0)}%`,\n    ));\n  }\n  return lines.length ? lines : ['No previous scan data available for comparison.'];\n};\n\nconsole.log('═'.repeat(60));\nconsole.log('  Deep Research: Statistical Analysis');\nconsole.log('═'.repeat(60));\nif (!fs.existsSync(scanData)) {\n  throw new Error(`${scanData} not found. Run scan.sh first.`);\n}\n\nconst scan = JSON.parse(fs.readFileSync(scanData, 'utf8'));\nconst repos = scan.repos || {};\nconst metadata = scan.metadata || {};\nconsole.log(`\\n  Dataset: ${metadata.total_repos ?? Object.keys(repos).length} repos, ${metadata.total_workflows ?? '?'} workflows`);\n\nconst allWorkflows = [];\nfor (const [repoKey, repo] of Object.entries(repos)) {\n  for (const workflow of repo.workflows || []) {\n    allWorkflows.push({\n      ...workflow,\n      _repo: repoKey,\n      _stars: repo.stars || 0,\n      _status: repo.status || 'unknown',\n    });\n  }\n}\nconsole.log(`  Flattened: ${allWorkflows.length} workflow entries`);\n\nconsole.log('\\n  [0/10] Loading previous scan data...');\nconst [previousScan, previousScanTimestamp] = loadPreviousScan();\nconsole.log(previousScan\n  ? `    Previous scan found: ${previousScanTimestamp}`\n  : '    No previous scan available for comparison');\n\nconsole.log('\\n  [1/10] Trigger combo analysis...');\nconst comboStats = new Map();\nfor (const workflow of allWorkflows) {\n  const triggers = [...new Set(workflow.triggers || [])].sort();\n  if (!triggers.length) continue;\n  const key = triggers.join('+');\n  if (!comboStats.has(key)) {\n    comboStats.set(key, { successes: 0, total: 0, workflows: new Set(), repos: new Set() });\n  }\n  const stats = comboStats.get(key);\n  stats.workflows.add(`${workflow._repo}/${workflow.file || workflow.name || ''}`);\n  stats.repos.add(workflow._repo);\n  const runs = workflow.recent_runs_detail || [];\n  if (runs.length) {\n    for (const run of runs) {\n      stats.total += 1;\n      if (run.conclusion === 'success') stats.successes += 1;\n    }\n  } else if (parseSuccessRate(workflow.success_rate) !== null) {\n    const [successes, total] = workflow.success_rate.split('/').map(Number);\n    stats.successes += successes;\n    stats.total += total;\n  }\n}\nconst triggerCombos = sortedEntries(comboStats, ([, a], [, b]) => b.total - a.total)\n  .map(([combo, stats]) => {\n    const rate = stats.total > 0 ? stats.successes / stats.total : 0;\n    return {\n      combo,\n      success_rate: round(rate),\n      successes: stats.successes,\n      total_runs: stats.total,\n      n_workflows: stats.workflows.size,\n      n_repos: stats.repos.size,\n      risk: rate < 0.3 ? 'high' : rate < 0.6 ? 'medium' : 'low',\n    };\n  })\n  .sort((a, b) => b.total_runs - a.total_runs);\nconsole.log(`    Found ${triggerCombos.length} unique trigger combinations`);\n\nconst profileStats = new Map();\nfor (const workflow of allWorkflows) {\n  const triggers = [...new Set(workflow.triggers || [])].sort();\n  const safeOutputs = [...new Set(workflow.safe_outputs || [])].sort();\n  if (!triggers.length || !safeOutputs.length) continue;\n  const archetype = classifyWorkflow(workflow);\n  const key = JSON.stringify([archetype, triggers, safeOutputs]);\n  if (!profileStats.has(key)) {\n    profileStats.set(key, {\n      archetype,\n      triggers,\n      safeOutputs,\n      successes: 0,\n      total: 0,\n      workflows: new Set(),\n      repos: new Set(),\n    });\n  }\n  const stats = profileStats.get(key);\n  stats.workflows.add(`${workflow._repo}/${workflow.file || workflow.name || ''}`);\n  stats.repos.add(workflow._repo);\n  const runs = workflow.recent_runs_detail || [];\n  if (runs.length) {\n    stats.total += runs.length;\n    stats.successes += runs.filter((run) => run.conclusion === 'success').length;\n  } else if (parseSuccessRate(workflow.success_rate) !== null) {\n    const [successes, total] = workflow.success_rate.split('/').map(Number);\n    stats.successes += successes;\n    stats.total += total;\n  }\n}\nconst profileRanks = new Map();\nconst configurationProfiles = [...profileStats.values()]\n  .filter((stats) => stats.total >= 20 && stats.workflows.size >= 3 && stats.repos.size >= 3)\n  .map((stats) => ({\n    archetype: stats.archetype,\n    triggers: stats.triggers,\n    safe_outputs: stats.safeOutputs,\n    success_rate: round(stats.successes / stats.total),\n    confidence_score: round(wilsonLower(stats.successes, stats.total)),\n    total_runs: stats.total,\n    n_workflows: stats.workflows.size,\n    n_repos: stats.repos.size,\n  }))\n  .sort((a, b) => a.archetype.localeCompare(b.archetype)\n    || b.confidence_score - a.confidence_score\n    || b.total_runs - a.total_runs)\n  .flatMap((profile) => {\n    const rank = (profileRanks.get(profile.archetype) || 0) + 1;\n    profileRanks.set(profile.archetype, rank);\n    return rank <= 3 ? [{ ...profile, rank }] : [];\n  });\nconsole.log(`    Found ${configurationProfiles.length} supported trigger + safe-output profiles`);\n\nconsole.log('  [2/10] Archetype health...');\nconst archetypeStats = new Map();\nfor (const workflow of allWorkflows) {\n  const archetype = classifyWorkflow(workflow);\n  if (!archetypeStats.has(archetype)) {\n    archetypeStats.set(archetype, { successes: 0, total: 0, workflows: 0, repos: new Set() });\n  }\n  const stats = archetypeStats.get(archetype);\n  stats.workflows += 1;\n  stats.repos.add(workflow._repo);\n  const runs = workflow.recent_runs_detail || [];\n  if (runs.length) {\n    for (const run of runs) {\n      stats.total += 1;\n      if (run.conclusion === 'success') stats.successes += 1;\n    }\n  } else if (parseSuccessRate(workflow.success_rate) !== null) {\n    const [successes, total] = workflow.success_rate.split('/').map(Number);\n    stats.successes += successes;\n    stats.total += total;\n  }\n}\nconst currentPatterns = new Map();\nif (fs.existsSync(patternsFile)) {\n  const patterns = JSON.parse(fs.readFileSync(patternsFile, 'utf8'));\n  for (const archetype of patterns.archetypes || []) {\n    currentPatterns.set(archetype.id, archetype.success_rate || 0);\n  }\n}\nconst archetypeHealth = sortedEntries(archetypeStats, ([a], [b]) => a.localeCompare(b))\n  .map(([id, stats]) => {\n    const computed = stats.total > 0 ? round(stats.successes / stats.total) : 0;\n    const current = currentPatterns.get(id) || 0;\n    const delta = round(computed - current);\n    return {\n      id,\n      current_rate: current,\n      computed_rate: computed,\n      delta,\n      n_runs: stats.total,\n      n_workflows: stats.workflows,\n      n_repos: stats.repos.size,\n      significant_change: Math.abs(delta) >= 0.05,\n    };\n  });\nconsole.log(`    ${archetypeHealth.length} archetypes analyzed`);\n"
-          ANALYSIS_SCRIPT_2: "console.log('  [3/10] Engine analysis...');\nconst engineStats = new Map();\nfor (const workflow of allWorkflows) {\n  const engine = workflow.engine || 'default';\n  if (!engineStats.has(engine)) engineStats.set(engine, { successes: 0, total: 0, workflows: 0 });\n  const stats = engineStats.get(engine);\n  stats.workflows += 1;\n  for (const run of workflow.recent_runs_detail || []) {\n    stats.total += 1;\n    if (run.conclusion === 'success') stats.successes += 1;\n  }\n}\nconst engineAnalysis = sortedEntries(engineStats, ([, a], [, b]) => b.total - a.total)\n  .map(([engine, stats]) => ({\n    engine,\n    success_rate: stats.total > 0 ? round(stats.successes / stats.total) : 0,\n    total_runs: stats.total,\n    n_workflows: stats.workflows,\n  }));\nconsole.log(`    ${engineAnalysis.length} engines found`);\n\nconsole.log('  [4/10] Prompt feature correlation...');\nconst featureStats = new Map();\nfor (const workflow of allWorkflows) {\n  const runs = workflow.recent_runs_detail || [];\n  if (!runs.length) continue;\n  const successes = runs.filter((run) => run.conclusion === 'success').length;\n  const features = {\n    has_pre_steps: workflow.has_pre_steps || false,\n    has_workflow_dispatch: (workflow.triggers || []).includes('workflow_dispatch'),\n    has_schedule: (workflow.triggers || []).includes('schedule'),\n    has_tools: Boolean(workflow.tools),\n    has_safe_outputs: Boolean(workflow.safe_outputs),\n    source_available: workflow.source_available || false,\n  };\n  for (const [feature, present] of Object.entries(features)) {\n    if (!featureStats.has(feature)) featureStats.set(feature, { with: { s: 0, t: 0 }, without: { s: 0, t: 0 } });\n    const bucket = featureStats.get(feature)[present ? 'with' : 'without'];\n    bucket.s += successes;\n    bucket.t += runs.length;\n  }\n}\nconst featureCorrelation = [...featureStats.entries()].map(([feature, stats]) => {\n  const withRate = stats.with.t > 0 ? stats.with.s / stats.with.t : 0;\n  const withoutRate = stats.without.t > 0 ? stats.without.s / stats.without.t : 0;\n  const delta = round(withRate - withoutRate);\n  return {\n    feature,\n    with_rate: round(withRate),\n    with_n: stats.with.t,\n    without_rate: round(withoutRate),\n    without_n: stats.without.t,\n    delta,\n    significant: Math.abs(delta) >= 0.1 && Math.min(stats.with.t, stats.without.t) >= 10,\n  };\n}).sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta));\nconsole.log(`    ${featureCorrelation.length} features analyzed`);\n\nconsole.log('  [5/10] Degradation detection...');\nconst degraded = [];\nfor (const workflow of allWorkflows) {\n  const runs = workflow.recent_runs_detail || [];\n  if (runs.length < 4) continue;\n  const midpoint = Math.floor(runs.length / 2);\n  const recent = runs.slice(0, midpoint);\n  const older = runs.slice(midpoint);\n  const recentRate = recent.filter((run) => run.conclusion === 'success').length / recent.length;\n  const olderRate = older.filter((run) => run.conclusion === 'success').length / older.length;\n  if (olderRate >= 0.7 && recentRate <= 0.3) {\n    degraded.push({\n      repo: workflow._repo,\n      workflow: workflow.name || 'unknown',\n      older_rate: round(olderRate, 2),\n      recent_rate: round(recentRate, 2),\n      runs_analyzed: runs.length,\n    });\n  }\n}\ndegraded.sort((a, b) => a.recent_rate - b.recent_rate);\nconsole.log(`    ${degraded.length} degraded workflows found`);\n\nconsole.log('  [6/10] New pattern discovery...');\nconst nameCounts = new Map();\nconst nameSuccess = new Map();\nfor (const workflow of allWorkflows) {\n  let name = (workflow.name || '').toLowerCase().trim();\n  if (name.length < 3) continue;\n  name = name.replace(/[-_](agent|bot|workflow|auto)$/, '');\n  increment(nameCounts, name);\n  if (!nameSuccess.has(name)) nameSuccess.set(name, { s: 0, t: 0, repos: new Set() });\n  const stats = nameSuccess.get(name);\n  for (const run of workflow.recent_runs_detail || []) {\n    stats.t += 1;\n    if (run.conclusion === 'success') stats.s += 1;\n  }\n  stats.repos.add(workflow._repo);\n}\nconst newPatterns = sortedEntries(nameCounts, ([, countA], [, countB]) => countB - countA)\n  .slice(0, 50)\n  .flatMap(([name]) => {\n    const stats = nameSuccess.get(name);\n    if (stats.repos.size < 3 || stats.t < 5) return [];\n    return [{\n      name,\n      current_archetype: classifyWorkflow({ name, file: '' }),\n      repos_seen: stats.repos.size,\n      total_runs: stats.t,\n      success_rate: round(stats.s / stats.t),\n    }];\n  })\n  .sort((a, b) => b.repos_seen - a.repos_seen);\nconsole.log(`    ${newPatterns.length} named patterns found across 3+ repos`);\n\nconsole.log('  [7/10] Failure log analysis (fetching logs)...');\nconst failureCategories = new Map();\nconst failureByArchetype = new Map();\nconst logSamples = new Map();\nconst failedRuns = allWorkflows.flatMap((workflow) =>\n  (workflow.recent_runs_detail || [])\n    .filter((run) => run.conclusion === 'failure')\n    .map((run) => ({\n      repo: workflow._repo,\n      run_id: run.id,\n      workflow: workflow.name || 'unknown',\n      archetype: classifyWorkflow(workflow),\n    })));\nconst processedRepos = new Set();\nlet logsFetched = 0;\nconsole.log(`    ${failedRuns.length} failed runs to analyze...`);\nfor (const failedRun of failedRuns) {\n  if (processedRepos.size >= maxLogRepos) break;\n  processedRepos.add(failedRun.repo);\n  const logText = await fetchFailedLogs(failedRun.repo, failedRun.run_id);\n  const categories = categorizeLog(logText);\n  if (!failureByArchetype.has(failedRun.archetype)) failureByArchetype.set(failedRun.archetype, new Map());\n  for (const category of categories) {\n    increment(failureCategories, category);\n    increment(failureByArchetype.get(failedRun.archetype), category);\n  }\n  const primary = categories[0];\n  if (logText) {\n    if (!logSamples.has(primary)) logSamples.set(primary, []);\n    if (logSamples.get(primary).length < 3) {\n      logSamples.get(primary).push({\n        repo: failedRun.repo,\n        workflow: failedRun.workflow,\n        snippet: logText.slice(-500),\n      });\n    }\n  }\n  logsFetched += 1;\n  await new Promise((resolve) => setTimeout(resolve, 300));\n}\nconsole.log(`    Fetched ${logsFetched} logs from ${processedRepos.size} repos`);\n\nconst totalFailures = [...failureCategories.values()].reduce((total, count) => total + count, 0);\nconst categoryEntries = sortedEntries(failureCategories, ([, a], [, b]) => b - a);\nconst failureAnalysis = {\n  total_failures: totalFailures,\n  categories: Object.fromEntries(categoryEntries.map(([category, count]) => [\n    category,\n    { count, pct: totalFailures > 0 ? round(count / totalFailures) : 0 },\n  ])),\n  by_archetype: Object.fromEntries([...failureByArchetype.entries()].map(([archetype, categories]) => [\n    archetype,\n    Object.fromEntries(sortedEntries(categories, ([, a], [, b]) => b - a)),\n  ])),\n  log_samples: Object.fromEntries(logSamples),\n};\nconsole.log(`    Failure categories: ${JSON.stringify(Object.fromEntries(categoryEntries))}`);\n\nconsole.log('  [8/10] Cross-scan degradation & adoption velocity...');\nconst crossScanDegraded = previousScan ? detectCrossScanDegradation(repos, previousScan) : [];\nconst adoption = previousScan ? computeAdoptionVelocity(repos, previousScan) : null;\nif (previousScan) {\n  console.log(`    Cross-scan degraded: ${crossScanDegraded.length} workflows`);\n  console.log(`    New repos: ${adoption.new_repos_count}, removed: ${adoption.removed_repos_count}, new workflows: ${adoption.new_workflows_count}, disappeared: ${adoption.disappeared_workflows_count}`);\n} else {\n  console.log('    Skipped (no previous scan)');\n}\n\nconsole.log('  [9/10] Temporal trends...');\nconst temporal = computeTemporalTrends();\nif (temporal) {\n  console.log(`    ${temporal.snapshots_available} snapshots, repo growth: ${temporal.repo_growth}, workflow growth: ${temporal.workflow_growth}`);\n} else {\n  console.log('    Skipped (insufficient history)');\n}\n\nconsole.log('  [10/10] Generating recommendations...');\nconst recommendations = [];\nfor (const combo of triggerCombos) {\n  if (combo.total_runs >= 10 && combo.success_rate < 0.2) {\n    recommendations.push({\n      type: 'warn_trigger',\n      message: `Trigger combo '${combo.combo}' has ${(combo.success_rate * 100).toFixed(0)}% success rate across ${combo.total_runs} runs — consider adding to anti-patterns`,\n      data: combo,\n    });\n  }\n}\nfor (const profile of configurationProfiles.filter(({ rank }) => rank === 1)) {\n  recommendations.push({\n    type: 'configuration_profile',\n    message: `Best supported '${profile.archetype}' mix uses triggers [${profile.triggers.join(', ')}] and safe outputs [${profile.safe_outputs.join(', ')}]: ${(profile.success_rate * 100).toFixed(0)}% success across ${profile.total_runs} runs (${profile.n_workflows} workflows in ${profile.n_repos} repos)`,\n    data: profile,\n  });\n}\nfor (const archetype of archetypeHealth) {\n  if (archetype.significant_change) {\n    recommendations.push({\n      type: 'archetype_drift',\n      message: `Archetype '${archetype.id}' has ${archetype.delta > 0 ? 'improved' : 'degraded'}: ${(archetype.current_rate * 100).toFixed(0)}% → ${(archetype.computed_rate * 100).toFixed(0)}% (Δ${archetype.delta >= 0 ? '+' : ''}${(archetype.delta * 100).toFixed(1)}pp, n=${archetype.n_runs})`,\n      data: archetype,\n    });\n  }\n}\nfor (const feature of featureCorrelation) {\n  if (feature.significant) {\n    recommendations.push({\n      type: 'feature_correlation',\n      message: `Feature '${feature.feature}' ${feature.delta > 0 ? 'improves' : 'hurts'} success rate by ${(Math.abs(feature.delta) * 100).toFixed(1)}pp (${(feature.with_rate * 100).toFixed(0)}% vs ${(feature.without_rate * 100).toFixed(0)}%)`,\n      data: feature,\n    });\n  }\n}\nfor (const item of degraded) {\n  recommendations.push({\n    type: 'degradation',\n    message: `Workflow '${item.workflow}' in ${item.repo} degraded from ${(item.older_rate * 100).toFixed(0)}% to ${(item.recent_rate * 100).toFixed(0)}%`,\n    data: item,\n  });\n}\nfor (const item of crossScanDegraded) {\n  recommendations.push({\n    type: 'cross_scan_degradation',\n    message: `Workflow '${item.workflow}' in ${item.repo} degraded since last scan: ${(item.previous_rate * 100).toFixed(0)}% → ${(item.current_rate * 100).toFixed(0)}%`,\n    data: item,\n  });\n}\nconsole.log(`    ${recommendations.length} recommendations generated`);\n\nconst whatChanged = buildWhatChangedSummary(adoption, crossScanDegraded, temporal);\nwhatChanged.forEach((line) => console.log(`    ${line}`));\nconst report = {\n  generated_at: new Date().toISOString(),\n  dataset: {\n    repos: Object.keys(repos).length,\n    workflows: allWorkflows.length,\n    with_runs: allWorkflows.filter((workflow) => (workflow.recent_runs_detail || []).length).length,\n    total_runs_analyzed: allWorkflows.reduce(\n      (total, workflow) => total + (workflow.recent_runs_detail || []).length,\n      0,\n    ),\n  },\n  trigger_analysis: { combos: triggerCombos.slice(0, 30) },\n  configuration_analysis: {\n    methodology: 'Ranked by the Wilson 95% lower confidence bound; requires at least 20 runs, 3 workflows, and 3 repositories.',\n    profiles: configurationProfiles,\n  },\n  archetype_health: archetypeHealth,\n  engine_analysis: engineAnalysis,\n  feature_correlation: featureCorrelation,\n  failure_analysis: failureAnalysis,\n  degraded_workflows: degraded.slice(0, 20),\n  new_patterns: newPatterns.slice(0, 20),\n  cross_scan_degradation: crossScanDegraded.slice(0, 20),\n  adoption_velocity: adoption,\n  temporal_trends: temporal,\n  what_changed_this_week: whatChanged,\n  recommendations,\n};\nfs.mkdirSync(path.dirname(reportFile), { recursive: true });\nfs.writeFileSync(reportFile, `${JSON.stringify(report, null, 2)}\\n`);\nconsole.log(`\\n  Analysis report written to ${reportFile}`);\nconsole.log(`     ${triggerCombos.length} trigger combos, ${archetypeHealth.length} archetypes, ${recommendations.length} recommendations`);\nconsole.log('═'.repeat(60));\n"
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        name: Run statistical analysis
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0 (source v9)
-        with:
-          script: "const fs = require('fs');\nconst path = require('path');\nconst scriptPath = path.join(process.env.RUNNER_TEMP, 'deep-research-analysis.cjs');\nfs.writeFileSync(\n  scriptPath,\n  `module.exports = async ({ github }) => {\\n${process.env.ANALYSIS_SCRIPT}\\n${process.env.ANALYSIS_SCRIPT_2}\\n};\\n`,\n);\ntry {\n  await require(scriptPath)({ github });\n} finally {\n  fs.unlinkSync(scriptPath);\n}\n"
-      - name: Persist scan state to cache-memory
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0 (source v9)
-        with:
-          script: "const fs = require('fs');\nconst path = require('path');\nconst cacheDir = '/tmp/gh-aw/cache-memory';\nconst scanDir = '/tmp/aw-scan';\nconst cachedScan = path.join(cacheDir, 'scan');\nconst cachedReports = path.join(cacheDir, 'reports');\nfs.mkdirSync(cachedScan, { recursive: true });\nfs.mkdirSync(cachedReports, { recursive: true });\nconst state = { updated_at: new Date().toISOString(), stages: {} };\nfor (const file of ['discovered.json', 'verified.json', 'analyzed.json']) {\n  const src = path.join(scanDir, file);\n  if (!fs.existsSync(src)) continue;\n  fs.copyFileSync(src, path.join(cachedScan, file));\n  state.stages[file] = fs.statSync(src).mtime.toISOString();\n  console.log(`Cached ${file}`);\n}\nfs.writeFileSync(path.join(cachedScan, 'state.json'), `${JSON.stringify(state, null, 2)}\\n`);\nfor (const file of ['data/analysis-report.json', 'data/scan-results.json']) {\n  if (!fs.existsSync(file)) continue;\n  fs.copyFileSync(file, path.join(cachedReports, path.basename(file)));\n  console.log(`Cached ${file}`);\n}"
-
       - name: Configure Git credentials
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
@@ -524,16 +410,6 @@ jobs:
           GH_AW_COMPILED_VERSION: v0.87.0
       - name: Install AWF binary
         run: bash "${RUNNER_TEMP}/gh-aw/actions/install_awf_binary.sh" v0.28.1 --rootless
-      - name: Determine automatic lockdown mode for GitHub MCP Server
-        id: determine-automatic-lockdown
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0 (source v9)
-        env:
-          GH_AW_GITHUB_TOKEN: ${{ secrets.GH_AW_GITHUB_TOKEN }}
-          GH_AW_GITHUB_MCP_SERVER_TOKEN: ${{ secrets.GH_AW_GITHUB_MCP_SERVER_TOKEN }}
-        with:
-          script: |
-            const determineAutomaticLockdown = require('${{ runner.temp }}/gh-aw/actions/determine_automatic_lockdown.cjs');
-            await determineAutomaticLockdown(github, context, core);
       - name: Restore agent config folders from base branch
         if: steps.checkout-pr.outcome == 'success'
         env:
@@ -550,78 +426,39 @@ jobs:
           GH_AW_SKILL_DIR: ".github/skills"
         run: bash "${RUNNER_TEMP}/gh-aw/actions/restore_inline_skills.sh"
       - name: Download container images
-        run: bash "${RUNNER_TEMP}/gh-aw/actions/download_docker_images.sh" alpine:latest ghcr.io/github/gh-aw-firewall/agent:0.28.1@sha256:5e3f6ee27eeae07195838b97ac4aa2f8aea42a7c55f1c0d3e17d8e88e294ad0d ghcr.io/github/gh-aw-firewall/api-proxy:0.28.1@sha256:288e7d2a12d5b430500d739f9c16e20bb1ed51b91f986f3f3eccde189f489f5c ghcr.io/github/gh-aw-firewall/squid:0.28.1@sha256:9d428af47899bf18ef2d5618075777d76ef344c91e76c1f44ec1aaa0ee347e5f ghcr.io/github/gh-aw-mcpg:v0.4.9@sha256:e5a1569aeaf41820fa7bdee3e94468cae448133cdbf00119ad24f5b74db1ab9f ghcr.io/github/gh-aw-node@sha256:0d9f1fb5fd6610c0ac1f5194a38e45a8a1e81f8a390d5142d8e4e6f26a4b3196 ghcr.io/github/github-mcp-server:v1.9.0@sha256:881b53d6f75f69bdbc1b5b10fc2f1361717c19054143b3a8529fb5c32061a50e
-      - name: Install gh-aw extension
-        uses: github/gh-aw-actions/setup-cli@v0.87.0
-        with:
-          version: 'v0.87.0'
-          github-token: ${{ secrets.GH_AW_GITHUB_MCP_SERVER_TOKEN || secrets.GH_AW_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
-      - name: Copy gh-aw binary for MCP server
-        run: |
-          gh aw --version
-          # Copy the gh-aw binary to ${RUNNER_TEMP}/gh-aw for MCP server containerization
-          mkdir -p "${RUNNER_TEMP}/gh-aw"
-          GH_AW_BIN=""
-          GH_AW_BIN=$(command -v gh-aw 2>/dev/null) || true
-          if [ -z "$GH_AW_BIN" ]; then
-            GH_AW_BIN=$(find "${HOME}/.local/share/gh/extensions/gh-aw" -name 'gh-aw' -type f 2>/dev/null | head -1) || true
-          fi
-          if [ -z "$GH_AW_BIN" ] && [ -n "${GH_CONFIG_DIR:-}" ]; then
-            GH_AW_BIN=$(find "${GH_CONFIG_DIR}/extensions/gh-aw" -name 'gh-aw' -type f 2>/dev/null | head -1) || true
-          fi
-          if [ -z "$GH_AW_BIN" ] && [ -f "${GITHUB_WORKSPACE}/gh-aw" ]; then
-            GH_AW_BIN="${GITHUB_WORKSPACE}/gh-aw"
-          fi
-          if [ -n "$GH_AW_BIN" ] && [ -f "$GH_AW_BIN" ]; then
-            cp "$GH_AW_BIN" "${RUNNER_TEMP}/gh-aw/gh-aw"
-            chmod +x "${RUNNER_TEMP}/gh-aw/gh-aw"
-            echo "Copied gh-aw binary to ${RUNNER_TEMP}/gh-aw/gh-aw"
-          else
-            echo "::error::Failed to find gh-aw binary for MCP server"
-            exit 1
-          fi
+        run: bash "${RUNNER_TEMP}/gh-aw/actions/download_docker_images.sh" ghcr.io/github/gh-aw-firewall/agent:0.28.1@sha256:5e3f6ee27eeae07195838b97ac4aa2f8aea42a7c55f1c0d3e17d8e88e294ad0d ghcr.io/github/gh-aw-firewall/api-proxy:0.28.1@sha256:288e7d2a12d5b430500d739f9c16e20bb1ed51b91f986f3f3eccde189f489f5c ghcr.io/github/gh-aw-firewall/squid:0.28.1@sha256:9d428af47899bf18ef2d5618075777d76ef344c91e76c1f44ec1aaa0ee347e5f ghcr.io/github/gh-aw-mcpg:v0.4.9@sha256:e5a1569aeaf41820fa7bdee3e94468cae448133cdbf00119ad24f5b74db1ab9f ghcr.io/github/gh-aw-node@sha256:0d9f1fb5fd6610c0ac1f5194a38e45a8a1e81f8a390d5142d8e4e6f26a4b3196
       - name: Generate Safe Outputs Config
         run: |
           mkdir -p "${RUNNER_TEMP}/gh-aw/safeoutputs"
           mkdir -p /tmp/gh-aw/safeoutputs
           mkdir -p /tmp/gh-aw/mcp-logs/safeoutputs
-          cat > "${RUNNER_TEMP}/gh-aw/safeoutputs/config.json" << 'GH_AW_SAFE_OUTPUTS_CONFIG_997a081fbbce345a_EOF'
-          {"create_pull_request":{"max":1,"max_patch_files":100,"max_patch_size":4096,"protect_top_level_dot_folders":true,"protected_files":["package.json","bun.lockb","bunfig.toml","deno.json","deno.jsonc","deno.lock","global.json","NuGet.Config","Directory.Packages.props","mix.exs","mix.lock","go.mod","go.sum","stack.yaml","stack.yaml.lock","pom.xml","build.gradle","build.gradle.kts","settings.gradle","settings.gradle.kts","gradle.properties","package-lock.json","yarn.lock","pnpm-lock.yaml","npm-shrinkwrap.json","requirements.txt","Pipfile","Pipfile.lock","pyproject.toml","setup.py","setup.cfg","Gemfile","Gemfile.lock","uv.lock","CODEOWNERS","DESIGN.md","README.md","CONTRIBUTING.md","CHANGELOG.md","SECURITY.md","CODE_OF_CONDUCT.md","AGENTS.md"],"protected_files_policy":"request_review"},"create_report_incomplete_issue":{},"missing_data":{},"missing_tool":{},"noop":{"max":1,"report-as-issue":"false"},"report_incomplete":{}}
-          GH_AW_SAFE_OUTPUTS_CONFIG_997a081fbbce345a_EOF
+          cat > "${RUNNER_TEMP}/gh-aw/safeoutputs/config.json" << 'GH_AW_SAFE_OUTPUTS_CONFIG_9c4ada4877f4db0a_EOF'
+          {"create_issue":{"labels":["deep-research"],"max":1,"title_prefix":"[deep-research]"},"noop":{"max":1,"report-as-issue":"false"}}
+          GH_AW_SAFE_OUTPUTS_CONFIG_9c4ada4877f4db0a_EOF
       - name: Generate Safe Outputs Tools
         env:
           GH_AW_TOOLS_META_JSON: |
             {
               "description_suffixes": {
-                "create_pull_request": " CONSTRAINTS: Maximum 1 pull request(s) can be created."
+                "create_issue": " CONSTRAINTS: Maximum 1 issue(s) can be created. Title will be prefixed with \"[deep-research]\". Labels [\"deep-research\"] will be automatically added."
               },
               "repo_params": {},
               "dynamic_tools": []
             }
           GH_AW_VALIDATION_JSON: |
             {
-              "create_pull_request": {
+              "create_issue": {
                 "defaultMax": 1,
                 "fields": {
-                  "base": {
-                    "type": "string",
-                    "sanitize": true,
-                    "maxLength": 128
-                  },
                   "body": {
                     "required": true,
                     "type": "string",
                     "sanitize": true,
-                    "maxLength": 65000
+                    "maxLength": 65000,
+                    "minLength": 20
                   },
-                  "branch": {
-                    "required": true,
-                    "type": "string",
-                    "sanitize": true,
-                    "maxLength": 256
-                  },
-                  "draft": {
-                    "type": "boolean"
+                  "fields": {
+                    "type": "array"
                   },
                   "labels": {
                     "type": "array",
@@ -629,62 +466,18 @@ jobs:
                     "itemSanitize": true,
                     "itemMaxLength": 128
                   },
+                  "parent": {
+                    "issueOrPRNumber": true
+                  },
                   "repo": {
                     "type": "string",
                     "maxLength": 256
                   },
                   "temporary_id": {
-                    "type": "string",
-                    "pattern": "^#?aw_[A-Za-z0-9_]{3,12}$"
+                    "type": "string"
                   },
                   "title": {
                     "required": true,
-                    "type": "string",
-                    "sanitize": true,
-                    "maxLength": 128
-                  }
-                }
-              },
-              "missing_data": {
-                "defaultMax": 20,
-                "fields": {
-                  "alternatives": {
-                    "type": "string",
-                    "sanitize": true,
-                    "maxLength": 256
-                  },
-                  "context": {
-                    "type": "string",
-                    "sanitize": true,
-                    "maxLength": 256
-                  },
-                  "data_type": {
-                    "type": "string",
-                    "sanitize": true,
-                    "maxLength": 128
-                  },
-                  "reason": {
-                    "type": "string",
-                    "sanitize": true,
-                    "maxLength": 256
-                  }
-                }
-              },
-              "missing_tool": {
-                "defaultMax": 20,
-                "fields": {
-                  "alternatives": {
-                    "type": "string",
-                    "sanitize": true,
-                    "maxLength": 512
-                  },
-                  "reason": {
-                    "required": true,
-                    "type": "string",
-                    "sanitize": true,
-                    "maxLength": 256
-                  },
-                  "tool": {
                     "type": "string",
                     "sanitize": true,
                     "maxLength": 128
@@ -699,22 +492,6 @@ jobs:
                     "type": "string",
                     "sanitize": true,
                     "maxLength": 65000
-                  }
-                }
-              },
-              "report_incomplete": {
-                "defaultMax": 5,
-                "fields": {
-                  "details": {
-                    "type": "string",
-                    "sanitize": true,
-                    "maxLength": 65000
-                  },
-                  "reason": {
-                    "required": true,
-                    "type": "string",
-                    "sanitize": true,
-                    "maxLength": 1024
                   }
                 }
               }
@@ -733,10 +510,6 @@ jobs:
           GH_AW_SAFE_OUTPUTS: ${{ steps.set-runtime-paths.outputs.GH_AW_SAFE_OUTPUTS }}
           GH_AW_SAFE_OUTPUTS_CONFIG_PATH: ${{ steps.set-runtime-paths.outputs.GH_AW_SAFE_OUTPUTS_CONFIG_PATH }}
           GH_AW_SAFE_OUTPUTS_TOOLS_PATH: ${{ steps.set-runtime-paths.outputs.GH_AW_SAFE_OUTPUTS_TOOLS_PATH }}
-          GH_AW_SINK_VISIBILITY: ${{ steps.determine-automatic-lockdown.outputs.visibility }}
-          GITHUB_MCP_GUARD_MIN_INTEGRITY: ${{ steps.determine-automatic-lockdown.outputs.min_integrity }}
-          GITHUB_MCP_GUARD_REPOS: ${{ steps.determine-automatic-lockdown.outputs.repos }}
-          GITHUB_MCP_SERVER_TOKEN: ${{ secrets.GH_AW_GITHUB_MCP_SERVER_TOKEN || secrets.GH_AW_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -eo pipefail
@@ -763,48 +536,9 @@ jobs:
 
           mkdir -p "$HOME/.copilot"
           GH_AW_NODE=$(which node 2>/dev/null || command -v node 2>/dev/null || echo node)
-          cat << GH_AW_MCP_CONFIG_8f5ab6e500aeb153_EOF | "$GH_AW_NODE" "${RUNNER_TEMP}/gh-aw/actions/start_mcp_gateway.cjs"
+          cat << GH_AW_MCP_CONFIG_948d9cbdbcfa4bfe_EOF | "$GH_AW_NODE" "${RUNNER_TEMP}/gh-aw/actions/start_mcp_gateway.cjs"
           {
             "mcpServers": {
-              "agenticworkflows": {
-                "type": "stdio",
-                "container": "alpine:latest",
-                "entrypoint": "${RUNNER_TEMP}/gh-aw/gh-aw",
-                "entrypointArgs": ["mcp-server", "--validate-actor"],
-                "mounts": ["${RUNNER_TEMP}/gh-aw:${RUNNER_TEMP}/gh-aw:ro", "/usr/bin/gh:/usr/bin/gh:ro", "\${GITHUB_WORKSPACE}:\${GITHUB_WORKSPACE}:rw", "/tmp/gh-aw:/tmp/gh-aw:rw"],
-                "args": ["--network", "host", "-w", "\${GITHUB_WORKSPACE}"],
-                "env": {
-                  "DEBUG": "*",
-                  "GITHUB_TOKEN": "\${GITHUB_TOKEN}",
-                  "GITHUB_ACTOR": "\${GITHUB_ACTOR}",
-                  "GITHUB_REPOSITORY": "\${GITHUB_REPOSITORY}"
-                },
-                "guard-policies": {
-                  "write-sink": {
-                    "accept": [
-                      "*"
-                    ],
-                    "sink-visibility": "${GH_AW_SINK_VISIBILITY}"
-                  }
-                }
-              },
-              "github": {
-                "type": "stdio",
-                "container": "ghcr.io/github/github-mcp-server:v1.9.0",
-                "env": {
-                  "GITHUB_FEATURES": "fields_param",
-                  "GITHUB_HOST": "${GITHUB_SERVER_URL}",
-                  "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_MCP_SERVER_TOKEN}",
-                  "GITHUB_READ_ONLY": "1",
-                  "GITHUB_TOOLSETS": "context,repos,issues,pull_requests"
-                },
-                "guard-policies": {
-                  "allow-only": {
-                    "min-integrity": "$GITHUB_MCP_GUARD_MIN_INTEGRITY",
-                    "repos": "$GITHUB_MCP_GUARD_REPOS"
-                  }
-                }
-              },
               "safeoutputs": {
                 "type": "stdio",
                 "container": "ghcr.io/github/gh-aw-node",
@@ -828,14 +562,6 @@ jobs:
                   "GITHUB_TOKEN": "\${GITHUB_TOKEN}",
                   "GITHUB_WORKSPACE": "\${GITHUB_WORKSPACE}",
                   "RUNNER_TEMP": "\${RUNNER_TEMP}"
-                },
-                "guard-policies": {
-                  "write-sink": {
-                    "accept": [
-                      "*"
-                    ],
-                    "sink-visibility": "${GH_AW_SINK_VISIBILITY}"
-                  }
                 }
               }
             },
@@ -847,7 +573,7 @@ jobs:
               "startupTimeout": 120
             }
           }
-          GH_AW_MCP_CONFIG_8f5ab6e500aeb153_EOF
+          GH_AW_MCP_CONFIG_948d9cbdbcfa4bfe_EOF
       - name: Mount MCP servers as CLIs
         id: mount-mcp-clis
         continue-on-error: true
@@ -872,7 +598,24 @@ jobs:
       - name: Execute GitHub Copilot CLI
         id: agentic_execution
         # Copilot CLI tool arguments (sorted):
-        timeout-minutes: 30
+        # --allow-tool safeoutputs
+        # --allow-tool shell(cat)
+        # --allow-tool shell(date)
+        # --allow-tool shell(echo)
+        # --allow-tool shell(grep)
+        # --allow-tool shell(head)
+        # --allow-tool shell(jq)
+        # --allow-tool shell(ls)
+        # --allow-tool shell(printf)
+        # --allow-tool shell(pwd)
+        # --allow-tool shell(safeoutputs:*)
+        # --allow-tool shell(sort)
+        # --allow-tool shell(tail)
+        # --allow-tool shell(uniq)
+        # --allow-tool shell(wc)
+        # --allow-tool shell(yq)
+        # --allow-tool write
+        timeout-minutes: 15
         run: |
           set -o pipefail
           printf '%s' "$(date +%s%3N)" > /tmp/gh-aw/agent_cli_start_ms.txt
@@ -917,8 +660,8 @@ jobs:
             fi
           fi
           # shellcheck disable=SC1003,SC2016,SC2086
-          awf --config "${RUNNER_TEMP}/gh-aw/awf-config.json" --container-workdir "${GITHUB_WORKSPACE}" --mount "${RUNNER_TEMP}/gh-aw:${RUNNER_TEMP}/gh-aw:ro" --mount "${RUNNER_TEMP}/gh-aw:/host${RUNNER_TEMP}/gh-aw:ro" ${GH_AW_TOOL_CACHE_MOUNT:+--mount "$GH_AW_TOOL_CACHE_MOUNT"} ${GH_AW_DOCKER_HOST:+--docker-host "$GH_AW_DOCKER_HOST"} --env-all --exclude-env ACTIONS_ID_TOKEN_REQUEST_TOKEN --exclude-env ACTIONS_ID_TOKEN_REQUEST_URL --exclude-env COPILOT_GITHUB_TOKEN --exclude-env GITHUB_MCP_SERVER_TOKEN --exclude-env MCP_GATEWAY_API_KEY --mount /tmp/gh-aw:/tmp/gh-aw:rw --log-level info --skip-pull \
-            -- /bin/bash -c 'set +o histexpand; export PATH="${RUNNER_TEMP}/gh-aw/mcp-cli/bin:$PATH" && : "${RUNNER_TOOL_CACHE:?RUNNER_TOOL_CACHE must be set}"; GH_AW_TOOL_CACHE="$RUNNER_TOOL_CACHE"; export PATH="$(find "$GH_AW_TOOL_CACHE" -maxdepth 5 -type d -name bin 2>/dev/null | tr '\''\n'\'' '\'':'\'')$PATH"; [ -n "$GOROOT" ] && export PATH="$GOROOT/bin:$PATH" || true; [ -n "$ERLANG_HOME" ] && export PATH="$ERLANG_HOME/bin:$PATH" || true && GH_AW_NODE_EXEC="${GH_AW_NODE_BIN:-}"; if [ -z "$GH_AW_NODE_EXEC" ] || [ ! -x "$GH_AW_NODE_EXEC" ]; then GH_AW_NODE_EXEC="$(command -v node 2>/dev/null || true)"; fi; if [ -z "$GH_AW_NODE_EXEC" ]; then echo "node runtime missing on this runner — check runtimes.node in workflow YAML" >&2; exit 127; fi; GH_AW_NPM_GLOBAL_ROOT="$(npm root -g 2>/dev/null || true)"; if [ -n "$GH_AW_NPM_GLOBAL_ROOT" ]; then export NODE_PATH="${GH_AW_NPM_GLOBAL_ROOT}${NODE_PATH:+:${NODE_PATH}}"; fi; "$GH_AW_NODE_EXEC" "${RUNNER_TEMP}/gh-aw/actions/copilot_harness.cjs" "${RUNNER_TEMP}/gh-aw/bin/copilot" --add-dir /tmp/gh-aw/ --log-level all --log-dir /tmp/gh-aw/sandbox/agent/logs/ --disable-builtin-mcps --no-ask-user --allow-all-tools --add-dir /tmp/gh-aw/cache-memory/ --allow-all-paths --add-dir "${GITHUB_WORKSPACE}" --prompt-file /tmp/gh-aw/aw-prompts/prompt.txt' 2>&1 | tee -a /tmp/gh-aw/agent-stdio.log
+          awf --config "${RUNNER_TEMP}/gh-aw/awf-config.json" --container-workdir "${GITHUB_WORKSPACE}" --mount "${RUNNER_TEMP}/gh-aw:${RUNNER_TEMP}/gh-aw:ro" --mount "${RUNNER_TEMP}/gh-aw:/host${RUNNER_TEMP}/gh-aw:ro" ${GH_AW_TOOL_CACHE_MOUNT:+--mount "$GH_AW_TOOL_CACHE_MOUNT"} ${GH_AW_DOCKER_HOST:+--docker-host "$GH_AW_DOCKER_HOST"} --env-all --exclude-env ACTIONS_ID_TOKEN_REQUEST_TOKEN --exclude-env ACTIONS_ID_TOKEN_REQUEST_URL --exclude-env COPILOT_GITHUB_TOKEN --exclude-env MCP_GATEWAY_API_KEY --mount /tmp/gh-aw:/tmp/gh-aw:rw --log-level info --skip-pull \
+            -- /bin/bash -c 'set +o histexpand; export PATH="${RUNNER_TEMP}/gh-aw/mcp-cli/bin:$PATH" && : "${RUNNER_TOOL_CACHE:?RUNNER_TOOL_CACHE must be set}"; GH_AW_TOOL_CACHE="$RUNNER_TOOL_CACHE"; export PATH="$(find "$GH_AW_TOOL_CACHE" -maxdepth 5 -type d -name bin 2>/dev/null | tr '\''\n'\'' '\'':'\'')$PATH"; [ -n "$GOROOT" ] && export PATH="$GOROOT/bin:$PATH" || true; [ -n "$ERLANG_HOME" ] && export PATH="$ERLANG_HOME/bin:$PATH" || true && GH_AW_NODE_EXEC="${GH_AW_NODE_BIN:-}"; if [ -z "$GH_AW_NODE_EXEC" ] || [ ! -x "$GH_AW_NODE_EXEC" ]; then GH_AW_NODE_EXEC="$(command -v node 2>/dev/null || true)"; fi; if [ -z "$GH_AW_NODE_EXEC" ]; then echo "node runtime missing on this runner — check runtimes.node in workflow YAML" >&2; exit 127; fi; GH_AW_NPM_GLOBAL_ROOT="$(npm root -g 2>/dev/null || true)"; if [ -n "$GH_AW_NPM_GLOBAL_ROOT" ]; then export NODE_PATH="${GH_AW_NPM_GLOBAL_ROOT}${NODE_PATH:+:${NODE_PATH}}"; fi; "$GH_AW_NODE_EXEC" "${RUNNER_TEMP}/gh-aw/actions/copilot_harness.cjs" "${RUNNER_TEMP}/gh-aw/bin/copilot" --add-dir /tmp/gh-aw/ --log-level all --log-dir /tmp/gh-aw/sandbox/agent/logs/ --disable-builtin-mcps --no-ask-user --allow-tool safeoutputs --allow-tool '\''shell(cat)'\'' --allow-tool '\''shell(date)'\'' --allow-tool '\''shell(echo)'\'' --allow-tool '\''shell(grep)'\'' --allow-tool '\''shell(head)'\'' --allow-tool '\''shell(jq)'\'' --allow-tool '\''shell(ls)'\'' --allow-tool '\''shell(printf)'\'' --allow-tool '\''shell(pwd)'\'' --allow-tool '\''shell(safeoutputs:*)'\'' --allow-tool '\''shell(sort)'\'' --allow-tool '\''shell(tail)'\'' --allow-tool '\''shell(uniq)'\'' --allow-tool '\''shell(wc)'\'' --allow-tool '\''shell(yq)'\'' --allow-tool write --add-dir "${GITHUB_WORKSPACE}" --prompt-file /tmp/gh-aw/aw-prompts/prompt.txt' 2>&1 | tee -a /tmp/gh-aw/agent-stdio.log
         env:
           AWF_REFLECT_ENABLED: 1
           COPILOT_AGENT_RUNNER_TYPE: STANDALONE
@@ -931,13 +674,12 @@ jobs:
           GH_AW_PHASE: agent
           GH_AW_PROMPT: /tmp/gh-aw/aw-prompts/prompt.txt
           GH_AW_SAFE_OUTPUTS: ${{ steps.set-runtime-paths.outputs.GH_AW_SAFE_OUTPUTS }}
-          GH_AW_TIMEOUT_MINUTES: 30
+          GH_AW_TIMEOUT_MINUTES: 15
           GH_AW_VERSION: v0.87.0
           GITHUB_API_URL: ${{ github.api_url }}
           GITHUB_AW: true
           GITHUB_COPILOT_INTEGRATION_ID: agentic-workflows
           GITHUB_HEAD_REF: ${{ github.head_ref }}
-          GITHUB_MCP_SERVER_TOKEN: ${{ secrets.GH_AW_GITHUB_MCP_SERVER_TOKEN || secrets.GH_AW_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
           GITHUB_REF_NAME: ${{ github.ref_name }}
           GITHUB_SERVER_URL: ${{ github.server_url }}
           GITHUB_STEP_SUMMARY: /tmp/gh-aw/agent-step-summary.md
@@ -1066,25 +808,6 @@ jobs:
           if [ ! -f /tmp/gh-aw/agent_output.json ]; then
             echo '{"items":[]}' > /tmp/gh-aw/agent_output.json
           fi
-      - name: Commit cache-memory changes
-        if: always()
-        env:
-          GH_AW_CACHE_DIR: /tmp/gh-aw/cache-memory
-        run: bash "${RUNNER_TEMP}/gh-aw/actions/commit_cache_memory_git.sh"
-      - name: Check cache-memory git integrity
-        if: always()
-        continue-on-error: true
-        env:
-          GH_AW_CACHE_DIR: /tmp/gh-aw/cache-memory
-        run: bash "${RUNNER_TEMP}/gh-aw/actions/check_cache_memory_git_integrity.sh"
-      - name: Upload cache-memory data as artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        if: always()
-        with:
-          name: cache-memory
-          include-hidden-files: true
-          path: /tmp/gh-aw/cache-memory
-          retention-days: 30
       - name: Upload agent artifacts
         if: always()
         continue-on-error: true
@@ -1117,7 +840,6 @@ jobs:
       - agent
       - detection
       - safe_outputs
-      - update_cache_memory
     if: >
       always() && (needs.agent.result != 'skipped' || needs.activation.outputs.lockdown_check_failed == 'true' ||
       needs.activation.outputs.oauth_token_check_failed == 'true' || needs.activation.outputs.stale_lock_file_failed == 'true' ||
@@ -1125,9 +847,7 @@ jobs:
     runs-on: ubuntu-slim
     permissions:
       actions: read
-      contents: write
       issues: write
-      pull-requests: write
     concurrency:
       group: "gh-aw-conclusion-deep-research"
       cancel-in-progress: false
@@ -1135,10 +855,7 @@ jobs:
     env:
       GH_AW_RUNTIME_FEATURES: ${{ vars.GH_AW_RUNTIME_FEATURES }}
     outputs:
-      incomplete_count: ${{ steps.report_incomplete.outputs.incomplete_count }}
       noop_message: ${{ steps.noop.outputs.noop_message }}
-      tools_reported: ${{ steps.missing_tool.outputs.tools_reported }}
-      total_count: ${{ steps.missing_tool.outputs.total_count }}
     steps:
       - name: Setup Scripts
         id: setup
@@ -1276,36 +993,6 @@ jobs:
             setupGlobals(core, github, context, exec, io, getOctokit);
             const { main } = require('${{ runner.temp }}/gh-aw/actions/handle_detection_runs.cjs');
             await main();
-      - name: Record missing tool
-        id: missing_tool
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
-        env:
-          GH_AW_AGENT_OUTPUT: ${{ steps.setup-agent-output-env.outputs.GH_AW_AGENT_OUTPUT }}
-          GH_AW_MISSING_TOOL_CREATE_ISSUE: "true"
-          GH_AW_WORKFLOW_NAME: "🔬 Deep Research"
-          GH_AW_WORKFLOW_SOURCE_URL: "${{ github.server_url }}/${{ github.repository }}/blob/${{ github.ref_name }}/.github/workflows/deep-research.md"
-        with:
-          github-token: ${{ secrets.GH_AW_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
-          script: |
-            const { setupGlobals } = require('${{ runner.temp }}/gh-aw/actions/setup_globals.cjs');
-            setupGlobals(core, github, context, exec, io, getOctokit);
-            const { main } = require('${{ runner.temp }}/gh-aw/actions/missing_tool.cjs');
-            await main();
-      - name: Record incomplete
-        id: report_incomplete
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
-        env:
-          GH_AW_AGENT_OUTPUT: ${{ steps.setup-agent-output-env.outputs.GH_AW_AGENT_OUTPUT }}
-          GH_AW_REPORT_INCOMPLETE_CREATE_ISSUE: "true"
-          GH_AW_WORKFLOW_NAME: "🔬 Deep Research"
-          GH_AW_WORKFLOW_SOURCE_URL: "${{ github.server_url }}/${{ github.repository }}/blob/${{ github.ref_name }}/.github/workflows/deep-research.md"
-        with:
-          github-token: ${{ secrets.GH_AW_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
-          script: |
-            const { setupGlobals } = require('${{ runner.temp }}/gh-aw/actions/setup_globals.cjs');
-            setupGlobals(core, github, context, exec, io, getOctokit);
-            const { main } = require('${{ runner.temp }}/gh-aw/actions/report_incomplete_handler.cjs');
-            await main();
       - name: Handle agent failure
         id: handle_agent_failure
         if: always()
@@ -1336,8 +1023,6 @@ jobs:
           GH_AW_MISSING_MODEL_PRICING_MODEL_NAME: ${{ needs.agent.outputs.missing_model_pricing_model_name }}
           GH_AW_SHELL_EXPANSION_GUARD_REJECTED: ${{ needs.agent.outputs.shell_expansion_guard_rejected }}
           GH_AW_ENGINE_API_HOSTS: "api.enterprise.githubcopilot.com,api.githubcopilot.com,api.business.githubcopilot.com,api.individual.githubcopilot.com"
-          GH_AW_CODE_PUSH_FAILURE_ERRORS: ${{ needs.safe_outputs.outputs.code_push_failure_errors }}
-          GH_AW_CODE_PUSH_FAILURE_COUNT: ${{ needs.safe_outputs.outputs.code_push_failure_count }}
           GH_AW_LOCKDOWN_CHECK_FAILED: ${{ needs.activation.outputs.lockdown_check_failed }}
           GH_AW_OAUTH_TOKEN_CHECK_FAILED: ${{ needs.activation.outputs.oauth_token_check_failed }}
           GH_AW_STALE_LOCK_FILE_FAILED: ${{ needs.activation.outputs.stale_lock_file_failed }}
@@ -1348,10 +1033,7 @@ jobs:
           GH_AW_FAILURE_REPORT_AS_ISSUE: "true"
           GH_AW_MISSING_TOOL_REPORT_AS_FAILURE: "true"
           GH_AW_MISSING_DATA_REPORT_AS_FAILURE: "true"
-          GH_AW_TIMEOUT_MINUTES: "30"
-          GH_AW_CACHE_MEMORY_ENABLED: "true"
-          GH_AW_CACHE_MEMORY_RESTORE_0_MATCHED_KEY: ${{ needs.agent.outputs.cache_memory_restore_0_matched_key || '' }}
-          GH_AW_CACHE_MEMORY_RESTORE_0_CACHE_HIT: ${{ needs.agent.outputs.cache_memory_restore_0_cache_hit || 'false' }}
+          GH_AW_TIMEOUT_MINUTES: "15"
         with:
           github-token: ${{ secrets.GH_AW_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
           script: |
@@ -1463,7 +1145,7 @@ jobs:
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           WORKFLOW_NAME: "🔬 Deep Research"
-          WORKFLOW_DESCRIPTION: "Analyze agentic workflow trends and open PRs to improve the pattern library"
+          WORKFLOW_DESCRIPTION: "Analyze the committed agentic workflow pattern library"
           HAS_PATCH: ${{ needs.agent.outputs.has_patch }}
           GH_AW_DETECTION_CONTINUE_ON_ERROR: "true"
         with:
@@ -1644,55 +1326,6 @@ jobs:
               }
             }
 
-  pre_activation:
-    runs-on: ubuntu-slim
-    env:
-      GH_AW_RUNTIME_FEATURES: ${{ vars.GH_AW_RUNTIME_FEATURES }}
-    outputs:
-      activated: ${{ steps.check_membership.outputs.is_team_member == 'true' && steps.check_skip_if_match.outputs.skip_check_ok == 'true' }}
-      matched_command: ''
-      setup-parent-span-id: ${{ steps.setup.outputs.parent-span-id || steps.setup.outputs.span-id }}
-      setup-span-id: ${{ steps.setup.outputs.span-id }}
-      setup-trace-id: ${{ steps.setup.outputs.trace-id }}
-    steps:
-      - name: Setup Scripts
-        id: setup
-        uses: github/gh-aw-actions/setup@v0.87.0
-        with:
-          destination: ${{ runner.temp }}/gh-aw/actions
-          job-name: ${{ github.job }}
-        env:
-          GH_AW_SETUP_WORKFLOW_NAME: "🔬 Deep Research"
-          GH_AW_CURRENT_WORKFLOW_REF: ${{ github.repository }}/.github/workflows/deep-research.lock.yml@${{ github.ref }}
-          GH_AW_INFO_VERSION: "1.0.80"
-          GH_AW_INFO_AWF_VERSION: "v0.28.1"
-          GH_AW_INFO_ENGINE_ID: "copilot"
-      - name: Check team membership for workflow
-        id: check_membership
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
-        env:
-          GH_AW_REQUIRED_ROLES: "admin,maintainer,write"
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const { setupGlobals } = require('${{ runner.temp }}/gh-aw/actions/setup_globals.cjs');
-            setupGlobals(core, github, context, exec, io, getOctokit);
-            const { main } = require('${{ runner.temp }}/gh-aw/actions/check_membership.cjs');
-            await main();
-      - name: Check skip-if-match query
-        id: check_skip_if_match
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
-        env:
-          GH_AW_SKIP_QUERY: "is:pr is:open in:title \"Pattern library update\""
-          GH_AW_WORKFLOW_NAME: "🔬 Deep Research"
-          GH_AW_SKIP_MAX_MATCHES: "1"
-        with:
-          script: |
-            const { setupGlobals } = require('${{ runner.temp }}/gh-aw/actions/setup_globals.cjs');
-            setupGlobals(core, github, context, exec, io, getOctokit);
-            const { main } = require('${{ runner.temp }}/gh-aw/actions/check_skip_if_match.cjs');
-            await main();
-
   safe_outputs:
     needs:
       - activation
@@ -1701,9 +1334,7 @@ jobs:
     if: (!cancelled()) && needs.agent.result != 'skipped' && needs.detection.result == 'success'
     runs-on: ubuntu-slim
     permissions:
-      contents: write
       issues: write
-      pull-requests: write
     timeout-minutes: 45
     env:
       GH_AW_AGENT_AIC: ${{ needs.agent.outputs.aic }}
@@ -1725,8 +1356,8 @@ jobs:
       code_push_failure_errors: ${{ steps.process_safe_outputs.outputs.code_push_failure_errors }}
       create_discussion_error_count: ${{ steps.process_safe_outputs.outputs.create_discussion_error_count }}
       create_discussion_errors: ${{ steps.process_safe_outputs.outputs.create_discussion_errors }}
-      created_pr_number: ${{ steps.process_safe_outputs.outputs.created_pr_number }}
-      created_pr_url: ${{ steps.process_safe_outputs.outputs.created_pr_url }}
+      created_issue_number: ${{ steps.process_safe_outputs.outputs.created_issue_number }}
+      created_issue_url: ${{ steps.process_safe_outputs.outputs.created_issue_url }}
       process_safe_outputs_items_applied: ${{ steps.process_safe_outputs.outputs.items_applied }}
       process_safe_outputs_items_cancelled: ${{ steps.process_safe_outputs.outputs.items_cancelled }}
       process_safe_outputs_items_deferred: ${{ steps.process_safe_outputs.outputs.items_deferred }}
@@ -1766,25 +1397,6 @@ jobs:
           mkdir -p /tmp/gh-aw/
           find "/tmp/gh-aw/" -type f -print
           echo "GH_AW_AGENT_OUTPUT=/tmp/gh-aw/agent_output.json" >> "$GITHUB_OUTPUT"
-      - name: Download patch artifact
-        continue-on-error: true
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        with:
-          name: agent
-          path: /tmp/gh-aw/
-      - name: Checkout repository
-        if: (!cancelled()) && needs.agent.result != 'skipped' && contains(needs.agent.outputs.output_types, 'create_pull_request')
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: true
-          token: ${{ secrets.GH_AW_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
-      - name: Configure Git credentials
-        if: (!cancelled()) && needs.agent.result != 'skipped' && contains(needs.agent.outputs.output_types, 'create_pull_request')
-        env:
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          GITHUB_SERVER_URL: ${{ github.server_url }}
-          GIT_TOKEN: ${{ secrets.GH_AW_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
-        run: bash "${RUNNER_TEMP}/gh-aw/actions/configure_git_credentials.sh"
       - name: Configure GH_HOST for enterprise compatibility
         id: ghes-host-config
         shell: bash
@@ -1803,8 +1415,7 @@ jobs:
           GH_AW_ALLOWED_DOMAINS: "api.business.githubcopilot.com,api.enterprise.githubcopilot.com,api.github.com,api.githubcopilot.com,api.individual.githubcopilot.com,api.snapcraft.io,archive.ubuntu.com,azure.archive.ubuntu.com,crl.geotrust.com,crl.globalsign.com,crl.identrust.com,crl.sectigo.com,crl.thawte.com,crl.usertrust.com,crl.verisign.com,crl3.digicert.com,crl4.digicert.com,crls.ssl.com,github.com,host.docker.internal,json-schema.org,json.schemastore.org,keyserver.ubuntu.com,ocsp.digicert.com,ocsp.geotrust.com,ocsp.globalsign.com,ocsp.identrust.com,ocsp.sectigo.com,ocsp.ssl.com,ocsp.thawte.com,ocsp.usertrust.com,ocsp.verisign.com,packagecloud.io,packages.cloud.google.com,packages.microsoft.com,ppa.launchpad.net,raw.githubusercontent.com,registry.npmjs.org,s.symcb.com,s.symcd.com,security.ubuntu.com,telemetry.enterprise.githubcopilot.com,ts-crl.ws.symantec.com,ts-ocsp.ws.symantec.com,www.googleapis.com"
           GITHUB_SERVER_URL: ${{ github.server_url }}
           GITHUB_API_URL: ${{ github.api_url }}
-          GH_AW_SAFE_OUTPUTS_HANDLER_CONFIG: "{\"create_pull_request\":{\"max\":1,\"max_patch_files\":100,\"max_patch_size\":4096,\"protect_top_level_dot_folders\":true,\"protected_files\":[\"package.json\",\"bun.lockb\",\"bunfig.toml\",\"deno.json\",\"deno.jsonc\",\"deno.lock\",\"global.json\",\"NuGet.Config\",\"Directory.Packages.props\",\"mix.exs\",\"mix.lock\",\"go.mod\",\"go.sum\",\"stack.yaml\",\"stack.yaml.lock\",\"pom.xml\",\"build.gradle\",\"build.gradle.kts\",\"settings.gradle\",\"settings.gradle.kts\",\"gradle.properties\",\"package-lock.json\",\"yarn.lock\",\"pnpm-lock.yaml\",\"npm-shrinkwrap.json\",\"requirements.txt\",\"Pipfile\",\"Pipfile.lock\",\"pyproject.toml\",\"setup.py\",\"setup.cfg\",\"Gemfile\",\"Gemfile.lock\",\"uv.lock\",\"CODEOWNERS\",\"DESIGN.md\",\"README.md\",\"CONTRIBUTING.md\",\"CHANGELOG.md\",\"SECURITY.md\",\"CODE_OF_CONDUCT.md\",\"AGENTS.md\"],\"protected_files_policy\":\"request_review\"},\"create_report_incomplete_issue\":{},\"missing_data\":{},\"missing_tool\":{},\"noop\":{\"max\":1,\"report-as-issue\":\"false\"},\"report_incomplete\":{}}"
-          GH_AW_CI_TRIGGER_TOKEN: ${{ secrets.GH_AW_CI_TRIGGER_TOKEN }}
+          GH_AW_SAFE_OUTPUTS_HANDLER_CONFIG: "{\"create_issue\":{\"labels\":[\"deep-research\"],\"max\":1,\"title_prefix\":\"[deep-research]\"},\"noop\":{\"max\":1,\"report-as-issue\":\"false\"}}"
         with:
           github-token: ${{ secrets.GH_AW_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
           script: |
@@ -1821,53 +1432,3 @@ jobs:
             /tmp/gh-aw/safe-output-items.jsonl
             /tmp/gh-aw/temporary-id-map.json
           if-no-files-found: ignore
-
-  update_cache_memory:
-    needs:
-      - activation
-      - agent
-      - detection
-    if: always() && needs.detection.result == 'success' && needs.agent.result == 'success'
-    runs-on: ubuntu-slim
-    permissions:
-      actions: write
-    env:
-      GH_AW_RUNTIME_FEATURES: ${{ vars.GH_AW_RUNTIME_FEATURES }}
-      GH_AW_WORKFLOW_ID_SANITIZED: deepresearch
-    steps:
-      - name: Setup Scripts
-        id: setup
-        uses: github/gh-aw-actions/setup@v0.87.0
-        with:
-          destination: ${{ runner.temp }}/gh-aw/actions
-          job-name: ${{ github.job }}
-          trace-id: ${{ needs.activation.outputs.setup-trace-id }}
-          parent-span-id: ${{ needs.activation.outputs.setup-parent-span-id || needs.activation.outputs.setup-span-id }}
-        env:
-          GH_AW_SETUP_WORKFLOW_NAME: "🔬 Deep Research"
-          GH_AW_CURRENT_WORKFLOW_REF: ${{ github.repository }}/.github/workflows/deep-research.lock.yml@${{ github.ref }}
-          GH_AW_INFO_VERSION: "1.0.80"
-          GH_AW_INFO_AWF_VERSION: "v0.28.1"
-          GH_AW_INFO_ENGINE_ID: "copilot"
-      - name: Download cache-memory artifact (default)
-        id: download_cache_default
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        continue-on-error: true
-        with:
-          name: cache-memory
-          path: /tmp/gh-aw/cache-memory
-      - name: Check if cache-memory folder has content (default)
-        id: check_cache_default
-        shell: bash
-        run: |
-          if [ -d "/tmp/gh-aw/cache-memory" ] && [ "$(ls -A /tmp/gh-aw/cache-memory 2>/dev/null)" ]; then
-            echo "has_content=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "has_content=false" >> "$GITHUB_OUTPUT"
-          fi
-      - name: Save cache-memory to cache (default)
-        if: steps.check_cache_default.outputs.has_content == 'true'
-        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          key: memory-none-nopolicy-deep-research-state-${{ github.run_id }}
-          path: /tmp/gh-aw/cache-memory
