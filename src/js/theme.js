@@ -4,9 +4,9 @@
 var THEME_STORAGE_KEY = 'gh-aw-wizard-theme';
 var THEME_MODES = ['auto', 'light', 'dark'];
 var THEME_COPY = {
-  auto: { label: 'Auto theme', icon: '◐' },
-  light: { label: 'Light theme', icon: '☀️' },
-  dark: { label: 'Dark theme', icon: '☾' }
+  auto: { label: 'Auto theme', icon: 'device-desktop' },
+  light: { label: 'Light theme', icon: 'sun' },
+  dark: { label: 'Dark theme', icon: 'moon' }
 };
 
 var themeMode = 'auto';
@@ -35,10 +35,10 @@ export function applyTheme(mode) {
 
   var label = document.getElementById('theme-toggle-label');
   var toggle = document.getElementById('theme-toggle');
-  var icon = document.querySelector('.theme-toggle-icon');
+  var icon = document.querySelector('.theme-toggle-icon use');
   var state = themeCopy(mode);
   if (label) label.textContent = state.label;
-  if (icon) icon.textContent = state.icon;
+  if (icon) icon.setAttribute('href', '#octicon-' + state.icon);
   if (toggle) {
     toggle.setAttribute('title', state.label + '. Click to change.');
   }

@@ -40,7 +40,7 @@ describe('themeCopy', () => {
     expect(themeCopy('auto').label).toBe('Auto theme');
     expect(themeCopy('light').label).toBe('Light theme');
     expect(themeCopy('dark').label).toBe('Dark theme');
-    expect(themeCopy('auto').icon).toBe('◐');
+    expect(themeCopy('auto').icon).toBe('device-desktop');
     expect(themeCopy('nope')).toEqual(themeCopy('auto'));
   });
 });

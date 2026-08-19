@@ -155,7 +155,11 @@ function updateProgress(from, to) {
   steps.forEach(function (el) {
     var ind = el.querySelector('.step-indicator');
     var s = parseInt(el.getAttribute('data-step'));
-    ind.textContent = el.classList.contains('completed') ? '✓' : s;
+    if (el.classList.contains('completed')) {
+      ind.innerHTML = '<svg class="octicon" aria-hidden="true"><use href="#octicon-check"></use></svg>';
+    } else {
+      ind.textContent = s;
+    }
   });
   document.getElementById('recipe-step-status').textContent = 'Step ' + to + ' of ' + TOTAL_STEPS;
 }
