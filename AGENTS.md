@@ -17,6 +17,7 @@ A wizard interface to create GitHub Agentic Workflows. Create ready-to-use [GitH
 | `scripts/generate-patterns.py` | Deterministically generates `patterns/` from scan results |
 | `.github/workflows/update-patterns.yml` | Weekly scan and stable pattern-library PR automation |
 | `.github/workflows/deep-research.md` | Read-only, manually dispatched analysis of committed pattern data |
+| `.github/workflows/pattern-miner.md` | Daily mining of upstream `github/gh-aw` and `githubnext/agentics` workflow sources for new curated pattern entries |
 
 ### Development
 
