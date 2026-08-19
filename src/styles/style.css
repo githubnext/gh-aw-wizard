@@ -117,6 +117,18 @@ body {
   line-height: 1.6;
   min-height: 100vh;
 }
+.octicon-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+.octicon {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+  flex-shrink: 0;
+}
 
 a {
   color: var(--accent-blue);
@@ -189,6 +201,7 @@ a:hover {
 }
 .theme-toggle-icon {
   width: 1em;
+  height: 1em;
   text-align: center;
 }
 
@@ -457,6 +470,10 @@ a:hover {
   border: 1px solid var(--border-color);
   transition: all var(--transition-fast);
 }
+.archetype-icon .octicon {
+  width: 18px;
+  height: 18px;
+}
 .option-card:hover .archetype-icon {
   border-color: var(--border-hover);
 }
@@ -534,6 +551,11 @@ a:hover {
   align-items: center;
   gap: 0.4rem;
   flex-wrap: wrap;
+}
+.option-label-with-icon {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 .option-info .option-desc {
   color: var(--text-secondary);
@@ -643,8 +665,12 @@ a:hover {
   gap: 0.4rem;
 }
 .preview-header h3::before {
-  content: '📄';
-  font-size: 0.85rem;
+  content: '';
+  width: 1em;
+  height: 1em;
+  background-color: currentColor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z'/%3E%3C/svg%3E") center / contain no-repeat;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 .preview-actions {
   display: flex;

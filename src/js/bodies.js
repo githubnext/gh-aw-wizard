@@ -112,7 +112,7 @@ export function buildStatusReport(answers, label) {
     '## Report Template\n\n' +
     'Use this exact format for the report issue:\n\n' +
     '```\n' +
-    '## 📊 Weekly Status Report — {date range}\n\n' +
+    '## Weekly Status Report — {date range}\n\n' +
     '### Summary\n' +
     '{2-3 sentence overview of the week}\n\n' +
     '### Issues\n' +
