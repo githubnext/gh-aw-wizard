@@ -26,6 +26,111 @@
     "content-moderation",
     "security-scanner"
   ],
+  "wizard": {
+    "what_options": [
+      {
+        "id": "pr-review",
+        "icon": "octicon-eye",
+        "requires_description": false,
+        "advance_on_select": true
+      },
+      {
+        "id": "issue-triage",
+        "icon": "octicon-tag",
+        "requires_description": false,
+        "advance_on_select": true
+      },
+      {
+        "id": "code-improvement",
+        "icon": "octicon-tools",
+        "description": "Daily code quality improvements",
+        "requires_description": false,
+        "advance_on_select": true
+      },
+      {
+        "id": "status-report",
+        "icon": "octicon-graph",
+        "description": "Periodic status/activity reports",
+        "requires_description": false,
+        "advance_on_select": true
+      },
+      {
+        "id": "dependency-monitor",
+        "icon": "octicon-package",
+        "description": "Track and update project dependencies",
+        "requires_description": false,
+        "advance_on_select": true
+      },
+      {
+        "id": "documentation-updater",
+        "icon": "octicon-book",
+        "requires_description": false,
+        "advance_on_select": true
+      },
+      {
+        "id": "content-moderation",
+        "icon": "octicon-shield",
+        "description": "Check PRs/issues for spam or policy violations",
+        "requires_description": false,
+        "advance_on_select": true
+      },
+      {
+        "id": "accessibility-expert",
+        "icon": "octicon-eye",
+        "requires_description": false,
+        "advance_on_select": true
+      },
+      {
+        "id": "performance-nut",
+        "icon": "octicon-graph",
+        "description": "Find and fix one measurable bottleneck",
+        "requires_description": false,
+        "advance_on_select": true
+      },
+      {
+        "id": "user-simulator",
+        "icon": "octicon-device-desktop",
+        "description": "Evaluate workflows through representative user personas",
+        "requires_description": false,
+        "advance_on_select": true
+      },
+      {
+        "id": "daily-test-improver",
+        "icon": "octicon-check",
+        "requires_description": false,
+        "advance_on_select": true
+      },
+      {
+        "id": "repo-maintainer",
+        "icon": "octicon-tools",
+        "requires_description": false,
+        "advance_on_select": true
+      },
+      {
+        "id": "linter-workflows",
+        "icon": "octicon-tools",
+        "requires_description": false,
+        "advance_on_select": true
+      },
+      {
+        "id": "skill-pr-reviewer",
+        "icon": "octicon-eye",
+        "description": "Apply popular skills such as Matt Pocock or Ponytail",
+        "requires_description": false,
+        "advance_on_select": true
+      },
+      {
+        "id": "custom",
+        "icon": "octicon-zap",
+        "description": "Describe your own workflow \u2014 start from scratch",
+        "classes": [
+          "archetype-option-full-width"
+        ],
+        "requires_description": true,
+        "advance_on_select": false
+      }
+    ]
+  },
   "anti_patterns": [
     {
       "pattern": "documentation-audit",

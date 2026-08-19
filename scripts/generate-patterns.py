@@ -16,6 +16,111 @@ PATTERNS_DIR = Path("patterns")
 ARCHETYPES_DIR = PATTERNS_DIR / "archetypes"
 MANIFEST = PATTERNS_DIR / "manifest.json"
 
+WIZARD_CONFIG = {
+    "what_options": [
+        {
+            "id": "pr-review",
+            "icon": "octicon-eye",
+            "requires_description": False,
+            "advance_on_select": True,
+        },
+        {
+            "id": "issue-triage",
+            "icon": "octicon-tag",
+            "requires_description": False,
+            "advance_on_select": True,
+        },
+        {
+            "id": "code-improvement",
+            "icon": "octicon-tools",
+            "description": "Daily code quality improvements",
+            "requires_description": False,
+            "advance_on_select": True,
+        },
+        {
+            "id": "status-report",
+            "icon": "octicon-graph",
+            "description": "Periodic status/activity reports",
+            "requires_description": False,
+            "advance_on_select": True,
+        },
+        {
+            "id": "dependency-monitor",
+            "icon": "octicon-package",
+            "description": "Track and update project dependencies",
+            "requires_description": False,
+            "advance_on_select": True,
+        },
+        {
+            "id": "documentation-updater",
+            "icon": "octicon-book",
+            "requires_description": False,
+            "advance_on_select": True,
+        },
+        {
+            "id": "content-moderation",
+            "icon": "octicon-shield",
+            "description": "Check PRs/issues for spam or policy violations",
+            "requires_description": False,
+            "advance_on_select": True,
+        },
+        {
+            "id": "accessibility-expert",
+            "icon": "octicon-eye",
+            "requires_description": False,
+            "advance_on_select": True,
+        },
+        {
+            "id": "performance-nut",
+            "icon": "octicon-graph",
+            "description": "Find and fix one measurable bottleneck",
+            "requires_description": False,
+            "advance_on_select": True,
+        },
+        {
+            "id": "user-simulator",
+            "icon": "octicon-device-desktop",
+            "description": "Evaluate workflows through representative user personas",
+            "requires_description": False,
+            "advance_on_select": True,
+        },
+        {
+            "id": "daily-test-improver",
+            "icon": "octicon-check",
+            "requires_description": False,
+            "advance_on_select": True,
+        },
+        {
+            "id": "repo-maintainer",
+            "icon": "octicon-tools",
+            "requires_description": False,
+            "advance_on_select": True,
+        },
+        {
+            "id": "linter-workflows",
+            "icon": "octicon-tools",
+            "requires_description": False,
+            "advance_on_select": True,
+        },
+        {
+            "id": "skill-pr-reviewer",
+            "icon": "octicon-eye",
+            "description": "Apply popular skills such as Matt Pocock or Ponytail",
+            "requires_description": False,
+            "advance_on_select": True,
+        },
+        {
+            "id": "custom",
+            "icon": "octicon-zap",
+            "description": "Describe your own workflow — start from scratch",
+            "classes": ["archetype-option-full-width"],
+            "requires_description": True,
+            "advance_on_select": False,
+        },
+    ],
+}
+
+
 CURATED_ARCHETYPES = {
     "accessibility-expert": {
         "label": "Web Accessibility Expert",
@@ -548,6 +653,7 @@ output = {
         "active_workflows": metadata.get("active_repos", 0),
         "total_workflows": metadata.get("total_workflows", len(workflows))
     },
+    "wizard": WIZARD_CONFIG,
     "anti_patterns": all_anti[:20],
     "config_defaults": {
         "model": None,
@@ -579,6 +685,7 @@ output = {
 manifest = {
     "metadata": output["metadata"],
     "archetypes": [archetype["id"] for archetype in archetypes],
+    "wizard": output["wizard"],
     "anti_patterns": output["anti_patterns"],
     "config_defaults": output["config_defaults"],
     "trigger_combos": output["trigger_combos"],
