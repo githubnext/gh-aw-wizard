@@ -16,164 +16,47 @@ PATTERNS_DIR = Path("patterns")
 ARCHETYPES_DIR = PATTERNS_DIR / "archetypes"
 MANIFEST = PATTERNS_DIR / "manifest.json"
 
-CURATED_ARCHETYPES = {
-    "accessibility-expert": {
-        "label": "Web Accessibility Expert",
-        "description": "Audit web interfaces for accessibility barriers",
-        "recommended_triggers": ["pull_request"],
-        "recommended_safe_outputs": ["pull-requests"],
-        "recommended_tools": ["add-comment"],
-        "prompt_style": "role-rules",
-        "size_range_bytes": [3000, 8000],
-        "tips": [
-            "Test keyboard, screen-reader, focus, and responsive behavior",
-            "Use Playwright against a local preview and cite reproducible evidence",
-            "Report only actionable barriers introduced or exposed by the change",
-        ],
-    },
-    "performance-nut": {
-        "label": "Performance Nut",
-        "description": "Find and fix one measurable performance bottleneck",
-        "recommended_triggers": ["schedule"],
-        "recommended_safe_outputs": ["pull-requests"],
-        "recommended_tools": ["create-pull-request"],
-        "prompt_style": "phase-based",
-        "size_range_bytes": [4000, 8000],
-        "tips": [
-            "Measure a representative baseline before optimizing",
-            "Make one focused change and compare before-and-after results",
-            "Do not trade correctness or maintainability for speculative speedups",
-            "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers",
-        ],
-    },
-    "user-simulator": {
-        "label": "User Simulator",
-        "description": "Simulate representative users and evaluate their workflows",
-        "recommended_triggers": ["schedule"],
-        "recommended_safe_outputs": ["issues"],
-        "recommended_tools": ["create-issue"],
-        "prompt_style": "scenario-based",
-        "size_range_bytes": [4000, 8000],
-        "tips": [
-            "Define personas by goals, responsibilities, and constraints rather than demographics",
-            "Simulate a small, representative set of technical and nontechnical tasks",
-            "Use repeatable criteria and concise evidence when reporting friction or gaps",
-        ],
-    },
-    "daily-test-improver": {
-        "label": "Daily Test Improver",
-        "description": "Add high-value tests and improve test quality",
-        "recommended_triggers": ["schedule"],
-        "recommended_safe_outputs": ["pull-requests"],
-        "recommended_tools": ["create-pull-request"],
-        "prompt_style": "phase-based",
-        "size_range_bytes": [5000, 12000],
-        "tips": [
-            "Establish a passing baseline before changing tests",
-            "Prefer regression-prone and critical paths over coverage inflation",
-            "Create one focused draft pull request per run",
-            "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers",
-        ],
-    },
-    "repo-maintainer": {
-        "label": "Repo Maintainer",
-        "description": "Proactively triage, fix, and maintain a repository",
-        "recommended_triggers": ["schedule"],
-        "recommended_safe_outputs": ["issues", "pull-requests"],
-        "recommended_tools": ["add-comment", "add-labels", "create-issue", "create-pull-request"],
-        "prompt_style": "role-steps",
-        "size_range_bytes": [5000, 12000],
-        "tips": [
-            "Use persistent memory and check for existing work before acting",
-            "Limit each run to one high-value maintenance task",
-            "Leave merges, approvals, and destructive actions to maintainers",
-        ],
-    },
-    "linter-workflows": {
-        "label": "Linter Workflows",
-        "description": "Create workflows to mine, refine, and apply lint rules",
-        "recommended_triggers": ["schedule"],
-        "recommended_safe_outputs": ["pull-requests"],
-        "recommended_tools": ["create-pull-request"],
-        "prompt_style": "phase-based",
-        "size_range_bytes": [5000, 12000],
-        "tips": [
-            "Generate separate workflows for mining, refining, and applying lint rules",
-            "Keep each workflow focused on one linting responsibility",
-            "Route all code changes through pull requests",
-        ],
-    },
-    "linter-miner": {
-        "label": "Linter Miner",
-        "description": "Discover recurring defects and create custom lint rules",
-        "recommended_triggers": ["schedule"],
-        "recommended_safe_outputs": ["pull-requests"],
-        "recommended_tools": ["create-pull-request"],
-        "prompt_style": "phase-based",
-        "size_range_bytes": [4000, 8000],
-        "tips": [
-            "Require repository evidence for every proposed rule",
-            "Include positive and negative fixtures to control false positives",
-            "Propose at most one high-signal rule per run",
-        ],
-    },
-    "linter-refiner": {
-        "label": "Linter Refiner",
-        "description": "Improve lint rule accuracy, diagnostics, and performance",
-        "recommended_triggers": ["pull_request"],
-        "recommended_safe_outputs": ["pull-requests"],
-        "recommended_tools": ["create-pull-request"],
-        "prompt_style": "phase-based",
-        "size_range_bytes": [3000, 7000],
-        "tips": [
-            "Require concrete false-positive or missed-case evidence",
-            "Add a regression fixture for every behavior change",
-            "Refine only one rule per pull request",
-        ],
-    },
-    "linter-applier": {
-        "label": "Linter Applier",
-        "description": "Fix a focused group of existing lint findings",
-        "recommended_triggers": ["schedule"],
-        "recommended_safe_outputs": ["pull-requests"],
-        "recommended_tools": ["create-pull-request"],
-        "prompt_style": "phase-based",
-        "size_range_bytes": [3000, 7000],
-        "tips": [
-            "Group fixes by one rule and subsystem",
-            "Never disable rules or add blanket suppressions",
-            "Validate semantics with relevant tests after applying fixes",
-        ],
-    },
-    "skill-pr-reviewer": {
-        "label": "Skill PR Reviewer",
-        "description": "Review pull requests with installed expert skills",
-        "recommended_triggers": ["pull_request"],
-        "recommended_safe_outputs": ["pull-requests"],
-        "recommended_tools": ["create-pull-request-review-comment"],
-        "prompt_style": "role-rules",
-        "size_range_bytes": [3000, 8000],
-        "tips": [
-            "Select skills that match the pull request's change type",
-            "Name the skill that informed each actionable finding",
-            "Review changed lines only and avoid duplicate feedback",
-        ],
-    },
-    "security-scanner": {
-        "label": "Security Scanner",
-        "description": "Scan recent commits for malicious or suspicious code patterns",
-        "recommended_triggers": ["schedule"],
-        "recommended_safe_outputs": ["issues"],
-        "recommended_tools": ["create-code-scanning-alert"],
-        "prompt_style": "phase-based",
-        "size_range_bytes": [5000, 12000],
-        "tips": [
-            "Scope analysis to a bounded recent window (e.g. last 3 days of commits) rather than the whole history",
-            "Report findings as code-scanning alerts, not issues, so they surface in the Security tab",
-            "Call noop when the scan is clean instead of leaving no output",
-        ],
-    },
-}
+CURATED_FIELDS = (
+    "label",
+    "description",
+    "recommended_safe_outputs",
+    "recommended_tools",
+    "prompt_style",
+    "size_range_bytes",
+    "tips",
+)
+CURATED_REQUIRED_FIELDS = (*CURATED_FIELDS, "recommended_triggers")
+
+
+def load_curated_archetypes():
+    paths_by_id = {
+        path.stem: path
+        for path in ARCHETYPES_DIR.glob("*.json")
+    }
+    ordered_ids = []
+    if MANIFEST.exists():
+        manifest = json.loads(MANIFEST.read_text())
+        ordered_ids.extend(manifest.get("archetypes", []))
+    ordered_ids.extend(sorted(paths_by_id.keys() - set(ordered_ids)))
+
+    curated_archetypes = {}
+    for arch_id in ordered_ids:
+        path = paths_by_id.get(arch_id)
+        if path is None:
+            continue
+        archetype = json.loads(path.read_text())
+        if archetype.get("success_rate") is not None:
+            continue
+        if archetype.get("id") != arch_id:
+            raise ValueError(f"{path} must declare id {arch_id!r}")
+        missing_fields = set(CURATED_REQUIRED_FIELDS) - archetype.keys()
+        if missing_fields:
+            raise ValueError(f"{path} is missing fields: {', '.join(sorted(missing_fields))}")
+        curated_archetypes[arch_id] = archetype
+    return curated_archetypes
+
+
+curated_archetypes = load_curated_archetypes()
 
 
 with SCAN_RESULTS.open() as f:
@@ -413,32 +296,18 @@ for arch_id, ad in sorted(
     })
 
 archetypes_by_id = {archetype["id"]: archetype for archetype in archetypes}
-for arch_id, curated in CURATED_ARCHETYPES.items():
+for arch_id, curated in curated_archetypes.items():
     archetype = archetypes_by_id.get(arch_id)
     if archetype is None:
-        archetype = {
-            "id": arch_id,
-            "success_rate": None,
-            "count": 0,
-            "top_repos": [],
-            "anti_patterns": [],
-        }
+        archetype = dict(curated)
         archetypes.append(archetype)
+        continue
     archetype.update({
-        "label": curated["label"],
-        "description": curated["description"],
-        "recommended_safe_outputs": curated["recommended_safe_outputs"],
-        "recommended_tools": curated["recommended_tools"],
-        "timeout_minutes": archetype.get("timeout_minutes", 30),
-        "prompt_style": curated["prompt_style"],
-        "size_range_bytes": curated["size_range_bytes"],
-        "tips": curated["tips"],
+        field: curated[field]
+        for field in CURATED_FIELDS
     })
     if not archetype.get("recommended_triggers"):
-        archetype["recommended_triggers"] = [
-            {"type": trigger, "config": {}}
-            for trigger in curated["recommended_triggers"]
-        ]
+        archetype["recommended_triggers"] = curated["recommended_triggers"]
 
 # Global anti-patterns: lowest success rate workflows
 all_anti = []
