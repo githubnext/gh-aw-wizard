@@ -147,7 +147,7 @@ You are a **pattern miner** for the gh-aw wizard. Mine upstream agentic-workflow
 - Upstream source declarations: `data/import-sources.json`
 - Current library summary: `/tmp/gh-aw/data/current-library.json`
 - Pattern library: `patterns/manifest.json` and `patterns/archetypes/<id>.json`
-- Curated entries that survive regeneration: `CURATED_ARCHETYPES` in `scripts/generate-patterns.py`
+- Curated entries that survive regeneration: pattern files with `success_rate: null` in `patterns/archetypes/`
 - Loader that validates the library: `src/js/patterns-node.js`
 - Tests: `npm test`
 - Build: `npm run build`
@@ -175,13 +175,11 @@ Keep every change additive and minimal so a later regeneration by `scripts/gener
 
 For a new curated archetype:
 
-1. Add an entry to `CURATED_ARCHETYPES` in `scripts/generate-patterns.py` using the existing entries as the template (`label`, `description`, `recommended_triggers`, `recommended_safe_outputs`, `recommended_tools`, `prompt_style`, `size_range_bytes`, `tips`).
-2. Add `patterns/archetypes/<id>.json` matching the shape of `patterns/archetypes/accessibility-expert.json`: `id`, `label`, `description`, `success_rate: null`, `count: 0`, `recommended_triggers` as `[{ "type": ..., "config": {} }]`, `recommended_safe_outputs`, `recommended_tools`, `timeout_minutes`, `prompt_style`, `size_range_bytes`, `top_repos: []`, `tips`, `anti_patterns: []`.
-3. Append the new id to `archetypes` in `patterns/manifest.json`. Every id listed there must have a matching file, and every archetype file must be listed.
-4. Keep the generator entry and the committed JSON file consistent with each other so regeneration is a no-op for your addition.
-5. Add or update a test when wizard behavior depends on the new entry.
+1. Add `patterns/archetypes/<id>.json` matching the shape of `patterns/archetypes/accessibility-expert.json`: `id`, `label`, `description`, `success_rate: null`, `count: 0`, `recommended_triggers` as `[{ "type": ..., "config": {} }]`, `recommended_safe_outputs`, `recommended_tools`, `timeout_minutes`, `prompt_style`, `size_range_bytes`, `top_repos: []`, `tips`, `anti_patterns: []`.
+2. Append the new id to `archetypes` in `patterns/manifest.json`. Every id listed there must have a matching file, and every archetype file must be listed.
+3. Add or update a test when wizard behavior depends on the new entry.
 
-For a refinement, change only the specific `tips`, `recommended_triggers`, `recommended_safe_outputs`, or `recommended_tools` values that the upstream evidence supports, in both the archetype file and, when the archetype is curated, `CURATED_ARCHETYPES`. Leave `metadata`, `anti_patterns`, `trigger_combos`, `research_findings`, `degraded_workflows`, `success_rate`, `count`, and `top_repos` untouched.
+For a refinement, change only the specific `tips`, `recommended_triggers`, `recommended_safe_outputs`, or `recommended_tools` values in the archetype file that the upstream evidence supports. Leave `metadata`, `anti_patterns`, `trigger_combos`, `research_findings`, `degraded_workflows`, `success_rate`, `count`, and `top_repos` untouched.
 
 ## Validation
 
@@ -198,7 +196,7 @@ Use the `create-pull-request` safe output only when changes are validated.
   - which upstream repositories and files were mined, with explicit file paths as evidence
   - the recurring pattern found and how many upstream workflows demonstrate it
   - why the existing library did not already cover it
-  - exactly what changed in `patterns/` and `scripts/generate-patterns.py`
+  - exactly what changed in `patterns/`
   - validation results for `npm test` and `npm run build`
   - candidates deliberately left out and why
 
