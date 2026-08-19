@@ -21,7 +21,11 @@ function engineLabel(engine) {
 export function nextStepsHtml(format, workflowName, engine) {
   var name = escapeHtml(workflowName);
   var label = engineLabel(engine);
-  var html = '<h3>' + (format === 'workflow' ? 'Next steps' : 'Run the prompt in your agent') + '</h3>';
+  var html = '<div class="next-steps-header"><div><p class="next-steps-eyebrow">What happens next</p><h3>' +
+    (format === 'workflow' ? 'Set up your workflow' : 'Run the prompt in your agent') +
+    '</h3></div><div class="next-steps-links">' +
+    '<a href="https://github.github.com/gh-aw/setup/quick-start/" target="_blank">Quick start</a>' +
+    '<a href="https://github.github.com/gh-aw/setup/creating-workflows/" target="_blank">Docs</a></div></div>';
 
   if (format === 'workflow') {
     html += step(1, 'Make sure <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository" target="_blank">GitHub Actions is enabled</a> on your repository');
@@ -34,10 +38,6 @@ export function nextStepsHtml(format, workflowName, engine) {
   } else {
     html += step(1, 'Open <strong>' + label + '</strong> in your repository and run the copied prompt');
   }
-
-  html += '<div style="margin-top:0.75rem;font-size:0.8rem;color:var(--text-muted);">' +
-    '📖 <a href="https://github.github.com/gh-aw/setup/quick-start/" target="_blank" style="color:var(--text-secondary);">Quick start guide</a>' +
-    ' · <a href="https://github.github.com/gh-aw/setup/creating-workflows/" target="_blank" style="color:var(--text-secondary);">Creating workflows</a></div>';
 
   return html;
 }

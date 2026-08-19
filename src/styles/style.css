@@ -674,28 +674,45 @@ a:hover {
 
 /* Agent prompt panel */
 .prompt-panel {
-  border-color: var(--accent-blue);
+  display: grid;
+  gap: 1rem;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
 }
 .finish-cta {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1.25rem;
-  background: linear-gradient(135deg, rgba(var(--accent-blue-rgb), 0.12), rgba(var(--accent-green-rgb), 0.12));
-  border-bottom: 1px solid var(--border-color);
+  gap: 1.1rem;
+  padding: 1.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+.finish-icon {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  color: var(--control-fg-on-emphasis);
+  background: var(--accent-green);
+  font-size: 1.25rem;
+  font-weight: 700;
 }
 .finish-eyebrow {
   margin-bottom: 0.2rem;
-  color: var(--accent-blue);
+  color: var(--accent-green);
   font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
-.finish-cta h3 {
+.finish-cta h2 {
   color: var(--text-primary);
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   line-height: 1.25;
   margin-bottom: 0.25rem;
 }
@@ -703,6 +720,28 @@ a:hover {
   color: var(--text-secondary);
   font-size: 0.9rem;
   line-height: 1.5;
+}
+.prompt-card {
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  background: var(--code-bg);
+}
+.prompt-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.prompt-card-hint {
+  color: var(--text-muted);
+  font-weight: 400;
 }
 .prompt-preview {
   position: relative;
@@ -729,15 +768,14 @@ a:hover {
 }
 .prompt-panel .next-steps-panel {
   margin-top: 0;
-  border-width: 1px 0 0;
-  border-radius: 0;
-  background: var(--bg-secondary);
+  background: var(--bg-card);
 }
 .btn-copy-prompt {
   flex-shrink: 0;
-  padding: 0.9rem 1.8rem;
-  font-size: 1rem;
-  box-shadow: 0 8px 20px rgba(var(--accent-green-rgb), 0.25);
+  min-width: 8rem;
+  justify-content: center;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.9rem;
 }
 
 /* Toast */
@@ -812,22 +850,36 @@ a:hover {
   border-radius: var(--radius-lg);
   padding: 1.25rem;
 }
-.next-steps-panel h3 {
-  font-size: 0.92rem;
-  color: var(--text-primary);
-  margin-bottom: 0.75rem;
+.next-steps-header {
   display: flex;
-  align-items: center;
-  gap: 0.4rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
 }
-.next-steps-panel h3::before {
-  content: '🚀';
+.next-steps-eyebrow {
+  margin-bottom: 0.1rem;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.next-steps-panel h3 {
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+.next-steps-links {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.78rem;
+  white-space: nowrap;
 }
 .next-step {
   display: flex;
   align-items: flex-start;
   gap: 0.65rem;
-  padding: 0.5rem 0;
+  padding: 0.4rem 0;
   font-size: 0.85rem;
   color: var(--text-secondary);
   line-height: 1.55;
@@ -846,6 +898,9 @@ a:hover {
   font-weight: 600;
   color: var(--accent-blue);
   margin-top: 1px;
+}
+.next-step + .next-step {
+  border-top: 1px solid var(--border-subtle);
 }
 .next-step code {
   background: var(--bg-tertiary);
@@ -901,7 +956,15 @@ a:hover {
   .progress-step .step-indicator { width: 1.5rem; height: 1.5rem; font-size: 0.65rem; }
   .recipe-key { padding: 0.55rem 0.35rem; }
   .preview-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
-  .finish-cta { flex-direction: column; align-items: stretch; }
+  .finish-cta {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    padding: 1.25rem;
+  }
+  .finish-icon { width: 2.25rem; height: 2.25rem; font-size: 1rem; }
+  .btn-copy-prompt { grid-column: 1 / -1; width: 100%; }
+  .prompt-card-hint { display: none; }
+  .next-steps-header { flex-direction: column; }
   .preview-actions { width: 100%; }
   .preview-actions .btn { flex: 1; justify-content: center; }
   .btn-copy-prompt { justify-content: center; }
