@@ -74,6 +74,14 @@ describe('buildWorkflowSummary', () => {
     expect(summary.trigger.value).toBe('a pull request is ready for review');
   });
 
+  it('describes the explicit ready-for-review trigger accurately', () => {
+    const summary = buildWorkflowSummary(answers({
+      triggers: ['pull_request_ready_for_review']
+    }), patterns);
+
+    expect(summary.trigger.value).toBe('a pull request is ready for review');
+  });
+
   it('joins three trigger conditions with OR', () => {
     const summary = buildWorkflowSummary(answers({
       triggers: ['issues', 'schedule', 'workflow_dispatch']

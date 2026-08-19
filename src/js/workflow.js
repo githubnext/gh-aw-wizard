@@ -78,15 +78,25 @@ var DEFAULT_PERMISSIONS = ['actions', 'contents', 'discussions', 'issues', 'pull
 export function buildTriggerYaml(triggers, commandName, archetype) {
   var lines = '';
   var name = commandName || 'agentic-workflow';
+  var pullRequestWritten = false;
   triggers.forEach(function (t) {
     switch (t) {
       case 'issues':
         lines += '  issues:\n    types: [opened]\n'; break;
       case 'pull_request':
-        // PR reviewers should act once a PR is actually ready (not while still a draft).
-        lines += (archetype === 'pr-review' || archetype === 'skill-pr-reviewer')
-          ? '  pull_request:\n    types: [ready_for_review]\n'
-          : '  pull_request:\n    types: [opened]\n';
+      case 'pull_request_ready_for_review':
+        if (pullRequestWritten) break;
+        var pullRequestTypes = [];
+        if (triggers.indexOf('pull_request') !== -1 &&
+            archetype !== 'pr-review' && archetype !== 'skill-pr-reviewer') {
+          pullRequestTypes.push('opened');
+        }
+        if (triggers.indexOf('pull_request_ready_for_review') !== -1 ||
+            archetype === 'pr-review' || archetype === 'skill-pr-reviewer') {
+          pullRequestTypes.push('ready_for_review');
+        }
+        lines += '  pull_request:\n    types: [' + pullRequestTypes.join(', ') + ']\n';
+        pullRequestWritten = true;
         break;
       case 'schedule':
         lines += '  schedule:\n    - cron: "0 9 * * 1-5"\n'; break;
@@ -297,6 +307,7 @@ export function generateAgentPrompt(answers, patterns) {
       'pull_request': (answers.archetype === 'pr-review' || answers.archetype === 'skill-pr-reviewer')
         ? 'when a pull request is marked ready for review'
         : 'when a pull request is opened',
+      'pull_request_ready_for_review': 'when a pull request is marked ready for review',
       'schedule': 'on a daily/weekly schedule',
       'workflow_dispatch': 'on manual dispatch',
       'slash_command': 'on slash commands in comments',
