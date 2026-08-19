@@ -211,25 +211,27 @@ a:hover {
   color: var(--accent-blue);
   font-weight: 600;
 }
-.footer-actions {
-  display: flex;
-  justify-content: flex-start;
-  margin-bottom: 1rem;
-}
 .theme-toggle {
-  background: var(--bg-card);
-  color: var(--text-primary);
-  border-color: var(--border-color);
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25em;
+  border: 0;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  vertical-align: middle;
 }
 .theme-toggle:hover {
-  background: var(--bg-tertiary);
-  border-color: var(--border-hover);
-  text-decoration: none;
+  color: var(--accent-blue);
+}
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
 }
 .theme-toggle-icon {
   width: 1em;
   height: 1em;
-  text-align: center;
+  fill: currentColor;
 }
 
 /* IFTTT-inspired workflow recipe and progress */
@@ -1002,7 +1004,6 @@ a:hover {
     padding: 0.75rem 0.85rem;
     font-size: 0.8rem;
   }
-  .footer-actions { justify-content: flex-start; }
   .option-group.archetype-grid { grid-template-columns: 1fr; }
   .archetype-icon { width: 34px; height: 34px; font-size: 1rem; }
   .recipe-clause { grid-template-columns: 2.25rem 3.75rem minmax(0, 1fr); }
