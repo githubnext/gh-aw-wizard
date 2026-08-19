@@ -209,7 +209,29 @@ function bindRadioDeselect(radios, onDeselect) {
 function bindFormEvents() {
   // Step 1: archetype radios
   var archetypeRadios = document.querySelectorAll('input[name="archetype"]');
+  var archetypeGroup = document.getElementById('archetype-options');
   bindRadioDeselect(archetypeRadios, clearArchetypeSelection);
+
+  // Arrow keys move focus *and* selection between radios in a native
+  // radiogroup, firing a `change` event just like a click does. Auto-advancing
+  // to step 2 on every `change` would eject keyboard focus from the group
+  // while the user is still browsing options with the arrow keys (WCAG 2.1.1 /
+  // 2.4.3 / 3.2.2). Track arrow-key navigation so the auto-advance below only
+  // fires for a discrete selection (click, or Enter/Space), and otherwise
+  // defer it until focus actually leaves the radiogroup.
+  var arrowKeyNav = false;
+  archetypeGroup.addEventListener('keydown', function (e) {
+    var isArrow = e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'ArrowRight';
+    if (isArrow && e.target && e.target.name === 'archetype') arrowKeyNav = true;
+  });
+  archetypeGroup.addEventListener('focusout', function () {
+    setTimeout(function () {
+      if (archetypeGroup.contains(document.activeElement)) return;
+      var checked = archetypeGroup.querySelector('input[name="archetype"]:checked');
+      if (checked && checked.value !== 'custom' && currentStep === 1) goToStep(2);
+    }, 0);
+  });
+
   archetypeRadios.forEach(function (radio) {
     radio.addEventListener('change', function () {
       updateCardSelection('#archetype-options', 'radio');
@@ -220,6 +242,12 @@ function bindFormEvents() {
       // Auto-fill triggers/outputs from archetype data
       prefillFromArchetype(radio.value);
       if (radio.value !== 'custom') {
+        if (arrowKeyNav) {
+          // Leave focus on the radio the user just navigated to; step 2 will
+          // be shown once focus leaves the radiogroup (see `focusout` above).
+          arrowKeyNav = false;
+          return;
+        }
         var hadFocus = document.activeElement === radio;
         goToStep(2);
         // The collapsing step would otherwise drop keyboard focus to the body.

@@ -85,6 +85,41 @@ describe('Copy prompt button focus indicator', () => {
   });
 });
 
+describe('Copy prompt toast status announcement', () => {
+  it('announces the toast to assistive technology via role=status and aria-live=polite', () => {
+    const toastTag = html.slice(html.indexOf('id="toast"') - 20, html.indexOf('>', html.indexOf('id="toast"')) + 1);
+    expect(toastTag).toMatch(/role="status"/);
+    expect(toastTag).toMatch(/aria-live="polite"/);
+  });
+});
+
+describe('Archetype radiogroup arrow-key focus', () => {
+  const ui = readFileSync(fileURLToPath(new URL('../src/js/ui.js', import.meta.url)), 'utf8');
+
+  it('tracks arrow-key navigation within the archetype radiogroup', () => {
+    expect(ui).toMatch(/arrowKeyNav/);
+    expect(ui).toMatch(/ArrowDown['"]|ArrowUp['"]|ArrowLeft['"]|ArrowRight['"]/);
+  });
+
+  it('does not auto-advance to step 2 from the change handler when navigating via arrow keys', () => {
+    const changeHandlerStart = ui.indexOf("radio.addEventListener('change'");
+    expect(changeHandlerStart).toBeGreaterThan(-1);
+    const changeHandlerEnd = ui.indexOf('\n  });', changeHandlerStart);
+    const changeHandlerBody = ui.slice(changeHandlerStart, changeHandlerEnd);
+    expect(changeHandlerBody).toMatch(/if \(arrowKeyNav\)/);
+    // The arrow-key branch should return before calling goToStep, leaving focus in place.
+    const arrowBranchStart = changeHandlerBody.indexOf('if (arrowKeyNav)');
+    const arrowBranchEnd = changeHandlerBody.indexOf('}', changeHandlerBody.indexOf('return;', arrowBranchStart));
+    const arrowBranchBody = changeHandlerBody.slice(arrowBranchStart, arrowBranchEnd);
+    expect(arrowBranchBody).toMatch(/return;/);
+    expect(arrowBranchBody).not.toMatch(/goToStep/);
+  });
+
+  it('defers advancing to step 2 until focus leaves the radiogroup', () => {
+    expect(ui).toMatch(/archetypeGroup\.addEventListener\('focusout'/);
+  });
+});
+
 describe('Primer iconography', () => {
   it('uses hidden Octicons instead of emoji for decorative interface icons', () => {
     expect(html).toContain('id="octicon-eye"');
