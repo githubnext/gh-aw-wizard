@@ -854,6 +854,11 @@ a:hover {
 .site-footer a:hover {
   color: var(--accent-blue);
 }
+.footer-separator,
+.legal-separator {
+  margin: 0 0.35em;
+  color: var(--text-muted);
+}
 
 /* Customize text field (always visible) */
 .customize-field {
