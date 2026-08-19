@@ -173,4 +173,11 @@ describe('Primer iconography', () => {
     expect(triggerOptions).toContain('<use href="#octicon-tag"></use>');
     expect(triggerOptions).toContain('<use href="#octicon-git-commit"></use>');
   });
+
+  it('keeps engine options to engine and company only', () => {
+    const engineOptions = html.slice(html.indexOf('id="engine-options"'), html.indexOf('</section>', html.indexOf('id="engine-options"')));
+    expect(engineOptions).toContain('Copilot (GitHub)');
+    expect(engineOptions).not.toContain('option-desc');
+    expect(engineOptions).not.toContain('default)');
+  });
 });

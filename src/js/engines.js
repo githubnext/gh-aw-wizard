@@ -5,12 +5,64 @@ export var ENGINES_URL = 'https://raw.githubusercontent.com/github/gh-aw/main/.g
 var ENGINE_ID_PATTERN = /^[a-z0-9][a-z0-9-]*$/;
 var builtInEngineIds = new Set(['copilot', 'claude', 'codex', 'gemini', 'pi']);
 var definitionEngineIds = new Set();
+var builtInEngineCompanies = {
+  copilot: 'GitHub',
+  claude: 'Anthropic',
+  codex: 'OpenAI',
+  gemini: 'Google',
+  pi: 'Inflection'
+};
+var engineIconSymbols = {
+  copilot: 'vendor-github',
+  claude: 'vendor-anthropic',
+  codex: 'vendor-openai',
+  gemini: 'vendor-google',
+  pi: 'vendor-pi'
+};
+var extensionLogoText = {
+  aider: 'AI',
+  crush: 'CR',
+  cursor: 'CU',
+  'deepseek-harness': 'DS',
+  // gh-aw publishes a "custom" extension backed by GenAIScript.
+  custom: 'CT',
+  goose: 'GO',
+  kiro: 'KI',
+  'pydantic-ai': 'PY',
+  opencode: 'OC'
+};
 
 export function formatEngineLabel(engine) {
+  engine = engine || 'extension';
   return engine.split('-').map(function (part) {
     if (part === 'ai') return 'AI';
     return part.charAt(0).toUpperCase() + part.slice(1);
   }).join(' ');
+}
+
+export function formatEngineOptionLabel(engine) {
+  var company = builtInEngineCompanies[engine];
+  return formatEngineLabel(engine) + (company ? ' (' + company + ')' : ' (Extension)');
+}
+
+export function engineIconMarkup(engine) {
+  var symbol = engineIconSymbols[engine];
+  if (symbol) {
+    return '<span class="engine-vendor-icon" aria-hidden="true"><svg class="vendor-icon" focusable="false"><use href="#' + symbol + '"></use></svg></span>';
+  }
+  var mark = extensionLogoText[engine] || fallbackEngineLogoText(engine);
+  return '<span class="engine-vendor-icon engine-logo-mark" aria-hidden="true">' + mark + '</span>';
+}
+
+function fallbackEngineLogoText(engine) {
+  var labelParts = formatEngineLabel(engine).split(/\s+/).filter(Boolean);
+  if (labelParts.length === 1) {
+    var singleWordMark = labelParts[0].slice(0, 2).toUpperCase();
+    return singleWordMark.length === 1 ? singleWordMark + singleWordMark : singleWordMark;
+  }
+  return labelParts.slice(0, 2).map(function (part) {
+    return part.charAt(0);
+  }).join('').toUpperCase();
 }
 
 export function parseDefinitionEngines(data) {

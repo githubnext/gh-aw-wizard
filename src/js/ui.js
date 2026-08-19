@@ -8,7 +8,7 @@ import {
 import { highlightMarkdown } from './highlight.js';
 import { initTheme } from './theme.js';
 import { buildWorkflowSummary } from './summary.js';
-import { formatEngineLabel, loadDefinitionEngines, registerDefinitionEngines } from './engines.js';
+import { engineIconMarkup, formatEngineOptionLabel, loadDefinitionEngines, registerDefinitionEngines } from './engines.js';
 
 var patterns = null;
 var currentStep = 1;
@@ -332,15 +332,11 @@ function addDefinitionEngineOptions(engines) {
     info.className = 'option-info';
 
     var label = document.createElement('div');
-    label.className = 'option-label option-label-with-icon';
-    label.innerHTML = '<svg class="octicon" aria-hidden="true"><use href="#octicon-tools"></use></svg>';
-    label.appendChild(document.createTextNode(formatEngineLabel(engine.id) + ' (definition-based)'));
+    label.className = 'option-label option-label-with-icon option-label-with-engine-icon';
+    label.innerHTML = engineIconMarkup(engine.id);
+    label.appendChild(document.createTextNode(formatEngineOptionLabel(engine.id)));
 
-    var description = document.createElement('div');
-    description.className = 'option-desc';
-    description.textContent = 'Definition-based engine provided by gh-aw';
-
-    info.append(label, description);
+    info.append(label);
     card.append(input, info);
     container.appendChild(card);
     added.push(input);

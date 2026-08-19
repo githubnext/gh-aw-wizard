@@ -2,7 +2,9 @@ import { describe, expect, it, vi } from 'vitest';
 
 import {
   ENGINES_URL,
+  engineIconMarkup,
   formatEngineLabel,
+  formatEngineOptionLabel,
   loadDefinitionEngines,
   parseDefinitionEngines
 } from '../src/js/engines.js';
@@ -41,5 +43,22 @@ describe('definition-based engines', () => {
 
   it('formats engine ids for display', () => {
     expect(formatEngineLabel('pydantic-ai')).toBe('Pydantic AI');
+  });
+
+  it('labels built-in engines with company names and extension engines as extensions', () => {
+    expect(formatEngineOptionLabel('copilot')).toBe('Copilot (GitHub)');
+    expect(formatEngineOptionLabel('pydantic-ai')).toBe('Pydantic AI (Extension)');
+    expect(formatEngineOptionLabel('')).toBe('Extension (Extension)');
+  });
+
+  it('uses updated marks for known extension engines', () => {
+    expect(engineIconMarkup('pydantic-ai')).toContain('engine-logo-mark');
+    expect(engineIconMarkup('pydantic-ai')).toContain('PY');
+    expect(engineIconMarkup('aider')).toContain('AI');
+    expect(engineIconMarkup('foo')).toContain('FO');
+    expect(engineIconMarkup('x')).toContain('XX');
+    expect(engineIconMarkup('my-engine')).toContain('ME');
+    expect(engineIconMarkup('foo--bar')).toContain('FB');
+    expect(engineIconMarkup('')).toContain('EX');
   });
 });
