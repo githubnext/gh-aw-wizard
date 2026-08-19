@@ -13,6 +13,17 @@ function ruleBody(selector) {
 }
 
 describe('archetype grid keyboard accessibility', () => {
+  it.each([
+    'daily-test-improver',
+    'repo-maintainer',
+    'linter-miner',
+    'linter-refiner',
+    'linter-applier',
+    'skill-pr-reviewer'
+  ])('exposes the %s archetype as a radio option', (archetype) => {
+    expect(html).toContain(`name="archetype" value="${archetype}"`);
+  });
+
   it('keeps the archetype radios in the tab order instead of display: none', () => {
     const body = ruleBody('.archetype-grid .option-card input[type="radio"]');
     expect(body).not.toMatch(/display:\s*none/);
@@ -85,6 +96,41 @@ describe('Copy prompt button focus indicator', () => {
   });
 });
 
+describe('Copy prompt toast status announcement', () => {
+  it('announces the toast to assistive technology via role=status and aria-live=polite', () => {
+    const toastTag = html.slice(html.indexOf('id="toast"') - 20, html.indexOf('>', html.indexOf('id="toast"')) + 1);
+    expect(toastTag).toMatch(/role="status"/);
+    expect(toastTag).toMatch(/aria-live="polite"/);
+  });
+});
+
+describe('Archetype radiogroup arrow-key focus', () => {
+  const ui = readFileSync(fileURLToPath(new URL('../src/js/ui.js', import.meta.url)), 'utf8');
+
+  it('tracks arrow-key navigation within the archetype radiogroup', () => {
+    expect(ui).toMatch(/arrowKeyNav/);
+    expect(ui).toMatch(/ArrowDown['"]|ArrowUp['"]|ArrowLeft['"]|ArrowRight['"]/);
+  });
+
+  it('does not auto-advance to step 2 from the change handler when navigating via arrow keys', () => {
+    const changeHandlerStart = ui.indexOf("radio.addEventListener('change'");
+    expect(changeHandlerStart).toBeGreaterThan(-1);
+    const changeHandlerEnd = ui.indexOf('\n  });', changeHandlerStart);
+    const changeHandlerBody = ui.slice(changeHandlerStart, changeHandlerEnd);
+    expect(changeHandlerBody).toMatch(/if \(arrowKeyNav\)/);
+    // The arrow-key branch should return before calling goToStep, leaving focus in place.
+    const arrowBranchStart = changeHandlerBody.indexOf('if (arrowKeyNav)');
+    const arrowBranchEnd = changeHandlerBody.indexOf('}', changeHandlerBody.indexOf('return;', arrowBranchStart));
+    const arrowBranchBody = changeHandlerBody.slice(arrowBranchStart, arrowBranchEnd);
+    expect(arrowBranchBody).toMatch(/return;/);
+    expect(arrowBranchBody).not.toMatch(/goToStep/);
+  });
+
+  it('defers advancing to step 2 until focus leaves the radiogroup', () => {
+    expect(ui).toMatch(/archetypeGroup\.addEventListener\('focusout'/);
+  });
+});
+
 describe('Primer iconography', () => {
   it('uses hidden Octicons instead of emoji for decorative interface icons', () => {
     expect(html).toContain('id="octicon-eye"');
@@ -112,9 +158,11 @@ describe('Primer iconography', () => {
 
   it('adds decorative Octicons to every trigger option', () => {
     const triggerOptions = html.slice(html.indexOf('id="trigger-options"'), html.indexOf('</section>', html.indexOf('id="trigger-options"')));
-    expect(triggerOptions.match(/<svg class="octicon" aria-hidden="true">/g)).toHaveLength(7);
+    expect(triggerOptions.match(/<svg class="octicon" aria-hidden="true">/g)).toHaveLength(8);
     expect(triggerOptions).toContain('<use href="#octicon-issue-opened"></use>');
     expect(triggerOptions).toContain('<use href="#octicon-git-pull-request"></use>');
+    expect(triggerOptions).toContain('name="trigger" value="pull_request_ready_for_review"');
+    expect(triggerOptions).toContain('PR ready for review');
     expect(triggerOptions).toContain('<use href="#octicon-calendar"></use>');
     expect(triggerOptions).toContain('<use href="#octicon-play"></use>');
     expect(triggerOptions).toContain('<use href="#octicon-terminal"></use>');

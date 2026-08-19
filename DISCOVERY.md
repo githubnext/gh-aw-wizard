@@ -24,6 +24,11 @@ The `.lock.yml` file is the compiled output. Its corresponding `.md` file (same 
 
 Search GitHub for `.lock.yml` files using code search: `path:.github/workflows extension:lock.yml`. Each result is a candidate repo.
 
+The scanner also loads configured import sources from `data/import-sources.json`.
+These sources let the pattern library mine reusable agentic workflow examples and
+importable guidance, such as `github/gh-aw` `.github/aw/*.md` files, even when
+they do not have compiled lock files.
+
 ### 2. Visibility
 
 Verify each repo is public via `gh api "repos/{owner}/{repo}" --jq '.visibility'`. Only repos returning `"public"` are included so all data is independently verifiable.
@@ -55,6 +60,9 @@ Requires the `gh` CLI, authenticated with a token that has `public_repo` scope. 
 search API used in step 1 only accepts user tokens, so the default `GITHUB_TOKEN` available
 to GitHub Actions cannot run the scan — store a PAT as the `GH_AW_GITHUB_TOKEN` secret and
 the workflow will use it.
+
+Configured import sources are stored in `data/import-sources.json`. Each source can list
+explicit `source_files` or a `source_directory` containing Markdown workflow samples.
 
 ## Data schema
 

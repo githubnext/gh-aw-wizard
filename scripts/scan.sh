@@ -46,14 +46,15 @@ is_reusable() {
   [ -s "$file" ] || return 1
   python3 -c "import json,sys; json.load(open(sys.argv[1]))" "$file" >/dev/null 2>&1 || return 1
   python3 -c \
-    "import json,sys; source=json.load(open(sys.argv[1])).get('githubnext/agentics', {}); sys.exit(not source.get('priority'))" \
+    "import json,sys; data=json.load(open(sys.argv[1])); repos=data.values() if isinstance(data, dict) else data; sys.exit(not any(isinstance(repo, dict) and repo.get('priority') for repo in repos))" \
     "$file" >/dev/null 2>&1 || return 1
   find "$file" -mtime "-${MAX_AGE_DAYS}" -print -quit 2>/dev/null | grep -q . || return 1
   return 0
 }
 
 CUTOFF_DATE=$(date -v-${CUTOFF_DAYS}d +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -d "-${CUTOFF_DAYS} days" --iso-8601=seconds 2>/dev/null)
-OUTDIR="$(cd "$(dirname "$0")/.." && pwd)/data"
+REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+OUTDIR="$REPO_ROOT/data"
 mkdir -p "$OUTDIR" /tmp/aw-scan
 
 echo "══════════════════════════════════════════════════════════════"
@@ -131,12 +132,18 @@ fi
 
 # Parse into unique repos + workflow files
 if [ "$DISCOVERY_FALLBACK" = "false" ]; then
-python3 << 'PYEOF'
-import json, subprocess, sys
+IMPORT_SOURCES_PATH="$REPO_ROOT/data/import-sources.json" python3 << 'PYEOF'
+import json, os, subprocess, sys
+from pathlib import Path
 
-PRIORITY_SOURCES = {
-    "githubnext/agentics": "workflows",
-}
+IMPORT_SOURCES = Path(os.environ["IMPORT_SOURCES_PATH"])
+
+def load_import_sources():
+    if not IMPORT_SOURCES.exists():
+        return []
+    with IMPORT_SOURCES.open() as f:
+        data = json.load(f)
+    return [source for source in data if source.get("repo")]
 
 repos = {}
 with open("/tmp/aw-scan/raw-results.jsonl") as f:
@@ -157,6 +164,7 @@ with open("/tmp/aw-scan/raw-results.jsonl") as f:
                     "visibility": r.get("visibility", "unknown"),
                     "stars": r.get("stargazers_count", 0),
                     "description": (r.get("description") or "")[:200],
+                    "ref": r.get("default_branch", "main"),
                     "lock_files": []
                 }
             wf = item["name"]
@@ -202,45 +210,56 @@ for i, (name, info) in enumerate(sorted(repos.items())):
     _time.sleep(0.05)
 sys.stdout.write("\n")
 
-# Mine every workflow sample from the GetUpNext Agentics collection, even though
-# its reusable sources live outside .github/workflows and have no local lock files.
-for name, source_directory in PRIORITY_SOURCES.items():
+# Mine configured import sources, even when their reusable sources live outside
+# .github/workflows and have no local lock files.
+for source in load_import_sources():
+    name = source["repo"]
     try:
+        source_files = sorted(set(source.get("source_files", [])))
         repo_result = subprocess.run(
             ["gh", "api", f"repos/{name}"],
             capture_output=True, text=True, timeout=15
         )
-        source_result = subprocess.run(
-            ["gh", "api", f"repos/{name}/contents/{source_directory}"],
-            capture_output=True, text=True, timeout=15
-        )
-        if repo_result.returncode != 0 or source_result.returncode != 0:
-            print(f"    Warning: priority source unavailable: {name}")
-            continue
-
-        repo = json.loads(repo_result.stdout)
-        source_files = sorted(
-            item["path"] for item in json.loads(source_result.stdout)
-            if item.get("type") == "file" and item.get("name", "").endswith(".md")
-        )
+        source_directory = source.get("source_directory")
+        if source_directory:
+            source_result = subprocess.run(
+                ["gh", "api", f"repos/{name}/contents/{source_directory}"],
+                capture_output=True, text=True, timeout=15
+            )
+            if source_result.returncode == 0:
+                contents = json.loads(source_result.stdout)
+                if isinstance(contents, dict):
+                    contents = [contents]
+                source_files.extend(
+                    item["path"] for item in contents
+                    if item.get("type") == "file" and item.get("name", "").endswith(".md")
+                )
+            else:
+                print(f"    Warning: import source directory unavailable: {name}/{source_directory}")
+        source_files = sorted(set(source_files))
         if not source_files:
-            print(f"    Warning: no workflow samples found in {name}/{source_directory}")
+            print(f"    Warning: no workflow samples found in {name}")
             continue
 
+        if repo_result.returncode != 0:
+            print(f"    Warning: import source metadata unavailable: {name}; using configured metadata")
+        repo = json.loads(repo_result.stdout) if repo_result.returncode == 0 else {}
         existing = public.get(name, {})
         public[name] = {
             **existing,
-            "url": repo["html_url"],
+            "url": repo.get("html_url") or source.get("url") or f"https://github.com/{name}",
             "visibility": repo.get("visibility", "public"),
             "stars": repo.get("stargazers_count", 0),
-            "description": (repo.get("description") or "")[:200],
+            "description": (repo.get("description") or source.get("description") or "")[:200],
             "lock_files": existing.get("lock_files", []),
             "source_files": source_files,
-            "priority": True,
+            "priority": source.get("priority", True),
+            "source_kind": source.get("source_kind", "workflow"),
+            "ref": source.get("ref", "main"),
         }
-        print(f"  Added priority source {name}: {len(source_files)} workflow samples")
+        print(f"  Added import source {name}: {len(source_files)} workflow samples")
     except Exception as e:
-        print(f"    Warning: could not load priority source {name}: {e}")
+        print(f"    Warning: could not load import source {name}: {e}")
 
 with open("/tmp/aw-scan/discovered.json", "w") as f:
     json.dump(public, f, indent=2)
@@ -347,7 +366,35 @@ else
 echo "Step 3 — Analysis: fetching workflow definitions..."
 
 python3 << 'PYEOF'
-import json, subprocess, time, sys, re
+import base64, binascii, json, subprocess, time, sys, re
+from urllib.error import HTTPError, URLError
+from urllib.parse import quote
+from urllib.request import urlopen
+
+def fetch_source(repo, path, ref):
+    result = subprocess.run(
+        ["gh", "api", f"repos/{repo}/contents/{path}?ref={quote(ref, safe='')}",
+         "-q", ".content", "--header", "Accept: application/vnd.github.v3+json"],
+        capture_output=True, text=True, timeout=15
+    )
+    if result.returncode == 0 and result.stdout.strip():
+        encoded = result.stdout.strip()
+        if encoded.startswith('"'):
+            encoded = json.loads(encoded)
+        encoded = "".join(encoded.split())
+        try:
+            return base64.b64decode(encoded).decode("utf-8", errors="replace")
+        except (binascii.Error, ValueError) as error:
+            print(f"    Note: API content decode failed for {repo}/{path}: {error}; trying raw URL", file=sys.stderr)
+    if result.returncode == 0:
+        print(f"    Note: API returned empty content for {repo}/{path}; trying raw URL", file=sys.stderr)
+
+    raw_url = f"https://raw.githubusercontent.com/{repo}/{ref}/{path}"
+    try:
+        with urlopen(raw_url, timeout=15) as response:
+            return response.read().decode("utf-8", errors="replace")
+    except (HTTPError, URLError, TimeoutError):
+        return None
 
 def frontmatter_entries(frontmatter, key):
     match = re.search(rf'^{re.escape(key)}:[ \t]*(.*?)[ \t]*$', frontmatter, re.MULTILINE)
@@ -403,19 +450,16 @@ for i, (name, info) in enumerate(sorted(repos.items())):
         md_file = source_file.rsplit("/", 1)[-1]
         
         try:
-            result = subprocess.run(
-                ["gh", "api", f"repos/{name}/contents/{source_file}",
-                 "-q", ".content", "--header", "Accept: application/vnd.github.v3+json"],
-                capture_output=True, text=True, timeout=15
-            )
-            if result.returncode == 0 and result.stdout.strip():
-                import base64
-                content = base64.b64decode(result.stdout.strip()).decode("utf-8", errors="replace")
+            content = fetch_source(name, source_file, info.get("ref", "main"))
+            if content:
                 
                 # Extract frontmatter patterns
                 wf = {"name": md_file.replace(".md", ""), "file": md_file}
+                if info.get("source_kind"):
+                    wf["source_kind"] = info["source_kind"]
                 
                 # Engine — must be in frontmatter and have a valid value
+                fm_match = None
                 fm_match = re.match(r'^---\s*\n(.*?)\n---', content, re.DOTALL)
                 fm_text = fm_match.group(1) if fm_match else ""
                 m = re.search(r'^engine:\s*(\S+)', fm_text, re.MULTILINE)
@@ -426,6 +470,10 @@ for i, (name, info) in enumerate(sorted(repos.items())):
                 m = re.search(r'^model:\s*(\S+)', fm_text, re.MULTILINE)
                 if m and m.group(1) not in ('{', '|', '>', '```'):
                     wf["model"] = m.group(1)
+
+                m = re.search(r'^description:\s*(.+)', fm_text, re.MULTILINE)
+                if m:
+                    wf["description"] = m.group(1).strip().strip("'\"")[:300]
                 
                 # Trigger
                 trigger_types = frontmatter_entries(fm_text, "on")
@@ -452,6 +500,9 @@ for i, (name, info) in enumerate(sorted(repos.items())):
                 prompt_match = re.search(r'(?:^prompt:\s*\|?\s*\n)((?:.*\n)*)', content, re.MULTILINE)
                 if prompt_match:
                     wf["prompt_size_bytes"] = len(prompt_match.group(0).encode())
+                elif info.get("source_kind", "workflow") == "workflow":
+                    prompt_body = content[fm_match.end():].lstrip() if fm_match else content
+                    wf["prompt_size_bytes"] = len(prompt_body.encode())
                 
                 # Pre-steps (bash steps before the agent)
                 has_pre_steps = bool(re.search(r'steps:\s*\n\s+-\s+(?:name|run):', content))
@@ -476,6 +527,7 @@ for i, (name, info) in enumerate(sorted(repos.items())):
         "description": info.get("description", ""),
         "status": info.get("status", "unknown"),
         "priority": info.get("priority", False),
+        "source_kind": info.get("source_kind"),
         "recent_runs": recent_runs,
         "workflows": workflows
     }

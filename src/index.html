@@ -125,6 +125,54 @@
                   <div class="option-desc">Check PRs/issues for spam or policy violations</div>
                 </div>
               </label>
+              <label class="option-card" data-value="daily-test-improver">
+                <input type="radio" name="archetype" value="daily-test-improver">
+                <div class="archetype-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-check"></use></svg></div>
+                <div class="option-info">
+                  <div class="option-label">Daily Test Improver</div>
+                  <div class="option-desc">Add high-value tests and improve test quality</div>
+                </div>
+              </label>
+              <label class="option-card" data-value="repo-maintainer">
+                <input type="radio" name="archetype" value="repo-maintainer">
+                <div class="archetype-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-tools"></use></svg></div>
+                <div class="option-info">
+                  <div class="option-label">Repo Maintainer</div>
+                  <div class="option-desc">Proactively triage, fix, and maintain a repository</div>
+                </div>
+              </label>
+              <label class="option-card" data-value="linter-miner">
+                <input type="radio" name="archetype" value="linter-miner">
+                <div class="archetype-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-graph"></use></svg></div>
+                <div class="option-info">
+                  <div class="option-label">Linter Miner</div>
+                  <div class="option-desc">Discover recurring defects and create lint rules</div>
+                </div>
+              </label>
+              <label class="option-card" data-value="linter-refiner">
+                <input type="radio" name="archetype" value="linter-refiner">
+                <div class="archetype-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-tools"></use></svg></div>
+                <div class="option-info">
+                  <div class="option-label">Linter Refiner</div>
+                  <div class="option-desc">Improve lint rule accuracy and diagnostics</div>
+                </div>
+              </label>
+              <label class="option-card" data-value="linter-applier">
+                <input type="radio" name="archetype" value="linter-applier">
+                <div class="archetype-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-check"></use></svg></div>
+                <div class="option-info">
+                  <div class="option-label">Linter Applier</div>
+                  <div class="option-desc">Fix a focused group of existing lint findings</div>
+                </div>
+              </label>
+              <label class="option-card" data-value="skill-pr-reviewer">
+                <input type="radio" name="archetype" value="skill-pr-reviewer">
+                <div class="archetype-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-eye"></use></svg></div>
+                <div class="option-info">
+                  <div class="option-label">Skill PR Reviewer</div>
+                  <div class="option-desc">Apply popular skills such as Matt Pocock or Ponytail</div>
+                </div>
+              </label>
               <label class="option-card" data-value="custom" style="grid-column: 1 / -1;">
                 <input type="radio" name="archetype" value="custom">
                 <div class="archetype-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-zap"></use></svg></div>
@@ -162,6 +210,13 @@
                 <div class="option-info">
                   <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-git-pull-request"></use></svg>Pull request opened</div>
                   <div class="option-desc">Runs when a PR is created</div>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="checkbox" name="trigger" value="pull_request_ready_for_review">
+                <div class="option-info">
+                  <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-git-pull-request"></use></svg>PR ready for review</div>
+                  <div class="option-desc">Runs when a draft PR is marked ready for review</div>
                 </div>
               </label>
               <label class="option-card">
@@ -364,7 +419,7 @@
               <div class="finish-cta">
                 <div class="finish-icon" aria-hidden="true"><svg class="octicon" aria-hidden="true"><use href="#octicon-check"></use></svg></div>
                 <div class="finish-cta-copy">
-                  <h2>Your workflow prompt is ready</h2>
+                  <h2>Your workflow generator prompt is ready</h2>
                   <p>Copy it, then paste it into your agent from the repository you want to automate.</p>
                 </div>
                 <button class="btn btn-primary btn-copy-prompt" id="btn-copy" type="button">Copy prompt</button>
@@ -413,7 +468,7 @@
     </div>
   </footer>
 
-  <div class="toast" id="toast"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script type="module" src="./js/main.js"></script>
 </body>
 </html>

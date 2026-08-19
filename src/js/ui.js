@@ -8,6 +8,7 @@ import {
 import { highlightMarkdown } from './highlight.js';
 import { initTheme } from './theme.js';
 import { buildWorkflowSummary } from './summary.js';
+import { formatEngineLabel, loadDefinitionEngines, registerDefinitionEngines } from './engines.js';
 
 var patterns = null;
 var currentStep = 1;
@@ -22,6 +23,10 @@ export function initWizard() {
   });
   bindNavigation();
   bindFormEvents();
+  loadDefinitionEngines().then(function (engines) {
+    registerDefinitionEngines(engines);
+    addDefinitionEngineOptions(engines);
+  });
   initNavigationHistory();
   renderWorkflowSummary();
 }
@@ -67,7 +72,7 @@ function bindNavigation() {
 
 function advanceOneStepLikeNext() {
   if (currentStep >= 1 && currentStep <= 4) {
-    if (currentStep + 1 > maxReachableStep()) return false;
+    if (currentStep + 1 > maxReachableStep(hasChecked('archetype'))) return false;
     goToStep(currentStep + 1);
     return true;
   }
@@ -149,17 +154,12 @@ function updateProgress(from, to) {
   });
 }
 
-function maxReachableStep() {
-  if (!document.querySelector('input[name="archetype"]:checked')) return 1;
-  if (!hasChecked('trigger')) return 2;
-  if (!hasChecked('output')) return 3;
-  // Step 4 is optional extras, so step 5 is always reachable once required steps are complete.
-  if (!hasChecked('engine')) return 5;
-  return 6;
+export function maxReachableStep(hasArchetype) {
+  return hasArchetype ? TOTAL_STEPS : 1;
 }
 
 function syncProgressStepAvailability() {
-  var maxStep = maxReachableStep();
+  var maxStep = maxReachableStep(hasChecked('archetype'));
   document.querySelectorAll('.progress-step').forEach(function (el) {
     var step = parseInt(el.getAttribute('data-step'));
     el.disabled = step > maxStep;
@@ -209,7 +209,29 @@ function bindRadioDeselect(radios, onDeselect) {
 function bindFormEvents() {
   // Step 1: archetype radios
   var archetypeRadios = document.querySelectorAll('input[name="archetype"]');
+  var archetypeGroup = document.getElementById('archetype-options');
   bindRadioDeselect(archetypeRadios, clearArchetypeSelection);
+
+  // Arrow keys move focus *and* selection between radios in a native
+  // radiogroup, firing a `change` event just like a click does. Auto-advancing
+  // to step 2 on every `change` would eject keyboard focus from the group
+  // while the user is still browsing options with the arrow keys (WCAG 2.1.1 /
+  // 2.4.3 / 3.2.2). Track arrow-key navigation so the auto-advance below only
+  // fires for a discrete selection (click, or Enter/Space), and otherwise
+  // defer it until focus actually leaves the radiogroup.
+  var arrowKeyNav = false;
+  archetypeGroup.addEventListener('keydown', function (e) {
+    var isArrow = e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'ArrowRight';
+    if (isArrow && e.target && e.target.name === 'archetype') arrowKeyNav = true;
+  });
+  archetypeGroup.addEventListener('focusout', function () {
+    setTimeout(function () {
+      if (archetypeGroup.contains(document.activeElement)) return;
+      var checked = archetypeGroup.querySelector('input[name="archetype"]:checked');
+      if (checked && checked.value !== 'custom' && currentStep === 1) goToStep(2);
+    }, 0);
+  });
+
   archetypeRadios.forEach(function (radio) {
     radio.addEventListener('change', function () {
       updateCardSelection('#archetype-options', 'radio');
@@ -220,6 +242,12 @@ function bindFormEvents() {
       // Auto-fill triggers/outputs from archetype data
       prefillFromArchetype(radio.value);
       if (radio.value !== 'custom') {
+        if (arrowKeyNav) {
+          // Leave focus on the radio the user just navigated to; step 2 will
+          // be shown once focus leaves the radiogroup (see `focusout` above).
+          arrowKeyNav = false;
+          return;
+        }
         var hadFocus = document.activeElement === radio;
         goToStep(2);
         // The collapsing step would otherwise drop keyboard focus to the body.
@@ -252,22 +280,62 @@ function bindFormEvents() {
   });
 
   // Step 5: engine radio cards
-  var engineRadios = document.querySelectorAll('input[name="engine"]');
-  bindRadioDeselect(engineRadios, clearEngineSelection);
-  engineRadios.forEach(function (radio) {
-    radio.addEventListener('change', function () {
+  var engineOptions = document.getElementById('engine-options');
+  bindRadioDeselect(engineOptions.querySelectorAll('input[name="engine"]'), clearEngineSelection);
+  engineOptions.addEventListener('change', function (event) {
+    if (event.target.name === 'engine') {
       updateCardSelection('#engine-options', 'radio');
       if (currentStep === 6) refreshPreview();
-    });
+    }
   });
   updateCardSelection('#engine-options', 'radio');
 
-  document.querySelectorAll('input').forEach(function (input) {
-    input.addEventListener('change', function () {
+  document.addEventListener('change', function (event) {
+    if (event.target.matches('input')) {
       renderWorkflowSummary();
       syncProgressStepAvailability();
-    });
+    }
   });
+}
+
+function addDefinitionEngineOptions(engines) {
+  var container = document.getElementById('engine-options');
+  var existing = new Set(Array.from(container.querySelectorAll('input[name="engine"]')).map(function (input) {
+    return input.value;
+  }));
+  var added = [];
+
+  engines.forEach(function (engine) {
+    if (existing.has(engine.id)) return;
+    existing.add(engine.id);
+
+    var card = document.createElement('label');
+    card.className = 'option-card';
+
+    var input = document.createElement('input');
+    input.type = 'radio';
+    input.name = 'engine';
+    input.value = engine.id;
+
+    var info = document.createElement('div');
+    info.className = 'option-info';
+
+    var label = document.createElement('div');
+    label.className = 'option-label option-label-with-icon';
+    label.innerHTML = '<svg class="octicon" aria-hidden="true"><use href="#octicon-tools"></use></svg>';
+    label.appendChild(document.createTextNode(formatEngineLabel(engine.id) + ' (definition-based)'));
+
+    var description = document.createElement('div');
+    description.className = 'option-desc';
+    description.textContent = 'Definition-based engine provided by gh-aw';
+
+    info.append(label, description);
+    card.append(input, info);
+    container.appendChild(card);
+    added.push(input);
+  });
+
+  bindRadioDeselect(added, clearEngineSelection);
 }
 
 // Reset any selections that depend on the "what" (archetype) choice, since they

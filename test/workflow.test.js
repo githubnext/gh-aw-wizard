@@ -9,6 +9,7 @@ import {
   inferNeedsPreSteps,
   workflowName
 } from '../src/js/workflow.js';
+import { registerDefinitionEngines } from '../src/js/engines.js';
 
 const patterns = {
   archetypes: [
@@ -23,6 +24,42 @@ const patterns = {
       label: 'Status Report',
       description: 'Summarize repository activity',
       timeout_minutes: 20
+    },
+    {
+      id: 'pr-review',
+      label: 'PR Review',
+      description: 'Review pull requests for quality and issues',
+      timeout_minutes: 30
+    },
+    {
+      id: 'daily-test-improver',
+      label: 'Daily Test Improver',
+      description: 'Add high-value tests and improve test quality'
+    },
+    {
+      id: 'repo-maintainer',
+      label: 'Repo Maintainer',
+      description: 'Proactively triage, fix, and maintain a repository'
+    },
+    {
+      id: 'linter-miner',
+      label: 'Linter Miner',
+      description: 'Discover recurring defects and create custom lint rules'
+    },
+    {
+      id: 'linter-refiner',
+      label: 'Linter Refiner',
+      description: 'Improve lint rule accuracy, diagnostics, and performance'
+    },
+    {
+      id: 'linter-applier',
+      label: 'Linter Applier',
+      description: 'Fix a focused group of existing lint findings'
+    },
+    {
+      id: 'skill-pr-reviewer',
+      label: 'Skill PR Reviewer',
+      description: 'Review pull requests with installed expert skills'
     }
   ],
   config_defaults: {
@@ -67,6 +104,8 @@ describe('inferNeedsPreSteps', () => {
   it('enables pre-steps for data heavy archetypes', () => {
     expect(inferNeedsPreSteps('status-report')).toBe(true);
     expect(inferNeedsPreSteps('dependency-monitor')).toBe(true);
+    expect(inferNeedsPreSteps('repo-maintainer')).toBe(true);
+    expect(inferNeedsPreSteps('linter-miner')).toBe(true);
   });
 
   it('leaves other archetypes without pre-steps', () => {
@@ -93,6 +132,31 @@ describe('inferCapabilities', () => {
       bash: false,
       githubToolsets: false
     });
+  });
+
+  it('adds github toolsets for pr-review so the agent can read PR diffs', () => {
+    expect(inferCapabilities('pr-review')).toEqual({
+      preSteps: false,
+      bash: false,
+      githubToolsets: true
+    });
+  });
+
+  it('infers capabilities for the new maintenance and review archetypes', () => {
+    expect(inferCapabilities('daily-test-improver').bash).toBe(true);
+    expect(inferCapabilities('repo-maintainer')).toEqual({
+      preSteps: true,
+      bash: true,
+      githubToolsets: true
+    });
+    expect(inferCapabilities('linter-miner')).toEqual({
+      preSteps: true,
+      bash: true,
+      githubToolsets: true
+    });
+    expect(inferCapabilities('linter-refiner').bash).toBe(true);
+    expect(inferCapabilities('linter-applier').bash).toBe(true);
+    expect(inferCapabilities('skill-pr-reviewer').githubToolsets).toBe(true);
   });
 });
 
@@ -128,6 +192,21 @@ describe('buildTriggerYaml', () => {
     const yaml = buildTriggerYaml(['pull_request'], 'pr-review-agent', 'pr-review');
     expect(yaml).toBe('  pull_request:\n    types: [ready_for_review]\n');
   });
+
+  it('uses ready_for_review for pull_request on the skill reviewer archetype', () => {
+    const yaml = buildTriggerYaml(['pull_request'], 'skill-pr-reviewer', 'skill-pr-reviewer');
+    expect(yaml).toBe('  pull_request:\n    types: [ready_for_review]\n');
+  });
+
+  it('maps the explicit ready-for-review trigger', () => {
+    const yaml = buildTriggerYaml(['pull_request_ready_for_review']);
+    expect(yaml).toBe('  pull_request:\n    types: [ready_for_review]\n');
+  });
+
+  it('combines pull request activity types into one trigger', () => {
+    const yaml = buildTriggerYaml(['pull_request', 'pull_request_ready_for_review']);
+    expect(yaml).toBe('  pull_request:\n    types: [opened, ready_for_review]\n');
+  });
 });
 
 describe('generateWorkflowFile', () => {
@@ -149,6 +228,19 @@ describe('generateWorkflowFile', () => {
       patterns
     );
     expect(md).toContain('timeout-minutes: 45\n');
+  });
+
+  it('gives pr-review read access to the PR diff via scoped permissions and github toolsets', () => {
+    const md = generateWorkflowFile(
+      answers({
+        archetype: 'pr-review',
+        triggers: ['pull_request', 'workflow_dispatch'],
+        outputs: ['create-pull-request-review-comment']
+      }),
+      patterns
+    );
+    expect(md).toContain('permissions:\n  contents: read\n  issues: read\n  pull-requests: read\n');
+    expect(md).toContain('  github:\n    toolsets: [repos, issues, pull_requests]\n');
   });
 
   it('adds inferred capabilities and optional agent capabilities', () => {
@@ -185,9 +277,19 @@ describe('generateWorkflowFile', () => {
     expect(md).toContain('timeout-minutes: 30\n');
   });
 
-  it('falls back to copilot engine for unknown values', () => {
-    const md = generateWorkflowFile(answers({ engine: 'invalid' }), patterns);
+  it('falls back to copilot engine for malformed ids', () => {
+    const md = generateWorkflowFile(answers({ engine: 'Invalid engine' }), patterns);
     expect(md).toContain('engine: copilot\n');
+  });
+
+  it('supports definition-based engines', () => {
+    registerDefinitionEngines([{ id: 'pydantic-ai' }]);
+    try {
+      const md = generateWorkflowFile(answers({ engine: 'pydantic-ai' }), patterns);
+      expect(md).toContain('engine: pydantic-ai\n');
+    } finally {
+      registerDefinitionEngines([]);
+    }
   });
 
   it('accepts all supported built-in engines', () => {
@@ -208,6 +310,26 @@ describe('generateWorkflowFile', () => {
     const pullRequestCount = md.split('\n').filter((line) => line === '  create-pull-request:').length;
     expect(pullRequestCount).toBe(1);
     expect(md).not.toContain('commit-files');
+  });
+
+  it.each([
+    ['daily-test-improver', 'test improvement engineer'],
+    ['repo-maintainer', 'proactive repository maintainer'],
+    ['linter-miner', 'static-analysis rule miner'],
+    ['linter-refiner', 'lint rule quality engineer'],
+    ['linter-applier', 'lint remediation engineer'],
+    ['skill-pr-reviewer', 'skills-based pull request reviewer']
+  ])('generates the tailored %s workflow body', (archetype, role) => {
+    const md = generateWorkflowFile(
+      answers({
+        archetype,
+        triggers: ['workflow_dispatch'],
+        outputs: ['create-pull-request']
+      }),
+      patterns
+    );
+    expect(md).toContain(`You are a **${role}**`);
+    expect(md).not.toContain('# Custom Workflow');
   });
 });
 
@@ -254,12 +376,19 @@ describe('generateAgentPrompt', () => {
     ['status-report', 'report.md'],
     ['dependency-monitor', 'maintainer.md'],
     ['documentation-updater', 'maintainer.md'],
-    ['pr-review', 'pr-reviewer.md']
-  ])('links the %s scenario instructions directly', (archetype, instructionFile) => {
+    ['pr-review', 'pr-reviewer.md'],
+    ['daily-test-improver', 'test-coverage.md'],
+    ['repo-maintainer', 'maintainer.md'],
+    ['linter-miner', 'linter-workflows.md'],
+    ['linter-refiner', 'linter-workflows.md'],
+    ['linter-applier', 'linter-workflows.md'],
+    ['skill-pr-reviewer', ['pr-reviewer.md', 'skills.md']]
+  ])('links the %s scenario instructions directly', (archetype, instructionFiles) => {
     const prompt = generateAgentPrompt(answers({ archetype }), patterns);
     const base = 'https://raw.githubusercontent.com/github/gh-aw/main/.github/aw/';
     expect(prompt).toContain(base + 'create-agentic-workflow.md');
-    expect(prompt).toContain(base + instructionFile);
+    const expectedFiles = Array.isArray(instructionFiles) ? instructionFiles : [instructionFiles];
+    expectedFiles.forEach((instructionFile) => expect(prompt).toContain(base + instructionFile));
     expect(prompt).not.toContain('github/gh-aw/main/create.md');
   });
 
@@ -290,6 +419,12 @@ describe('generateAgentPrompt', () => {
     'content-moderation',
     'documentation-updater',
     'pr-review',
+    'daily-test-improver',
+    'repo-maintainer',
+    'linter-miner',
+    'linter-refiner',
+    'linter-applier',
+    'skill-pr-reviewer',
     'custom'
   ])('limits the %s sample prompt body to one line plus ellipsis', (archetype) => {
     const prompt = generateAgentPrompt(answers({ archetype }), patterns);

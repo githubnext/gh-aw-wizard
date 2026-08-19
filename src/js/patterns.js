@@ -71,9 +71,14 @@ export function getRecommendedConfiguration(patterns, id) {
     });
   var profile = profiles[0] || null;
 
-  var triggers = profile && Array.isArray(profile.triggers)
+  var triggerCandidates = profile && Array.isArray(profile.triggers)
     ? profile.triggers.slice()
     : (archetype.recommended_triggers || []).map(function (trigger) { return trigger.type; });
+  var rankedTriggers = (archetype.recommended_triggers || []).map(function (trigger) { return trigger.type; });
+  var mostRelevantTrigger = rankedTriggers.find(function (trigger) {
+    return triggerCandidates.indexOf(trigger) !== -1;
+  }) || triggerCandidates[0];
+  var triggers = mostRelevantTrigger ? [mostRelevantTrigger] : [];
   var safeOutputs = profile && Array.isArray(profile.safe_outputs)
     ? profile.safe_outputs
     : (archetype.recommended_tools || archetype.recommended_safe_outputs || []);
