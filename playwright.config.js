@@ -1,3 +1,4 @@
+import process from 'node:process';
 import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
@@ -8,6 +9,6 @@ export default defineConfig({
   webServer: {
     command: 'npm run preview -- --host 127.0.0.1 --port 4173',
     port: 4173,
-    reuseExistingServer: true
+    reuseExistingServer: !process.env.CI
   }
 });
