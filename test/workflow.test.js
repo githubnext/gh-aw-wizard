@@ -284,6 +284,19 @@ describe('generateWorkflowFile', () => {
     expect(md).toContain('  github:\n    toolsets: [repos, issues, pull_requests]\n');
   });
 
+  it('gives bash-only archetypes a minimal read permissions block', () => {
+    const md = generateWorkflowFile(
+      answers({
+        archetype: 'code-improvement',
+        triggers: ['schedule', 'workflow_dispatch'],
+        outputs: ['create-pull-request']
+      }),
+      patterns
+    );
+    expect(md).toContain('permissions:\n  contents: read\n');
+    expect(md).toContain('  bash: true\n');
+  });
+
   it('adds inferred capabilities and optional agent capabilities', () => {
     const md = generateWorkflowFile(
       answers({

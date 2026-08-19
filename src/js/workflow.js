@@ -86,6 +86,10 @@ var PERMISSIONS_BY_ARCHETYPE = {
   'user-simulator': ['contents', 'issues', 'pull-requests']
 };
 var DEFAULT_PERMISSIONS = ['actions', 'contents', 'discussions', 'issues', 'pull-requests', 'security-events'];
+// Bash-only archetypes (no github toolset) still need read access to check out and
+// inspect the repo — without this they were emitting no `permissions:` block at all,
+// leaving the job on the default (often broader) GITHUB_TOKEN scope.
+var BASH_ONLY_PERMISSIONS = ['contents'];
 
 export function buildTriggerYaml(triggers, commandName, archetype) {
   var lines = '';
@@ -184,6 +188,11 @@ export function generateWorkflowFile(answers, patterns) {
     var perms = PERMISSIONS_BY_ARCHETYPE[answers.archetype] || DEFAULT_PERMISSIONS;
     fm += 'permissions:\n';
     perms.forEach(function (p) { fm += '  ' + p + ': read\n'; });
+  } else if (inferred.bash) {
+    // Bash-only archetypes still check out and read the repo, so declare the
+    // minimal read permission explicitly rather than relying on defaults.
+    fm += 'permissions:\n';
+    BASH_ONLY_PERMISSIONS.forEach(function (p) { fm += '  ' + p + ': read\n'; });
   }
   fm += 'engine: ' + engine + '\n';
 
