@@ -131,11 +131,11 @@ fi
 
 # Parse into unique repos + workflow files
 if [ "$DISCOVERY_FALLBACK" = "false" ]; then
-python3 << 'PYEOF'
-import json, subprocess, sys
+IMPORT_SOURCES_PATH="$OUTDIR/import-sources.json" python3 << 'PYEOF'
+import json, os, subprocess, sys
 from pathlib import Path
 
-IMPORT_SOURCES = Path("data/import-sources.json")
+IMPORT_SOURCES = Path(os.environ["IMPORT_SOURCES_PATH"])
 
 def load_import_sources():
     if not IMPORT_SOURCES.exists():
