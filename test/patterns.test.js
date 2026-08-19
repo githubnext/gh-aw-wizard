@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { fileURLToPath } from 'node:url';
 
-import { getArchetype, getRecommendedConfiguration } from '../src/js/patterns.js';
+import { getArchetype, getRecommendedConfiguration, getWhatPageOptions } from '../src/js/patterns.js';
 import { loadPatternsFromDir } from '../src/js/patterns-node.js';
 import { nextStepsHtml } from '../src/js/next-steps.js';
 
@@ -130,6 +130,60 @@ describe('getRecommendedConfiguration', () => {
       outputs: [],
       profile: null
     });
+  });
+});
+
+describe('getWhatPageOptions', () => {
+  it('returns the configured options in display order', () => {
+    const options = getWhatPageOptions(generatedPatterns);
+
+    expect(options.map((option) => { return option.id; })).toEqual([
+      'pr-review',
+      'issue-triage',
+      'code-improvement',
+      'status-report',
+      'dependency-monitor',
+      'documentation-updater',
+      'content-moderation',
+      'accessibility-expert',
+      'performance-nut',
+      'user-simulator',
+      'daily-test-improver',
+      'repo-maintainer',
+      'linter-workflows',
+      'skill-pr-reviewer',
+      'custom'
+    ]);
+    expect(options[0]).toMatchObject({
+      label: 'PR Review',
+      icon: 'octicon-eye',
+      advance_on_select: true
+    });
+    expect(options.at(-1)).toMatchObject({
+      label: 'Custom',
+      description: 'Describe your own workflow — start from scratch',
+      classes: ['archetype-option-full-width'],
+      requires_description: true,
+      advance_on_select: false
+    });
+  });
+
+  it('skips configured ids that are missing from the pattern library', () => {
+    expect(getWhatPageOptions({
+      archetypes: [{ id: 'known', label: 'Known' }],
+      wizard: {
+        what_options: [{ id: 'missing' }, { id: 'known', icon: 'octicon-check' }]
+      }
+    })).toEqual([{
+      id: 'known',
+      label: 'Known',
+      icon: 'octicon-check'
+    }]);
+  });
+
+  it('returns no options when display configuration is unavailable', () => {
+    expect(getWhatPageOptions(null)).toEqual([]);
+    expect(getWhatPageOptions({ archetypes: [] })).toEqual([]);
   });
 });
 

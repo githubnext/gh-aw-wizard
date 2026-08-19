@@ -3,8 +3,13 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
+import { getWhatPageOptions } from '../src/js/patterns.js';
+import { loadPatternsFromDir } from '../src/js/patterns-node.js';
+
 const css = readFileSync(fileURLToPath(new URL('../src/styles/style.css', import.meta.url)), 'utf8');
 const html = readFileSync(fileURLToPath(new URL('../src/index.html', import.meta.url)), 'utf8');
+const patterns = await loadPatternsFromDir(fileURLToPath(new URL('../patterns', import.meta.url)));
+const whatOptionIds = getWhatPageOptions(patterns).map((option) => { return option.id; });
 
 function ruleBody(selector) {
   const start = css.indexOf(`${selector  } {`);
@@ -22,11 +27,13 @@ describe('archetype grid keyboard accessibility', () => {
     'linter-workflows',
     'skill-pr-reviewer'
   ])('exposes the %s archetype as a radio option', (archetype) => {
-    expect(html).toContain(`name="archetype" value="${archetype}"`);
+    expect(whatOptionIds).toContain(archetype);
   });
 
   it('groups the linter workflows into one option', () => {
-    expect(html).not.toMatch(/name="archetype" value="linter-(miner|refiner|applier)"/);
+    expect(whatOptionIds).not.toContain('linter-miner');
+    expect(whatOptionIds).not.toContain('linter-refiner');
+    expect(whatOptionIds).not.toContain('linter-applier');
   });
 
   it('keeps the archetype radios in the tab order instead of display: none', () => {

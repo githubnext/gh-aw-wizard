@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { maxReachableStep, resetNavigationPane } from '../src/js/ui.js';
+import { maxReachableStep, renderArchetypeOptions, resetNavigationPane } from '../src/js/ui.js';
 
 const originalDocument = globalThis.document;
 
@@ -48,6 +48,72 @@ describe('wizard navigation', () => {
   });
 });
 
+describe('What page options', () => {
+  it('renders pattern-backed cards and their behavior metadata', () => {
+    const container = createElement();
+    globalThis.document = {
+      createElement(tagName) {
+        return createElement({ tagName });
+      },
+      createElementNS(_namespace, tagName) {
+        return createElement({ tagName });
+      },
+      getElementById(id) {
+        return id === 'archetype-options' ? container : null;
+      }
+    };
+
+    renderArchetypeOptions({
+      archetypes: [
+        { id: 'pr-review', label: 'PR Review', description: 'Review pull requests' },
+        { id: 'custom', label: 'Custom', description: 'Custom workflow' }
+      ],
+      wizard: {
+        what_options: [
+          {
+            id: 'pr-review',
+            icon: 'octicon-eye',
+            requires_description: false,
+            advance_on_select: true
+          },
+          {
+            id: 'custom',
+            icon: 'octicon-zap',
+            description: 'Describe your own workflow',
+            classes: ['archetype-option-full-width'],
+            requires_description: true,
+            advance_on_select: false
+          }
+        ]
+      }
+    });
+
+    expect(container.children).toHaveLength(2);
+    const reviewCard = container.children[0];
+    expect(reviewCard.attributes.get('data-value')).toBe('pr-review');
+    expect(reviewCard.children[0]).toMatchObject({
+      type: 'radio',
+      name: 'archetype',
+      value: 'pr-review',
+      dataset: {
+        requiresDescription: 'false',
+        advanceOnSelect: 'true'
+      }
+    });
+    expect(reviewCard.children[1].children[0].children[0].attributes.get('href')).toBe('#octicon-eye');
+    expect(reviewCard.children[2].children[0].textContent).toBe('PR Review');
+    expect(reviewCard.children[2].children[1].textContent).toBe('Review pull requests');
+
+    const customCard = container.children[1];
+    expect(customCard.classList.contains('archetype-option-full-width')).toBe(true);
+    expect(customCard.children[0].dataset).toEqual({
+      requiresDescription: 'true',
+      advanceOnSelect: 'false'
+    });
+    expect(customCard.children[2].children[1].textContent).toBe('Describe your own workflow');
+  });
+});
+
 function createProgressStep(step, item, classes) {
   const indicator = createElement();
   const button = createElement({ classes });
@@ -61,13 +127,27 @@ function createElement(options = {}) {
   const attributes = new Map();
   const element = {
     id: options.id || '',
+    tagName: options.tagName || '',
     attributes,
+    children: [],
     classList: createClassList(options.classes || []),
+    className: '',
+    dataset: {},
     disabled: false,
     innerHTML: '',
+    name: '',
     offsetHeight: 0,
     style: {},
     textContent: '',
+    type: '',
+    value: '',
+    append(...children) {
+      this.children.push(...children);
+    },
+    appendChild(child) {
+      this.children.push(child);
+      return child;
+    },
     closest() {
       return null;
     },
@@ -79,6 +159,9 @@ function createElement(options = {}) {
     },
     removeAttribute(name) {
       attributes.delete(name);
+    },
+    replaceChildren(...children) {
+      this.children.splice(0, this.children.length, ...children);
     },
     setAttribute(name, value) {
       attributes.set(name, value);
