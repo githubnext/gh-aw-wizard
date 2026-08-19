@@ -81,11 +81,48 @@ function bindNavigation() {
   syncProgressStepAvailability();
 }
 
+function prefersReducedMotion() {
+  return typeof window.matchMedia === 'function'
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
 function toggleCurrentStep() {
   const step = document.getElementById(`step-${  currentStep}`);
-  const isOpen = step.classList.toggle('active');
   const tab = document.querySelector(`.progress-step[data-step="${  currentStep  }"]`);
-  tab.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  const isOpen = !step.classList.contains('active');
+
+  if (isOpen) {
+    // Opening: (re)play the open animation from a clean state.
+    step.classList.remove('slide-out-left');
+    step.style.animation = 'none';
+    step.offsetHeight; // reflow
+    step.style.animation = '';
+    step.classList.add('active');
+    tab.setAttribute('aria-expanded', 'true');
+    return;
+  }
+
+  // Closing: play a closing animation before hiding the pane, unless the
+  // browser/user has requested reduced motion.
+  tab.setAttribute('aria-expanded', 'false');
+  if (prefersReducedMotion()) {
+    step.classList.remove('active');
+    return;
+  }
+  step.classList.add('slide-out-left');
+  let closed = false;
+  const closePane = () => {
+    if (closed) return;
+    closed = true;
+    step.classList.remove('active', 'slide-out-left');
+    step.removeEventListener('animationend', onAnimationEnd);
+    clearTimeout(fallbackTimer);
+  };
+  const onAnimationEnd = () => closePane();
+  step.addEventListener('animationend', onAnimationEnd);
+  // Fallback in case the animation never fires (e.g. missing keyframe, or
+  // element removed from the DOM), so the pane doesn't get stuck open.
+  const fallbackTimer = setTimeout(closePane, 300);
 }
 
 function advanceOneStepLikeNext() {
