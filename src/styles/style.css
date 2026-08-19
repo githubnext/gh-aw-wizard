@@ -353,24 +353,34 @@ a:hover {
   animation: accordionCloseDown 0.2s ease forwards;
 }
 @keyframes accordionOpen {
-  from { opacity: 0; transform: translateY(-8px); }
-  to   { opacity: 1; transform: translateY(0); }
+  0% { opacity: 0; transform: translateY(-8px) scale(1); }
+  60% { opacity: 0.9; transform: translateY(-2px) scale(0.985); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 @keyframes accordionOpenReverse {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
+  0% { opacity: 0; transform: translateY(8px) scale(1); }
+  60% { opacity: 0.9; transform: translateY(2px) scale(0.985); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 @keyframes accordionCloseUp {
-  from { opacity: 1; transform: translateY(0); }
-  to   { opacity: 0; transform: translateY(-8px); }
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to   { opacity: 0; transform: translateY(-8px) scale(0.985); }
 }
 @keyframes accordionCloseDown {
-  from { opacity: 1; transform: translateY(0); }
-  to   { opacity: 0; transform: translateY(8px); }
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to   { opacity: 0; transform: translateY(8px) scale(0.985); }
 }
 @keyframes slideIn {
   from { opacity: 0; transform: translateY(-6px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Form elements */
