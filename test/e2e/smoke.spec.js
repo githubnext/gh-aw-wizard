@@ -9,5 +9,8 @@ test('website loads and opens the wizard', async ({ page }) => {
   await page.getByRole('button', { name: 'Create An Agentic Workflow' }).click();
 
   await expect(page.locator('#step-1')).toHaveClass(/active/);
-  await expect(page.locator('#preview-code')).not.toBeEmpty();
+  await expect
+    .poll(async () => page.locator('#archetype-options input[type="radio"]').count())
+    .toBeGreaterThan(0);
+  await expect(page.locator('#archetype-options input[type="radio"]').first()).toBeVisible();
 });
