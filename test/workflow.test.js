@@ -57,6 +57,11 @@ const patterns = {
       description: 'Proactively triage, fix, and maintain a repository'
     },
     {
+      id: 'linter-workflows',
+      label: 'Linter Workflows',
+      description: 'Create workflows to mine, refine, and apply lint rules'
+    },
+    {
       id: 'linter-miner',
       label: 'Linter Miner',
       description: 'Discover recurring defects and create custom lint rules'
@@ -120,6 +125,7 @@ describe('inferNeedsPreSteps', () => {
     expect(inferNeedsPreSteps('status-report')).toBe(true);
     expect(inferNeedsPreSteps('dependency-monitor')).toBe(true);
     expect(inferNeedsPreSteps('repo-maintainer')).toBe(true);
+    expect(inferNeedsPreSteps('linter-workflows')).toBe(true);
     expect(inferNeedsPreSteps('linter-miner')).toBe(true);
   });
 
@@ -169,6 +175,12 @@ describe('inferCapabilities', () => {
       browser: false
     });
     expect(inferCapabilities('linter-miner')).toEqual({
+      preSteps: true,
+      bash: true,
+      githubToolsets: true,
+      browser: false
+    });
+    expect(inferCapabilities('linter-workflows')).toEqual({
       preSteps: true,
       bash: true,
       githubToolsets: true,
@@ -331,6 +343,13 @@ describe('generateWorkflowFile', () => {
     expect(md).toContain('timeout-minutes: 30\n');
   });
 
+  it('rejects direct file generation for a multi-workflow archetype', () => {
+    expect(() => generateWorkflowFile(
+      answers({ archetype: 'linter-workflows' }),
+      patterns
+    )).toThrow('Linter Workflows generates multiple files; use the prompt format.');
+  });
+
   it('falls back to copilot engine for malformed ids', () => {
     const md = generateWorkflowFile(answers({ engine: 'Invalid engine' }), patterns);
     expect(md).toContain('engine: copilot\n');
@@ -427,6 +446,24 @@ describe('generateAgentPrompt', () => {
     expect(prompt).toContain('- Engine: claude\n');
   });
 
+  it('generates all grouped linter workflows in one prompt', () => {
+    const prompt = generateAgentPrompt(answers({ archetype: 'linter-workflows' }), patterns);
+
+    expect(prompt).toContain('Create 3 workflows for GitHub Agentic Workflows');
+    expect(prompt).toContain('- Generate exactly 3 independent workflow files:');
+    expect(prompt).toContain('Linter Miner: name it linter-miner');
+    expect(prompt).toContain('Linter Refiner: name it linter-refiner');
+    expect(prompt).toContain('Linter Applier: name it linter-applier');
+    expect(prompt).toContain('All workflows should be saved as separate Markdown files');
+    expect(prompt).toContain('## Suggested workflow files');
+    expect(prompt).toContain('### Linter Miner');
+    expect(prompt).toContain('### Linter Refiner');
+    expect(prompt).toContain('### Linter Applier');
+    expect(prompt.match(/name: linter-/g)).toHaveLength(3);
+    expect(prompt.match(/linter-workflows\.md/g)).toHaveLength(1);
+    expect(prompt).not.toContain('name: linter-workflows');
+  });
+
   it.each([
     ['issue-triage', 'maintainer.md'],
     ['code-improvement', 'maintainer.md'],
@@ -480,6 +517,16 @@ describe('generateAgentPrompt', () => {
     expect(prompt).toContain('Let the agent generate the detailed issue triage prompt for this repository...\n');
     expect(prompt).not.toContain('## Instructions\n');
     expect(prompt).not.toContain('Your job is to read every newly opened issue');
+  });
+
+  it('preserves explicit data-fetch settings in single-workflow suggestions', () => {
+    const prompt = generateAgentPrompt(
+      answers({ archetype: 'status-report', needsData: false }),
+      patterns
+    );
+    const sample = prompt.split('```markdown\n')[1].split('\n```')[0];
+
+    expect(sample).not.toContain('## Pre-steps');
   });
 
   it.each([

@@ -19,12 +19,14 @@ describe('archetype grid keyboard accessibility', () => {
     'performance-nut',
     'user-simulator',
     'repo-maintainer',
-    'linter-miner',
-    'linter-refiner',
-    'linter-applier',
+    'linter-workflows',
     'skill-pr-reviewer'
   ])('exposes the %s archetype as a radio option', (archetype) => {
     expect(html).toContain(`name="archetype" value="${archetype}"`);
+  });
+
+  it('groups the linter workflows into one option', () => {
+    expect(html).not.toMatch(/name="archetype" value="linter-(miner|refiner|applier)"/);
   });
 
   it('keeps the archetype radios in the tab order instead of display: none', () => {

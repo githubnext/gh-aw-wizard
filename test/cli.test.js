@@ -50,6 +50,18 @@ describe('prompt generator CLI', () => {
     expect(result.stdout).toContain('# Custom Workflow');
   });
 
+  it('reports that grouped archetypes require prompt output', () => {
+    const result = runCli(
+      '--input',
+      inputFile({ ...answers, archetype: 'linter-workflows' }),
+      '--format',
+      'workflow'
+    );
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain('Linter Workflows generates multiple files; use the prompt format.');
+  });
+
   it('reports invalid command-line arguments', () => {
     const result = runCli('--input', inputFile(answers), '--format', 'invalid');
 

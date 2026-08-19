@@ -35,7 +35,7 @@ export function workflowName(archetype, customDesc) {
 
 export function inferNeedsPreSteps(archetype) {
   // These archetypes deal with lots of data — auto-add pre-steps
-  return ['status-report', 'dependency-monitor', 'repo-maintainer', 'linter-miner'].indexOf(archetype) !== -1;
+  return ['status-report', 'dependency-monitor', 'repo-maintainer', 'linter-workflows', 'linter-miner'].indexOf(archetype) !== -1;
 }
 
 export function inferCapabilities(archetype) {
@@ -61,6 +61,7 @@ export function inferCapabilities(archetype) {
     case 'skill-pr-reviewer':
       caps.githubToolsets = true; break;
     case 'repo-maintainer':
+    case 'linter-workflows':
     case 'linter-miner':
       caps.preSteps = true; caps.bash = true; caps.githubToolsets = true; break;
   }
@@ -131,6 +132,9 @@ export function buildTriggerYaml(triggers, commandName, archetype) {
 }
 
 export function generateWorkflowFile(answers, patterns) {
+  if (answers.archetype === 'linter-workflows') {
+    throw new Error('Linter Workflows generates multiple files; use the prompt format.');
+  }
   var arch = getArchetype(patterns, answers.archetype);
   var name = workflowName(answers.archetype, answers.customDescription);
   var label = arch ? arch.label : 'Custom Workflow';
@@ -314,6 +318,7 @@ var SCENARIO_INSTRUCTIONS = {
   'pr-review': ['pr-reviewer.md'],
   'daily-test-improver': ['test-coverage.md'],
   'repo-maintainer': ['maintainer.md'],
+  'linter-workflows': ['linter-workflows.md'],
   'linter-miner': ['linter-workflows.md'],
   'linter-refiner': ['linter-workflows.md'],
   'linter-applier': ['linter-workflows.md'],
@@ -336,6 +341,35 @@ function sampleWorkflowFile(answers, patterns, label) {
   return frontmatter + 'Let the agent generate the detailed ' + label.toLowerCase() + ' prompt for this repository...\n';
 }
 
+var MULTI_WORKFLOW_ARCHETYPES = {
+  'linter-workflows': ['linter-miner', 'linter-refiner', 'linter-applier']
+};
+
+function requestedWorkflows(answers, patterns) {
+  var archetypes = MULTI_WORKFLOW_ARCHETYPES[answers.archetype];
+  if (!archetypes) {
+    var arch = getArchetype(patterns, answers.archetype);
+    return [{
+      answers: answers,
+      archetype: arch,
+      label: arch ? arch.label : 'Custom Workflow',
+      description: arch ? arch.description : answers.customDescription || 'Custom agentic workflow'
+    }];
+  }
+  return archetypes.map(function (archetype) {
+    var arch = getArchetype(patterns, archetype);
+    return {
+      answers: Object.assign({}, answers, {
+        archetype: archetype,
+        needsData: inferNeedsPreSteps(archetype)
+      }),
+      archetype: arch,
+      label: arch ? arch.label : 'Custom Workflow',
+      description: arch ? arch.description : answers.customDescription || 'Custom agentic workflow'
+    };
+  });
+}
+
 export function generateAgentPrompt(answers, patterns) {
   var arch = getArchetype(patterns, answers.archetype);
   var name = workflowName(answers.archetype, answers.customDescription);
@@ -343,6 +377,8 @@ export function generateAgentPrompt(answers, patterns) {
   var desc = arch ? arch.description : answers.customDescription || 'Custom agentic workflow';
   var engine = normalizeEngine(answers.engine);
   var inferred = inferCapabilities(answers.archetype);
+  var workflows = requestedWorkflows(answers, patterns);
+  var multiple = workflows.length > 1;
 
   var triggersReadable = answers.triggers.map(function (t) {
     var map = {
@@ -378,23 +414,39 @@ export function generateAgentPrompt(answers, patterns) {
     return map[o] || o;
   }).join(', ');
 
-  var prompt = 'Create a workflow for GitHub Agentic Workflows using these instructions:\n';
-  instructionUrls(answers.archetype).forEach(function (url) {
+  var prompt = 'Create ' + (multiple ? workflows.length + ' workflows' : 'a workflow') +
+    ' for GitHub Agentic Workflows using these instructions:\n';
+  var instructionSet = new Set();
+  workflows.forEach(function (workflow) {
+    instructionUrls(workflow.answers.archetype).forEach(function (url) { instructionSet.add(url); });
+  });
+  instructionSet.forEach(function (url) {
     prompt += '- ' + url + '\n';
   });
   prompt += '\n';
-  prompt += 'The purpose of the workflow is: ' + desc + '\n\n';
-  prompt += 'First, analyze this repository so the workflow is optimized for it:\n';
+  prompt += 'The purpose of ' + (multiple ? 'the workflows' : 'the workflow') + ' is: ' + desc + '\n\n';
+  prompt += 'First, analyze this repository so the ' + (multiple ? 'workflows are' : 'workflow is') + ' optimized for it:\n';
   prompt += '- Read the README, AGENTS.md (and any CONTRIBUTING or docs files) to understand the project purpose and conventions\n';
   prompt += '- Identify the languages, package managers, build/test/lint commands and CI setup actually used\n';
   prompt += '- Note repository conventions such as labels, issue/PR templates and branch naming\n';
   prompt += '- Use those findings to tailor the workflow prompt, tools, and instructions to this repository\n\n';
   prompt += 'Requirements:\n';
-  prompt += '- Name: ' + name + '\n';
+  if (multiple) {
+    prompt += '- Generate exactly ' + workflows.length + ' independent workflow files:\n';
+    workflows.forEach(function (workflow) {
+      prompt += '  - ' + workflow.label + ': name it ' +
+        workflowName(workflow.answers.archetype, workflow.answers.customDescription) +
+        ' and use it to ' + workflow.description.charAt(0).toLowerCase() + workflow.description.slice(1) + '\n';
+    });
+  } else {
+    prompt += '- Name: ' + name + '\n';
+  }
   prompt += '- Engine: ' + engine + '\n';
   prompt += '- Triggers: ' + triggersReadable + '\n';
   prompt += '- Allowed outputs: ' + outputsReadable + '\n';
-  prompt += '- Choose an appropriate kebab-case filename for the new .github/workflows/*.md file\n';
+  prompt += multiple
+    ? '- Save each workflow in its own appropriately named .github/workflows/*.md file\n'
+    : '- Choose an appropriate kebab-case filename for the new .github/workflows/*.md file\n';
 
   // Auto-inferred capabilities communicated to the agent
   if (answers.needsData) {
@@ -411,15 +463,27 @@ export function generateAgentPrompt(answers, patterns) {
     prompt += '- Enable Playwright CLI for browser automation\n';
   }
 
-  prompt += '\nThe workflow should be saved as a new Markdown file in .github/workflows/.';
+  prompt += multiple
+    ? '\nAll workflows should be saved as separate Markdown files in .github/workflows/.'
+    : '\nThe workflow should be saved as a new Markdown file in .github/workflows/.';
   prompt += '\nCreate a pull request with the generated agentic workflow files.';
 
-  // Inline the generated workflow markdown as a starting-point suggestion.
-  var suggestion = sampleWorkflowFile(answers, patterns, label);
-  prompt += '\n\n## Suggested workflow file\n\n' +
-    'Use this generated draft as a starting point for the new `.github/workflows/*.md` file, ' +
-    'adapting it to the repository as needed:\n\n' +
-    fencedBlock(suggestion, 'markdown') + '\n';
+  // Inline generated workflow markdown as starting-point suggestions.
+  prompt += '\n\n## Suggested workflow ' + (multiple ? 'files' : 'file') + '\n\n';
+  if (!multiple) {
+    prompt += 'Use this generated draft as a starting point for the new `.github/workflows/*.md` file, ' +
+      'adapting it to the repository as needed:\n\n';
+  }
+  workflows.forEach(function (workflow) {
+    if (multiple) {
+      prompt += '### ' + workflow.label + '\n\n';
+    }
+    prompt += fencedBlock(
+      sampleWorkflowFile(workflow.answers, patterns, workflow.label),
+      'markdown'
+    ) + '\n';
+    if (multiple) prompt += '\n';
+  });
 
   return prompt;
 }
