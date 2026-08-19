@@ -43,6 +43,7 @@ CURATED_ARCHETYPES = {
             "Measure a representative baseline before optimizing",
             "Make one focused change and compare before-and-after results",
             "Do not trade correctness or maintainability for speculative speedups",
+            "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers",
         ],
     },
     "user-simulator": {
@@ -71,6 +72,7 @@ CURATED_ARCHETYPES = {
             "Establish a passing baseline before changing tests",
             "Prefer regression-prone and critical paths over coverage inflation",
             "Create one focused draft pull request per run",
+            "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers",
         ],
     },
     "repo-maintainer": {
