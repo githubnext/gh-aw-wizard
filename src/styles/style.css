@@ -738,14 +738,6 @@ a:hover {
   font-size: 1.25rem;
   font-weight: 700;
 }
-.finish-eyebrow {
-  margin-bottom: 0.2rem;
-  color: var(--accent-green);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
 .finish-cta h2 {
   color: var(--text-primary);
   font-size: 1.2rem;
