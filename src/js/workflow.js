@@ -82,6 +82,14 @@ export function generateWorkflowFile(answers, patterns) {
   var safeSet = new Set();
   answers.outputs.forEach(function (o) {
     switch (o) {
+      case 'add-comment':
+      case 'create-issue':
+      case 'create-pull-request':
+      case 'create-pull-request-review-comment':
+        safeSet.add(o); break;
+      case 'add-label':
+      case 'add-labels':
+        safeSet.add('add-labels'); break;
       case 'comments':
         safeSet.add('add-comment'); break;
       case 'labels':
@@ -248,11 +256,17 @@ export function generateAgentPrompt(answers, patterns) {
 
   var outputsReadable = answers.outputs.map(function (o) {
     var map = {
-      'comments': 'post comments on issues/PRs',
-      'labels': 'add/remove labels',
+      'add-comment': 'add comments on issues/PRs',
+      'add-label': 'add labels',
+      'add-labels': 'add labels',
+      'create-issue': 'create new issues',
+      'create-pull-request': 'open pull requests',
+      'create-pull-request-review-comment': 'add review comments on pull request diffs',
+      'comments': 'add comments on issues/PRs',
+      'labels': 'add labels',
       'new-issues': 'create new issues',
       'pull-requests': 'open pull requests',
-      'commits': 'commit file changes'
+      'commits': 'open pull requests'
     };
     return map[o] || o;
   }).join(', ');

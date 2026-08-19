@@ -218,31 +218,38 @@
           <section class="wizard-step" id="step-3">
             <div class="option-group" id="output-options">
               <label class="option-card">
-                <input type="checkbox" name="output" value="comments">
+                <input type="checkbox" name="output" value="create-issue">
                 <div class="option-info">
-                  <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-comment-discussion"></use></svg>Comments on issues/PRs</div>
-                  <div class="option-desc">Post comments with analysis, feedback, or results</div>
-                </div>
-              </label>
-              <label class="option-card">
-                <input type="checkbox" name="output" value="labels">
-                <div class="option-info">
-                  <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-tag"></use></svg>Labels</div>
-                  <div class="option-desc">Add or remove labels on issues</div>
-                </div>
-              </label>
-              <label class="option-card">
-                <input type="checkbox" name="output" value="new-issues">
-                <div class="option-info">
-                  <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-issue-opened"></use></svg>New issues</div>
+                  <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-issue-opened"></use></svg>Create issue</div>
                   <div class="option-desc">Create new issues for tracking or reporting</div>
                 </div>
               </label>
               <label class="option-card">
-                <input type="checkbox" name="output" value="pull-requests">
+                <input type="checkbox" name="output" value="add-comment">
                 <div class="option-info">
-                  <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-git-pull-request"></use></svg>Pull requests</div>
+                  <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-comment-discussion"></use></svg>Add comment</div>
+                  <div class="option-desc">Post comments with analysis, feedback, or results</div>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="checkbox" name="output" value="add-labels">
+                <div class="option-info">
+                  <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-tag"></use></svg>Add label</div>
+                  <div class="option-desc">Add labels on issues</div>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="checkbox" name="output" value="create-pull-request">
+                <div class="option-info">
+                  <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-git-pull-request"></use></svg>Create pull request</div>
                   <div class="option-desc">Open pull requests with code changes</div>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="checkbox" name="output" value="create-pull-request-review-comment">
+                <div class="option-info">
+                  <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-comment-discussion"></use></svg>Add review comment</div>
+                  <div class="option-desc">Leave review comments on pull request diffs</div>
                 </div>
               </label>
             </div>

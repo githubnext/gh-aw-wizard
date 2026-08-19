@@ -13,11 +13,16 @@ var triggerLabels = {
 };
 
 var outputLabels = {
-  comments: 'post comments',
-  labels: 'manage labels',
-  'new-issues': 'create issues',
-  'pull-requests': 'open pull requests',
-  commits: 'commit changes'
+  'add-comment': 'add comment',
+  'add-labels': 'add label',
+  'create-issue': 'create issue',
+  'create-pull-request': 'create pull request',
+  'create-pull-request-review-comment': 'add review comment',
+  comments: 'add comment',
+  labels: 'add label',
+  'new-issues': 'create issue',
+  'pull-requests': 'create pull request',
+  commits: 'create pull request'
 };
 
 var engineLabels = {

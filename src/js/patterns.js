@@ -20,15 +20,16 @@ export function getArchetype(patterns, id) {
 }
 
 var SAFE_OUTPUT_MAP = {
-  'add-comment': ['comments'],
-  'add-label': ['labels'],
-  'add-labels': ['labels'],
-  'create-issue': ['new-issues'],
-  'create-pull-request': ['pull-requests'],
-  'commit-files': ['pull-requests'],
-  'issues': ['comments', 'labels', 'new-issues'],
-  'pull-requests': ['pull-requests', 'comments'],
-  'contents': ['pull-requests']
+  'add-comment': ['add-comment'],
+  'add-label': ['add-labels'],
+  'add-labels': ['add-labels'],
+  'create-issue': ['create-issue'],
+  'create-pull-request': ['create-pull-request'],
+  'create-pull-request-review-comment': ['create-pull-request-review-comment'],
+  'commit-files': ['create-pull-request'],
+  'issues': ['add-comment', 'add-labels', 'create-issue'],
+  'pull-requests': ['create-pull-request', 'add-comment', 'create-pull-request-review-comment'],
+  'contents': ['create-pull-request']
 };
 var RECOMMENDABLE_TRIGGERS = [
   'issues',
