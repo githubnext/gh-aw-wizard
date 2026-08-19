@@ -58,17 +58,6 @@ function refreshGeneratedContent() {
 
 // ── Navigation ─────────────────────────────────────────────────────────────
 function bindNavigation() {
-  document.getElementById('next-1').addEventListener('click', function () { goToStep(2); });
-  document.getElementById('next-2').addEventListener('click', function () { goToStep(3); });
-  document.getElementById('next-3').addEventListener('click', function () { goToStep(4); });
-  document.getElementById('next-4').addEventListener('click', function () { goToStep(5); });
-  document.getElementById('next-5').addEventListener('click', function () { generateAndShow(); });
-  document.getElementById('prev-2').addEventListener('click', function () { goToStep(1); });
-  document.getElementById('prev-3').addEventListener('click', function () { goToStep(2); });
-  document.getElementById('prev-4').addEventListener('click', function () { goToStep(3); });
-  document.getElementById('prev-5').addEventListener('click', function () { goToStep(4); });
-  document.getElementById('prev-6').addEventListener('click', function () { goToStep(5); });
-
   document.getElementById('btn-copy').addEventListener('click', copyToClipboard);
 
   // Clickable progress steps
@@ -92,8 +81,7 @@ function bindNavigation() {
 
 function advanceOneStepLikeNext() {
   if (currentStep >= 1 && currentStep <= 4) {
-    var nextButton = document.getElementById('next-' + currentStep);
-    if (!nextButton || nextButton.disabled) return false;
+    if (currentStep + 1 > maxReachableStep()) return false;
     goToStep(currentStep + 1);
     return true;
   }
@@ -206,7 +194,6 @@ function bindFormEvents() {
     });
     radio.addEventListener('change', function () {
       updateCardSelection('#archetype-options', 'radio');
-      document.getElementById('next-1').disabled = false;
       var customField = document.getElementById('custom-description-field');
       customField.classList.toggle('visible', radio.value === 'custom');
       // Selecting a new "what" scenario invalidates any downstream choices made for the previous one.
@@ -221,7 +208,6 @@ function bindFormEvents() {
   document.querySelectorAll('input[name="trigger"]').forEach(function (cb) {
     cb.addEventListener('change', function () {
       updateCardSelection('#trigger-options', 'checkbox');
-      document.getElementById('next-2').disabled = !hasChecked('trigger');
     });
   });
 
@@ -229,7 +215,6 @@ function bindFormEvents() {
   document.querySelectorAll('input[name="output"]').forEach(function (cb) {
     cb.addEventListener('change', function () {
       updateCardSelection('#output-options', 'checkbox');
-      document.getElementById('next-3').disabled = !hasChecked('output');
     });
   });
 
@@ -279,17 +264,14 @@ function clearDownstreamSelections(archetypeId) {
 function clearArchetypeSelection() {
   document.querySelectorAll('input[name="archetype"]').forEach(function (radio) { radio.checked = false; });
   updateCardSelection('#archetype-options', 'radio');
-  document.getElementById('next-1').disabled = true;
   document.getElementById('custom-description-field').classList.remove('visible');
   clearDownstreamSelections(null);
 
   document.querySelectorAll('input[name="trigger"]').forEach(function (cb) { cb.checked = false; });
   updateCardSelection('#trigger-options', 'checkbox');
-  document.getElementById('next-2').disabled = true;
 
   document.querySelectorAll('input[name="output"]').forEach(function (cb) { cb.checked = false; });
   updateCardSelection('#output-options', 'checkbox');
-  document.getElementById('next-3').disabled = true;
 
   document.querySelectorAll('input[name="extra"]').forEach(function (cb) { cb.checked = false; });
   updateCardSelection('#data-options', 'checkbox');
@@ -322,7 +304,6 @@ function prefillFromArchetype(id) {
     if (cb) cb.checked = true;
   });
   updateCardSelection('#trigger-options', 'checkbox');
-  document.getElementById('next-2').disabled = !hasChecked('trigger');
 
   // Pre-check recommended outputs
   document.querySelectorAll('input[name="output"]').forEach(function (cb) { cb.checked = false; });
@@ -331,7 +312,6 @@ function prefillFromArchetype(id) {
     if (cb) cb.checked = true;
   });
   updateCardSelection('#output-options', 'checkbox');
-  document.getElementById('next-3').disabled = !hasChecked('output');
 
   // Reset extras
   document.querySelectorAll('input[name="extra"]').forEach(function (cb) { cb.checked = false; });
@@ -409,7 +389,6 @@ function restoreSelectionState() {
     if (archRadio) archRadio.checked = true;
   }
   updateCardSelection('#archetype-options', 'radio');
-  document.getElementById('next-1').disabled = !state.archetype;
   document.getElementById('custom-description-field').classList.toggle('visible', state.archetype === 'custom');
   if (state.customDescription != null) document.getElementById('custom-description').value = state.customDescription;
 
@@ -418,14 +397,12 @@ function restoreSelectionState() {
     if (cb) cb.checked = true;
   });
   updateCardSelection('#trigger-options', 'checkbox');
-  document.getElementById('next-2').disabled = !hasChecked('trigger');
 
   (state.outputs || []).forEach(function (output) {
     var cb = document.querySelector('input[name="output"][value="' + output + '"]');
     if (cb) cb.checked = true;
   });
   updateCardSelection('#output-options', 'checkbox');
-  document.getElementById('next-3').disabled = !hasChecked('output');
 
   (state.extras || []).forEach(function (extra) {
     var cb = document.querySelector('input[name="extra"][value="' + extra + '"]');
