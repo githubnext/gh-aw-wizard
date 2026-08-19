@@ -76,6 +76,7 @@ QUERIES=(
 
 > /tmp/aw-scan/raw-results.jsonl
 SEARCH_ERRORS=0
+DISCOVERY_FALLBACK=false
 
 for i in "${!QUERIES[@]}"; do
   Q="${QUERIES[$i]}"
@@ -113,15 +114,23 @@ for i in "${!QUERIES[@]}"; do
 done
 
 if [ ! -s /tmp/aw-scan/raw-results.jsonl ] && [ "$SEARCH_ERRORS" -gt 0 ]; then
-  echo ""
-  echo "Error: every code search request failed, so no repos could be discovered."
-  echo "The GitHub code search API requires a user token (a PAT with public_repo scope);"
-  echo "the default GITHUB_TOKEN available to GitHub Actions cannot access it."
-  echo "Set GH_TOKEN to such a token (in Actions, store it as the GH_AW_GITHUB_TOKEN secret)."
-  exit 1
+  if [ "$RESUME" = "true" ] && [ -s /tmp/aw-scan/discovered.json ]; then
+    echo ""
+    echo "Warning: every code search request failed; reusing cached /tmp/aw-scan/discovered.json (--resume)."
+    echo "Set GH_TOKEN to a user token (for Actions, use GH_AW_GITHUB_TOKEN) to refresh discovery data."
+    DISCOVERY_FALLBACK=true
+  else
+    echo ""
+    echo "Error: every code search request failed, so no repos could be discovered."
+    echo "The GitHub code search API requires a user token (a PAT with public_repo scope);"
+    echo "the default GITHUB_TOKEN available to GitHub Actions cannot access it."
+    echo "Set GH_TOKEN to such a token (in Actions, store it as the GH_AW_GITHUB_TOKEN secret)."
+    exit 1
+  fi
 fi
 
 # Parse into unique repos + workflow files
+if [ "$DISCOVERY_FALLBACK" = "false" ]; then
 python3 << 'PYEOF'
 import json, subprocess, sys
 
@@ -241,6 +250,7 @@ if skipped:
     for k in sorted(skipped):
         print(f"    ⚠️  Skipped: {k} (visibility: {skipped[k].get('visibility', 'unknown')})")
 PYEOF
+fi
 fi
 
 echo ""
