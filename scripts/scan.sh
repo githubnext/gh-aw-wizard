@@ -370,7 +370,8 @@ def fetch_source(repo, path, ref):
         capture_output=True, text=True, timeout=15
     )
     if result.returncode == 0 and result.stdout.strip():
-        return base64.b64decode(result.stdout.strip()).decode("utf-8", errors="replace")
+        encoded = "".join(result.stdout.split())
+        return base64.b64decode(encoded).decode("utf-8", errors="replace")
 
     raw_url = f"https://raw.githubusercontent.com/{repo}/{ref}/{path}"
     try:
@@ -482,7 +483,7 @@ for i, (name, info) in enumerate(sorted(repos.items())):
                 prompt_match = re.search(r'(?:^prompt:\s*\|?\s*\n)((?:.*\n)*)', content, re.MULTILINE)
                 if prompt_match:
                     wf["prompt_size_bytes"] = len(prompt_match.group(0).encode())
-                else:
+                elif info.get("source_kind", "workflow") == "workflow":
                     wf["prompt_size_bytes"] = len(content.encode())
                 
                 # Pre-steps (bash steps before the agent)
