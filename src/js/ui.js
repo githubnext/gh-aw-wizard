@@ -81,10 +81,10 @@ function bindNavigation() {
         goToStep(target);
         return;
       }
-      while (target > currentStep) {
-        var previous = currentStep;
+      for (var i = 0; i < TOTAL_STEPS && target > currentStep; i++) {
+        var previousStep = currentStep;
         if (!advanceOneStepLikeNext()) break;
-        if (currentStep === previous) break;
+        if (currentStep === previousStep) break;
       }
     });
   });
@@ -92,23 +92,10 @@ function bindNavigation() {
 }
 
 function advanceOneStepLikeNext() {
-  if (currentStep === 1) {
-    if (document.getElementById('next-1').disabled) return false;
-    goToStep(2);
-    return true;
-  }
-  if (currentStep === 2) {
-    if (document.getElementById('next-2').disabled) return false;
-    goToStep(3);
-    return true;
-  }
-  if (currentStep === 3) {
-    if (document.getElementById('next-3').disabled) return false;
-    goToStep(4);
-    return true;
-  }
-  if (currentStep === 4) {
-    goToStep(5);
+  if (currentStep >= 1 && currentStep <= 4) {
+    var nextButton = document.getElementById('next-' + currentStep);
+    if (!nextButton || nextButton.disabled) return false;
+    goToStep(currentStep + 1);
     return true;
   }
   if (currentStep === 5) {
@@ -190,7 +177,8 @@ function maxReachableStep() {
   if (!document.querySelector('input[name="archetype"]:checked')) return 1;
   if (!hasChecked('trigger')) return 2;
   if (!hasChecked('output')) return 3;
-  return 6;
+  if (currentStep === 6 || generatedPrompt) return 6;
+  return 5;
 }
 
 function syncProgressStepAvailability() {
