@@ -61,7 +61,7 @@ export function renderArchetypeOptions(patternData) {
     svg.setAttribute('class', 'octicon');
     svg.setAttribute('aria-hidden', 'true');
     const use = document.createElementNS(SVG_NAMESPACE, 'use');
-    use.setAttribute('href', `#${  option.icon}`);
+    use.setAttribute('href', `#${option.icon}`);
     svg.appendChild(use);
     icon.appendChild(svg);
 
