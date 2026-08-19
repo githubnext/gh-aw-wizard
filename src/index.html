@@ -337,7 +337,7 @@
 
             <div class="step-nav">
               <button class="btn btn-secondary" id="prev-5">← Back</button>
-              <button class="btn btn-primary" id="next-5">Generate →</button>
+              <button class="btn btn-primary" id="next-5">Finish →</button>
             </div>
           </section>
         </div>
@@ -346,23 +346,27 @@
         <div class="recipe-item">
           <button class="recipe-clause progress-step" type="button" data-step="6" aria-expanded="false" aria-controls="step-6" disabled>
             <span class="step-indicator" aria-hidden="true">6</span>
-            <span class="recipe-key recipe-key-preview">Generate</span>
+            <span class="recipe-key recipe-key-preview">Finish</span>
             <span class="recipe-value">copy your prompt and run it</span>
           </button>
           <section class="wizard-step" id="step-6">
 
             <div class="preview-container prompt-panel">
-              <div class="preview-header">
-                <h3 id="preview-filename">Agent prompt</h3>
-                <div class="preview-actions">
-                  <button class="btn btn-primary btn-copy-prompt" id="btn-copy">📋 Copy prompt</button>
+              <div class="finish-cta">
+                <div class="finish-cta-copy">
+                  <p class="finish-eyebrow">Your prompts are ready</p>
+                  <h3>Copy the prompts</h3>
+                  <p>Paste them into your agent to create and submit the workflow files.</p>
                 </div>
+                <button class="btn btn-primary btn-copy-prompt" id="btn-copy">Copy prompts</button>
               </div>
-              <div class="preview-code" id="preview-code"></div>
-            </div>
 
-            <!-- Next steps -->
-            <div class="next-steps-panel" id="next-steps-panel"></div>
+              <div class="prompt-preview" aria-label="Generated prompt preview">
+                <div class="preview-code" id="preview-code"></div>
+              </div>
+
+              <div class="next-steps-panel" id="next-steps-panel"></div>
+            </div>
 
             <div class="step-nav">
               <button class="btn btn-secondary" id="prev-6">← Back to edit</button>

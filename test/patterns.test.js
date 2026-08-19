@@ -120,7 +120,8 @@ describe('nextStepsHtml', () => {
 
   it('renders coding agent instructions for the prompt format', () => {
     const html = nextStepsHtml('prompt', 'issue-triage', 'codex');
-    expect(html).toContain('Open <strong>Codex</strong> in your repository and run this prompt');
+    expect(html).toContain('Run the prompt in your agent');
+    expect(html).toContain('Open <strong>Codex</strong> in your repository and run the copied prompt');
     expect(html).not.toContain('reference/engines/');
     expect(html).not.toContain('Download the <code>.md</code> file');
     expect(html).not.toContain('gh aw compile');
