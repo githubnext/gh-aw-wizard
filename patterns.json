@@ -70,6 +70,144 @@
       ]
     },
     {
+      "id": "daily-test-improver",
+      "label": "Daily Test Improver",
+      "description": "Add high-value tests and improve test quality",
+      "success_rate": null,
+      "count": 0,
+      "recommended_triggers": [
+        { "type": "schedule", "config": {} },
+        { "type": "workflow_dispatch", "config": {} }
+      ],
+      "recommended_safe_outputs": ["pull-requests"],
+      "recommended_tools": ["create-pull-request"],
+      "timeout_minutes": 30,
+      "prompt_style": "phase-based",
+      "size_range_bytes": [5000, 12000],
+      "top_repos": [],
+      "tips": [
+        "Establish a passing baseline before changing tests",
+        "Prefer regression-prone and critical paths over coverage inflation",
+        "Create one focused draft pull request per run"
+      ],
+      "anti_patterns": []
+    },
+    {
+      "id": "repo-maintainer",
+      "label": "Repo Maintainer",
+      "description": "Proactively triage, fix, and maintain a repository",
+      "success_rate": null,
+      "count": 0,
+      "recommended_triggers": [
+        { "type": "schedule", "config": {} },
+        { "type": "workflow_dispatch", "config": {} }
+      ],
+      "recommended_safe_outputs": ["issues", "pull-requests"],
+      "recommended_tools": ["add-comment", "add-labels", "create-issue", "create-pull-request"],
+      "timeout_minutes": 30,
+      "prompt_style": "role-steps",
+      "size_range_bytes": [5000, 12000],
+      "top_repos": [],
+      "tips": [
+        "Use persistent memory and check for existing work before acting",
+        "Limit each run to one high-value maintenance task",
+        "Leave merges, approvals, and destructive actions to maintainers"
+      ],
+      "anti_patterns": []
+    },
+    {
+      "id": "linter-miner",
+      "label": "Linter Miner",
+      "description": "Discover recurring defects and create custom lint rules",
+      "success_rate": null,
+      "count": 0,
+      "recommended_triggers": [
+        { "type": "schedule", "config": {} },
+        { "type": "workflow_dispatch", "config": {} }
+      ],
+      "recommended_safe_outputs": ["pull-requests"],
+      "recommended_tools": ["create-pull-request"],
+      "timeout_minutes": 30,
+      "prompt_style": "phase-based",
+      "size_range_bytes": [4000, 8000],
+      "top_repos": [],
+      "tips": [
+        "Require repository evidence for every proposed rule",
+        "Include positive and negative fixtures to control false positives",
+        "Propose at most one high-signal rule per run"
+      ],
+      "anti_patterns": []
+    },
+    {
+      "id": "linter-refiner",
+      "label": "Linter Refiner",
+      "description": "Improve lint rule accuracy, diagnostics, and performance",
+      "success_rate": null,
+      "count": 0,
+      "recommended_triggers": [
+        { "type": "workflow_dispatch", "config": {} },
+        { "type": "pull_request", "config": {} }
+      ],
+      "recommended_safe_outputs": ["pull-requests"],
+      "recommended_tools": ["create-pull-request"],
+      "timeout_minutes": 30,
+      "prompt_style": "phase-based",
+      "size_range_bytes": [3000, 7000],
+      "top_repos": [],
+      "tips": [
+        "Require concrete false-positive or missed-case evidence",
+        "Add a regression fixture for every behavior change",
+        "Refine only one rule per pull request"
+      ],
+      "anti_patterns": []
+    },
+    {
+      "id": "linter-applier",
+      "label": "Linter Applier",
+      "description": "Fix a focused group of existing lint findings",
+      "success_rate": null,
+      "count": 0,
+      "recommended_triggers": [
+        { "type": "schedule", "config": {} },
+        { "type": "workflow_dispatch", "config": {} }
+      ],
+      "recommended_safe_outputs": ["pull-requests"],
+      "recommended_tools": ["create-pull-request"],
+      "timeout_minutes": 30,
+      "prompt_style": "phase-based",
+      "size_range_bytes": [3000, 7000],
+      "top_repos": [],
+      "tips": [
+        "Group fixes by one rule and subsystem",
+        "Never disable rules or add blanket suppressions",
+        "Validate semantics with relevant tests after applying fixes"
+      ],
+      "anti_patterns": []
+    },
+    {
+      "id": "skill-pr-reviewer",
+      "label": "Skill PR Reviewer",
+      "description": "Review pull requests with installed expert skills",
+      "success_rate": null,
+      "count": 0,
+      "recommended_triggers": [
+        { "type": "pull_request", "config": {} },
+        { "type": "workflow_dispatch", "config": {} }
+      ],
+      "recommended_safe_outputs": ["pull-requests"],
+      "recommended_tools": ["create-pull-request-review-comment"],
+      "timeout_minutes": 30,
+      "prompt_style": "role-rules",
+      "size_range_bytes": [3000, 8000],
+      "top_repos": [],
+      "tips": [
+        "Select skills that match the pull request's change type",
+        "Name the skill that informed each actionable finding",
+        "Review changed lines only and avoid duplicate feedback"
+      ],
+      "anti_patterns": []
+    },
+    {
       "id": "issue-triage",
       "label": "Issue Triage",
       "description": "Classify and label new issues",

@@ -13,6 +13,17 @@ function ruleBody(selector) {
 }
 
 describe('archetype grid keyboard accessibility', () => {
+  it.each([
+    'daily-test-improver',
+    'repo-maintainer',
+    'linter-miner',
+    'linter-refiner',
+    'linter-applier',
+    'skill-pr-reviewer'
+  ])('exposes the %s archetype as a radio option', (archetype) => {
+    expect(html).toContain(`name="archetype" value="${archetype}"`);
+  });
+
   it('keeps the archetype radios in the tab order instead of display: none', () => {
     const body = ruleBody('.archetype-grid .option-card input[type="radio"]');
     expect(body).not.toMatch(/display:\s*none/);
