@@ -297,7 +297,6 @@ function clearArchetypeSelection() {
   updateCardSelection('#extras-options', 'checkbox');
   renderWorkflowSummary();
   syncProgressStepAvailability();
-  syncProgressStepAvailability();
 }
 
 // Deselect the engine choice. Used when the user clicks an already-selected
