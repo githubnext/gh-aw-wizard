@@ -160,7 +160,9 @@ a:hover {
   line-height: 1.15;
   letter-spacing: -0.04em;
   background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+  -webkit-background-clip: text;
   background-clip: text;
+  -webkit-text-fill-color: transparent;
   color: transparent;
 }
 .site-header .subtitle {
