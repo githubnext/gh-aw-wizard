@@ -50,13 +50,14 @@ steps:
   - name: Install dependencies
     run: npm ci
 
-  - name: Generate representative prompts
+  - name: Generate representative patterns and prompts
     run: |
       mkdir -p /tmp/gh-aw/data
       node --input-type=module <<'NODE'
       import { writeFile } from 'node:fs/promises';
       import patterns from './patterns.json' with { type: 'json' };
       import { generateAgentPrompt, generateWorkflowFile } from './src/js/workflow.js';
+      import { getArchetype } from './src/js/patterns.js';
 
       const cases = [
         {
@@ -133,11 +134,16 @@ steps:
       const generated = cases.map(({ id, answers }) => ({
         id,
         answers,
+        pattern: {
+          archetype: getArchetype(patterns, answers.archetype),
+          configuration_profiles: (patterns.configuration_profiles || [])
+            .filter((profile) => profile.archetype === answers.archetype)
+        },
         prompt: generateAgentPrompt(answers, patterns),
         workflow: generateWorkflowFile(answers, patterns)
       }));
 
-      await writeFile('/tmp/gh-aw/data/generated-prompts.json', JSON.stringify(generated, null, 2));
+      await writeFile('/tmp/gh-aw/data/generated-patterns-and-prompts.json', JSON.stringify(generated, null, 2));
       NODE
 ---
 
@@ -148,7 +154,7 @@ You are a **workflow quality evaluator** for the gh-aw wizard. Evaluate whether 
 ## Context
 
 - Repository: `${{ github.repository }}`
-- Generated prompt samples: `/tmp/gh-aw/data/generated-prompts.json`
+- Generated pattern and prompt samples: `/tmp/gh-aw/data/generated-patterns-and-prompts.json`
 - Pattern data: `patterns.json`
 - Generator logic: `src/js/workflow.js`, `src/js/bodies.js`, `src/js/patterns.js`
 - Tests: `npm test`
@@ -163,18 +169,21 @@ Before evaluating, search this repository for any open issue or pull request abo
 
 ## Evaluation process
 
-1. Read `/tmp/gh-aw/data/generated-prompts.json`, `patterns.json`, and the generator files listed above.
-2. For each sample, ask the `prompt-solution-simulator` subagent to simulate a downstream agent following the generated prompt and to evaluate the likely solution quality.
-3. Synthesize the subagent reports into a compact matrix with one row per sample:
+1. Read `/tmp/gh-aw/data/generated-patterns-and-prompts.json`, `patterns.json`, and the generator files listed above.
+2. For each sample, first generate the pattern you would expect the wizard to use for that archetype: recommended triggers, safe outputs, tools, constraints, and prompt-generation guidance. Compare that generated pattern with the current `pattern` object in the sample.
+3. Ask the `prompt-solution-simulator` subagent to simulate a downstream agent following the generated pattern and prompt, then evaluate the likely solution quality.
+4. Synthesize the subagent reports into a compact matrix with one row per sample:
    - sample id
+   - generated pattern summary
+   - current pattern gap, if any
    - expected downstream output
    - likely strengths
    - likely failure modes
    - evidence from the generated prompt or workflow
    - quality score from 1 to 5
    - recommended fix, if any
-4. Look for recurring, actionable generator or pattern issues. Prioritize issues that affect multiple archetypes or cause unsafe, invalid, vague, or hard-to-validate generated workflows.
-5. If no high-confidence improvement exists, call `noop` with a short summary and stop.
+5. Look for recurring, actionable generator or pattern issues. Prioritize pattern changes that improve multiple generated prompts or cause safer, more valid, more concrete workflow output.
+6. If no high-confidence improvement exists, call `noop` with a short summary and stop.
 
 ## Improvement rules
 
@@ -217,13 +226,16 @@ model: small
 
 You evaluate one generated gh-aw wizard prompt or workflow sample at a time.
 
-Given a sample id, wizard answers, generated prompt, and generated workflow draft:
+Given a sample id, wizard answers, current pattern data, generated prompt, and generated workflow draft:
 
-1. Simulate what a competent downstream agent would likely create or change if it followed the prompt.
-2. Judge whether the generated instructions are specific, safe, valid, scoped, and testable.
-3. Check for missing or mismatched triggers, permissions, tools, safe outputs, validation guidance, duplicate guards, no-op behavior, and anti-patterns.
-4. Return only a compact Markdown report with:
+1. Generate the ideal pattern guidance this sample should encode: triggers, safe outputs, tools, constraints, no-op behavior, and validation expectations.
+2. Simulate what a competent downstream agent would likely create or change if it followed that pattern and prompt.
+3. Judge whether the current pattern and generated instructions are specific, safe, valid, scoped, and testable.
+4. Check for missing or mismatched triggers, permissions, tools, safe outputs, validation guidance, duplicate guards, no-op behavior, and anti-patterns.
+5. Return only a compact Markdown report with:
    - `Sample`
+   - `Generated pattern`
+   - `Current pattern gap`
    - `Likely solution`
    - `Strengths`
    - `Failure modes`
