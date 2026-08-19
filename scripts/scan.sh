@@ -240,6 +240,8 @@ for source in load_import_sources():
             print(f"    Warning: no workflow samples found in {name}")
             continue
 
+        if repo_result.returncode != 0:
+            print(f"    Warning: import source metadata unavailable: {name}")
         repo = json.loads(repo_result.stdout) if repo_result.returncode == 0 else {}
         existing = public.get(name, {})
         public[name] = {
@@ -376,6 +378,8 @@ def fetch_source(repo, path, ref):
     if result.returncode == 0 and result.stdout.strip():
         encoded = "".join(result.stdout.split())
         return base64.b64decode(encoded).decode("utf-8", errors="replace")
+    if result.returncode == 0:
+        print(f"    Warning: empty API content for {repo}/{path}; trying raw URL", file=sys.stderr)
 
     raw_url = f"https://raw.githubusercontent.com/{repo}/{ref}/{path}"
     try:
