@@ -58,5 +58,6 @@ describe('definition-based engines', () => {
     expect(engineIconMarkup('x')).toContain('XX');
     expect(engineIconMarkup('my-engine')).toContain('ME');
     expect(engineIconMarkup('foo--bar')).toContain('FB');
+    expect(engineIconMarkup('')).toContain('EX');
   });
 });
