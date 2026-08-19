@@ -4,8 +4,9 @@ import { readFile } from 'node:fs/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { generateAgentPrompt, generateWorkflowFile } from './workflow.js';
+import { loadPatternsFromDir } from './patterns-node.js';
 
-const defaultPatternsPath = fileURLToPath(new URL('../../patterns.json', import.meta.url));
+const defaultPatternsPath = fileURLToPath(new URL('../../patterns', import.meta.url));
 
 function usage() {
   return [
@@ -16,7 +17,7 @@ function usage() {
     'Options:',
     '  -i, --input <path>       JSON file containing wizard answers (required)',
     '  -f, --format <format>    Output format: prompt (default) or workflow',
-    '  -p, --patterns <path>   Pattern library JSON file (default: patterns.json)',
+    '  -p, --patterns <path>   Pattern library directory (default: patterns/)',
     '  -h, --help              Show this help message'
   ].join('\n');
 }
@@ -59,7 +60,7 @@ export async function runCli(args, io) {
 
   const [answers, patterns] = await Promise.all([
     readJson(options.input),
-    readJson(options.patterns)
+    loadPatternsFromDir(options.patterns)
   ]);
   const generated = options.format === 'workflow'
     ? generateWorkflowFile(answers, patterns)

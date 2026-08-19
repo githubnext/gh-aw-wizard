@@ -1,0 +1,32 @@
+{
+  "id": "daily-test-improver",
+  "label": "Daily Test Improver",
+  "description": "Add high-value tests and improve test quality",
+  "success_rate": null,
+  "count": 0,
+  "recommended_triggers": [
+    {
+      "type": "schedule",
+      "config": {}
+    }
+  ],
+  "recommended_safe_outputs": [
+    "pull-requests"
+  ],
+  "recommended_tools": [
+    "create-pull-request"
+  ],
+  "timeout_minutes": 30,
+  "prompt_style": "phase-based",
+  "size_range_bytes": [
+    5000,
+    12000
+  ],
+  "top_repos": [],
+  "tips": [
+    "Establish a passing baseline before changing tests",
+    "Prefer regression-prone and critical paths over coverage inflation",
+    "Create one focused draft pull request per run"
+  ],
+  "anti_patterns": []
+}

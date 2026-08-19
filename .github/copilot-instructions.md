@@ -87,6 +87,6 @@ If any anti-pattern is detected in the user's request, warn them and suggest the
 
 ## Reference Files
 
-- `patterns.json` — Full archetype data, trigger combos, tips, anti-patterns
+- `patterns/` — Full archetype data (`manifest.json` plus one file per archetype under `archetypes/`), trigger combos, tips, anti-patterns
 - `data/analysis-report.json` — Statistical analysis with methodology
 - `data/scan-results.json` — Raw scan data for 679 workflows

@@ -1,0 +1,63 @@
+{
+  "id": "pr-review",
+  "label": "PR Review",
+  "description": "Review pull requests for quality and issues",
+  "success_rate": 0.45,
+  "count": 74,
+  "recommended_triggers": [
+    {
+      "type": "issues",
+      "config": {}
+    },
+    {
+      "type": "pull_request",
+      "config": {}
+    }
+  ],
+  "recommended_safe_outputs": [
+    "pull-requests"
+  ],
+  "recommended_tools": [
+    "add-comment"
+  ],
+  "timeout_minutes": 30,
+  "prompt_style": "role-rules",
+  "size_range_bytes": [
+    3000,
+    7000
+  ],
+  "top_repos": [
+    {
+      "repo": "pydantic/pydantic-ai",
+      "stars": 19374
+    },
+    {
+      "repo": "dotnet/msbuild",
+      "stars": 5542
+    },
+    {
+      "repo": "github/gh-aw",
+      "stars": 4953
+    },
+    {
+      "repo": "runhey/OnmyojiAutoScript",
+      "stars": 4746
+    },
+    {
+      "repo": "microsoft/apm",
+      "stars": 3565
+    }
+  ],
+  "tips": [
+    "Focus on specific review criteria (security, performance, style)",
+    "Use pull_request triggers focused on ready-to-review activity",
+    "Include DO NOT constraints to avoid false positive comments"
+  ],
+  "anti_patterns": [
+    "data-plane-api-review",
+    "mgmt-review",
+    "pr-review",
+    "fix-review-comment",
+    "android-reviewer"
+  ]
+}

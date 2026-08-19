@@ -1,0 +1,32 @@
+{
+  "id": "performance-nut",
+  "label": "Performance Nut",
+  "description": "Find and fix one measurable performance bottleneck",
+  "success_rate": null,
+  "count": 0,
+  "recommended_triggers": [
+    {
+      "type": "schedule",
+      "config": {}
+    }
+  ],
+  "recommended_safe_outputs": [
+    "pull-requests"
+  ],
+  "recommended_tools": [
+    "create-pull-request"
+  ],
+  "timeout_minutes": 30,
+  "prompt_style": "phase-based",
+  "size_range_bytes": [
+    4000,
+    8000
+  ],
+  "top_repos": [],
+  "tips": [
+    "Measure a representative baseline before optimizing",
+    "Make one focused change and compare before-and-after results",
+    "Do not trade correctness or maintainability for speculative speedups"
+  ],
+  "anti_patterns": []
+}

@@ -1,0 +1,32 @@
+{
+  "id": "linter-miner",
+  "label": "Linter Miner",
+  "description": "Discover recurring defects and create custom lint rules",
+  "success_rate": null,
+  "count": 0,
+  "recommended_triggers": [
+    {
+      "type": "schedule",
+      "config": {}
+    }
+  ],
+  "recommended_safe_outputs": [
+    "pull-requests"
+  ],
+  "recommended_tools": [
+    "create-pull-request"
+  ],
+  "timeout_minutes": 30,
+  "prompt_style": "phase-based",
+  "size_range_bytes": [
+    4000,
+    8000
+  ],
+  "top_repos": [],
+  "tips": [
+    "Require repository evidence for every proposed rule",
+    "Include positive and negative fixtures to control false positives",
+    "Propose at most one high-signal rule per run"
+  ],
+  "anti_patterns": []
+}

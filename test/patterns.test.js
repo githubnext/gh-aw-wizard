@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
 import { getArchetype, getRecommendedConfiguration } from '../src/js/patterns.js';
+import { loadPatternsFromDir } from '../src/js/patterns-node.js';
 import { nextStepsHtml } from '../src/js/next-steps.js';
 
-const generatedPatterns = JSON.parse(readFileSync(new URL('../patterns.json', import.meta.url), 'utf8'));
+const generatedPatterns = await loadPatternsFromDir(fileURLToPath(new URL('../patterns', import.meta.url)));
 
 describe('getArchetype', () => {
   const patterns = { archetypes: [{ id: 'pr-review', label: 'PR Review' }] };

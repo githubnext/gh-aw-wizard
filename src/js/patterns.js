@@ -1,10 +1,42 @@
 // Pattern library loading and lookup helpers.
+//
+// The pattern library is split into one file per archetype so it can be
+// versioned and reviewed independently: `patterns/manifest.json` lists the
+// archetype ids plus every other field, and `patterns/archetypes/<id>.json`
+// holds each archetype's data.
 
-export var PATTERNS_URL = 'patterns.json';
+export var PATTERNS_MANIFEST_URL = 'patterns/manifest.json';
 
-export function loadPatterns(url) {
-  return fetch(url || PATTERNS_URL)
+// Combine a manifest (with an `archetypes` array of ids) and the loaded
+// archetype objects back into the shape the rest of the app expects.
+export function mergePatterns(manifest, archetypes) {
+  var merged = {};
+  for (var key in manifest) {
+    if (Object.prototype.hasOwnProperty.call(manifest, key)) merged[key] = manifest[key];
+  }
+  merged.archetypes = archetypes;
+  return merged;
+}
+
+function archetypesBaseUrlFor(manifestUrl) {
+  var lastSlash = manifestUrl.lastIndexOf('/');
+  var dir = lastSlash === -1 ? '' : manifestUrl.slice(0, lastSlash + 1);
+  return dir + 'archetypes/';
+}
+
+export function loadPatterns(manifestUrl) {
+  var resolvedManifestUrl = manifestUrl || PATTERNS_MANIFEST_URL;
+  var archetypesBaseUrl = archetypesBaseUrlFor(resolvedManifestUrl);
+  return fetch(resolvedManifestUrl)
     .then(function (r) { return r.json(); })
+    .then(function (manifest) {
+      var ids = Array.isArray(manifest.archetypes) ? manifest.archetypes : [];
+      return Promise.all(ids.map(function (id) {
+        return fetch(archetypesBaseUrl + id + '.json').then(function (r) { return r.json(); });
+      })).then(function (archetypes) {
+        return mergePatterns(manifest, archetypes);
+      });
+    })
     .catch(function () {
       // patterns unavailable — generator still works with defaults
       return null;

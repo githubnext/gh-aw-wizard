@@ -1,0 +1,59 @@
+{
+  "id": "custom",
+  "label": "Custom",
+  "description": "Custom or uncategorized workflow",
+  "success_rate": 0.49,
+  "count": 416,
+  "recommended_triggers": [
+    {
+      "type": "issues",
+      "config": {}
+    },
+    {
+      "type": "schedule",
+      "config": {}
+    }
+  ],
+  "recommended_safe_outputs": [],
+  "recommended_tools": [],
+  "timeout_minutes": 30,
+  "prompt_style": "role-steps",
+  "size_range_bytes": [
+    3000,
+    8000
+  ],
+  "top_repos": [
+    {
+      "repo": "github/spec-kit",
+      "stars": 130114
+    },
+    {
+      "repo": "OtterMind/Chat2DB",
+      "stars": 27971
+    },
+    {
+      "repo": "elastic/kibana",
+      "stars": 21249
+    },
+    {
+      "repo": "pydantic/pydantic-ai",
+      "stars": 19374
+    },
+    {
+      "repo": "dotnet/runtime",
+      "stars": 18205
+    }
+  ],
+  "tips": [
+    "Prefer concrete repository events or schedules over manual-only execution",
+    "Prompts between 3-8KB perform best \u2014 too short lacks context, too long has diminishing returns",
+    "Use DO NOT constraints to bound agent behavior \u2014 61% more likely to be healthy"
+  ],
+  "anti_patterns": [
+    "documentation-audit",
+    "breaking-change-checker",
+    "agent-planner-staiot",
+    "validate-pr",
+    "planner"
+  ]
+}

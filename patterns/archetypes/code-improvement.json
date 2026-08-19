@@ -1,0 +1,63 @@
+{
+  "id": "code-improvement",
+  "label": "Code Improvement",
+  "description": "Diagnose and fix code or CI issues",
+  "success_rate": 0.37,
+  "count": 76,
+  "recommended_triggers": [
+    {
+      "type": "issues",
+      "config": {}
+    },
+    {
+      "type": "schedule",
+      "config": {}
+    }
+  ],
+  "recommended_safe_outputs": [
+    "pull-requests"
+  ],
+  "recommended_tools": [
+    "create-pull-request"
+  ],
+  "timeout_minutes": 30,
+  "prompt_style": "phase-based",
+  "size_range_bytes": [
+    5000,
+    12000
+  ],
+  "top_repos": [
+    {
+      "repo": "dotnet/maui",
+      "stars": 23302
+    },
+    {
+      "repo": "elastic/kibana",
+      "stars": 21249
+    },
+    {
+      "repo": "vercel/vercel",
+      "stars": 16104
+    },
+    {
+      "repo": "openvinotoolkit/openvino",
+      "stars": 10673
+    },
+    {
+      "repo": "dotnet/skills",
+      "stars": 5188
+    }
+  ],
+  "tips": [
+    "Use schedule triggers for repeatable reporting",
+    "Add pre-steps to run tests/linters before the agent starts \u2014 validates baseline",
+    "Avoid pr-fix and ci-doctor templates \u2014 both have <20% success in practice"
+  ],
+  "anti_patterns": [
+    "ci-doctor",
+    "ci-doctor",
+    "autofix-ci",
+    "code-simplifier",
+    "pr-fix"
+  ]
+}

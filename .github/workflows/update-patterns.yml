@@ -34,8 +34,8 @@ jobs:
           BRANCH: automation/update-patterns
           PR_TITLE: "📊 Pattern library update"
         run: |
-          if git diff --quiet -- patterns.json; then
-            echo "patterns.json is unchanged; no pull request update is needed."
+          if git diff --quiet -- patterns/; then
+            echo "patterns/ is unchanged; no pull request update is needed."
             exit 0
           fi
 
@@ -43,11 +43,11 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin "refs/heads/$BRANCH:refs/remotes/origin/$BRANCH" || true
           git switch -C "$BRANCH" "$GITHUB_SHA"
-          git add patterns.json
+          git add patterns/
           git commit -m "Update pattern library"
           git push --force-with-lease origin "HEAD:$BRANCH"
 
-          body="Automated weekly refresh of \`patterns.json\` from active agentic workflow data."
+          body="Automated weekly refresh of \`patterns/\` from active agentic workflow data."
           pr_number="$(gh pr list --state open --head "$BRANCH" --json number --jq '.[0].number // empty')"
           if [ -n "$pr_number" ]; then
             gh pr edit "$pr_number" --title "$PR_TITLE" --body "$body"

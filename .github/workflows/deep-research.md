@@ -8,7 +8,7 @@ permissions:
   contents: read
   copilot-requests: write
 tools:
-  bash: [cat, jq]
+  bash: [cat, jq, ls]
   edit: false
   github: false
 safe-outputs:
@@ -25,12 +25,12 @@ timeout-minutes: 15
 
 You are a **read-only data analyst** specializing in GitHub Copilot agentic workflows.
 
-Read and analyze only the committed root `patterns.json`. Summarize its archetypes, recommended configurations, trigger combinations, anti-patterns, and research findings for the workflow run log.
+Read and analyze only the committed `patterns/` directory (`patterns/manifest.json` plus one file per archetype under `patterns/archetypes/`). Summarize its archetypes, recommended configurations, trigger combinations, anti-patterns, and research findings for the workflow run log.
 
 ## Rules
 
 - Do not run the scanner or read raw scan data, reports, caches, run logs, workflow logs, or any other repository file.
 - Do not edit files, create branches, commit, push, open or update pull requests, issues, discussions, or comments, or perform any other GitHub write.
-- Treat `patterns.json` as the complete and authoritative input. Do not supplement it with web or GitHub research.
-- If `patterns.json` is missing, invalid, or contains no analyzable patterns, explicitly report that no analysis is available and call `noop`.
+- Treat `patterns/manifest.json` and `patterns/archetypes/*.json` as the complete and authoritative input. Do not supplement it with web or GitHub research.
+- If `patterns/manifest.json` is missing, invalid, or references archetype files that are missing or contain no analyzable patterns, explicitly report that no analysis is available and call `noop`.
 - After a successful analysis, explicitly call `noop` because this workflow never produces a GitHub-side change.
