@@ -158,9 +158,11 @@ describe('Primer iconography', () => {
 
   it('adds decorative Octicons to every trigger option', () => {
     const triggerOptions = html.slice(html.indexOf('id="trigger-options"'), html.indexOf('</section>', html.indexOf('id="trigger-options"')));
-    expect(triggerOptions.match(/<svg class="octicon" aria-hidden="true">/g)).toHaveLength(7);
+    expect(triggerOptions.match(/<svg class="octicon" aria-hidden="true">/g)).toHaveLength(8);
     expect(triggerOptions).toContain('<use href="#octicon-issue-opened"></use>');
     expect(triggerOptions).toContain('<use href="#octicon-git-pull-request"></use>');
+    expect(triggerOptions).toContain('name="trigger" value="pull_request_ready_for_review"');
+    expect(triggerOptions).toContain('PR ready for review');
     expect(triggerOptions).toContain('<use href="#octicon-calendar"></use>');
     expect(triggerOptions).toContain('<use href="#octicon-play"></use>');
     expect(triggerOptions).toContain('<use href="#octicon-terminal"></use>');

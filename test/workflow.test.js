@@ -197,6 +197,16 @@ describe('buildTriggerYaml', () => {
     const yaml = buildTriggerYaml(['pull_request'], 'skill-pr-reviewer', 'skill-pr-reviewer');
     expect(yaml).toBe('  pull_request:\n    types: [ready_for_review]\n');
   });
+
+  it('maps the explicit ready-for-review trigger', () => {
+    const yaml = buildTriggerYaml(['pull_request_ready_for_review']);
+    expect(yaml).toBe('  pull_request:\n    types: [ready_for_review]\n');
+  });
+
+  it('combines pull request activity types into one trigger', () => {
+    const yaml = buildTriggerYaml(['pull_request', 'pull_request_ready_for_review']);
+    expect(yaml).toBe('  pull_request:\n    types: [opened, ready_for_review]\n');
+  });
 });
 
 describe('generateWorkflowFile', () => {

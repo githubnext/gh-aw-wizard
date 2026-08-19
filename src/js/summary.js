@@ -6,6 +6,7 @@ import { formatEngineLabel } from './engines.js';
 var triggerLabels = {
   issues: 'a new issue is opened',
   pull_request: 'a pull request is opened',
+  pull_request_ready_for_review: 'a pull request is ready for review',
   schedule: 'the schedule runs',
   workflow_dispatch: 'it is started manually',
   slash_command: 'a slash command is posted (not recommended)',
