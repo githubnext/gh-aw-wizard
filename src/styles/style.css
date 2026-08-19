@@ -152,19 +152,16 @@ a:hover {
 .header-title {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
   margin-bottom: 0.35rem;
 }
-.header-icon {
-  width: 28px;
-  height: 28px;
-  flex-shrink: 0;
-}
 .site-header h1 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  letter-spacing: -0.02em;
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+  background-clip: text;
+  color: transparent;
 }
 .site-header .subtitle {
   font-size: 0.95rem;
@@ -931,7 +928,6 @@ a:hover {
     line-height: 1.2;
   }
   .site-header .subtitle { font-size: 0.9rem; }
-  .header-icon { width: 26px; height: 26px; }
   .recipe-header h2 {
     font-size: 0.75rem;
     font-weight: 600;
