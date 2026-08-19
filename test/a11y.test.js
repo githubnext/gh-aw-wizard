@@ -156,6 +156,15 @@ describe('Primer iconography', () => {
     expect(html).not.toMatch(/\p{Extended_Pictographic}/u);
   });
 
+  it('subtly scales Octicons on hover while respecting reduced-motion preferences', () => {
+    expect(ruleBody('.octicon')).toMatch(/transition:\s*transform var\(--transition-fast\)/);
+    expect(ruleBody('.octicon:hover')).toMatch(/transform:\s*scale\(1\.08\)/);
+
+    const reducedMotionStart = css.indexOf('@media (prefers-reduced-motion: reduce)');
+    const reducedMotionRules = css.slice(reducedMotionStart, css.indexOf('/* Form elements */', reducedMotionStart));
+    expect(reducedMotionRules).toMatch(/\.octicon:hover\s*\{\s*transform:\s*none;/);
+  });
+
   it('adds decorative Octicons to every output option', () => {
     const outputOptions = html.slice(html.indexOf('id="output-options"'), html.indexOf('</section>', html.indexOf('id="output-options"')));
     expect(outputOptions.match(/<svg class="octicon" aria-hidden="true">/g)).toHaveLength(5);
