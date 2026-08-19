@@ -303,7 +303,8 @@ function bindFormEvents() {
   engineOptions.addEventListener('change', (event) => {
     if (event.target.name === 'engine') {
       updateCardSelection('#engine-options', 'radio');
-      if (currentStep === 6) refreshPreview();
+      if (currentStep === 5) generateAndShow();
+      else if (currentStep === 6) refreshPreview();
     }
   });
   updateCardSelection('#engine-options', 'radio');
