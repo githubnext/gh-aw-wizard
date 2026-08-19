@@ -20,15 +20,28 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
+      - name: Check required secret
+        id: check-token
+        run: |
+          if [ -n "${{ secrets.GH_AW_GITHUB_TOKEN }}" ]; then
+            echo "has_token=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_token=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::GH_AW_GITHUB_TOKEN secret is not set; skipping the pattern library scan and update. GitHub code search requires a user token (a PAT with public_repo scope) because the default GITHUB_TOKEN cannot access it."
+          fi
+
       - name: Scan active workflows
+        if: steps.check-token.outputs.has_token == 'true'
         env:
           GH_TOKEN: ${{ secrets.GH_AW_GITHUB_TOKEN }}
         run: scripts/scan.sh --active-only --run-history
 
       - name: Generate patterns
+        if: steps.check-token.outputs.has_token == 'true'
         run: python3 scripts/generate-patterns.py
 
       - name: Create or update pull request
+        if: steps.check-token.outputs.has_token == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: automation/update-patterns
