@@ -209,43 +209,6 @@ a:hover {
 .workflow-recipe {
   margin-bottom: 2.5rem;
 }
-.recipe-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-.recipe-header h2 {
-  font-size: 1rem;
-  font-weight: 650;
-  color: var(--text-primary);
-}
-.recipe-status {
-  flex-shrink: 0;
-  padding: 0.25rem 0.6rem;
-  color: var(--text-secondary);
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-subtle);
-  border-radius: 999px;
-  font-size: 0.7rem;
-  font-weight: 600;
-}
-.recipe-status-dot {
-  display: inline-block;
-  width: 0.5rem;
-  height: 0.5rem;
-  margin-right: 0.25rem;
-  background: var(--accent-green);
-  border-radius: 50%;
-  box-shadow: 0 0 0 3px rgba(var(--accent-green-rgb), 0.12);
-}
-.recipe-status-step {
-  margin-left: 0.3rem;
-  padding-left: 0.45rem;
-  border-left: 1px solid var(--border-color);
-  color: var(--text-muted);
-}
 .recipe-clauses {
   display: grid;
   gap: 0.5rem;
@@ -956,13 +919,6 @@ a:hover {
     line-height: 1.2;
   }
   .site-header .subtitle { font-size: 0.9rem; }
-  .recipe-header h2 {
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--text-secondary);
-  }
   .option-card,
   .btn { min-height: 44px; border-radius: 10px; }
   .recipe-item { border-radius: 10px; }
@@ -974,8 +930,6 @@ a:hover {
   .footer-actions { justify-content: flex-start; }
   .option-group.archetype-grid { grid-template-columns: 1fr; }
   .archetype-icon { width: 34px; height: 34px; font-size: 1rem; }
-  .recipe-header { align-items: flex-start; }
-  .recipe-status { font-size: 0.65rem; }
   .recipe-clause { grid-template-columns: 2.25rem 3.75rem minmax(0, 1fr); }
   .progress-step .step-indicator { width: 1.5rem; height: 1.5rem; font-size: 0.65rem; }
   .recipe-key { padding: 0.55rem 0.35rem; }
