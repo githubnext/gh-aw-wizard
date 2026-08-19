@@ -847,7 +847,7 @@ a:hover {
 
 /* Footer */
 .site-footer {
-  text-align: left;
+  text-align: center;
   padding: 2rem 0;
   margin-top: 4rem;
   border-top: 1px solid var(--border-subtle);
@@ -860,6 +860,11 @@ a:hover {
 }
 .site-footer a:hover {
   color: var(--accent-blue);
+}
+.footer-source {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
 }
 .footer-separator,
 .legal-separator {
@@ -995,7 +1000,7 @@ a:hover {
   .btn { min-height: 44px; border-radius: 10px; }
   .recipe-item { border-radius: 10px; }
   .site-footer {
-    text-align: left;
+    text-align: center;
     margin-top: 2.5rem;
     padding-bottom: max(2rem, env(safe-area-inset-bottom));
   }
