@@ -7,6 +7,7 @@ import {
 } from './workflow.js';
 import { highlightMarkdown } from './highlight.js';
 import { initTheme } from './theme.js';
+import { initLanding } from './landing.js';
 import { buildWorkflowSummary } from './summary.js';
 import { engineIconMarkup, formatEngineOptionLabel, loadDefinitionEngines, registerDefinitionEngines } from './engines.js';
 
@@ -28,7 +29,13 @@ export function initWizard() {
     addDefinitionEngineOptions(engines);
   });
   initNavigationHistory();
+  initLanding(focusFirstArchetype);
   renderWorkflowSummary();
+}
+
+function focusFirstArchetype() {
+  var first = document.querySelector('#archetype-options input[type="radio"]');
+  if (first) first.focus();
 }
 
 function generateAndShow() {

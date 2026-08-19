@@ -11,6 +11,9 @@
       var systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
       document.documentElement.setAttribute('data-theme-preference', theme);
       document.documentElement.setAttribute('data-color-mode', theme === 'auto' ? (systemDark ? 'dark' : 'light') : theme);
+      // Progressive enhancement: only hide the wizard behind the landing page
+      // when scripting is available to reveal it again.
+      document.documentElement.classList.add('is-landing');
     })();
   </script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@primer/css@22.3.0/dist/primer.css">
@@ -57,6 +60,17 @@
   </header>
 
   <main class="container">
+    <section class="landing" id="landing" aria-labelledby="landing-title">
+      <div class="landing-glow" aria-hidden="true"></div>
+      <h2 class="landing-title" id="landing-title">Automate your repository with AI agents</h2>
+      <p class="landing-message">Answer a few questions and get a ready-to-run agentic workflow for your repository.</p>
+      <button class="btn btn-primary btn-get-started" id="btn-get-started" type="button">
+        Get started
+        <svg class="octicon" aria-hidden="true"><use href="#octicon-zap"></use></svg>
+      </button>
+      <p class="landing-hint">Takes about a minute — no sign-in required.</p>
+    </section>
+
     <section class="workflow-recipe" aria-labelledby="workflow-recipe-title">
       <h2 class="visually-hidden" id="workflow-recipe-title">Agentic workflow wizard</h2>
       <div class="recipe-clauses" id="progress-bar" aria-live="polite">

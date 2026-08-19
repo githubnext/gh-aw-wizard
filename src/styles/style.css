@@ -1139,3 +1139,124 @@ a:hover {
     grid-template-columns: 1fr;
   }
 }
+
+/* Landing page */
+.landing {
+  display: none;
+}
+.is-landing .landing {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: min(72vh, 620px);
+  padding: 2rem 0 3rem;
+}
+.is-landing .site-header,
+.is-landing .workflow-recipe,
+.is-landing .info-callout {
+  display: none;
+}
+.landing-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(560px, 90vw);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--accent-blue-rgb), 0.18) 0%, rgba(var(--accent-green-rgb), 0.12) 45%, transparent 70%);
+  filter: blur(10px);
+  pointer-events: none;
+  animation: landingGlow 8s ease-in-out infinite;
+}
+.landing-title {
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  max-width: 16ch;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: landingRise 0.6s ease both;
+}
+.landing-message {
+  margin-top: 1rem;
+  max-width: 44ch;
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  animation: landingRise 0.6s ease 0.12s both;
+}
+.btn-get-started {
+  margin-top: 2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 2.25rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  border-radius: 999px;
+  position: relative;
+  animation: landingRise 0.6s ease 0.24s both;
+}
+/* The attention pulse lives on a pseudo-element so hovering can pause it
+   without freezing the button's own entrance animation. */
+.btn-get-started::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  animation: landingPulse 2.8s ease-in-out 1s infinite;
+}
+.btn-get-started:hover {
+  transform: translateY(-2px) scale(1.03);
+}
+.btn-get-started:hover::after {
+  animation-play-state: paused;
+}
+.btn-get-started:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 3px;
+}
+.btn-get-started .octicon {
+  width: 1.1em;
+  height: 1.1em;
+}
+.landing-hint {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  animation: landingRise 0.6s ease 0.36s both;
+}
+.landing.is-leaving {
+  animation: landingLeave 0.3s ease forwards;
+}
+.wizard-revealed .site-header,
+.wizard-revealed .workflow-recipe,
+.wizard-revealed .info-callout {
+  animation: landingRise 0.45s ease both;
+}
+.wizard-revealed .workflow-recipe { animation-delay: 0.08s; }
+.wizard-revealed .info-callout { animation-delay: 0.16s; }
+@keyframes landingRise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes landingLeave {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to   { opacity: 0; transform: translateY(-14px) scale(0.98); }
+}
+@keyframes landingPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(var(--accent-green-rgb), 0.45); }
+  50%      { box-shadow: 0 0 0 14px rgba(var(--accent-green-rgb), 0); }
+}
+@keyframes landingGlow {
+  0%, 100% { opacity: 0.75; transform: translate(-50%, -50%) scale(1); }
+  50%      { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
+}
