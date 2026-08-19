@@ -17,6 +17,7 @@ describe('wizard navigation', () => {
   describe('copy prompt success', () => {
     it('opens the success dialog after copying', () => {
       let showCount = 0;
+      const removedClasses = [];
       const modal = {
         open: false,
         showModal() {
@@ -24,9 +25,22 @@ describe('wizard navigation', () => {
           this.open = true;
         }
       };
+      const button = {
+        classList: {
+          remove(name) {
+            removedClasses.push(name);
+          }
+        },
+        dataset: { defaultLabel: 'Copy prompt' },
+        textContent: 'Copy failed — try again'
+      };
+      const status = { textContent: 'Prompt could not be copied. Please try again.' };
       globalThis.document = {
         getElementById(id) {
-          return id === 'copy-modal' ? modal : null;
+          if (id === 'copy-modal') return modal;
+          if (id === 'btn-copy') return button;
+          if (id === 'copy-status') return status;
+          return null;
         }
       };
 
@@ -34,6 +48,9 @@ describe('wizard navigation', () => {
       showCopySuccess();
 
       expect(showCount).toBe(1);
+      expect(button.textContent).toBe('Copy prompt');
+      expect(removedClasses).toContain('copy-error');
+      expect(status.textContent).toBe('');
     });
   });
 

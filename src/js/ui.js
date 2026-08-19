@@ -589,6 +589,7 @@ function showCopyFailure() {
   const button = document.getElementById('btn-copy');
   const status = document.getElementById('copy-status');
   clearTimeout(copyFeedbackTimer);
+  button.dataset.defaultLabel ||= button.textContent;
   button.textContent = 'Copy failed — try again';
   button.classList.add('copy-error');
   status.textContent = 'Prompt could not be copied. Please try again.';
@@ -601,7 +602,7 @@ function resetCopyFeedback() {
   const button = document.getElementById('btn-copy');
   const status = document.getElementById('copy-status');
   if (button) {
-    button.textContent = 'Copy prompt';
+    button.textContent = button.dataset.defaultLabel || button.textContent;
     button.classList.remove('copy-error');
   }
   if (status) status.textContent = '';
