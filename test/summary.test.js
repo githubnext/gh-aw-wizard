@@ -55,7 +55,7 @@ describe('buildWorkflowSummary', () => {
     }), patterns);
 
     expect(summary.engine.value).toBe(
-      'Copilot, memory between runs, chart generation with browser access'
+      'Copilot with memory between runs, chart generation, and browser access'
     );
   });
 

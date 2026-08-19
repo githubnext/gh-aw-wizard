@@ -51,9 +51,10 @@ export function buildWorkflowSummary(answers, patterns) {
     ? answers.customDescription
     : archetype && archetype.description;
   var engine = answers.engine ? (engineLabels[answers.engine] || 'Copilot') : null;
-  var agent = engine && readableList([engine].concat(
-    (answers.extras || []).map(function (extra) { return extraLabels[extra] || extra; })
-  ), 'with');
+  var capabilities = (answers.extras || []).map(function (extra) { return extraLabels[extra] || extra; });
+  var agent = engine && (capabilities.length
+    ? engine + ' with ' + readableList(capabilities)
+    : engine);
 
   return {
     trigger: {
