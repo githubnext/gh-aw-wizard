@@ -410,6 +410,7 @@ describe('generateWorkflowFile', () => {
 describe('generateAgentPrompt', () => {
   it('describes triggers and outputs in plain language', () => {
     const prompt = generateAgentPrompt(answers(), patterns);
+    expect(prompt).toContain('Create a draft PR that adds an agentic workflow using these instructions:');
     expect(prompt).toContain('- Name: issue-triage\n');
     expect(prompt).toContain('- Engine: copilot\n');
     expect(prompt).toContain('when a new issue is opened, on push to main');
@@ -447,7 +448,7 @@ describe('generateAgentPrompt', () => {
   it('generates all grouped linter workflows in one prompt', () => {
     const prompt = generateAgentPrompt(answers({ archetype: 'linter-workflows' }), patterns);
 
-    expect(prompt).toContain('Create 3 workflows for GitHub Agentic Workflows');
+    expect(prompt).toContain('Create a draft PR that adds 3 agentic workflows using these instructions:');
     expect(prompt).toContain('- Generate exactly 3 independent workflow files:');
     expect(prompt).toContain('Linter Miner: name it linter-miner');
     expect(prompt).toContain('Linter Refiner: name it linter-refiner');
