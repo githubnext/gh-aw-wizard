@@ -1320,8 +1320,6 @@ a:hover {
 }
 .ld-phase-icon-multi .ld-phase-icon-lock,
 .ld-phase-icon-multi .ld-phase-icon-shield {
-  width: 0.8rem;
-  height: 0.8rem;
   color: var(--accent-green);
 }
 .ld-phase-text {
