@@ -10,6 +10,48 @@ SCAN_RESULTS = Path("data/scan-results.json")
 PATTERNS = Path("patterns.json")
 
 CURATED_ARCHETYPES = {
+    "accessibility-expert": {
+        "label": "Web Accessibility Expert",
+        "description": "Audit web interfaces for accessibility barriers",
+        "recommended_triggers": ["pull_request", "workflow_dispatch"],
+        "recommended_safe_outputs": ["pull-requests"],
+        "recommended_tools": ["add-comment"],
+        "prompt_style": "role-rules",
+        "size_range_bytes": [3000, 8000],
+        "tips": [
+            "Test keyboard, screen-reader, focus, and responsive behavior",
+            "Use Playwright against a local preview and cite reproducible evidence",
+            "Report only actionable barriers introduced or exposed by the change",
+        ],
+    },
+    "performance-nut": {
+        "label": "Performance Nut",
+        "description": "Find and fix one measurable performance bottleneck",
+        "recommended_triggers": ["schedule", "workflow_dispatch"],
+        "recommended_safe_outputs": ["pull-requests"],
+        "recommended_tools": ["create-pull-request"],
+        "prompt_style": "phase-based",
+        "size_range_bytes": [4000, 8000],
+        "tips": [
+            "Measure a representative baseline before optimizing",
+            "Make one focused change and compare before-and-after results",
+            "Do not trade correctness or maintainability for speculative speedups",
+        ],
+    },
+    "user-simulator": {
+        "label": "User Simulator",
+        "description": "Simulate representative users and evaluate their workflows",
+        "recommended_triggers": ["schedule", "workflow_dispatch"],
+        "recommended_safe_outputs": ["issues"],
+        "recommended_tools": ["create-issue"],
+        "prompt_style": "scenario-based",
+        "size_range_bytes": [4000, 8000],
+        "tips": [
+            "Define personas by goals, responsibilities, and constraints rather than demographics",
+            "Simulate a small, representative set of technical and nontechnical tasks",
+            "Use repeatable criteria and concise evidence when reporting friction or gaps",
+        ],
+    },
     "daily-test-improver": {
         "label": "Daily Test Improver",
         "description": "Add high-value tests and improve test quality",

@@ -15,6 +15,9 @@ function ruleBody(selector) {
 describe('archetype grid keyboard accessibility', () => {
   it.each([
     'daily-test-improver',
+    'accessibility-expert',
+    'performance-nut',
+    'user-simulator',
     'repo-maintainer',
     'linter-miner',
     'linter-refiner',

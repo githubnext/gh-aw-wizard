@@ -9,6 +9,9 @@ import {
   buildDependencyMonitor,
   buildContentModeration,
   buildDocumentationUpdater,
+  buildAccessibilityExpert,
+  buildPerformanceNut,
+  buildUserSimulator,
   buildPrReview,
   buildDailyTestImprover,
   buildRepoMaintainer,
@@ -37,7 +40,7 @@ export function inferNeedsPreSteps(archetype) {
 
 export function inferCapabilities(archetype) {
   // Auto-infer what tools/capabilities the archetype needs
-  var caps = { preSteps: false, bash: false, githubToolsets: false };
+  var caps = { preSteps: false, bash: false, githubToolsets: false, browser: false };
   switch (archetype) {
     case 'status-report':
       caps.preSteps = true; caps.githubToolsets = true; break;
@@ -45,10 +48,15 @@ export function inferCapabilities(archetype) {
       caps.preSteps = true; caps.bash = true; break;
     case 'code-improvement':
     case 'documentation-updater':
+    case 'performance-nut':
     case 'daily-test-improver':
     case 'linter-refiner':
     case 'linter-applier':
       caps.bash = true; break;
+    case 'accessibility-expert':
+      caps.bash = true; caps.githubToolsets = true; caps.browser = true; break;
+    case 'user-simulator':
+      caps.githubToolsets = true; break;
     case 'pr-review':
     case 'skill-pr-reviewer':
       caps.githubToolsets = true; break;
@@ -63,7 +71,9 @@ export function inferCapabilities(archetype) {
 // reviewers only get the read access they actually need to see PR diffs.
 var GITHUB_TOOLSETS_BY_ARCHETYPE = {
   'pr-review': ['repos', 'issues', 'pull_requests'],
-  'skill-pr-reviewer': ['repos', 'issues', 'pull_requests']
+  'skill-pr-reviewer': ['repos', 'issues', 'pull_requests'],
+  'accessibility-expert': ['repos', 'issues', 'pull_requests'],
+  'user-simulator': ['repos', 'issues', 'pull_requests']
 };
 var DEFAULT_GITHUB_TOOLSETS = ['repos', 'issues', 'pull_requests', 'actions', 'code_security', 'discussions'];
 
@@ -71,7 +81,9 @@ var DEFAULT_GITHUB_TOOLSETS = ['repos', 'issues', 'pull_requests', 'actions', 'c
 // PR diff/metadata, not the full status-report surface (actions, security, discussions).
 var PERMISSIONS_BY_ARCHETYPE = {
   'pr-review': ['contents', 'issues', 'pull-requests'],
-  'skill-pr-reviewer': ['contents', 'issues', 'pull-requests']
+  'skill-pr-reviewer': ['contents', 'issues', 'pull-requests'],
+  'accessibility-expert': ['contents', 'issues', 'pull-requests'],
+  'user-simulator': ['contents', 'issues', 'pull-requests']
 };
 var DEFAULT_PERMISSIONS = ['actions', 'contents', 'discussions', 'issues', 'pull-requests', 'security-events'];
 
@@ -166,7 +178,7 @@ export function generateWorkflowFile(answers, patterns) {
   fm += 'engine: ' + engine + '\n';
 
   // Tools section
-  if (inferred.bash || inferred.githubToolsets || extras.indexOf('memory') !== -1 || extras.indexOf('browser') !== -1) {
+  if (inferred.bash || inferred.githubToolsets || inferred.browser || extras.indexOf('memory') !== -1 || extras.indexOf('browser') !== -1) {
     fm += 'tools:\n';
     if (inferred.bash) {
       fm += '  bash: true\n';
@@ -179,7 +191,7 @@ export function generateWorkflowFile(answers, patterns) {
     if (extras.indexOf('memory') !== -1) {
       fm += '  cache-memory:\n';
     }
-    if (extras.indexOf('browser') !== -1) {
+    if (inferred.browser || extras.indexOf('browser') !== -1) {
       fm += '  playwright:\n    mode: cli\n';
     }
   }
@@ -212,6 +224,15 @@ export function generateWorkflowFile(answers, patterns) {
       break;
     case 'documentation-updater':
       body = buildDocumentationUpdater(answers, label);
+      break;
+    case 'accessibility-expert':
+      body = buildAccessibilityExpert(answers, label);
+      break;
+    case 'performance-nut':
+      body = buildPerformanceNut(answers, label);
+      break;
+    case 'user-simulator':
+      body = buildUserSimulator(answers, label);
       break;
     case 'pr-review':
       body = buildPrReview(answers, label);
@@ -259,6 +280,18 @@ var SCENARIO_INSTRUCTIONS = {
   'status-report': ['report.md'],
   'dependency-monitor': ['maintainer.md'],
   'documentation-updater': ['maintainer.md'],
+  'accessibility-expert': [
+    'https://raw.githubusercontent.com/github/gh-aw/main/docs/src/content/docs/reference/playwright.md',
+    'syntax-tools-imports.md',
+    'create-agentic-workflow-trigger-details.md'
+  ],
+  'performance-nut': [
+    'https://raw.githubusercontent.com/github/gh-aw/main/.github/copilot/instructions/cli-performance.md',
+    'https://raw.githubusercontent.com/github/gh-aw/main/.github/copilot/instructions/build-performance.md',
+    'maintainer.md',
+    'memory-stateful-patterns.md'
+  ],
+  'user-simulator': ['github-agentic-workflows.md'],
   'pr-review': ['pr-reviewer.md'],
   'daily-test-improver': ['test-coverage.md'],
   'repo-maintainer': ['maintainer.md'],
@@ -272,7 +305,7 @@ function instructionUrls(archetype) {
   var urls = [GH_AW_INSTRUCTIONS_BASE + 'create-agentic-workflow.md'];
   var scenarioInstructions = SCENARIO_INSTRUCTIONS[archetype] || [];
   scenarioInstructions.forEach(function (instruction) {
-    urls.push(GH_AW_INSTRUCTIONS_BASE + instruction);
+    urls.push(instruction.indexOf('https://') === 0 ? instruction : GH_AW_INSTRUCTIONS_BASE + instruction);
   });
   return urls;
 }
@@ -290,6 +323,7 @@ export function generateAgentPrompt(answers, patterns) {
   var label = arch ? arch.label : 'Custom Workflow';
   var desc = arch ? arch.description : answers.customDescription || 'Custom agentic workflow';
   var engine = normalizeEngine(answers.engine);
+  var inferred = inferCapabilities(answers.archetype);
 
   var triggersReadable = answers.triggers.map(function (t) {
     var map = {
@@ -353,7 +387,7 @@ export function generateAgentPrompt(answers, patterns) {
   if (extras.indexOf('charts') !== -1) {
     prompt += '- Add upload-assets safe output to publish generated charts\n';
   }
-  if (extras.indexOf('browser') !== -1) {
+  if (inferred.browser || extras.indexOf('browser') !== -1) {
     prompt += '- Enable Playwright CLI for browser automation\n';
   }
 

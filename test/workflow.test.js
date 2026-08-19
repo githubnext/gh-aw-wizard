@@ -32,6 +32,21 @@ const patterns = {
       timeout_minutes: 30
     },
     {
+      id: 'accessibility-expert',
+      label: 'Web Accessibility Expert',
+      description: 'Audit web interfaces for accessibility barriers'
+    },
+    {
+      id: 'performance-nut',
+      label: 'Performance Nut',
+      description: 'Find and fix one measurable performance bottleneck'
+    },
+    {
+      id: 'user-simulator',
+      label: 'User Simulator',
+      description: 'Simulate representative users and evaluate their workflows'
+    },
+    {
       id: 'daily-test-improver',
       label: 'Daily Test Improver',
       description: 'Add high-value tests and improve test quality'
@@ -118,7 +133,8 @@ describe('inferCapabilities', () => {
     expect(inferCapabilities('status-report')).toEqual({
       preSteps: true,
       bash: false,
-      githubToolsets: true
+      githubToolsets: true,
+      browser: false
     });
   });
 
@@ -130,7 +146,8 @@ describe('inferCapabilities', () => {
     expect(inferCapabilities('custom')).toEqual({
       preSteps: false,
       bash: false,
-      githubToolsets: false
+      githubToolsets: false,
+      browser: false
     });
   });
 
@@ -138,7 +155,8 @@ describe('inferCapabilities', () => {
     expect(inferCapabilities('pr-review')).toEqual({
       preSteps: false,
       bash: false,
-      githubToolsets: true
+      githubToolsets: true,
+      browser: false
     });
   });
 
@@ -147,16 +165,34 @@ describe('inferCapabilities', () => {
     expect(inferCapabilities('repo-maintainer')).toEqual({
       preSteps: true,
       bash: true,
-      githubToolsets: true
+      githubToolsets: true,
+      browser: false
     });
     expect(inferCapabilities('linter-miner')).toEqual({
       preSteps: true,
       bash: true,
-      githubToolsets: true
+      githubToolsets: true,
+      browser: false
     });
     expect(inferCapabilities('linter-refiner').bash).toBe(true);
     expect(inferCapabilities('linter-applier').bash).toBe(true);
     expect(inferCapabilities('skill-pr-reviewer').githubToolsets).toBe(true);
+  });
+
+  it('infers capabilities for the expert and simulation archetypes', () => {
+    expect(inferCapabilities('accessibility-expert')).toEqual({
+      preSteps: false,
+      bash: true,
+      githubToolsets: true,
+      browser: true
+    });
+    expect(inferCapabilities('user-simulator')).toEqual({
+      preSteps: false,
+      bash: false,
+      githubToolsets: true,
+      browser: false
+    });
+    expect(inferCapabilities('performance-nut').bash).toBe(true);
   });
 });
 
@@ -303,6 +339,9 @@ describe('generateWorkflowFile', () => {
   });
 
   it.each([
+    ['accessibility-expert', 'web accessibility expert'],
+    ['performance-nut', 'performance optimization expert'],
+    ['user-simulator', 'user persona simulator'],
     ['daily-test-improver', 'test improvement engineer'],
     ['repo-maintainer', 'proactive repository maintainer'],
     ['linter-miner', 'static-analysis rule miner'],
@@ -366,6 +405,18 @@ describe('generateAgentPrompt', () => {
     ['status-report', 'report.md'],
     ['dependency-monitor', 'maintainer.md'],
     ['documentation-updater', 'maintainer.md'],
+    ['accessibility-expert', [
+      'https://raw.githubusercontent.com/github/gh-aw/main/docs/src/content/docs/reference/playwright.md',
+      'syntax-tools-imports.md',
+      'create-agentic-workflow-trigger-details.md'
+    ]],
+    ['performance-nut', [
+      'https://raw.githubusercontent.com/github/gh-aw/main/.github/copilot/instructions/cli-performance.md',
+      'https://raw.githubusercontent.com/github/gh-aw/main/.github/copilot/instructions/build-performance.md',
+      'maintainer.md',
+      'memory-stateful-patterns.md'
+    ]],
+    ['user-simulator', 'github-agentic-workflows.md'],
     ['pr-review', 'pr-reviewer.md'],
     ['daily-test-improver', 'test-coverage.md'],
     ['repo-maintainer', 'maintainer.md'],
@@ -378,7 +429,9 @@ describe('generateAgentPrompt', () => {
     const base = 'https://raw.githubusercontent.com/github/gh-aw/main/.github/aw/';
     expect(prompt).toContain(base + 'create-agentic-workflow.md');
     const expectedFiles = Array.isArray(instructionFiles) ? instructionFiles : [instructionFiles];
-    expectedFiles.forEach((instructionFile) => expect(prompt).toContain(base + instructionFile));
+    expectedFiles.forEach((instructionFile) => {
+      expect(prompt).toContain(instructionFile.indexOf('https://') === 0 ? instructionFile : base + instructionFile);
+    });
     expect(prompt).not.toContain('github/gh-aw/main/create.md');
   });
 
@@ -408,6 +461,9 @@ describe('generateAgentPrompt', () => {
     'dependency-monitor',
     'content-moderation',
     'documentation-updater',
+    'accessibility-expert',
+    'performance-nut',
+    'user-simulator',
     'pr-review',
     'daily-test-improver',
     'repo-maintainer',
