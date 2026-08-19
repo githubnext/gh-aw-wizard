@@ -554,15 +554,6 @@ a:hover {
   margin-bottom: 0.4rem;
 }
 
-/* Navigation buttons */
-.step-nav {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 2.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--border-subtle);
-}
-
 .btn {
   display: inline-flex;
   align-items: center;
@@ -575,14 +566,6 @@ a:hover {
   border-radius: var(--radius-md);
   cursor: pointer;
   transition: all var(--transition-fast);
-}
-.btn-secondary {
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
-}
-.btn-secondary:hover {
-  background: var(--border-color);
-  border-color: var(--border-hover);
 }
 .btn-primary {
   background: var(--accent-green);
@@ -855,8 +838,6 @@ a:hover {
   .recipe-clause { grid-template-columns: 2.25rem 3.75rem minmax(0, 1fr); }
   .progress-step .step-indicator { width: 1.5rem; height: 1.5rem; font-size: 0.65rem; }
   .recipe-key { padding: 0.55rem 0.35rem; }
-  .step-nav { flex-direction: column-reverse; gap: 0.75rem; }
-  .step-nav .btn { width: 100%; justify-content: center; }
   .preview-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
   .finish-cta { flex-direction: column; align-items: stretch; }
   .preview-actions { width: 100%; }
