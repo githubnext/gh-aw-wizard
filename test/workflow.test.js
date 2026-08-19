@@ -519,6 +519,16 @@ describe('generateAgentPrompt', () => {
     expect(prompt).not.toContain('Your job is to read every newly opened issue');
   });
 
+  it('preserves explicit data-fetch settings in single-workflow suggestions', () => {
+    const prompt = generateAgentPrompt(
+      answers({ archetype: 'status-report', needsData: false }),
+      patterns
+    );
+    const sample = prompt.split('```markdown\n')[1].split('\n```')[0];
+
+    expect(sample).not.toContain('## Pre-steps');
+  });
+
   it.each([
     'issue-triage',
     'code-improvement',

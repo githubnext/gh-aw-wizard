@@ -346,7 +346,16 @@ var MULTI_WORKFLOW_ARCHETYPES = {
 };
 
 function requestedWorkflows(answers, patterns) {
-  var archetypes = MULTI_WORKFLOW_ARCHETYPES[answers.archetype] || [answers.archetype];
+  var archetypes = MULTI_WORKFLOW_ARCHETYPES[answers.archetype];
+  if (!archetypes) {
+    var arch = getArchetype(patterns, answers.archetype);
+    return [{
+      answers: answers,
+      archetype: arch,
+      label: arch ? arch.label : 'Custom Workflow',
+      description: arch ? arch.description : answers.customDescription || 'Custom agentic workflow'
+    }];
+  }
   return archetypes.map(function (archetype) {
     var arch = getArchetype(patterns, archetype);
     return {
