@@ -1,6 +1,6 @@
 // DOM wiring for the wizard UI.
 
-import { loadPatterns, getRecommendedConfiguration } from './patterns.js';
+import { loadPatterns, getRecommendedConfiguration, getWhatPageOptions } from './patterns.js';
 import {
   inferNeedsPreSteps,
   generateAgentPrompt
@@ -17,11 +17,14 @@ let generatedPrompt = '';
 const TOTAL_STEPS = 6;
 const ACCORDION_OPEN_ANIMATION = 'accordionOpen 0.3s ease';
 const ACCORDION_OPEN_REVERSE_ANIMATION = 'accordionOpenReverse 0.3s ease';
+const SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
 
 export function initWizard() {
   initTheme();
   loadPatterns().then((data) => {
     patterns = data;
+    renderArchetypeOptions(patterns);
+    bindArchetypeEvents();
     renderWorkflowSummary();
   });
   bindNavigation();
@@ -33,6 +36,48 @@ export function initWizard() {
   initNavigationHistory();
   initLanding(revealWhatPane);
   renderWorkflowSummary();
+}
+
+export function renderArchetypeOptions(patternData) {
+  const container = document.getElementById('archetype-options');
+  container.replaceChildren();
+
+  getWhatPageOptions(patternData).forEach((option) => {
+    const card = document.createElement('label');
+    card.className = 'option-card';
+    card.setAttribute('data-value', option.id);
+    (option.classes || []).forEach((className) => { card.classList.add(className); });
+
+    const input = document.createElement('input');
+    input.type = 'radio';
+    input.name = 'archetype';
+    input.value = option.id;
+    input.dataset.requiresDescription = String(option.requires_description);
+    input.dataset.advanceOnSelect = String(option.advance_on_select);
+
+    const icon = document.createElement('div');
+    icon.className = 'archetype-icon';
+    const svg = document.createElementNS(SVG_NAMESPACE, 'svg');
+    svg.setAttribute('class', 'octicon');
+    svg.setAttribute('aria-hidden', 'true');
+    const use = document.createElementNS(SVG_NAMESPACE, 'use');
+    use.setAttribute('href', `#${  option.icon}`);
+    svg.appendChild(use);
+    icon.appendChild(svg);
+
+    const info = document.createElement('div');
+    info.className = 'option-info';
+    const label = document.createElement('div');
+    label.className = 'option-label';
+    label.textContent = option.label;
+    const description = document.createElement('div');
+    description.className = 'option-desc';
+    description.textContent = option.description;
+    info.append(label, description);
+
+    card.append(input, icon, info);
+    container.appendChild(card);
+  });
 }
 
 function revealWhatPane() {
@@ -284,7 +329,15 @@ function bindRadioDeselect(radios, onDeselect) {
   });
 }
 
-function bindFormEvents() {
+function requiresDescription(radio) {
+  return radio.dataset.requiresDescription === 'true';
+}
+
+function advancesOnSelect(radio) {
+  return radio.dataset.advanceOnSelect === 'true';
+}
+
+function bindArchetypeEvents() {
   // Step 1: archetype radios
   const archetypeRadios = document.querySelectorAll('input[name="archetype"]');
   const archetypeGroup = document.getElementById('archetype-options');
@@ -306,7 +359,7 @@ function bindFormEvents() {
     setTimeout(() => {
       if (archetypeGroup.contains(document.activeElement)) return;
       const checked = archetypeGroup.querySelector('input[name="archetype"]:checked');
-      if (checked && checked.value !== 'custom' && currentStep === 1) goToStep(2);
+      if (checked && advancesOnSelect(checked) && currentStep === 1) goToStep(2);
     }, 0);
   });
 
@@ -314,12 +367,12 @@ function bindFormEvents() {
     radio.addEventListener('change', () => {
       updateCardSelection('#archetype-options', 'radio');
       const customField = document.getElementById('custom-description-field');
-      customField.classList.toggle('visible', radio.value === 'custom');
+      customField.classList.toggle('visible', requiresDescription(radio));
       // Selecting a new "what" scenario invalidates any downstream choices made for the previous one.
-      clearDownstreamSelections(radio.value);
+      clearDownstreamSelections(requiresDescription(radio));
       // Auto-fill triggers/outputs from archetype data
       prefillFromArchetype(radio.value);
-      if (radio.value !== 'custom') {
+      if (advancesOnSelect(radio)) {
         if (arrowKeyNav) {
           // Leave focus on the radio the user just navigated to; step 2 will
           // be shown once focus leaves the radiogroup (see `focusout` above).
@@ -334,7 +387,9 @@ function bindFormEvents() {
       }
     });
   });
+}
 
+function bindFormEvents() {
   // Step 2: trigger checkboxes
   document.querySelectorAll('input[name="trigger"]').forEach((cb) => {
     cb.addEventListener('change', () => {
@@ -415,8 +470,8 @@ function addDefinitionEngineOptions(engines) {
 
 // Reset any selections that depend on the "what" (archetype) choice, since they
 // no longer apply once a different scenario is picked.
-function clearDownstreamSelections(archetypeId) {
-  if (archetypeId !== 'custom') {
+function clearDownstreamSelections(keepDescription) {
+  if (!keepDescription) {
     document.getElementById('custom-description').value = '';
   }
 }
@@ -428,7 +483,7 @@ function clearArchetypeSelection() {
   document.querySelectorAll('input[name="archetype"]').forEach((radio) => { radio.checked = false; });
   updateCardSelection('#archetype-options', 'radio');
   document.getElementById('custom-description-field').classList.remove('visible');
-  clearDownstreamSelections(null);
+  clearDownstreamSelections(false);
 
   document.querySelectorAll('input[name="trigger"]').forEach((cb) => { cb.checked = false; });
   updateCardSelection('#trigger-options', 'checkbox');

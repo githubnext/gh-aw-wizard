@@ -414,6 +414,10 @@ a:hover {
   scrollbar-gutter: stable;
 }
 
+.archetype-option-full-width {
+  grid-column: 1 / -1;
+}
+
 .option-card {
   display: flex;
   align-items: center;

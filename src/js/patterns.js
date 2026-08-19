@@ -51,6 +51,15 @@ export function getArchetype(patterns, id) {
   return null;
 }
 
+export function getWhatPageOptions(patterns) {
+  if (!patterns || !patterns.wizard || !Array.isArray(patterns.wizard.what_options)) return [];
+  return patterns.wizard.what_options.reduce((options, display) => {
+    const archetype = getArchetype(patterns, display.id);
+    if (archetype) options.push(Object.assign({}, archetype, display));
+    return options;
+  }, []);
+}
+
 const SAFE_OUTPUT_MAP = {
   'add-comment': ['add-comment'],
   'add-label': ['add-labels'],
