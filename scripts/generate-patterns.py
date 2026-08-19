@@ -159,6 +159,20 @@ CURATED_ARCHETYPES = {
             "Review changed lines only and avoid duplicate feedback",
         ],
     },
+    "security-scanner": {
+        "label": "Security Scanner",
+        "description": "Scan recent commits for malicious or suspicious code patterns",
+        "recommended_triggers": ["schedule"],
+        "recommended_safe_outputs": ["issues"],
+        "recommended_tools": ["create-code-scanning-alert"],
+        "prompt_style": "phase-based",
+        "size_range_bytes": [5000, 12000],
+        "tips": [
+            "Scope analysis to a bounded recent window (e.g. last 3 days of commits) rather than the whole history",
+            "Report findings as code-scanning alerts, not issues, so they surface in the Security tab",
+            "Call noop when the scan is clean instead of leaving no output",
+        ],
+    },
 }
 
 
