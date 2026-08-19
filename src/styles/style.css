@@ -1165,6 +1165,19 @@ a:hover {
   margin-top: 0;
   padding: 0.75rem 0;
   border-top: none;
+  background: transparent;
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+.is-landing .site-footer a {
+  color: var(--text-muted);
+}
+.is-landing .site-footer:hover,
+.is-landing .site-footer:focus-within {
+  opacity: 1;
+}
+.is-landing .site-footer a:hover {
+  color: var(--accent-blue);
 }
 .landing-glow {
   position: absolute;
