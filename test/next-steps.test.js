@@ -13,9 +13,12 @@ describe('next steps', () => {
   });
 
   it('escapes workflow names in setup instructions', () => {
-    const html = nextStepsHtml('workflow', '<script>', 'claude');
+    const engine = 'claude';
+    const html = nextStepsHtml('workflow', '<script>', engine);
 
     expect(html).toContain('&lt;script&gt;.md');
     expect(html).not.toContain('<script>');
+    expect(html).toContain('gh extension install github/gh-aw && gh aw upgrade');
+    expect(html).toContain(`gh aw init --engine ${engine}`);
   });
 });
