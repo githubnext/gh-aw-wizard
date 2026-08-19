@@ -113,6 +113,7 @@ steps:
             for wf in repo.get("workflows", []):
                 wf["_repo"] = repo_key
                 wf["_stars"] = repo.get("stars", 0)
+                wf["_priority"] = repo.get("priority", False)
                 workflows.append(wf)
 
         # Parse success rate from "N/M" string
@@ -159,7 +160,7 @@ steps:
         # Aggregate by archetype
         arch_data = defaultdict(lambda: {
             "workflows": [], "success_rates": [], "triggers": Counter(),
-            "repos": [], "tips": set(), "anti_patterns": []
+            "repos": [], "priority_workflows": 0, "tips": set(), "anti_patterns": []
         })
 
         for wf in workflows:
@@ -168,16 +169,21 @@ steps:
             ad["label"] = label
             ad["description"] = desc
             ad["workflows"].append(wf)
+            if wf["_priority"]:
+                ad["priority_workflows"] += 1
             sr = parse_sr(wf.get("success_rate"))
             if sr is not None:
                 ad["success_rates"].append(sr)
             for t in wf.get("triggers", []):
                 ad["triggers"][t] += 1
-            ad["repos"].append((wf["_repo"], wf["_stars"]))
+            ad["repos"].append((wf["_repo"], wf["_stars"], wf["_priority"]))
 
         # Build archetypes list
         archetypes = []
-        for arch_id, ad in sorted(arch_data.items(), key=lambda x: -len(x[1]["workflows"])):
+        for arch_id, ad in sorted(
+            arch_data.items(),
+            key=lambda x: (-x[1]["priority_workflows"], -len(x[1]["workflows"]))
+        ):
             rates = ad["success_rates"]
             avg_sr = round(sum(rates) / len(rates), 2) if rates else 0.0
 
@@ -187,8 +193,8 @@ steps:
                 top_triggers.append({"type": t, "config": {}})
 
             # Top repos by stars
-            top_repos = sorted(set(ad["repos"]), key=lambda x: -x[1])[:5]
-            top_repos = [{"repo": r, "stars": s} for r, s in top_repos]
+            top_repos = sorted(set(ad["repos"]), key=lambda x: (-x[2], -x[1]))[:5]
+            top_repos = [{"repo": r, "stars": s} for r, s, _ in top_repos]
 
             # Anti-patterns: workflows with very low success rates
             for wf in ad["workflows"]:
@@ -1183,7 +1189,7 @@ Your job is to read the statistical analysis report, compare it with the current
 
 This repository contains a prompt generator for agentic workflows. It uses `patterns.json` as its knowledge base — a file that defines archetypes (types of workflows), their success rates, recommended configurations, tips, and anti-patterns.
 
-The workflow first restores cached intermediate scan data, then runs `scripts/scan.sh --active-only --run-history --resume` to collect data from real public repositories, downloads agentic workflow run logs with `gh aw logs`, rebuilds `patterns.json`, and produces `data/analysis-report.json` with fresh statistics.
+The workflow first restores cached intermediate scan data, then runs `scripts/scan.sh --active-only --run-history --resume` to collect data from real public repositories and every sample in the GetUpNext Agentics collection (`githubnext/agentics`), downloads agentic workflow run logs with `gh aw logs`, rebuilds `patterns.json`, and produces `data/analysis-report.json` with fresh statistics.
 
 Because the scan is incremental, this workflow is designed to run repeatedly: intermediate stages that are still fresh (less than 7 days old) are reused from the cache instead of being re-fetched.
 
@@ -1209,6 +1215,7 @@ You also have the `agentic-workflows` tools available (`status`, `compile`, `log
 5. Inspect `logs/` for failure evidence when the report flags degraded workflows
 6. Understand what changed: look at the `recommendations` array in the report
 7. Review `configuration_analysis.profiles` for supported trigger and safe-output combinations; rank 1 is the wizard default for each archetype
+8. Treat workflows from repositories marked `priority: true` as the authoritative samples for workflow types and recommended structure. Prefer them when they conflict with samples discovered elsewhere, while keeping measured run data as the source for success-rate claims.
 
 ### Step 2: Evaluate recommendations
 
@@ -1262,6 +1269,7 @@ If the analysis report shows no significant changes (all deltas within noise), d
 ## Rules
 
 - Do not invent data. Every change must be traceable to a number in `analysis-report.json`.
+- Give GetUpNext Agentics samples precedence over workflows discovered through code search when defining workflow types, examples, and recommended structure.
 - Do not remove existing archetypes or anti-patterns unless the data strongly contradicts them (n≥50, >20pp shift).
 - Do not change the structure or schema of `patterns.json` beyond the generated `configuration_profiles` section.
 - Do not reference internal or private repositories. All data comes from public repos.
