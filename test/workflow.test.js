@@ -151,13 +151,13 @@ describe('generateWorkflowFile', () => {
     expect(md).toContain('timeout-minutes: 45\n');
   });
 
-  it('adds inferred capabilities and cache-memory extras', () => {
+  it('adds inferred capabilities and optional agent capabilities', () => {
     const md = generateWorkflowFile(
       answers({
         archetype: 'status-report',
         triggers: ['workflow_dispatch'],
         outputs: ['new-issues'],
-        extras: ['memory'],
+        extras: ['memory', 'charts', 'browser'],
         needsData: true
       }),
       patterns
@@ -165,12 +165,14 @@ describe('generateWorkflowFile', () => {
     expect(md).toContain('permissions:\n  actions: read\n  contents: read\n');
     expect(md).toContain('  github:\n');
     expect(md).toContain('  cache-memory:\n');
+    expect(md).toContain('  playwright:\n    mode: cli\n');
+    expect(md).toContain('safe-outputs:\n  create-issue:\n  upload-assets:\n');
     expect(md).toContain('## Pre-steps');
   });
 
-  it('appends the project context section when provided', () => {
+  it('does not add project context from removed free-text input', () => {
     const md = generateWorkflowFile(answers({ dataDescription: 'Monorepo layout' }), patterns);
-    expect(md).toContain('## Project Context\n\nMonorepo layout\n');
+    expect(md).not.toContain('## Project Context');
   });
 
   it('falls back to a custom body and default timeout without patterns', () => {
@@ -228,14 +230,15 @@ describe('generateAgentPrompt', () => {
     expect(prompt.indexOf('First, analyze this repository')).toBeLessThan(prompt.indexOf('Requirements:'));
   });
 
-  it('mentions pre-steps, memory and project context when requested', () => {
+  it('mentions pre-steps and selected agent capabilities when requested', () => {
     const prompt = generateAgentPrompt(
-      answers({ needsData: true, extras: ['memory'], dataDescription: 'Uses pnpm' }),
+      answers({ needsData: true, extras: ['memory', 'charts', 'browser'] }),
       patterns
     );
     expect(prompt).toContain('- Add a pre-step to fetch external data before the agent runs\n');
     expect(prompt).toContain('- Add cache-memory tool for persistent memory across runs\n');
-    expect(prompt).toContain('- Additional project context: Uses pnpm\n');
+    expect(prompt).toContain('- Add upload-assets safe output to publish generated charts\n');
+    expect(prompt).toContain('- Enable Playwright CLI for browser automation\n');
   });
 
   it('includes the selected engine requirement', () => {
