@@ -161,7 +161,6 @@ function updateProgress(from, to) {
       ind.textContent = s;
     }
   });
-  document.getElementById('recipe-step-status').textContent = 'Step ' + to + ' of ' + TOTAL_STEPS;
 }
 
 function maxReachableStep() {
