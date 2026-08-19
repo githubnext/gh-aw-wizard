@@ -387,7 +387,7 @@ def fetch_source(repo, path, ref):
         except (binascii.Error, ValueError) as error:
             print(f"    Note: API content decode failed for {repo}/{path}: {error}; trying raw URL", file=sys.stderr)
     if result.returncode == 0:
-        print(f"    Note: API content unavailable for {repo}/{path}; trying raw URL", file=sys.stderr)
+        print(f"    Note: API returned empty content for {repo}/{path}; trying raw URL", file=sys.stderr)
 
     raw_url = f"https://raw.githubusercontent.com/{repo}/{ref}/{path}"
     try:
@@ -459,6 +459,7 @@ for i, (name, info) in enumerate(sorted(repos.items())):
                     wf["source_kind"] = info["source_kind"]
                 
                 # Engine — must be in frontmatter and have a valid value
+                fm_match = None
                 fm_match = re.match(r'^---\s*\n(.*?)\n---', content, re.DOTALL)
                 fm_text = fm_match.group(1) if fm_match else ""
                 m = re.search(r'^engine:\s*(\S+)', fm_text, re.MULTILINE)
