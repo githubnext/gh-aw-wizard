@@ -366,7 +366,7 @@ else
 echo "Step 3 — Analysis: fetching workflow definitions..."
 
 python3 << 'PYEOF'
-import base64, json, subprocess, time, sys, re
+import base64, binascii, json, subprocess, time, sys, re
 from urllib.error import HTTPError, URLError
 from urllib.parse import quote
 from urllib.request import urlopen
@@ -382,7 +382,10 @@ def fetch_source(repo, path, ref):
         if encoded.startswith('"'):
             encoded = json.loads(encoded)
         encoded = "".join(encoded.split())
-        return base64.b64decode(encoded).decode("utf-8", errors="replace")
+        try:
+            return base64.b64decode(encoded).decode("utf-8", errors="replace")
+        except (binascii.Error, ValueError) as error:
+            print(f"    Note: API content decode failed for {repo}/{path}: {error}; trying raw URL", file=sys.stderr)
     if result.returncode == 0:
         print(f"    Note: API content unavailable for {repo}/{path}; trying raw URL", file=sys.stderr)
 
@@ -497,7 +500,8 @@ for i, (name, info) in enumerate(sorted(repos.items())):
                 if prompt_match:
                     wf["prompt_size_bytes"] = len(prompt_match.group(0).encode())
                 elif info.get("source_kind", "workflow") == "workflow":
-                    wf["prompt_size_bytes"] = len(content.encode())
+                    prompt_body = content[fm_match.end():].lstrip() if fm_match else content
+                    wf["prompt_size_bytes"] = len(prompt_body.encode())
                 
                 # Pre-steps (bash steps before the agent)
                 has_pre_steps = bool(re.search(r'steps:\s*\n\s+-\s+(?:name|run):', content))
