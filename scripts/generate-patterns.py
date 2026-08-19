@@ -25,6 +25,7 @@ CURATED_FIELDS = (
     "size_range_bytes",
     "tips",
 )
+CURATED_REQUIRED_FIELDS = (*CURATED_FIELDS, "recommended_triggers")
 
 
 def load_curated_archetypes():
@@ -48,6 +49,9 @@ def load_curated_archetypes():
             continue
         if archetype.get("id") != arch_id:
             raise ValueError(f"{path} must declare id {arch_id!r}")
+        missing_fields = set(CURATED_REQUIRED_FIELDS) - archetype.keys()
+        if missing_fields:
+            raise ValueError(f"{path} is missing fields: {', '.join(sorted(missing_fields))}")
         curated_archetypes[arch_id] = archetype
     return curated_archetypes
 
