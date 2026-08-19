@@ -40,7 +40,7 @@ export function inferNeedsPreSteps(archetype) {
 
 export function inferCapabilities(archetype) {
   // Auto-infer what tools/capabilities the archetype needs
-  var caps = { preSteps: false, bash: false, githubToolsets: false, browser: false };
+  const caps = { preSteps: false, bash: false, githubToolsets: false, browser: false };
   switch (archetype) {
     case 'status-report':
       caps.preSteps = true; caps.githubToolsets = true; break;
@@ -70,40 +70,40 @@ export function inferCapabilities(archetype) {
 
 // Per-archetype GitHub toolset scope — narrower than the default set so
 // reviewers only get the read access they actually need to see PR diffs.
-var GITHUB_TOOLSETS_BY_ARCHETYPE = {
+const GITHUB_TOOLSETS_BY_ARCHETYPE = {
   'pr-review': ['repos', 'issues', 'pull_requests'],
   'skill-pr-reviewer': ['repos', 'issues', 'pull_requests'],
   'accessibility-expert': ['repos', 'issues', 'pull_requests'],
   'user-simulator': ['repos', 'issues', 'pull_requests']
 };
-var DEFAULT_GITHUB_TOOLSETS = ['repos', 'issues', 'pull_requests', 'actions', 'code_security', 'discussions'];
+const DEFAULT_GITHUB_TOOLSETS = ['repos', 'issues', 'pull_requests', 'actions', 'code_security', 'discussions'];
 
 // Per-archetype read permissions — pr-review only needs enough to read the
 // PR diff/metadata, not the full status-report surface (actions, security, discussions).
-var PERMISSIONS_BY_ARCHETYPE = {
+const PERMISSIONS_BY_ARCHETYPE = {
   'pr-review': ['contents', 'issues', 'pull-requests'],
   'skill-pr-reviewer': ['contents', 'issues', 'pull-requests'],
   'accessibility-expert': ['contents', 'issues', 'pull-requests'],
   'user-simulator': ['contents', 'issues', 'pull-requests']
 };
-var DEFAULT_PERMISSIONS = ['actions', 'contents', 'discussions', 'issues', 'pull-requests', 'security-events'];
+const DEFAULT_PERMISSIONS = ['actions', 'contents', 'discussions', 'issues', 'pull-requests', 'security-events'];
 // Bash-only archetypes (no github toolset) still need read access to check out and
 // inspect the repo — without this they were emitting no `permissions:` block at all,
 // leaving the job on the default (often broader) GITHUB_TOKEN scope.
-var BASH_ONLY_PERMISSIONS = ['contents'];
+const BASH_ONLY_PERMISSIONS = ['contents'];
 
 export function buildTriggerYaml(triggers, commandName, archetype) {
-  var lines = '';
-  var name = commandName || 'agentic-workflow';
-  var pullRequestWritten = false;
-  triggers.forEach(function (t) {
+  let lines = '';
+  const name = commandName || 'agentic-workflow';
+  let pullRequestWritten = false;
+  triggers.forEach((t) => {
     switch (t) {
       case 'issues':
         lines += '  issues:\n    types: [opened]\n'; break;
       case 'pull_request':
-      case 'pull_request_ready_for_review':
+      case 'pull_request_ready_for_review': {
         if (pullRequestWritten) break;
-        var pullRequestTypes = [];
+        const pullRequestTypes = [];
         if (triggers.indexOf('pull_request') !== -1 &&
             archetype !== 'pr-review' && archetype !== 'skill-pr-reviewer') {
           pullRequestTypes.push('opened');
@@ -112,16 +112,17 @@ export function buildTriggerYaml(triggers, commandName, archetype) {
             archetype === 'pr-review' || archetype === 'skill-pr-reviewer') {
           pullRequestTypes.push('ready_for_review');
         }
-        lines += '  pull_request:\n    types: [' + pullRequestTypes.join(', ') + ']\n';
+        lines += `  pull_request:\n    types: [${  pullRequestTypes.join(', ')  }]\n`;
         pullRequestWritten = true;
         break;
+      }
       case 'schedule':
         lines += '  schedule:\n    - cron: "0 9 * * 1-5"\n'; break;
       case 'slash_command':
       case 'issue_comment':
-        lines += '  slash_command:\n    name: ' + name + '\n'; break;
+        lines += `  slash_command:\n    name: ${  name  }\n`; break;
       case 'label_command':
-        lines += '  label_command:\n    name: ' + name + '\n'; break;
+        lines += `  label_command:\n    name: ${  name  }\n`; break;
       case 'push':
         lines += '  push:\n    branches: [main]\n'; break;
     }
@@ -133,14 +134,14 @@ export function generateWorkflowFile(answers, patterns) {
   if (answers.archetype === 'linter-workflows') {
     throw new Error('Linter Workflows generates multiple files; use the prompt format.');
   }
-  var arch = getArchetype(patterns, answers.archetype);
-  var name = workflowName(answers.archetype, answers.customDescription);
-  var label = arch ? arch.label : 'Custom Workflow';
-  var desc = arch ? arch.description : answers.customDescription || 'Custom agentic workflow';
+  const arch = getArchetype(patterns, answers.archetype);
+  const name = workflowName(answers.archetype, answers.customDescription);
+  const label = arch ? arch.label : 'Custom Workflow';
+  const desc = arch ? arch.description : answers.customDescription || 'Custom agentic workflow';
 
   // Build safe outputs
-  var safeSet = new Set();
-  answers.outputs.forEach(function (o) {
+  const safeSet = new Set();
+  answers.outputs.forEach((o) => {
     switch (o) {
       case 'add-comment':
       case 'add-labels':
@@ -164,39 +165,39 @@ export function generateWorkflowFile(answers, patterns) {
   if ((answers.extras || []).indexOf('charts') !== -1) {
     safeSet.add('upload-assets');
   }
-  var safeOutputs = Array.from(safeSet);
+  const safeOutputs = Array.from(safeSet);
 
   // Timeout
-  var timeout = (arch && arch.timeout_minutes) ? arch.timeout_minutes : 30;
+  let timeout = (arch && arch.timeout_minutes) ? arch.timeout_minutes : 30;
   if (patterns && patterns.config_defaults && patterns.config_defaults.timeout_by_trigger) {
-    answers.triggers.forEach(function (t) {
-      var val = patterns.config_defaults.timeout_by_trigger[t];
+    answers.triggers.forEach((t) => {
+      const val = patterns.config_defaults.timeout_by_trigger[t];
       if (val && val > timeout) timeout = val;
     });
   }
 
   // Trigger config YAML
-  var triggerYaml = buildTriggerYaml(answers.triggers, name, answers.archetype);
+  const triggerYaml = buildTriggerYaml(answers.triggers, name, answers.archetype);
 
   // Frontmatter — auto-infer capabilities from archetype
-  var inferred = inferCapabilities(answers.archetype);
-  var extras = answers.extras || [];
-  var engine = normalizeEngine(answers.engine);
-  var fm = '---\n';
-  fm += 'name: ' + name + '\n';
-  fm += 'description: ' + desc + '\n';
-  fm += 'on:\n' + triggerYaml;
+  const inferred = inferCapabilities(answers.archetype);
+  const extras = answers.extras || [];
+  const engine = normalizeEngine(answers.engine);
+  let fm = '---\n';
+  fm += `name: ${  name  }\n`;
+  fm += `description: ${  desc  }\n`;
+  fm += `on:\n${  triggerYaml}`;
   if (inferred.githubToolsets) {
-    var perms = PERMISSIONS_BY_ARCHETYPE[answers.archetype] || DEFAULT_PERMISSIONS;
+    const perms = PERMISSIONS_BY_ARCHETYPE[answers.archetype] || DEFAULT_PERMISSIONS;
     fm += 'permissions:\n';
-    perms.forEach(function (p) { fm += '  ' + p + ': read\n'; });
+    perms.forEach((p) => { fm += `  ${  p  }: read\n`; });
   } else if (inferred.bash) {
     // Bash-only archetypes still check out and read the repo, so declare the
     // minimal read permission explicitly rather than relying on defaults.
     fm += 'permissions:\n';
-    BASH_ONLY_PERMISSIONS.forEach(function (p) { fm += '  ' + p + ': read\n'; });
+    BASH_ONLY_PERMISSIONS.forEach((p) => { fm += `  ${  p  }: read\n`; });
   }
-  fm += 'engine: ' + engine + '\n';
+  fm += `engine: ${  engine  }\n`;
 
   // Tools section
   if (inferred.bash || inferred.githubToolsets || inferred.browser || extras.indexOf('memory') !== -1 || extras.indexOf('browser') !== -1) {
@@ -205,9 +206,9 @@ export function generateWorkflowFile(answers, patterns) {
       fm += '  bash: true\n';
     }
     if (inferred.githubToolsets) {
-      var toolsets = GITHUB_TOOLSETS_BY_ARCHETYPE[answers.archetype] || DEFAULT_GITHUB_TOOLSETS;
+      const toolsets = GITHUB_TOOLSETS_BY_ARCHETYPE[answers.archetype] || DEFAULT_GITHUB_TOOLSETS;
       fm += '  github:\n';
-      fm += '    toolsets: [' + toolsets.join(', ') + ']\n';
+      fm += `    toolsets: [${  toolsets.join(', ')  }]\n`;
     }
     if (extras.indexOf('memory') !== -1) {
       fm += '  cache-memory:\n';
@@ -219,14 +220,14 @@ export function generateWorkflowFile(answers, patterns) {
 
   if (safeOutputs.length) {
     fm += 'safe-outputs:\n';
-    safeOutputs.forEach(function (safeOutput) { fm += '  ' + safeOutput + ':\n'; });
+    safeOutputs.forEach((safeOutput) => { fm += `  ${  safeOutput  }:\n`; });
   }
-  fm += 'timeout-minutes: ' + timeout + '\n';
+  fm += `timeout-minutes: ${  timeout  }\n`;
 
   fm += '---\n\n';
 
   // Body — varies by archetype
-  var body = '';
+  let body;
   switch (answers.archetype) {
     case 'issue-triage':
       body = buildIssueTriage(answers, label);
@@ -286,16 +287,16 @@ export function generateWorkflowFile(answers, patterns) {
 export function fencedBlock(content, lang) {
   // Use a fence longer than the longest backtick run inside the content so
   // nested code blocks in the generated markdown stay intact.
-  var body = String(content).replace(/\s+$/, '');
-  var longest = 0;
-  var matches = body.match(/`+/g) || [];
-  matches.forEach(function (m) { if (m.length > longest) longest = m.length; });
-  var fence = '`'.repeat(Math.max(3, longest + 1));
-  return fence + (lang || '') + '\n' + body + '\n' + fence;
+  const body = String(content).replace(/\s+$/, '');
+  let longest = 0;
+  const matches = body.match(/`+/g) || [];
+  matches.forEach((m) => { if (m.length > longest) longest = m.length; });
+  const fence = '`'.repeat(Math.max(3, longest + 1));
+  return `${fence + (lang || '')  }\n${  body  }\n${  fence}`;
 }
 
-var GH_AW_INSTRUCTIONS_BASE = 'https://raw.githubusercontent.com/github/gh-aw/main/.github/aw/';
-var SCENARIO_INSTRUCTIONS = {
+const GH_AW_INSTRUCTIONS_BASE = 'https://raw.githubusercontent.com/github/gh-aw/main/.github/aw/';
+const SCENARIO_INSTRUCTIONS = {
   'issue-triage': ['maintainer.md'],
   'code-improvement': ['maintainer.md'],
   'status-report': ['report.md'],
@@ -324,41 +325,41 @@ var SCENARIO_INSTRUCTIONS = {
 };
 
 function instructionUrls(archetype) {
-  var urls = [GH_AW_INSTRUCTIONS_BASE + 'create-agentic-workflow.md'];
-  var scenarioInstructions = SCENARIO_INSTRUCTIONS[archetype] || [];
-  scenarioInstructions.forEach(function (instruction) {
+  const urls = [`${GH_AW_INSTRUCTIONS_BASE  }create-agentic-workflow.md`];
+  const scenarioInstructions = SCENARIO_INSTRUCTIONS[archetype] || [];
+  scenarioInstructions.forEach((instruction) => {
     urls.push(instruction.indexOf('https://') === 0 ? instruction : GH_AW_INSTRUCTIONS_BASE + instruction);
   });
   return urls;
 }
 
 function sampleWorkflowFile(answers, patterns, label) {
-  var workflow = generateWorkflowFile(answers, patterns);
-  var frontmatterEnd = workflow.indexOf('\n---\n\n');
-  var frontmatter = workflow.slice(0, frontmatterEnd + 6);
-  return frontmatter + 'Let the agent generate the detailed ' + label.toLowerCase() + ' prompt for this repository...\n';
+  const workflow = generateWorkflowFile(answers, patterns);
+  const frontmatterEnd = workflow.indexOf('\n---\n\n');
+  const frontmatter = workflow.slice(0, frontmatterEnd + 6);
+  return `${frontmatter  }Let the agent generate the detailed ${  label.toLowerCase()  } prompt for this repository...\n`;
 }
 
-var MULTI_WORKFLOW_ARCHETYPES = {
+const MULTI_WORKFLOW_ARCHETYPES = {
   'linter-workflows': ['linter-miner', 'linter-refiner', 'linter-applier']
 };
 
 function requestedWorkflows(answers, patterns) {
-  var archetypes = MULTI_WORKFLOW_ARCHETYPES[answers.archetype];
+  const archetypes = MULTI_WORKFLOW_ARCHETYPES[answers.archetype];
   if (!archetypes) {
-    var arch = getArchetype(patterns, answers.archetype);
+    const arch = getArchetype(patterns, answers.archetype);
     return [{
-      answers: answers,
+      answers,
       archetype: arch,
       label: arch ? arch.label : 'Custom Workflow',
       description: arch ? arch.description : answers.customDescription || 'Custom agentic workflow'
     }];
   }
-  return archetypes.map(function (archetype) {
-    var arch = getArchetype(patterns, archetype);
+  return archetypes.map((archetype) => {
+    const arch = getArchetype(patterns, archetype);
     return {
       answers: Object.assign({}, answers, {
-        archetype: archetype,
+        archetype,
         needsData: inferNeedsPreSteps(archetype)
       }),
       archetype: arch,
@@ -369,17 +370,16 @@ function requestedWorkflows(answers, patterns) {
 }
 
 export function generateAgentPrompt(answers, patterns) {
-  var arch = getArchetype(patterns, answers.archetype);
-  var name = workflowName(answers.archetype, answers.customDescription);
-  var label = arch ? arch.label : 'Custom Workflow';
-  var desc = arch ? arch.description : answers.customDescription || 'Custom agentic workflow';
-  var engine = normalizeEngine(answers.engine);
-  var inferred = inferCapabilities(answers.archetype);
-  var workflows = requestedWorkflows(answers, patterns);
-  var multiple = workflows.length > 1;
+  const arch = getArchetype(patterns, answers.archetype);
+  const name = workflowName(answers.archetype, answers.customDescription);
+  const desc = arch ? arch.description : answers.customDescription || 'Custom agentic workflow';
+  const engine = normalizeEngine(answers.engine);
+  const inferred = inferCapabilities(answers.archetype);
+  const workflows = requestedWorkflows(answers, patterns);
+  const multiple = workflows.length > 1;
 
-  var triggersReadable = answers.triggers.map(function (t) {
-    var map = {
+  const triggersReadable = answers.triggers.map((t) => {
+    const map = {
       'issues': 'when a new issue is opened',
       'pull_request': (answers.archetype === 'pr-review' || answers.archetype === 'skill-pr-reviewer')
         ? 'when a pull request is marked ready for review'
@@ -394,8 +394,8 @@ export function generateAgentPrompt(answers, patterns) {
     return map[t] || t;
   }).join(', ');
 
-  var outputsReadable = answers.outputs.map(function (o) {
-    var map = {
+  const outputsReadable = answers.outputs.map((o) => {
+    const map = {
       'add-comment': 'add comments on issues/PRs',
       'add-labels': 'add labels',
       'create-issue': 'create new issues',
@@ -411,36 +411,36 @@ export function generateAgentPrompt(answers, patterns) {
     return map[o] || o;
   }).join(', ');
 
-  var prompt = 'Create ' + (multiple ? workflows.length + ' workflows' : 'a workflow') +
-    ' for GitHub Agentic Workflows using these instructions:\n';
-  var instructionSet = new Set();
-  workflows.forEach(function (workflow) {
-    instructionUrls(workflow.answers.archetype).forEach(function (url) { instructionSet.add(url); });
+  let prompt = `Create ${  multiple ? `${workflows.length  } workflows` : 'a workflow' 
+    } for GitHub Agentic Workflows using these instructions:\n`;
+  const instructionSet = new Set();
+  workflows.forEach((workflow) => {
+    instructionUrls(workflow.answers.archetype).forEach((url) => { instructionSet.add(url); });
   });
-  instructionSet.forEach(function (url) {
-    prompt += '- ' + url + '\n';
+  instructionSet.forEach((url) => {
+    prompt += `- ${  url  }\n`;
   });
   prompt += '\n';
-  prompt += 'The purpose of ' + (multiple ? 'the workflows' : 'the workflow') + ' is: ' + desc + '\n\n';
-  prompt += 'First, analyze this repository so the ' + (multiple ? 'workflows are' : 'workflow is') + ' optimized for it:\n';
+  prompt += `The purpose of ${  multiple ? 'the workflows' : 'the workflow'  } is: ${  desc  }\n\n`;
+  prompt += `First, analyze this repository so the ${  multiple ? 'workflows are' : 'workflow is'  } optimized for it:\n`;
   prompt += '- Read the README, AGENTS.md (and any CONTRIBUTING or docs files) to understand the project purpose and conventions\n';
   prompt += '- Identify the languages, package managers, build/test/lint commands and CI setup actually used\n';
   prompt += '- Note repository conventions such as labels, issue/PR templates and branch naming\n';
   prompt += '- Use those findings to tailor the workflow prompt, tools, and instructions to this repository\n\n';
   prompt += 'Requirements:\n';
   if (multiple) {
-    prompt += '- Generate exactly ' + workflows.length + ' independent workflow files:\n';
-    workflows.forEach(function (workflow) {
-      prompt += '  - ' + workflow.label + ': name it ' +
-        workflowName(workflow.answers.archetype, workflow.answers.customDescription) +
-        ' and use it to ' + workflow.description.charAt(0).toLowerCase() + workflow.description.slice(1) + '\n';
+    prompt += `- Generate exactly ${  workflows.length  } independent workflow files:\n`;
+    workflows.forEach((workflow) => {
+      prompt += `  - ${  workflow.label  }: name it ${ 
+        workflowName(workflow.answers.archetype, workflow.answers.customDescription) 
+        } and use it to ${  workflow.description.charAt(0).toLowerCase()  }${workflow.description.slice(1)  }\n`;
     });
   } else {
-    prompt += '- Name: ' + name + '\n';
+    prompt += `- Name: ${  name  }\n`;
   }
-  prompt += '- Engine: ' + engine + '\n';
-  prompt += '- Triggers: ' + triggersReadable + '\n';
-  prompt += '- Allowed outputs: ' + outputsReadable + '\n';
+  prompt += `- Engine: ${  engine  }\n`;
+  prompt += `- Triggers: ${  triggersReadable  }\n`;
+  prompt += `- Allowed outputs: ${  outputsReadable  }\n`;
   prompt += multiple
     ? '- Save each workflow in its own appropriately named .github/workflows/*.md file\n'
     : '- Choose an appropriate kebab-case filename for the new .github/workflows/*.md file\n';
@@ -449,7 +449,7 @@ export function generateAgentPrompt(answers, patterns) {
   if (answers.needsData) {
     prompt += '- Add a pre-step to fetch external data before the agent runs\n';
   }
-  var extras = answers.extras || [];
+  const extras = answers.extras || [];
   if (extras.indexOf('memory') !== -1) {
     prompt += '- Add cache-memory tool for persistent memory across runs\n';
   }
@@ -466,19 +466,19 @@ export function generateAgentPrompt(answers, patterns) {
   prompt += '\nCreate a pull request with the generated agentic workflow files.';
 
   // Inline generated workflow markdown as starting-point suggestions.
-  prompt += '\n\n## Suggested workflow ' + (multiple ? 'files' : 'file') + '\n\n';
+  prompt += `\n\n## Suggested workflow ${  multiple ? 'files' : 'file'  }\n\n`;
   if (!multiple) {
     prompt += 'Use this generated draft as a starting point for the new `.github/workflows/*.md` file, ' +
       'adapting it to the repository as needed:\n\n';
   }
-  workflows.forEach(function (workflow) {
+  workflows.forEach((workflow) => {
     if (multiple) {
-      prompt += '### ' + workflow.label + '\n\n';
+      prompt += `### ${  workflow.label  }\n\n`;
     }
-    prompt += fencedBlock(
+    prompt += `${fencedBlock(
       sampleWorkflowFile(workflow.answers, patterns, workflow.label),
       'markdown'
-    ) + '\n';
+    )  }\n`;
     if (multiple) prompt += '\n';
   });
 

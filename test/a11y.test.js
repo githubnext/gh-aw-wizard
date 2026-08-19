@@ -7,8 +7,8 @@ const css = readFileSync(fileURLToPath(new URL('../src/styles/style.css', import
 const html = readFileSync(fileURLToPath(new URL('../src/index.html', import.meta.url)), 'utf8');
 
 function ruleBody(selector) {
-  const start = css.indexOf(selector + ' {');
-  expect(start, 'rule not found: ' + selector).toBeGreaterThan(-1);
+  const start = css.indexOf(`${selector  } {`);
+  expect(start, `rule not found: ${  selector}`).toBeGreaterThan(-1);
   return css.slice(start, css.indexOf('}', start));
 }
 

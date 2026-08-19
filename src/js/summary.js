@@ -3,7 +3,7 @@
 import { getArchetype } from './patterns.js';
 import { formatEngineLabel } from './engines.js';
 
-var triggerLabels = {
+const triggerLabels = {
   issues: 'a new issue is opened',
   pull_request: 'a pull request is opened',
   pull_request_ready_for_review: 'a pull request is ready for review',
@@ -13,7 +13,7 @@ var triggerLabels = {
   push: 'code is pushed to main'
 };
 
-var outputLabels = {
+const outputLabels = {
   'add-comment': 'add comment',
   'add-labels': 'add label',
   'create-issue': 'create issue',
@@ -26,7 +26,7 @@ var outputLabels = {
   commits: 'commit changes'
 };
 
-var engineLabels = {
+const engineLabels = {
   copilot: 'Copilot',
   claude: 'Claude',
   codex: 'Codex',
@@ -34,7 +34,7 @@ var engineLabels = {
   pi: 'Pi'
 };
 
-var extraLabels = {
+const extraLabels = {
   memory: 'memory between runs',
   charts: 'chart generation',
   browser: 'browser access'
@@ -43,26 +43,26 @@ var extraLabels = {
 function readableList(values, conjunction) {
   conjunction = conjunction || 'and';
   if (values.length < 2) return values[0] || '';
-  if (values.length === 2) return values[0] + ' ' + conjunction + ' ' + values[1];
-  return values.slice(0, -1).join(', ') + ', ' + conjunction + ' ' + values[values.length - 1];
+  if (values.length === 2) return `${values[0]  } ${  conjunction  } ${  values[1]}`;
+  return `${values.slice(0, -1).join(', ')  }, ${  conjunction  } ${  values[values.length - 1]}`;
 }
 
 function mapLabels(values, labels) {
-  return readableList(values.map(function (value) { return labels[value] || value; }));
+  return readableList(values.map((value) => { return labels[value] || value; }));
 }
 
 export function buildWorkflowSummary(answers, patterns) {
-  var archetype = getArchetype(patterns, answers.archetype);
-  var purpose = answers.archetype === 'custom'
+  const archetype = getArchetype(patterns, answers.archetype);
+  const purpose = answers.archetype === 'custom'
     ? answers.customDescription
     : archetype && archetype.description;
-  var engine = answers.engine ? (engineLabels[answers.engine] || formatEngineLabel(answers.engine)) : null;
-  var capabilities = (answers.extras || []).map(function (extra) { return extraLabels[extra] || extra; });
+  const engine = answers.engine ? (engineLabels[answers.engine] || formatEngineLabel(answers.engine)) : null;
+  const capabilities = (answers.extras || []).map((extra) => { return extraLabels[extra] || extra; });
 
   return {
     trigger: {
       value: answers.triggers.length
-        ? readableList(answers.triggers.map(function (trigger) {
+        ? readableList(answers.triggers.map((trigger) => {
           if (trigger === 'pull_request' && answers.archetype === 'pr-review') {
             return 'a pull request is ready for review';
           }

@@ -1,12 +1,12 @@
 // Theme toggling — keeps the Primer color mode in sync with the current page state.
-var THEME_MODES = ['auto', 'light', 'dark'];
-var THEME_COPY = {
+const THEME_MODES = ['auto', 'light', 'dark'];
+const THEME_COPY = {
   auto: { label: 'Auto theme', icon: 'device-desktop' },
   light: { label: 'Light theme', icon: 'sun' },
   dark: { label: 'Dark theme', icon: 'moon' }
 };
 
-var themeMode = 'auto';
+let themeMode = 'auto';
 
 export function normalizeThemeMode(mode) {
   return THEME_MODES.indexOf(mode) === -1 ? 'auto' : mode;
@@ -26,18 +26,18 @@ export function themeCopy(mode) {
 
 export function applyTheme(mode) {
   themeMode = mode;
-  var systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   document.documentElement.setAttribute('data-theme-preference', mode);
   document.documentElement.setAttribute('data-color-mode', resolveColorMode(mode, systemDark));
 
-  var label = document.getElementById('theme-toggle-label');
-  var toggle = document.getElementById('theme-toggle');
-  var icon = document.querySelector('.theme-toggle-icon use');
-  var state = themeCopy(mode);
+  const label = document.getElementById('theme-toggle-label');
+  const toggle = document.getElementById('theme-toggle');
+  const icon = document.querySelector('.theme-toggle-icon use');
+  const state = themeCopy(mode);
   if (label) label.textContent = state.label;
-  if (icon) icon.setAttribute('href', '#octicon-' + state.icon);
+  if (icon) icon.setAttribute('href', `#octicon-${  state.icon}`);
   if (toggle) {
-    toggle.setAttribute('title', state.label + '. Click to change.');
+    toggle.setAttribute('title', `${state.label  }. Click to change.`);
   }
 }
 
@@ -45,16 +45,16 @@ export function initTheme() {
   themeMode = normalizeThemeMode(document.documentElement.getAttribute('data-theme-preference') || 'auto');
   applyTheme(themeMode);
 
-  var toggle = document.getElementById('theme-toggle');
+  const toggle = document.getElementById('theme-toggle');
   if (!toggle) return;
-  toggle.addEventListener('click', function () {
-    var next = nextThemeMode(themeMode);
+  toggle.addEventListener('click', () => {
+    const next = nextThemeMode(themeMode);
     applyTheme(next);
   });
 
   if (window.matchMedia) {
-    var media = window.matchMedia('(prefers-color-scheme: dark)');
-    var updateAutoTheme = function () {
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+    const updateAutoTheme = function () {
       if (themeMode === 'auto') applyTheme('auto');
     };
     if (media.addEventListener) media.addEventListener('change', updateAutoTheme);
