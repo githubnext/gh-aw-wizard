@@ -1314,6 +1314,11 @@ a:hover {
   width: 0.8rem;
   height: 0.8rem;
 }
+.ld-phase-icon-multi .ld-phase-icon-lock {
+  width: 0.8rem;
+  height: 0.8rem;
+  color: var(--accent-green);
+}
 .ld-phase-text {
   display: flex;
   flex-direction: column;
