@@ -657,6 +657,30 @@ a:hover {
 .preview-code .md-bold     { color: var(--text-primary); font-weight: 600; }
 .preview-code .md-number   { color: var(--accent-blue); }
 
+/* Agent prompt panel */
+.prompt-panel {
+  border-color: var(--accent-blue);
+}
+.prompt-panel .preview-header {
+  padding: 0.85rem 1rem;
+}
+.prompt-panel .preview-header h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.prompt-panel .preview-header h3::before {
+  content: '✨';
+  font-size: 1rem;
+}
+.prompt-panel .preview-code {
+  font-size: 0.85rem;
+}
+.btn-copy-prompt {
+  padding: 0.7rem 1.6rem;
+  font-size: 0.95rem;
+}
+
 /* Toast */
 .toast {
   position: fixed;

@@ -36,7 +36,7 @@ function generateAndShow() {
   showPreview(generatedPrompt);
   var answers = gatherAnswers();
   showNextSteps('prompt', workflowName(answers.archetype, answers.customDescription), answers.engine);
-  document.getElementById('preview-filename').textContent = 'prompt.txt';
+  document.getElementById('preview-filename').textContent = 'Agent prompt';
 }
 
 function refreshPreview() {
@@ -177,8 +177,7 @@ function maxReachableStep() {
   if (!document.querySelector('input[name="archetype"]:checked')) return 1;
   if (!hasChecked('trigger')) return 2;
   if (!hasChecked('output')) return 3;
-  if (currentStep === 6 || generatedPrompt) return 6;
-  return 5;
+  return 6;
 }
 
 function syncProgressStepAvailability() {

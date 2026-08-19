@@ -7,57 +7,32 @@ export function step(n, content) {
   return '<div class="next-step"><div class="next-step-num">' + n + '</div><div>' + content + '</div></div>';
 }
 
-function getEngineMeta(engine) {
-  var selected = normalizeEngine(engine);
-  var engines = {
-    copilot: {
-      label: 'Copilot',
-      quickDocs: 'https://github.github.com/gh-aw/reference/engines/#copilot',
-      setup: 'https://github.github.com/gh-aw/setup/quick-start/'
-    },
-    claude: {
-      label: 'Claude',
-      quickDocs: 'https://github.github.com/gh-aw/reference/engines/#claude',
-      setup: 'https://github.github.com/gh-aw/setup/quick-start/'
-    },
-    codex: {
-      label: 'Codex',
-      quickDocs: 'https://github.github.com/gh-aw/reference/engines/#codex',
-      setup: 'https://github.github.com/gh-aw/setup/quick-start/'
-    },
-    gemini: {
-      label: 'Gemini',
-      quickDocs: 'https://github.github.com/gh-aw/reference/engines/#gemini',
-      setup: 'https://github.github.com/gh-aw/setup/quick-start/'
-    },
-    pi: {
-      label: 'Pi',
-      quickDocs: 'https://github.github.com/gh-aw/reference/engines/#pi',
-      setup: 'https://github.github.com/gh-aw/setup/quick-start/'
-    }
+function engineLabel(engine) {
+  var labels = {
+    copilot: 'Copilot',
+    claude: 'Claude',
+    codex: 'Codex',
+    gemini: 'Gemini',
+    pi: 'Pi'
   };
-  return engines[selected];
+  return labels[normalizeEngine(engine)];
 }
 
 export function nextStepsHtml(format, workflowName, engine) {
   var name = escapeHtml(workflowName);
-  var engineMeta = getEngineMeta(engine);
-  var engineLabel = engineMeta.label;
-  var quickDocsLink = '<a href="' + engineMeta.quickDocs + '" target="_blank">Quick docs</a>';
-  var setupLink = '<a href="' + engineMeta.setup + '" target="_blank">Setup guide</a>';
+  var label = engineLabel(engine);
   var html = '<h3>Next steps</h3>';
 
   if (format === 'workflow') {
     html += step(1, 'Make sure <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository" target="_blank">GitHub Actions is enabled</a> on your repository');
     html += step(2, 'Install the <a href="https://cli.github.com" target="_blank">GitHub CLI</a> and the Agentic Workflows extension:<br><code>gh extension install github/gh-aw</code>');
     html += step(3, 'Download the <code>.md</code> file and save it to <code>.github/workflows/' + name + '.md</code>');
-    html += step(4, 'Set up the <strong>' + engineLabel + '</strong> engine — run <code>gh aw add-wizard</code>. ' + quickDocsLink + ' · ' + setupLink);
+    html += step(4, 'Set up the <strong>' + label + '</strong> engine — run <code>gh aw add-wizard</code>');
     html += step(5, 'Compile the workflow to generate the Actions YAML:<br><code>gh aw compile</code>');
     html += step(6, 'Commit both files and push:<br><code>git add .github/workflows/' + name + '.md .github/workflows/' + name + '.lock.yml && git push</code>');
     html += step(7, 'Trigger a run from the Actions tab or with:<br><code>gh aw run ' + name + '</code>');
   } else {
-    html += step(1, 'Open <strong>' + engineLabel + '</strong> in your repository and use this prompt. ' + quickDocsLink + ' · ' + setupLink);
-    html += step(2, 'Run this prompt');
+    html += step(1, 'Open <strong>' + label + '</strong> in your repository and run this prompt');
   }
 
   html += '<div style="margin-top:0.75rem;font-size:0.8rem;color:var(--text-muted);">' +

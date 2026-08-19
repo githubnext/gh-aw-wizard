@@ -115,13 +115,13 @@ describe('nextStepsHtml', () => {
     expect(html).toContain('gh aw compile');
     expect(html).toContain('gh aw run issue-triage');
     expect(html).toContain('Set up the <strong>Claude</strong> engine');
-    expect(html).toContain('reference/engines/#claude');
+    expect(html).not.toContain('reference/engines/#claude');
   });
 
   it('renders coding agent instructions for the prompt format', () => {
     const html = nextStepsHtml('prompt', 'issue-triage', 'codex');
-    expect(html).toContain('Open <strong>Codex</strong> in your repository');
-    expect(html).toContain('Run this prompt');
+    expect(html).toContain('Open <strong>Codex</strong> in your repository and run this prompt');
+    expect(html).not.toContain('reference/engines/');
     expect(html).not.toContain('Download the <code>.md</code> file');
     expect(html).not.toContain('gh aw compile');
   });
@@ -133,15 +133,14 @@ describe('nextStepsHtml', () => {
   it('defaults to copilot when engine is invalid', () => {
     const html = nextStepsHtml('workflow', 'issue-triage', 'invalid');
     expect(html).toContain('Set up the <strong>Copilot</strong> engine');
-    expect(html).toContain('reference/engines/#copilot');
   });
 
-  it('renders setup links for additional supported engines', () => {
+  it('labels additional supported engines without per-engine links', () => {
     const geminiHtml = nextStepsHtml('workflow', 'issue-triage', 'gemini');
     const piHtml = nextStepsHtml('workflow', 'issue-triage', 'pi');
     expect(geminiHtml).toContain('Set up the <strong>Gemini</strong> engine');
-    expect(geminiHtml).toContain('reference/engines/#gemini');
     expect(piHtml).toContain('Set up the <strong>Pi</strong> engine');
-    expect(piHtml).toContain('reference/engines/#pi');
+    expect(geminiHtml).not.toContain('reference/engines/');
+    expect(piHtml).not.toContain('reference/engines/');
   });
 });
