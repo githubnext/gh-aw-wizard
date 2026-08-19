@@ -91,7 +91,7 @@ function answers(overrides) {
   return {
     archetype: 'issue-triage',
     customDescription: '',
-    triggers: ['issues', 'schedule'],
+    triggers: ['issues', 'push'],
     outputs: ['add-labels', 'add-comment'],
     engine: 'copilot',
     extras: [],
@@ -412,7 +412,7 @@ describe('generateAgentPrompt', () => {
     const prompt = generateAgentPrompt(answers(), patterns);
     expect(prompt).toContain('- Name: issue-triage\n');
     expect(prompt).toContain('- Engine: copilot\n');
-    expect(prompt).toContain('when a new issue is opened, on a daily/weekly schedule');
+    expect(prompt).toContain('when a new issue is opened, on push to main');
     expect(prompt).toContain('add labels, add comments on issues/PRs');
     expect(prompt).toContain('Choose an appropriate kebab-case filename');
     expect(prompt).toContain('The workflow should be saved as a new Markdown file in .github/workflows/.');
