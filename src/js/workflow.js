@@ -39,9 +39,25 @@ export function inferCapabilities(archetype) {
     case 'code-improvement':
     case 'documentation-updater':
       caps.bash = true; break;
+    case 'pr-review':
+      caps.githubToolsets = true; break;
   }
   return caps;
 }
+
+// Per-archetype GitHub toolset scope — narrower than the default set so
+// reviewers only get the read access they actually need to see PR diffs.
+var GITHUB_TOOLSETS_BY_ARCHETYPE = {
+  'pr-review': ['repos', 'issues', 'pull_requests']
+};
+var DEFAULT_GITHUB_TOOLSETS = ['repos', 'issues', 'pull_requests', 'actions', 'code_security', 'discussions'];
+
+// Per-archetype read permissions — pr-review only needs enough to read the
+// PR diff/metadata, not the full status-report surface (actions, security, discussions).
+var PERMISSIONS_BY_ARCHETYPE = {
+  'pr-review': ['contents', 'issues', 'pull-requests']
+};
+var DEFAULT_PERMISSIONS = ['actions', 'contents', 'discussions', 'issues', 'pull-requests', 'security-events'];
 
 export function buildTriggerYaml(triggers, commandName, archetype) {
   var lines = '';
@@ -127,13 +143,9 @@ export function generateWorkflowFile(answers, patterns) {
   fm += 'description: ' + desc + '\n';
   fm += 'on:\n' + triggerYaml;
   if (inferred.githubToolsets) {
+    var perms = PERMISSIONS_BY_ARCHETYPE[answers.archetype] || DEFAULT_PERMISSIONS;
     fm += 'permissions:\n';
-    fm += '  actions: read\n';
-    fm += '  contents: read\n';
-    fm += '  discussions: read\n';
-    fm += '  issues: read\n';
-    fm += '  pull-requests: read\n';
-    fm += '  security-events: read\n';
+    perms.forEach(function (p) { fm += '  ' + p + ': read\n'; });
   }
   fm += 'engine: ' + engine + '\n';
 
@@ -144,8 +156,9 @@ export function generateWorkflowFile(answers, patterns) {
       fm += '  bash: true\n';
     }
     if (inferred.githubToolsets) {
+      var toolsets = GITHUB_TOOLSETS_BY_ARCHETYPE[answers.archetype] || DEFAULT_GITHUB_TOOLSETS;
       fm += '  github:\n';
-      fm += '    toolsets: [repos, issues, pull_requests, actions, code_security, discussions]\n';
+      fm += '    toolsets: [' + toolsets.join(', ') + ']\n';
     }
     if (extras.indexOf('memory') !== -1) {
       fm += '  cache-memory:\n';
