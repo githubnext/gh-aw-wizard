@@ -13,7 +13,10 @@ export function initLanding(onReveal) {
     startWizard(landing, onReveal);
   });
   window.addEventListener('popstate', function (event) {
-    if (event.state && event.state.started) return;
+    // Only react to entries this app pushed, and only while the wizard is
+    // showing, so unrelated history entries never bounce the user back.
+    if (!event.state || event.state.started) return;
+    if (!document.documentElement.classList.contains('wizard-revealed')) return;
     showLanding(landing);
   });
 }
