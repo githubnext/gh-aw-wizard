@@ -15,6 +15,8 @@ let patterns = null;
 let currentStep = 1;
 let generatedPrompt = '';
 const TOTAL_STEPS = 6;
+const ACCORDION_OPEN_ANIMATION = 'accordionOpen 0.3s ease';
+const ACCORDION_OPEN_REVERSE_ANIMATION = 'accordionOpenReverse 0.3s ease';
 
 export function initWizard() {
   initTheme();
@@ -29,12 +31,17 @@ export function initWizard() {
     addDefinitionEngineOptions(engines);
   });
   initNavigationHistory();
-  initLanding(focusFirstArchetype);
+  initLanding(revealWhatPane);
   renderWorkflowSummary();
 }
 
+function revealWhatPane() {
+  resetNavigationPane();
+  focusFirstArchetype();
+}
+
 function focusFirstArchetype() {
-  var first = document.querySelector('#archetype-options input[type="radio"]');
+  const first = document.querySelector('#archetype-options input[type="radio"]');
   if (first) first.focus();
 }
 
@@ -150,10 +157,26 @@ function goToStep(n, options) {
   const next = document.getElementById(`step-${  n}`);
   next.style.animation = 'none';
   next.offsetHeight; // reflow
-  next.style.animation = direction === 'forward' ? 'accordionOpen 0.3s ease' : 'accordionOpenReverse 0.3s ease';
+  next.style.animation = direction === 'forward' ? ACCORDION_OPEN_ANIMATION : ACCORDION_OPEN_REVERSE_ANIMATION;
   next.classList.add('active');
   if (!skipHistory) {
     window.history.pushState({ step: n }, '');
+  }
+}
+
+export function resetNavigationPane() {
+  const previousStep = currentStep;
+  let whatPane = null;
+  document.querySelectorAll('.wizard-step').forEach((step) => {
+    if (step.id === 'step-1') whatPane = step;
+    step.classList.toggle('active', step.id === 'step-1');
+  });
+  currentStep = 1;
+  updateProgress(previousStep, 1);
+  if (whatPane && previousStep !== 1) {
+    whatPane.style.animation = 'none';
+    void whatPane.offsetHeight; // reflow
+    whatPane.style.animation = ACCORDION_OPEN_ANIMATION;
   }
 }
 
