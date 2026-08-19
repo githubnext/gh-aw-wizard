@@ -243,16 +243,54 @@ describe('generateAgentPrompt', () => {
     expect(prompt).toContain('- Engine: claude\n');
   });
 
-  it('inlines the generated workflow markdown as a suggestion at the bottom', () => {
-    const a = answers();
-    const prompt = generateAgentPrompt(a, patterns);
-    const md = generateWorkflowFile(a, patterns);
+  it.each([
+    ['issue-triage', 'maintainer.md'],
+    ['code-improvement', 'maintainer.md'],
+    ['status-report', 'report.md'],
+    ['dependency-monitor', 'maintainer.md'],
+    ['documentation-updater', 'maintainer.md'],
+    ['pr-review', 'pr-reviewer.md']
+  ])('links the %s scenario instructions directly', (archetype, instructionFile) => {
+    const prompt = generateAgentPrompt(answers({ archetype }), patterns);
+    const base = 'https://raw.githubusercontent.com/github/gh-aw/main/.github/aw/';
+    expect(prompt).toContain(base + 'create-agentic-workflow.md');
+    expect(prompt).toContain(base + instructionFile);
+    expect(prompt).not.toContain('github/gh-aw/main/create.md');
+  });
+
+  it('uses only the general instructions for scenarios without a topic guide', () => {
+    const prompt = generateAgentPrompt(answers({ archetype: 'custom' }), patterns);
+    expect(prompt.match(/https:\/\/raw\.githubusercontent\.com\/github\/gh-aw\//g)).toHaveLength(1);
+    expect(prompt).toContain('/.github/aw/create-agentic-workflow.md');
+  });
+
+  it('inlines a minimal workflow markdown suggestion at the bottom', () => {
+    const prompt = generateAgentPrompt(answers(), patterns);
     expect(prompt).toContain('## Suggested workflow file');
     expect(prompt.indexOf('## Suggested workflow file')).toBeGreaterThan(
       prompt.indexOf('.github/workflows/issue-triage.md')
     );
     expect(prompt).toContain('```markdown\n');
-    expect(prompt).toContain(md.trimEnd());
+    expect(prompt).toContain('Let the agent generate the detailed issue triage prompt for this repository...\n');
+    expect(prompt).not.toContain('## Instructions\n');
+    expect(prompt).not.toContain('Your job is to read every newly opened issue');
+  });
+
+  it.each([
+    'issue-triage',
+    'code-improvement',
+    'status-report',
+    'dependency-monitor',
+    'content-moderation',
+    'documentation-updater',
+    'pr-review',
+    'custom'
+  ])('limits the %s sample prompt body to one line plus ellipsis', (archetype) => {
+    const prompt = generateAgentPrompt(answers({ archetype }), patterns);
+    const sample = prompt.split('```markdown\n')[1].split('\n```')[0];
+    const body = sample.split('\n---\n\n')[1];
+    expect(body.split('\n')).toHaveLength(1);
+    expect(body).toMatch(/\.\.\.$/);
   });
 });
 

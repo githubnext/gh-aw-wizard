@@ -199,9 +199,34 @@ export function fencedBlock(content, lang) {
   return fence + (lang || '') + '\n' + body + '\n' + fence;
 }
 
+var GH_AW_INSTRUCTIONS_BASE = 'https://raw.githubusercontent.com/github/gh-aw/main/.github/aw/';
+var SCENARIO_INSTRUCTIONS = {
+  'issue-triage': 'maintainer.md',
+  'code-improvement': 'maintainer.md',
+  'status-report': 'report.md',
+  'dependency-monitor': 'maintainer.md',
+  'documentation-updater': 'maintainer.md',
+  'pr-review': 'pr-reviewer.md'
+};
+
+function instructionUrls(archetype) {
+  var urls = [GH_AW_INSTRUCTIONS_BASE + 'create-agentic-workflow.md'];
+  var scenarioInstructions = SCENARIO_INSTRUCTIONS[archetype];
+  if (scenarioInstructions) urls.push(GH_AW_INSTRUCTIONS_BASE + scenarioInstructions);
+  return urls;
+}
+
+function sampleWorkflowFile(answers, patterns, label) {
+  var workflow = generateWorkflowFile(answers, patterns);
+  var frontmatterEnd = workflow.indexOf('\n---\n\n');
+  var frontmatter = workflow.slice(0, frontmatterEnd + 6);
+  return frontmatter + 'Let the agent generate the detailed ' + label.toLowerCase() + ' prompt for this repository...\n';
+}
+
 export function generateAgentPrompt(answers, patterns) {
   var arch = getArchetype(patterns, answers.archetype);
   var name = workflowName(answers.archetype, answers.customDescription);
+  var label = arch ? arch.label : 'Custom Workflow';
   var desc = arch ? arch.description : answers.customDescription || 'Custom agentic workflow';
   var engine = normalizeEngine(answers.engine);
 
@@ -232,7 +257,11 @@ export function generateAgentPrompt(answers, patterns) {
     return map[o] || o;
   }).join(', ');
 
-  var prompt = 'Create a workflow for GitHub Agentic Workflows using https://raw.githubusercontent.com/github/gh-aw/main/create.md\n\n';
+  var prompt = 'Create a workflow for GitHub Agentic Workflows using these instructions:\n';
+  instructionUrls(answers.archetype).forEach(function (url) {
+    prompt += '- ' + url + '\n';
+  });
+  prompt += '\n';
   prompt += 'The purpose of the workflow is: ' + desc + '\n\n';
   prompt += 'First, analyze this repository so the workflow is optimized for it:\n';
   prompt += '- Read the README, AGENTS.md (and any CONTRIBUTING or docs files) to understand the project purpose and conventions\n';
@@ -261,7 +290,7 @@ export function generateAgentPrompt(answers, patterns) {
   prompt += '\nCreate a pull request with the generated agentic workflow files.';
 
   // Inline the generated workflow markdown as a starting-point suggestion.
-  var suggestion = generateWorkflowFile(answers, patterns);
+  var suggestion = sampleWorkflowFile(answers, patterns, label);
   prompt += '\n\n## Suggested workflow file\n\n' +
     'Use this generated draft as a starting point for `.github/workflows/' + name + '.md`, ' +
     'adapting it to the repository as needed:\n\n' +
