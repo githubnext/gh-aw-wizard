@@ -416,7 +416,7 @@ export function generateAgentPrompt(answers, patterns) {
 
   var prompt = 'Create ' + (multiple ? workflows.length + ' workflows' : 'a workflow') +
     ' for GitHub Agentic Workflows using these instructions:\n';
-  var instructionSet = new Set(instructionUrls(answers.archetype));
+  var instructionSet = new Set();
   workflows.forEach(function (workflow) {
     instructionUrls(workflow.answers.archetype).forEach(function (url) { instructionSet.add(url); });
   });
