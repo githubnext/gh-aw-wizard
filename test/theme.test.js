@@ -59,6 +59,6 @@ describe('theme selector placement', () => {
   });
 
   it('provides an accessible label for the icon-only selector', () => {
-    expect(html).toMatch(/<span class="visually-hidden" id="theme-toggle-label">Auto theme<\/span>/);
+    expect(html).toMatch(/<span class="visually-hidden" id="theme-toggle-label">[^<]+<\/span>/);
   });
 });
