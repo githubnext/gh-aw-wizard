@@ -26,7 +26,8 @@
   "tips": [
     "Measure a representative baseline before optimizing",
     "Make one focused change and compare before-and-after results",
-    "Do not trade correctness or maintainability for speculative speedups"
+    "Do not trade correctness or maintainability for speculative speedups",
+    "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers"
   ],
   "anti_patterns": []
 }
