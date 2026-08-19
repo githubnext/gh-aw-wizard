@@ -48,15 +48,21 @@ describe('buildWorkflowSummary', () => {
     expect(summary.engine.value).toBe('Claude');
   });
 
-  it('summarizes optional agent capabilities with the selected engine', () => {
+  it('summarizes optional extras separately from the selected engine', () => {
     const summary = buildWorkflowSummary(answers({
       engine: 'copilot',
       extras: ['memory', 'charts', 'browser']
     }), patterns);
 
-    expect(summary.engine.value).toBe(
-      'Copilot with memory between runs, chart generation, and browser access'
-    );
+    expect(summary.extras.value).toBe('memory between runs, chart generation, and browser access');
+    expect(summary.extras.complete).toBe(true);
+    expect(summary.engine.value).toBe('Copilot');
+  });
+
+  it('shows a placeholder for extras when none are selected', () => {
+    const summary = buildWorkflowSummary(answers({ engine: 'copilot', extras: [] }), patterns);
+
+    expect(summary.extras).toEqual({ value: 'choose optional capabilities', complete: false });
   });
 
   it('describes the pull request review trigger accurately', () => {

@@ -301,6 +301,10 @@ a:hover {
 .recipe-key-what { background: var(--label-pink); }
 .recipe-key-when { background: var(--label-blue); }
 .recipe-key-where { background: var(--label-green); }
+.recipe-key-extras {
+  background: var(--label-orange);
+  color: #000000;
+}
 .recipe-key-agent { background: var(--label-gray); }
 .recipe-key-preview { background: var(--label-purple); }
 .recipe-value {
