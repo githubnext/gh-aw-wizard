@@ -48,6 +48,7 @@ describe('definition-based engines', () => {
   it('labels built-in engines with company names and extension engines as extensions', () => {
     expect(formatEngineOptionLabel('copilot')).toBe('Copilot (GitHub)');
     expect(formatEngineOptionLabel('pydantic-ai')).toBe('Pydantic AI (Extension)');
+    expect(formatEngineOptionLabel('')).toBe('Extension (Extension)');
   });
 
   it('uses updated marks for known extension engines', () => {

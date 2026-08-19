@@ -33,6 +33,7 @@ var extensionLogoText = {
 };
 
 export function formatEngineLabel(engine) {
+  engine = engine || 'extension';
   return engine.split('-').map(function (part) {
     if (part === 'ai') return 'AI';
     return part.charAt(0).toUpperCase() + part.slice(1);
@@ -49,14 +50,19 @@ export function engineIconMarkup(engine) {
   if (symbol) {
     return '<span class="engine-vendor-icon" aria-hidden="true"><svg class="vendor-icon" focusable="false"><use href="#' + symbol + '"></use></svg></span>';
   }
+  var mark = extensionLogoText[engine] || fallbackEngineLogoText(engine);
+  return '<span class="engine-vendor-icon engine-logo-mark" aria-hidden="true">' + mark + '</span>';
+}
+
+function fallbackEngineLogoText(engine) {
   var labelParts = formatEngineLabel(engine).split(/\s+/).filter(Boolean);
-  if (!labelParts.length) labelParts = ['Extension'];
-  var singleWordMark = labelParts[0].slice(0, 2).toUpperCase();
-  var fallbackMark = labelParts.length === 1 ? (singleWordMark + singleWordMark).slice(0, 2) : labelParts.slice(0, 2).map(function (part) {
+  if (labelParts.length === 1) {
+    var singleWordMark = labelParts[0].slice(0, 2).toUpperCase();
+    return singleWordMark.length === 1 ? singleWordMark + singleWordMark : singleWordMark;
+  }
+  return labelParts.slice(0, 2).map(function (part) {
     return part.charAt(0);
   }).join('').toUpperCase();
-  var mark = extensionLogoText[engine] || fallbackMark;
-  return '<span class="engine-vendor-icon engine-logo-mark" aria-hidden="true">' + mark + '</span>';
 }
 
 export function parseDefinitionEngines(data) {
