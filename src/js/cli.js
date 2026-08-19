@@ -15,7 +15,7 @@ function usage() {
     '',
     'Options:',
     '  -i, --input <path>       JSON file containing wizard answers (required)',
-    '  -f, --format <format>   Output format: prompt (default) or workflow',
+    '  -f, --format <format>    Output format: prompt (default) or workflow',
     '  -p, --patterns <path>   Pattern library JSON file (default: patterns.json)',
     '  -h, --help              Show this help message'
   ].join('\n');

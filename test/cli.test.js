@@ -51,9 +51,9 @@ describe('prompt generator CLI', () => {
   });
 
   it('reports invalid command-line arguments', () => {
-    const result = runCli('--format', 'invalid');
+    const result = runCli('--input', inputFile(answers), '--format', 'invalid');
 
     expect(result.status).toBe(1);
-    expect(result.stderr).toContain('Error: An input file is required.');
+    expect(result.stderr).toContain('Error: Format must be "prompt" or "workflow".');
   });
 });
