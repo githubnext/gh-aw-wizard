@@ -1,10 +1,12 @@
-import { describe, expect, it } from 'vitest';
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import { afterEach, describe, expect, it } from 'vitest';
 
-import { maxReachableStep } from '../src/js/ui.js';
+import { maxReachableStep, resetNavigationPane } from '../src/js/ui.js';
 
-const ui = readFileSync(fileURLToPath(new URL('../src/js/ui.js', import.meta.url)), 'utf8');
+const originalDocument = globalThis.document;
+
+afterEach(() => {
+  globalThis.document = originalDocument;
+});
 
 describe('wizard navigation', () => {
   it('keeps only the What tab required', () => {
@@ -12,11 +14,97 @@ describe('wizard navigation', () => {
     expect(maxReachableStep(true)).toBe(6);
   });
 
-  it('resets the navigation pane to the opened What pane when the landing CTA reveals the wizard', () => {
-    expect(ui).toContain('initLanding(revealWhatPane)');
-    expect(ui).toMatch(/function revealWhatPane\(\) \{\s+resetNavigationPane\(\);\s+focusFirstArchetype\(\);/);
-    expect(ui).toMatch(/export function resetNavigationPane\(\)/);
-    expect(ui).toMatch(/currentStep = 1/);
-    expect(ui).toMatch(/step\.classList\.toggle\('active', step\.id === 'step-1'\)/);
+  it('resets the navigation pane to the opened What pane', () => {
+    const step1Pane = createElement({ id: 'step-1' });
+    const step2Pane = createElement({ id: 'step-2', classes: ['active'] });
+    const step1Item = createElement({ classes: ['completed'] });
+    const step2Item = createElement({ classes: ['active'] });
+    const step1Button = createProgressStep(1, step1Item, ['completed']);
+    const step2Button = createProgressStep(2, step2Item, ['active']);
+
+    globalThis.document = {
+      getElementById(id) {
+        return id === 'step-1' ? step1Pane : null;
+      },
+      querySelectorAll(selector) {
+        if (selector === '.wizard-step') return [step1Pane, step2Pane];
+        if (selector === '.progress-step') return [step1Button, step2Button];
+        if (selector === 'input[name="archetype"]:checked') return [];
+        return [];
+      }
+    };
+
+    resetNavigationPane();
+
+    expect(step1Pane.classList.contains('active')).toBe(true);
+    expect(step2Pane.classList.contains('active')).toBe(false);
+    expect(step1Pane.style.animation).toBe('accordionOpen 0.3s ease');
+    expect(step1Button.classList.contains('active')).toBe(true);
+    expect(step1Button.attributes.get('aria-expanded')).toBe('true');
+    expect(step1Button.attributes.get('aria-current')).toBe('step');
+    expect(step2Button.classList.contains('active')).toBe(false);
+    expect(step2Button.disabled).toBe(true);
   });
 });
+
+function createProgressStep(step, item, classes) {
+  const indicator = createElement();
+  const button = createElement({ classes });
+  button.attributes.set('data-step', String(step));
+  button.closest = (selector) => selector === '.recipe-item' ? item : null;
+  button.querySelector = (selector) => selector === '.step-indicator' ? indicator : null;
+  return button;
+}
+
+function createElement(options = {}) {
+  const attributes = new Map();
+  const element = {
+    id: options.id || '',
+    attributes,
+    classList: createClassList(options.classes || []),
+    disabled: false,
+    innerHTML: '',
+    offsetHeight: 0,
+    style: {},
+    textContent: '',
+    closest() {
+      return null;
+    },
+    querySelector() {
+      return null;
+    },
+    getAttribute(name) {
+      return attributes.get(name) || null;
+    },
+    removeAttribute(name) {
+      attributes.delete(name);
+    },
+    setAttribute(name, value) {
+      attributes.set(name, value);
+    }
+  };
+  return element;
+}
+
+function createClassList(initial) {
+  const classes = new Set(initial);
+  return {
+    add(...names) {
+      names.forEach((name) => classes.add(name));
+    },
+    contains(name) {
+      return classes.has(name);
+    },
+    remove(...names) {
+      names.forEach((name) => classes.delete(name));
+    },
+    toggle(name, force) {
+      if (force === undefined ? !classes.has(name) : force) {
+        classes.add(name);
+        return true;
+      }
+      classes.delete(name);
+      return false;
+    }
+  };
+}

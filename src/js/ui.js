@@ -135,7 +135,7 @@ export function resetNavigationPane() {
   const whatPane = document.getElementById('step-1');
   if (whatPane) {
     whatPane.style.animation = 'none';
-    whatPane.offsetHeight; // reflow
+    void whatPane.offsetHeight; // reflow
     whatPane.style.animation = 'accordionOpen 0.3s ease';
   }
 }
