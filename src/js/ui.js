@@ -56,6 +56,10 @@ function bindNavigation() {
   steps.forEach(function (el) {
     el.addEventListener('click', function () {
       var target = parseInt(el.getAttribute('data-step'));
+      if (target === currentStep) {
+        toggleCurrentStep();
+        return;
+      }
       if (target < currentStep) {
         goToStep(target);
         return;
@@ -68,6 +72,13 @@ function bindNavigation() {
     });
   });
   syncProgressStepAvailability();
+}
+
+function toggleCurrentStep() {
+  var step = document.getElementById('step-' + currentStep);
+  var isOpen = step.classList.toggle('active');
+  var tab = document.querySelector('.progress-step[data-step="' + currentStep + '"]');
+  tab.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
 }
 
 function advanceOneStepLikeNext() {
