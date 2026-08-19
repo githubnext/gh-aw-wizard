@@ -80,6 +80,20 @@ CURATED_ARCHETYPES = {
             "Leave merges, approvals, and destructive actions to maintainers",
         ],
     },
+    "linter-workflows": {
+        "label": "Linter Workflows",
+        "description": "Create workflows to mine, refine, and apply lint rules",
+        "recommended_triggers": ["workflow_dispatch"],
+        "recommended_safe_outputs": ["pull-requests"],
+        "recommended_tools": ["create-pull-request"],
+        "prompt_style": "phase-based",
+        "size_range_bytes": [5000, 12000],
+        "tips": [
+            "Generate separate workflows for mining, refining, and applying lint rules",
+            "Keep each workflow focused on one linting responsibility",
+            "Route all code changes through pull requests",
+        ],
+    },
     "linter-miner": {
         "label": "Linter Miner",
         "description": "Discover recurring defects and create custom lint rules",

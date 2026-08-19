@@ -20,6 +20,7 @@ describe('getArchetype', () => {
       'performance-nut',
       'user-simulator',
       'repo-maintainer',
+      'linter-workflows',
       'linter-miner',
       'linter-refiner',
       'linter-applier',
