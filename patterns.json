@@ -1,24 +1,17 @@
 {
   "metadata": {
-    "generated_at": "2026-02-21T21:05:21.535340+00:00",
-    "source_repos": 269,
-    "active_workflows": 246,
-    "total_workflows": 679,
-    "unique_after_dedup": 679,
-    "template_clones_removed": 0,
-    "template_families": 0,
-    "total_run_records": 4888,
-    "methodology": "Template-deduplicated. Statistical tests: Mann-Whitney U, chi-squared with odds ratios, multivariate logistic regression. Min sample n=20.",
-    "updated_at": "2026-02-27T03:00:00+00:00",
-    "notes": "Updated archetype rates from Feb 2026 analysis. Added degraded workflows, anti-patterns, model/safe-output guidance."
+    "generated_at": "2026-08-18T23:58:10.787155+00:00",
+    "source_repos": 518,
+    "active_workflows": 340,
+    "total_workflows": 819
   },
   "archetypes": [
     {
       "id": "custom",
       "label": "Custom",
       "description": "Custom or uncategorized workflow",
-      "success_rate": 0.64,
-      "count": 351,
+      "success_rate": 0.49,
+      "count": 416,
       "recommended_triggers": [
         {
           "type": "issues",
@@ -43,181 +36,45 @@
       ],
       "top_repos": [
         {
-          "repo": "f/prompts.chat",
-          "stars": 145906
+          "repo": "github/spec-kit",
+          "stars": 130114
         },
         {
-          "repo": "RustPython/RustPython",
-          "stars": 21810
+          "repo": "OtterMind/Chat2DB",
+          "stars": 27971
         },
         {
-          "repo": "github/gh-aw",
-          "stars": 3356
+          "repo": "elastic/kibana",
+          "stars": 21249
         },
         {
-          "repo": "ZSWatch/ZSWatch",
-          "stars": 3128
+          "repo": "pydantic/pydantic-ai",
+          "stars": 19374
         },
         {
-          "repo": "llm-d/llm-d",
-          "stars": 2516
+          "repo": "dotnet/runtime",
+          "stars": 18205
         }
       ],
       "tips": [
-        "Add workflow_dispatch as a trigger \u2014 adds ~21pp to success rate",
-        "Prompts between 3-8KB perform best",
-        "Use DO NOT constraints to bound agent behavior \u2014 61% more likely to be healthy",
-        "NEVER use slash_command trigger \u2014 0-2% success rate across all combos"
+        "Add workflow_dispatch as a trigger \u2014 adds ~17pp to success rate",
+        "Prompts between 3-8KB perform best \u2014 too short lacks context, too long has diminishing returns",
+        "Use DO NOT constraints to bound agent behavior \u2014 61% more likely to be healthy"
       ],
       "anti_patterns": [
-        "plan",
-        "repo-ask",
-        "video-analyzer",
-        "workflow-generator",
-        "smoke-copilot"
-      ]
-    },
-    {
-      "id": "status-report",
-      "label": "Status Report",
-      "description": "Generate periodic status summaries",
-      "success_rate": 0.69,
-      "count": 116,
-      "recommended_triggers": [
-        {
-          "type": "schedule",
-          "config": {}
-        },
-        {
-          "type": "workflow_dispatch",
-          "config": {}
-        },
-        {
-          "type": "issues",
-          "config": {}
-        }
-      ],
-      "recommended_safe_outputs": [
-        "issues"
-      ],
-      "recommended_tools": [
-        "create-issue"
-      ],
-      "timeout_minutes": 30,
-      "prompt_style": "template-driven",
-      "size_range_bytes": [
-        2000,
-        5000
-      ],
-      "top_repos": [
-        {
-          "repo": "dotnet/maui",
-          "stars": 23180
-        },
-        {
-          "repo": "dotnet/aspire",
-          "stars": 5457
-        },
-        {
-          "repo": "erigontech/erigon",
-          "stars": 3531
-        },
-        {
-          "repo": "github/gh-aw",
-          "stars": 3356
-        },
-        {
-          "repo": "apache/cloudstack",
-          "stars": 2800
-        }
-      ],
-      "tips": [
-        "Pre-fetch data in a steps: block \u2014 #1 predictor of workflow health",
-        "Use schedule+workflow_dispatch triggers (80% success rate)",
-        "Keep prompts focused on one report \u2014 multi-source reports need pre-steps",
-        "NEVER use slash_command trigger \u2014 0-2% success rate across all combos"
-      ],
-      "anti_patterns": [
-        "daily-repo-status",
-        "daily-activity-report",
-        "github-changelog-impact-report",
-        "weekly-research"
-      ]
-    },
-    {
-      "id": "code-improvement",
-      "label": "Code Improvement",
-      "description": "Diagnose and fix code or CI issues",
-      "success_rate": 0.51,
-      "count": 67,
-      "recommended_triggers": [
-        {
-          "type": "issues",
-          "config": {}
-        },
-        {
-          "type": "schedule",
-          "config": {}
-        },
-        {
-          "type": "workflow_dispatch",
-          "config": {}
-        }
-      ],
-      "recommended_safe_outputs": [
-        "pull-requests"
-      ],
-      "recommended_tools": [
-        "create-pull-request"
-      ],
-      "timeout_minutes": 30,
-      "prompt_style": "phase-based",
-      "size_range_bytes": [
-        5000,
-        12000
-      ],
-      "top_repos": [
-        {
-          "repo": "BabylonJS/Babylon.js",
-          "stars": 25113
-        },
-        {
-          "repo": "JanDeDobbeleer/oh-my-posh",
-          "stars": 21566
-        },
-        {
-          "repo": "github/gh-aw",
-          "stars": 3356
-        },
-        {
-          "repo": "devantler-tech/ksail",
-          "stars": 130
-        },
-        {
-          "repo": "github/gh-aw-mcpg",
-          "stars": 45
-        }
-      ],
-      "tips": [
-        "Use schedule+workflow_dispatch triggers (80% success rate)",
-        "Add pre-steps to run tests/linters before the agent starts",
-        "Avoid pr-fix and ci-doctor templates \u2014 both have <20% success in practice",
-        "NEVER use slash_command trigger \u2014 0-2% success rate across all combos"
-      ],
-      "anti_patterns": [
-        "duplicate-code-detector",
-        "code-simplifier",
-        "code-quality-tracker",
-        "smoke-codex",
-        "test-assign-to-agent-codex"
+        "documentation-audit",
+        "breaking-change-checker",
+        "agent-planner-staiot",
+        "validate-pr",
+        "planner"
       ]
     },
     {
       "id": "issue-triage",
       "label": "Issue Triage",
       "description": "Classify and label new issues",
-      "success_rate": 0.72,
-      "count": 42,
+      "success_rate": 0.65,
+      "count": 98,
       "recommended_triggers": [
         {
           "type": "issues",
@@ -248,52 +105,122 @@
       "top_repos": [
         {
           "repo": "appwrite/appwrite",
-          "stars": 54898
+          "stars": 57047
         },
         {
-          "repo": "apolloconfig/apollo",
-          "stars": 29779
+          "repo": "moeru-ai/airi",
+          "stars": 48057
         },
         {
-          "repo": "github/copilot-sdk",
-          "stars": 7254
+          "repo": "taosdata/TDengine",
+          "stars": 25068
         },
         {
-          "repo": "frankbria/ralph-claude-code",
-          "stars": 7097
+          "repo": "czlonkowski/n8n-mcp",
+          "stars": 22721
         },
         {
-          "repo": "evcc-io/evcc",
-          "stars": 6169
+          "repo": "prowler-cloud/prowler",
+          "stars": 14612
         }
       ],
       "tips": [
-        "Add workflow_dispatch as a fallback trigger \u2014 adds ~21pp to success rate",
+        "Add workflow_dispatch as a fallback trigger \u2014 adds ~17pp to success rate",
         "Include explicit label taxonomy in your prompt so the agent knows valid options",
-        "Use DO NOT constraints (e.g., \"Do NOT close issues\") \u2014 61% more likely to be healthy",
-        "NEVER use slash_command trigger \u2014 0-2% success rate across all combos"
+        "Use DO NOT constraints (e.g., 'Do NOT close issues') \u2014 61% more likely to be healthy"
       ],
       "anti_patterns": [
-        "issue-triage-agent",
-        "pr-triage-agent",
-        "issue-triage.agent",
-        "issue_triage",
-        "triage-issue"
+        "issue-triage",
+        "issue-triage",
+        "marketplace-harness-gap-triage",
+        "issue-triage",
+        "issue-triage"
+      ]
+    },
+    {
+      "id": "code-improvement",
+      "label": "Code Improvement",
+      "description": "Diagnose and fix code or CI issues",
+      "success_rate": 0.37,
+      "count": 76,
+      "recommended_triggers": [
+        {
+          "type": "issues",
+          "config": {}
+        },
+        {
+          "type": "workflow_dispatch",
+          "config": {}
+        },
+        {
+          "type": "schedule",
+          "config": {}
+        }
+      ],
+      "recommended_safe_outputs": [
+        "pull-requests"
+      ],
+      "recommended_tools": [
+        "create-pull-request"
+      ],
+      "timeout_minutes": 30,
+      "prompt_style": "phase-based",
+      "size_range_bytes": [
+        5000,
+        12000
+      ],
+      "top_repos": [
+        {
+          "repo": "dotnet/maui",
+          "stars": 23302
+        },
+        {
+          "repo": "elastic/kibana",
+          "stars": 21249
+        },
+        {
+          "repo": "vercel/vercel",
+          "stars": 16104
+        },
+        {
+          "repo": "openvinotoolkit/openvino",
+          "stars": 10673
+        },
+        {
+          "repo": "dotnet/skills",
+          "stars": 5188
+        }
+      ],
+      "tips": [
+        "Use schedule+workflow_dispatch triggers (80% success rate)",
+        "Add pre-steps to run tests/linters before the agent starts \u2014 validates baseline",
+        "Avoid pr-fix and ci-doctor templates \u2014 both have <20% success in practice"
+      ],
+      "anti_patterns": [
+        "ci-doctor",
+        "ci-doctor",
+        "autofix-ci",
+        "code-simplifier",
+        "pr-fix"
       ]
     },
     {
       "id": "pr-review",
       "label": "PR Review",
       "description": "Review pull requests for quality and issues",
-      "success_rate": 0.42,
-      "count": 30,
+      "success_rate": 0.45,
+      "count": 74,
       "recommended_triggers": [
         {
-          "type": "pull_request",
+          "type": "workflow_dispatch",
           "config": {}
         },
         {
-          "type": "workflow_dispatch",
+          "type": "issues",
+          "config": {}
+        },
+        {
+          "type": "pull_request",
           "config": {}
         }
       ],
@@ -311,53 +238,52 @@
       ],
       "top_repos": [
         {
-          "repo": "github/copilot-sdk",
-          "stars": 7254
+          "repo": "pydantic/pydantic-ai",
+          "stars": 19374
+        },
+        {
+          "repo": "dotnet/msbuild",
+          "stars": 5542
         },
         {
           "repo": "github/gh-aw",
-          "stars": 3356
+          "stars": 4953
         },
         {
-          "repo": "elastic/opentelemetry-collector-components",
-          "stars": 16
+          "repo": "runhey/OnmyojiAutoScript",
+          "stars": 4746
         },
         {
-          "repo": "jurre/huebar",
-          "stars": 10
-        },
-        {
-          "repo": "pelikhan/github-agentic-workflows",
-          "stars": 4
+          "repo": "microsoft/apm",
+          "stars": 3565
         }
       ],
       "tips": [
         "Focus on specific review criteria (security, performance, style)",
         "Use pull_request+workflow_dispatch triggers for flexibility",
-        "Include DO NOT constraints to avoid false positive comments",
-        "NEVER use slash_command trigger \u2014 0-2% success rate across all combos"
+        "Include DO NOT constraints to avoid false positive comments"
       ],
       "anti_patterns": [
-        "sdk-consistency-review",
-        "dependency-reviewer",
-        "grumpy-reviewer",
-        "weekly-safe-outputs-spec-review",
-        "weekly-issue-review"
+        "data-plane-api-review",
+        "mgmt-review",
+        "pr-review",
+        "fix-review-comment",
+        "android-reviewer"
       ]
     },
     {
-      "id": "documentation-updater",
-      "label": "Documentation Updater",
-      "description": "Keep docs accurate and up-to-date",
-      "success_rate": 0.78,
-      "count": 28,
+      "id": "status-report",
+      "label": "Status Report",
+      "description": "Generate periodic status summaries",
+      "success_rate": 0.52,
+      "count": 69,
       "recommended_triggers": [
         {
           "type": "workflow_dispatch",
           "config": {}
         },
         {
-          "type": "push",
+          "type": "schedule",
           "config": {}
         },
         {
@@ -366,67 +292,69 @@
         }
       ],
       "recommended_safe_outputs": [
-        "pull-requests"
+        "issues"
       ],
       "recommended_tools": [
-        "create-pull-request"
+        "create-issue"
       ],
       "timeout_minutes": 30,
-      "prompt_style": "phase-based",
+      "prompt_style": "template-driven",
       "size_range_bytes": [
-        3000,
-        7000
+        2000,
+        5000
       ],
       "top_repos": [
         {
-          "repo": "phpstan/phpstan",
-          "stars": 13829
+          "repo": "taosdata/TDengine",
+          "stars": 25068
+        },
+        {
+          "repo": "Z3Prover/z3",
+          "stars": 12567
         },
         {
           "repo": "github/gh-aw",
-          "stars": 3356
+          "stars": 4953
         },
         {
-          "repo": "wp-media/wp-rocket",
-          "stars": 738
+          "repo": "Azure/git-ape",
+          "stars": 267
         },
         {
-          "repo": "makkoncept/pyvoc",
-          "stars": 73
-        },
-        {
-          "repo": "pikax/verter",
-          "stars": 54
+          "repo": "adoptium/adoptium",
+          "stars": 185
         }
       ],
       "tips": [
-        "80% success rate \u2014 reliable when scoped to specific doc areas",
-        "Add pre-steps to validate docs build before the agent starts",
-        "Use DO NOT constraints to prevent deleting existing content",
-        "NEVER use slash_command trigger \u2014 0-2% success rate across all combos"
+        "Pre-fetch data in a steps: block \u2014 #1 predictor of workflow health",
+        "Use schedule+workflow_dispatch triggers (80% success rate)",
+        "Keep prompts focused on one report \u2014 multi-source reports need pre-steps"
       ],
       "anti_patterns": [
-        "daily-doc-updater",
-        "update-docs"
+        "daily-repo-status",
+        "daily-repo-status",
+        "daily-repo-status",
+        "daily-repo-status",
+        "pbir-report-rules-check"
       ]
     },
     {
       "id": "dependency-monitor",
       "label": "Dependency Monitor",
       "description": "Track and update dependencies",
-      "success_rate": 0.8,
-      "count": 18,
+      "success_rate": 0.5,
+      "count": 55,
       "recommended_triggers": [
+        {
+          "type": "schedule",
+          "config": {}
+        },
         {
           "type": "workflow_dispatch",
           "config": {}
         },
         {
           "type": "issues",
-          "config": {}
-        },
-        {
-          "type": "schedule",
           "config": {}
         }
       ],
@@ -446,46 +374,48 @@
       ],
       "top_repos": [
         {
+          "repo": "mono/SkiaSharp",
+          "stars": 5546
+        },
+        {
           "repo": "github/gh-aw",
-          "stars": 3356
+          "stars": 4953
         },
         {
-          "repo": "devantler-tech/ksail",
-          "stars": 130
+          "repo": "dotnet/Open-XML-SDK",
+          "stars": 4583
         },
         {
-          "repo": "github/gh-aw-mcpg",
-          "stars": 45
+          "repo": "dotnet/arcade",
+          "stars": 727
         },
         {
-          "repo": "drehelis/gcp-emulator-ui",
-          "stars": 35
-        },
-        {
-          "repo": "github/gh-aw-firewall",
-          "stars": 34
+          "repo": "OpenMS/OpenMS",
+          "stars": 611
         }
       ],
       "tips": [
         "Use schedule+workflow_dispatch triggers for reliable periodic checks",
-        "Include a checklist of specific dependencies to monitor",
-        "Enable network access for fetching upstream release data",
-        "NEVER use slash_command trigger \u2014 0-2% success rate across all combos"
+        "Include a checklist of specific dependencies to monitor \u2014 don't leave it open-ended",
+        "Enable network access for fetching upstream release data"
       ],
       "anti_patterns": [
-        "dependency-update-helper",
-        "dependency-updater"
+        "docs-sync",
+        "skills-updater",
+        "doc-sync",
+        "update-github-info",
+        "doc-sync"
       ]
     },
     {
-      "id": "content-moderation",
-      "label": "Content Moderation",
-      "description": "Review content for quality or policy",
-      "success_rate": 0.77,
-      "count": 5,
+      "id": "documentation-updater",
+      "label": "Documentation Updater",
+      "description": "Keep docs accurate and up-to-date",
+      "success_rate": 0.6,
+      "count": 25,
       "recommended_triggers": [
         {
-          "type": "schedule",
+          "type": "workflow_dispatch",
           "config": {}
         },
         {
@@ -493,7 +423,74 @@
           "config": {}
         },
         {
+          "type": "schedule",
+          "config": {}
+        }
+      ],
+      "recommended_safe_outputs": [
+        "pull-requests"
+      ],
+      "recommended_tools": [
+        "create-pull-request"
+      ],
+      "timeout_minutes": 30,
+      "prompt_style": "phase-based",
+      "size_range_bytes": [
+        3000,
+        7000
+      ],
+      "top_repos": [
+        {
+          "repo": "microsoft/hve-core",
+          "stars": 1347
+        },
+        {
+          "repo": "OP5dev/TF-via-PR",
+          "stars": 335
+        },
+        {
+          "repo": "github/gh-aw-firewall",
+          "stars": 130
+        },
+        {
+          "repo": "AndreaGriffiths11/IssueCrush",
+          "stars": 17
+        },
+        {
+          "repo": "verkyyi/github-agent-runner",
+          "stars": 10
+        }
+      ],
+      "tips": [
+        "80% success rate \u2014 reliable when scoped to specific doc areas",
+        "Add pre-steps to validate docs build before the agent starts",
+        "Use DO NOT constraints to prevent deleting existing content"
+      ],
+      "anti_patterns": [
+        "update-docs",
+        "daily-doc-updater",
+        "daily-doc-updater",
+        "daily-doc-updater",
+        "daily-doc-updater"
+      ]
+    },
+    {
+      "id": "content-moderation",
+      "label": "Content Moderation",
+      "description": "Review content for quality or policy",
+      "success_rate": 0.73,
+      "count": 6,
+      "recommended_triggers": [
+        {
+          "type": "issues",
+          "config": {}
+        },
+        {
           "type": "pull_request",
+          "config": {}
+        },
+        {
+          "type": "workflow_dispatch",
           "config": {}
         }
       ],
@@ -514,154 +511,155 @@
       "top_repos": [
         {
           "repo": "github/gh-aw",
-          "stars": 3356
+          "stars": 4953
         },
         {
-          "repo": "learntocloud/learn-to-cloud-app",
-          "stars": 93
+          "repo": "Bertverbeek4PS/bc2adls",
+          "stars": 169
         },
         {
-          "repo": "sujithq/sujithq.github.io",
-          "stars": 1
+          "repo": "SSWConsulting/SSW.Rules.Content",
+          "stars": 62
         },
         {
-          "repo": "kody-w/rappterbook",
-          "stars": 1
+          "repo": "chrizbo/agentics-beyond-code",
+          "stars": 21
         },
         {
-          "repo": "Suv4o/personal-blog-2023",
-          "stars": 0
+          "repo": "SSWConsulting/SSW.Website",
+          "stars": 14
         }
       ],
       "tips": [
         "Never auto-close or lock \u2014 label and comment only",
         "Include explicit rules for what IS legitimate to reduce false positives",
-        "Use DO NOT constraints for actions the agent should never take",
-        "NEVER use slash_command trigger \u2014 0-2% success rate across all combos"
+        "Use DO NOT constraints for actions the agent should never take"
       ],
-      "anti_patterns": []
+      "anti_patterns": [
+        "ai-moderator"
+      ]
     }
   ],
   "anti_patterns": [
     {
+      "pattern": "documentation-audit",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in Alvin-Wu-Garden/COBOL2SPEC"
+    },
+    {
+      "pattern": "data-plane-api-review",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in Azure/azure-rest-api-specs"
+    },
+    {
+      "pattern": "mgmt-review",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in Azure/azure-sdk-for-go"
+    },
+    {
+      "pattern": "docs-sync",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in Azure/typespec-azure"
+    },
+    {
+      "pattern": "skills-updater",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in C-Ross/LlamaOfFate"
+    },
+    {
+      "pattern": "breaking-change-checker",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in Canepro/pipelinehealer-demo"
+    },
+    {
+      "pattern": "pr-review",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in CliMA/ClimaAtmos.jl"
+    },
+    {
+      "pattern": "doc-sync",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in DefaceRoot/agentic-documentation"
+    },
+    {
       "pattern": "daily-repo-status",
       "success_rate": 0.0,
       "repos_seen": 1,
-      "reason": "Very low success rate in Akki120781/le"
-    },
-    {
-      "pattern": "upstream-sync",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in Automattic/iapi-skills-experiments"
-    },
-    {
-      "pattern": "schema-consistency-checker",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in Canepro/pipelinehealer"
-    },
-    {
-      "pattern": "weekly-research",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in DevExpGbb/vscode-ghcp-starter-kit"
-    },
-    {
-      "pattern": "daily-repo-status",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in Emmanuel289/aws-tutorials"
-    },
-    {
-      "pattern": "csharp-guideline-improver",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in Gibbs-Morris/mississippi"
-    },
-    {
-      "pattern": "pr-fix",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in MH0386/doctainr"
-    },
-    {
-      "pattern": "daily-repo-status",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in Mwango24/git-clone-https-github.com-microsoft-Web-Dev-For-Beginners"
-    },
-    {
-      "pattern": "fix-bug",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in NaphatPound/poc-github-agentic-workflows"
-    },
-    {
-      "pattern": "triage-issue",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in NaphatPound/poc-github-agentic-workflows"
+      "reason": "Very low success rate in DoriniTT/PS-TEROS"
     },
     {
       "pattern": "ci-doctor",
       "success_rate": 0.0,
       "repos_seen": 1,
-      "reason": "Very low success rate in Qubinode/qubinode_navigator"
+      "reason": "Very low success rate in EvergineTeam/CesiumC"
+    },
+    {
+      "pattern": "ci-doctor",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in EvergineTeam/Meshoptimizer.NET"
+    },
+    {
+      "pattern": "update-github-info",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in Josephine-LiMin/skills-agentic-workflows-that-read-the-room"
+    },
+    {
+      "pattern": "agent-planner-staiot",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in Karkina/TestAgentPlaywright"
+    },
+    {
+      "pattern": "fix-review-comment",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in Kawatan1927/cooking-planner"
+    },
+    {
+      "pattern": "validate-pr",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in LeMegaGeek/bgobs"
+    },
+    {
+      "pattern": "planner",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in MaggieAppleton/maggieappleton.com-V3"
+    },
+    {
+      "pattern": "docs-noob-tester",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in Michael-demo/github-adlc"
+    },
+    {
+      "pattern": "q",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in MoiraeSoftware/Myriad"
+    },
+    {
+      "pattern": "keybot",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in NikiforovAll/keycloak-authorization-services-dotnet"
     },
     {
       "pattern": "daily-repo-status",
       "success_rate": 0.0,
       "repos_seen": 1,
-      "reason": "Very low success rate in SUVIDGOEL/web_dev"
-    },
-    {
-      "pattern": "daily-repo-status",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in Supadoopa/boots"
-    },
-    {
-      "pattern": "issue-assigner",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in TeamFlint-Dev/vibe-coding-cn"
-    },
-    {
-      "pattern": "goal-planner",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in TeamFlint-Dev/vibe-coding-cn"
-    },
-    {
-      "pattern": "code-simplifier",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in TruvetaPublic/OpenToken"
-    },
-    {
-      "pattern": "pr-fix",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in abhimehro/email-security-pipeline"
-    },
-    {
-      "pattern": "plan",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in abhimehro/email-security-pipeline"
-    },
-    {
-      "pattern": "pr-fix",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in abhimehro/personal-config"
-    },
-    {
-      "pattern": "plan",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in abhimehro/personal-config"
+      "reason": "Very low success rate in Nithinlinga/spring-boot-demo-workflow"
     }
   ],
   "config_defaults": {
@@ -679,250 +677,159 @@
     "prompt_size_sweet_spot": [
       3000,
       8000
-    ],
-    "model_guidance": {
-      "default": {
-        "success_rate": 0.67,
-        "use_for": "triage, labeling, single-repo analysis"
-      },
-      "codex": {
-        "success_rate": 0.57,
-        "use_for": "avoid unless specifically needed for code generation"
-      },
-      "claude-opus-4.5": {
-        "success_rate": null,
-        "use_for": "executive summaries, sentiment, multi-repo, prompts >20KB"
-      }
-    },
-    "safe_outputs_impact": {
-      "with_rate": 0.875,
-      "without_rate": 0.637,
-      "delta_pp": 23.8,
-      "note": "Small sample (n=16) \u2014 correlation likely reflects better overall workflow design"
-    }
+    ]
   },
   "trigger_combos": [
     {
-      "combo": "discussion+push+schedule+workflow_dispatch",
+      "combo": "pull_request+schedule+workflow_dispatch",
       "success_rate": 1.0,
       "count": 10,
       "risk": "low",
       "recommendation": "Recommended"
     },
     {
-      "combo": "issues+workflow_dispatch+workflow_run",
-      "success_rate": 1.0,
-      "count": 10,
+      "combo": "discussion+issues+workflow_dispatch",
+      "success_rate": 0.93,
+      "count": 171,
+      "risk": "low",
+      "recommendation": "Recommended"
+    },
+    {
+      "combo": "issues+push+schedule+workflow_dispatch",
+      "success_rate": 0.9,
+      "count": 30,
+      "risk": "low",
+      "recommendation": "Recommended"
+    },
+    {
+      "combo": "discussion+schedule+workflow_dispatch",
+      "success_rate": 0.88,
+      "count": 25,
+      "risk": "low",
+      "recommendation": "Recommended"
+    },
+    {
+      "combo": "push",
+      "success_rate": 0.83,
+      "count": 18,
       "risk": "low",
       "recommendation": "Recommended"
     },
     {
       "combo": "workflow_dispatch",
-      "success_rate": 0.97,
-      "count": 61,
+      "success_rate": 0.77,
+      "count": 131,
       "risk": "low",
       "recommendation": "Recommended"
     },
     {
-      "combo": "schedule",
-      "success_rate": 0.95,
-      "count": 21,
-      "risk": "low",
-      "recommendation": "Recommended"
-    },
-    {
-      "combo": "discussion+workflow_dispatch",
-      "success_rate": 0.85,
+      "combo": "issues+schedule+workflow_dispatch+workflow_run",
+      "success_rate": 0.7,
       "count": 20,
       "risk": "low",
       "recommendation": "Recommended"
     },
     {
-      "combo": "push+workflow_dispatch",
-      "success_rate": 0.82,
-      "count": 92,
+      "combo": "issues+workflow_dispatch",
+      "success_rate": 0.67,
+      "count": 518,
       "risk": "low",
       "recommendation": "Recommended"
     },
     {
       "combo": "discussion+issues+schedule+workflow_dispatch",
-      "success_rate": 0.81,
-      "count": 234,
+      "success_rate": 0.67,
+      "count": 166,
       "risk": "low",
       "recommendation": "Recommended"
     },
     {
-      "combo": "issues+schedule",
-      "success_rate": 0.81,
-      "count": 200,
+      "combo": "pull_request",
+      "success_rate": 0.65,
+      "count": 160,
       "risk": "low",
       "recommendation": "Recommended"
     },
     {
       "combo": "issues+push+workflow_dispatch",
-      "success_rate": 0.8,
-      "count": 54,
-      "risk": "low",
-      "recommendation": "Recommended"
-    },
-    {
-      "combo": "discussion+issues+schedule",
-      "success_rate": 0.79,
-      "count": 14,
-      "risk": "low",
-      "recommendation": "Recommended"
-    },
-    {
-      "combo": "issues+schedule+workflow_dispatch",
-      "success_rate": 0.76,
-      "count": 1559,
-      "risk": "low",
-      "recommendation": "Recommended"
-    },
-    {
-      "combo": "issues+pull_request+push+workflow_dispatch",
-      "success_rate": 0.76,
-      "count": 50,
+      "success_rate": 0.65,
+      "count": 57,
       "risk": "low",
       "recommendation": "Recommended"
     },
     {
       "combo": "schedule+workflow_dispatch",
-      "success_rate": 0.75,
-      "count": 506,
-      "risk": "low",
-      "recommendation": "Recommended"
+      "success_rate": 0.58,
+      "count": 423,
+      "risk": "medium",
+      "recommendation": "Use with caution"
     },
     {
-      "combo": "discussion+issues",
-      "success_rate": 0.73,
-      "count": 67,
-      "risk": "low",
-      "recommendation": "Recommended"
+      "combo": "issues+pull_request+schedule+workflow_dispatch",
+      "success_rate": 0.57,
+      "count": 58,
+      "risk": "medium",
+      "recommendation": "Use with caution"
+    },
+    {
+      "combo": "issues+schedule+workflow_dispatch",
+      "success_rate": 0.53,
+      "count": 1351,
+      "risk": "medium",
+      "recommendation": "Use with caution"
     },
     {
       "combo": "issues+push",
-      "success_rate": 0.72,
-      "count": 29,
-      "risk": "low",
-      "recommendation": "Recommended"
+      "success_rate": 0.53,
+      "count": 58,
+      "risk": "medium",
+      "recommendation": "Use with caution"
+    },
+    {
+      "combo": "issues+workflow_run",
+      "success_rate": 0.12,
+      "count": 130,
+      "risk": "high",
+      "recommendation": "Avoid"
+    },
+    {
+      "combo": "slash_command",
+      "success_rate": 0.05,
+      "count": 111,
+      "risk": "high",
+      "recommendation": "Avoid"
+    },
+    {
+      "combo": "discussion+issues+slash_command",
+      "success_rate": 0.0,
+      "count": 40,
+      "risk": "high",
+      "recommendation": "Avoid"
+    },
+    {
+      "combo": "issues+pull_request+workflow_run",
+      "success_rate": 0.03,
+      "count": 30,
+      "risk": "high",
+      "recommendation": "Avoid"
+    },
+    {
+      "combo": "push+slash_command",
+      "success_rate": 0.04,
+      "count": 28,
+      "risk": "high",
+      "recommendation": "Avoid"
     }
   ],
+  "configuration_profiles": [],
   "research_findings": {
-    "bimodal_distribution": "38% of workflows always succeed, 21% always fail, 41% are mixed.",
+    "bimodal_distribution": "38% of workflows always succeed, 21% always fail, 41% are mixed. The average hides this.",
     "do_not_constraints": "Workflows with explicit DO NOT instructions are 61% more likely to be healthy (p=0.009).",
-    "slash_command_broken": "slash_command triggers have 0-2% success rate across all combos.",
-    "workflow_run_risky": "workflow_run chaining has 13-16% success rate. Use pre-steps or schedule instead.",
+    "slash_command_broken": "slash_command triggers have 0-17% success rate across all combos (e.g. 5% success across 111 runs, 14 workflows, 14 repos). Avoid until platform stabilizes.",
+    "workflow_run_risky": "workflow_run chaining has 3-12% success rate (e.g. issues+workflow_run: 12% across 130 runs, 15 workflows, 15 repos). Use pre-steps or schedule instead.",
     "pre_steps_help": "Workflows with pre-steps are more likely to be active (+13pp internal, +5pp community).",
     "prompt_size_matters": "Active workflows have 35-48% larger prompts. More detail = better outcomes.",
-    "template_clones_fragile": "32% of workflows are template copies. Copied templates have lower success than customized ones.",
-    "tools_reduce_success": "Workflows that declare tools: have 12.2pp lower success rate than those without (52% vs 64%, n=31 vs 4857) \u2014 prefer safe-outputs and minimal tool scopes."
+    "template_clones_fragile": "32% of workflows are template copies. Copied templates have lower success than customized ones."
   },
-  "degraded_workflows": [
-    {
-      "repo": "github/gh-aw",
-      "workflow": "issue-triage-agent",
-      "older_rate": 1.0,
-      "recent_rate": 0.0
-    },
-    {
-      "repo": "github/gh-aw",
-      "workflow": "ai-moderator",
-      "older_rate": 1.0,
-      "recent_rate": 0.2
-    },
-    {
-      "repo": "jramalho/test-stuff",
-      "workflow": "weekly-research",
-      "older_rate": 1.0,
-      "recent_rate": 0.0
-    },
-    {
-      "repo": "llm-d-incubation/llm-d-async",
-      "workflow": "typo-checker",
-      "older_rate": 0.8,
-      "recent_rate": 0.0
-    },
-    {
-      "repo": "adrianmg/test-repo",
-      "workflow": "issue-triage",
-      "older_rate": 1.0,
-      "recent_rate": 0.2
-    },
-    {
-      "repo": "adrianmg/test-repo",
-      "workflow": "dad-jokes",
-      "older_rate": 1.0,
-      "recent_rate": 0.2
-    },
-    {
-      "repo": "elastic/opentelemetry-collector-components",
-      "workflow": "pr-review",
-      "older_rate": 0.8,
-      "recent_rate": 0.2
-    },
-    {
-      "repo": "yuma-722/gh-aw-test",
-      "workflow": "github-changelog-report",
-      "older_rate": 1.0,
-      "recent_rate": 0.2
-    },
-    {
-      "repo": "Okyerema/.github",
-      "workflow": "continuous-triage",
-      "older_rate": 0.8,
-      "recent_rate": 0.25
-    }
-  ],
-  "explicit_anti_patterns": [
-    {
-      "id": "slash-command",
-      "trigger": "slash_command",
-      "success_rate": 0.01,
-      "n_runs": 262,
-      "severity": "critical",
-      "fix": "Remove slash_command trigger. Use issues + workflow_dispatch instead.",
-      "explanation": "slash_command has 0-2% success rate across ALL trigger combos. Effectively broken."
-    },
-    {
-      "id": "workflow-run-alone",
-      "trigger": "workflow_run",
-      "success_rate": 0.16,
-      "n_runs": 76,
-      "severity": "critical",
-      "fix": "Use schedule + workflow_dispatch instead of workflow_run chaining.",
-      "explanation": "workflow_run chaining has 13-16% success rate. Pre-steps or schedule are more reliable."
-    },
-    {
-      "id": "codex-model",
-      "config": "model: codex",
-      "success_rate": 0.57,
-      "severity": "high",
-      "fix": "Use default model (67% success) or claude-opus for complex tasks.",
-      "explanation": "codex model has 57% success rate vs 67% for default."
-    },
-    {
-      "id": "template-clone",
-      "config": "unmodified template copy",
-      "prevalence": "32% of all workflows",
-      "severity": "medium",
-      "fix": "Customize triggers, timeout, safe-outputs, and repo-specific context after copying.",
-      "explanation": "Template clones have lower success than customized workflows."
-    },
-    {
-      "id": "oversized-prompt-default-model",
-      "config": "prompt >30KB with default model",
-      "severity": "medium",
-      "fix": "Split workflow into smaller pieces or upgrade to claude-opus model.",
-      "explanation": "Large prompts on default model may exceed context limits."
-    },
-    {
-      "id": "missing-workflow-dispatch",
-      "config": "no workflow_dispatch trigger",
-      "success_rate_delta": -0.21,
-      "severity": "high",
-      "fix": "Add workflow_dispatch: to the on: block.",
-      "explanation": "Workflows with workflow_dispatch have +21pp success rate. Also enables manual re-runs for debugging."
-    }
-  ]
+  "degraded_workflows": []
 }
