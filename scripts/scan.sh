@@ -163,6 +163,7 @@ with open("/tmp/aw-scan/raw-results.jsonl") as f:
                     "visibility": r.get("visibility", "unknown"),
                     "stars": r.get("stargazers_count", 0),
                     "description": (r.get("description") or "")[:200],
+                    "ref": r.get("default_branch", "main"),
                     "lock_files": []
                 }
             wf = item["name"]
@@ -225,8 +226,11 @@ for source in load_import_sources():
                 capture_output=True, text=True, timeout=15
             )
             if source_result.returncode == 0:
+                contents = json.loads(source_result.stdout)
+                if isinstance(contents, dict):
+                    contents = [contents]
                 source_files.extend(
-                    item["path"] for item in json.loads(source_result.stdout)
+                    item["path"] for item in contents
                     if item.get("type") == "file" and item.get("name", "").endswith(".md")
                 )
             else:
