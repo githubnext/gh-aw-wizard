@@ -1,0 +1,64 @@
+{
+  "id": "issue-triage",
+  "label": "Issue Triage",
+  "description": "Classify and label new issues",
+  "success_rate": 0.65,
+  "count": 98,
+  "recommended_triggers": [
+    {
+      "type": "issues",
+      "config": {}
+    },
+    {
+      "type": "schedule",
+      "config": {}
+    }
+  ],
+  "recommended_safe_outputs": [
+    "issues"
+  ],
+  "recommended_tools": [
+    "add-comment",
+    "add-labels"
+  ],
+  "timeout_minutes": 30,
+  "prompt_style": "role-steps",
+  "size_range_bytes": [
+    3000,
+    7000
+  ],
+  "top_repos": [
+    {
+      "repo": "appwrite/appwrite",
+      "stars": 57047
+    },
+    {
+      "repo": "moeru-ai/airi",
+      "stars": 48057
+    },
+    {
+      "repo": "taosdata/TDengine",
+      "stars": 25068
+    },
+    {
+      "repo": "czlonkowski/n8n-mcp",
+      "stars": 22721
+    },
+    {
+      "repo": "prowler-cloud/prowler",
+      "stars": 14612
+    }
+  ],
+  "tips": [
+    "Prefer event-driven triggers like issues and schedule over manual-only execution",
+    "Include explicit label taxonomy in your prompt so the agent knows valid options",
+    "Use DO NOT constraints (e.g., 'Do NOT close issues') \u2014 61% more likely to be healthy"
+  ],
+  "anti_patterns": [
+    "issue-triage",
+    "issue-triage",
+    "marketplace-harness-gap-triage",
+    "issue-triage",
+    "issue-triage"
+  ]
+}

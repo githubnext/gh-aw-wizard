@@ -1,0 +1,32 @@
+{
+  "id": "skill-pr-reviewer",
+  "label": "Skill PR Reviewer",
+  "description": "Review pull requests with installed expert skills",
+  "success_rate": null,
+  "count": 0,
+  "recommended_triggers": [
+    {
+      "type": "pull_request",
+      "config": {}
+    }
+  ],
+  "recommended_safe_outputs": [
+    "pull-requests"
+  ],
+  "recommended_tools": [
+    "create-pull-request-review-comment"
+  ],
+  "timeout_minutes": 30,
+  "prompt_style": "role-rules",
+  "size_range_bytes": [
+    3000,
+    8000
+  ],
+  "top_repos": [],
+  "tips": [
+    "Select skills that match the pull request's change type",
+    "Name the skill that informed each actionable finding",
+    "Review changed lines only and avoid duplicate feedback"
+  ],
+  "anti_patterns": []
+}

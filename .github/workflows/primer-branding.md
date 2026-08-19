@@ -94,6 +94,6 @@ If the audit finds no meaningful deviations, do nothing — no pull request, no 
 - Do NOT restructure the page, rename files, or change application logic. This workflow is presentational only.
 - Do NOT remove existing functionality, tests, or accessibility affordances such as ARIA attributes and keyboard handling.
 - Do NOT add new runtime dependencies or swap the Primer CSS CDN for a different source.
-- Do NOT change `patterns.json`, `data/`, `scripts/`, or other agentic workflow files.
+- Do NOT change `patterns/`, `data/`, `scripts/`, or other agentic workflow files.
 - Do NOT open a pull request when tests or the build fail.
 - Keep the change set small enough for a human to review in one sitting.

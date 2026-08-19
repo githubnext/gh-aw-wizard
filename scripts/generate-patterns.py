@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Build patterns.json deterministically from data/scan-results.json."""
+"""Build the patterns/ directory deterministically from data/scan-results.json.
+
+Pattern data is split into one file per archetype (patterns/archetypes/<id>.json)
+plus a manifest (patterns/manifest.json) so the library can be versioned and
+reviewed one archetype at a time instead of as a single monolithic JSON blob.
+"""
 
 import json
 from collections import Counter, defaultdict
@@ -7,7 +12,9 @@ from pathlib import Path
 
 
 SCAN_RESULTS = Path("data/scan-results.json")
-PATTERNS = Path("patterns.json")
+PATTERNS_DIR = Path("patterns")
+ARCHETYPES_DIR = PATTERNS_DIR / "archetypes"
+MANIFEST = PATTERNS_DIR / "manifest.json"
 
 CURATED_ARCHETYPES = {
     "accessibility-expert": {
@@ -525,7 +532,6 @@ output = {
         "active_workflows": metadata.get("active_repos", 0),
         "total_workflows": metadata.get("total_workflows", len(workflows))
     },
-    "archetypes": archetypes,
     "anti_patterns": all_anti[:20],
     "config_defaults": {
         "model": None,
@@ -554,26 +560,71 @@ output = {
     "degraded_workflows": []
 }
 
+manifest = {
+    "metadata": output["metadata"],
+    "archetypes": [archetype["id"] for archetype in archetypes],
+    "anti_patterns": output["anti_patterns"],
+    "config_defaults": output["config_defaults"],
+    "trigger_combos": output["trigger_combos"],
+    "configuration_profiles": output["configuration_profiles"],
+    "research_findings": output["research_findings"],
+    "degraded_workflows": output["degraded_workflows"],
+}
+archetypes_by_file_id = {archetype["id"]: archetype for archetype in archetypes}
+
+
+def load_existing_patterns():
+    if not MANIFEST.exists():
+        return None, {}
+    try:
+        existing_manifest = json.loads(MANIFEST.read_text())
+    except (json.JSONDecodeError, OSError):
+        return None, {}
+    existing_archetypes = {}
+    for arch_id in existing_manifest.get("archetypes", []):
+        path = ARCHETYPES_DIR / f"{arch_id}.json"
+        if not path.exists():
+            continue
+        try:
+            existing_archetypes[arch_id] = json.loads(path.read_text())
+        except (json.JSONDecodeError, OSError):
+            pass
+    return existing_manifest, existing_archetypes
+
+
 # Do not turn a scan timestamp refresh into a pattern-library change. Preserve
 # generated_at when every generated field other than that timestamp is equal.
-if PATTERNS.exists():
-    try:
-        previous = json.loads(PATTERNS.read_text())
-        previous_without_timestamp = {
-            **previous,
-            "metadata": {**previous.get("metadata", {}), "generated_at": None},
-        }
-        output_without_timestamp = {
-            **output,
-            "metadata": {**output["metadata"], "generated_at": None},
-        }
-        if previous_without_timestamp == output_without_timestamp:
-            output["metadata"]["generated_at"] = previous.get("metadata", {}).get("generated_at")
-    except (json.JSONDecodeError, OSError):
-        pass
+existing_manifest, existing_archetypes = load_existing_patterns()
+if existing_manifest is not None:
+    existing_manifest_without_timestamp = {
+        **existing_manifest,
+        "metadata": {**existing_manifest.get("metadata", {}), "generated_at": None},
+    }
+    manifest_without_timestamp = {
+        **manifest,
+        "metadata": {**manifest["metadata"], "generated_at": None},
+    }
+    if (
+        existing_manifest_without_timestamp == manifest_without_timestamp
+        and existing_archetypes == archetypes_by_file_id
+    ):
+        manifest["metadata"]["generated_at"] = existing_manifest.get("metadata", {}).get("generated_at")
 
-with PATTERNS.open("w") as f:
-    json.dump(output, f, indent=2)
+ARCHETYPES_DIR.mkdir(parents=True, exist_ok=True)
+
+# Remove archetype files that no longer correspond to a generated archetype.
+for existing_file in ARCHETYPES_DIR.glob("*.json"):
+    if existing_file.stem not in archetypes_by_file_id:
+        existing_file.unlink()
+
+with MANIFEST.open("w") as f:
+    json.dump(manifest, f, indent=2)
     f.write("\n")
 
-print(f"Built patterns.json: {len(archetypes)} archetypes, {len(all_anti[:20])} anti-patterns")
+for archetype in archetypes:
+    path = ARCHETYPES_DIR / f"{archetype['id']}.json"
+    with path.open("w") as f:
+        json.dump(archetype, f, indent=2)
+        f.write("\n")
+
+print(f"Built patterns/manifest.json + {len(archetypes)} archetype files, {len(all_anti[:20])} anti-patterns")

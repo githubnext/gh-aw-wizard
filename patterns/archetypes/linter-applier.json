@@ -1,0 +1,32 @@
+{
+  "id": "linter-applier",
+  "label": "Linter Applier",
+  "description": "Fix a focused group of existing lint findings",
+  "success_rate": null,
+  "count": 0,
+  "recommended_triggers": [
+    {
+      "type": "schedule",
+      "config": {}
+    }
+  ],
+  "recommended_safe_outputs": [
+    "pull-requests"
+  ],
+  "recommended_tools": [
+    "create-pull-request"
+  ],
+  "timeout_minutes": 30,
+  "prompt_style": "phase-based",
+  "size_range_bytes": [
+    3000,
+    7000
+  ],
+  "top_repos": [],
+  "tips": [
+    "Group fixes by one rule and subsystem",
+    "Never disable rules or add blanket suppressions",
+    "Validate semantics with relevant tests after applying fixes"
+  ],
+  "anti_patterns": []
+}

@@ -1,0 +1,32 @@
+{
+  "id": "user-simulator",
+  "label": "User Simulator",
+  "description": "Simulate representative users and evaluate their workflows",
+  "success_rate": null,
+  "count": 0,
+  "recommended_triggers": [
+    {
+      "type": "schedule",
+      "config": {}
+    }
+  ],
+  "recommended_safe_outputs": [
+    "issues"
+  ],
+  "recommended_tools": [
+    "create-issue"
+  ],
+  "timeout_minutes": 30,
+  "prompt_style": "scenario-based",
+  "size_range_bytes": [
+    4000,
+    8000
+  ],
+  "top_repos": [],
+  "tips": [
+    "Define personas by goals, responsibilities, and constraints rather than demographics",
+    "Simulate a small, representative set of technical and nontechnical tasks",
+    "Use repeatable criteria and concise evidence when reporting friction or gaps"
+  ],
+  "anti_patterns": []
+}

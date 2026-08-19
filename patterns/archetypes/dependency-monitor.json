@@ -1,0 +1,65 @@
+{
+  "id": "dependency-monitor",
+  "label": "Dependency Monitor",
+  "description": "Track and update dependencies",
+  "success_rate": 0.5,
+  "count": 55,
+  "recommended_triggers": [
+    {
+      "type": "schedule",
+      "config": {}
+    },
+    {
+      "type": "issues",
+      "config": {}
+    }
+  ],
+  "recommended_safe_outputs": [
+    "issues",
+    "pull-requests"
+  ],
+  "recommended_tools": [
+    "create-issue",
+    "create-pull-request"
+  ],
+  "timeout_minutes": 30,
+  "prompt_style": "checklist",
+  "size_range_bytes": [
+    3000,
+    6000
+  ],
+  "top_repos": [
+    {
+      "repo": "mono/SkiaSharp",
+      "stars": 5546
+    },
+    {
+      "repo": "github/gh-aw",
+      "stars": 4953
+    },
+    {
+      "repo": "dotnet/Open-XML-SDK",
+      "stars": 4583
+    },
+    {
+      "repo": "dotnet/arcade",
+      "stars": 727
+    },
+    {
+      "repo": "OpenMS/OpenMS",
+      "stars": 611
+    }
+  ],
+  "tips": [
+    "Use schedule triggers for reliable periodic checks",
+    "Include a checklist of specific dependencies to monitor \u2014 don't leave it open-ended",
+    "Enable network access for fetching upstream release data"
+  ],
+  "anti_patterns": [
+    "docs-sync",
+    "skills-updater",
+    "doc-sync",
+    "update-github-info",
+    "doc-sync"
+  ]
+}

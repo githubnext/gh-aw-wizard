@@ -1,0 +1,32 @@
+{
+  "id": "linter-refiner",
+  "label": "Linter Refiner",
+  "description": "Improve lint rule accuracy, diagnostics, and performance",
+  "success_rate": null,
+  "count": 0,
+  "recommended_triggers": [
+    {
+      "type": "pull_request",
+      "config": {}
+    }
+  ],
+  "recommended_safe_outputs": [
+    "pull-requests"
+  ],
+  "recommended_tools": [
+    "create-pull-request"
+  ],
+  "timeout_minutes": 30,
+  "prompt_style": "phase-based",
+  "size_range_bytes": [
+    3000,
+    7000
+  ],
+  "top_repos": [],
+  "tips": [
+    "Require concrete false-positive or missed-case evidence",
+    "Add a regression fixture for every behavior change",
+    "Refine only one rule per pull request"
+  ],
+  "anti_patterns": []
+}
