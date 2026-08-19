@@ -32,6 +32,6 @@ describe('Primer iconography', () => {
   it('uses hidden Octicons instead of emoji for decorative interface icons', () => {
     expect(html).toContain('id="octicon-eye"');
     expect(html).toContain('<use href="#octicon-eye"></use>');
-    expect(html).not.toMatch(/[\u{1F300}-\u{1FAFF}]/u);
+    expect(html).not.toMatch(/\p{Extended_Pictographic}/u);
   });
 });
