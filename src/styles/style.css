@@ -184,6 +184,24 @@ a:hover {
   margin: 0;
   line-height: 1.5;
 }
+.header-callout {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.6rem 0 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+.header-callout .octicon {
+  width: 14px;
+  height: 14px;
+  fill: var(--accent-blue);
+  flex-shrink: 0;
+}
+.header-callout a {
+  color: var(--accent-blue);
+  font-weight: 600;
+}
 .footer-actions {
   display: flex;
   justify-content: flex-start;
