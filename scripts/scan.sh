@@ -241,7 +241,7 @@ for source in load_import_sources():
             continue
 
         if repo_result.returncode != 0:
-            print(f"    Warning: import source metadata unavailable: {name}")
+            print(f"    Warning: import source metadata unavailable: {name}; using configured metadata")
         repo = json.loads(repo_result.stdout) if repo_result.returncode == 0 else {}
         existing = public.get(name, {})
         public[name] = {
@@ -367,11 +367,12 @@ echo "Step 3 — Analysis: fetching workflow definitions..."
 python3 << 'PYEOF'
 import base64, json, subprocess, time, sys, re
 from urllib.error import HTTPError, URLError
+from urllib.parse import quote
 from urllib.request import urlopen
 
 def fetch_source(repo, path, ref):
     result = subprocess.run(
-        ["gh", "api", f"repos/{repo}/contents/{path}",
+        ["gh", "api", f"repos/{repo}/contents/{path}?ref={quote(ref, safe='')}",
          "-q", ".content", "--header", "Accept: application/vnd.github.v3+json"],
         capture_output=True, text=True, timeout=15
     )
