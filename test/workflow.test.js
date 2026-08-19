@@ -410,6 +410,7 @@ describe('generateWorkflowFile', () => {
 describe('generateAgentPrompt', () => {
   it('describes triggers and outputs in plain language', () => {
     const prompt = generateAgentPrompt(answers(), patterns);
+    expect(prompt).toContain('Create a draft PR that adds an agentic workflow using these instructions:');
     expect(prompt).toContain('- Name: issue-triage\n');
     expect(prompt).toContain('- Engine: copilot\n');
     expect(prompt).toContain('when a new issue is opened, on push to main');
