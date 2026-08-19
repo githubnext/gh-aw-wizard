@@ -273,6 +273,14 @@ describe('generateWorkflowFile', () => {
     expect(md).toContain('# Issue Triage');
   });
 
+  it('gives archetypes with no inferred bash/github toolset a minimal read permissions block', () => {
+    // issue-triage relies solely on safe-outputs (add-labels/add-comment) and infers
+    // neither bash nor a github toolset, but it still checks out and reads the
+    // triggering issue — it should not be left with the default (broader) token scope.
+    const md = generateWorkflowFile(answers(), patterns);
+    expect(md).toContain('permissions:\n  contents: read\n');
+  });
+
   it('raises the timeout when a trigger requires more time', () => {
     const md = generateWorkflowFile(
       answers({ triggers: ['schedule', 'push'] }),
