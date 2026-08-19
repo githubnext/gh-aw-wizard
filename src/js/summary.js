@@ -33,6 +33,12 @@ var engineLabels = {
   pi: 'Pi'
 };
 
+var extraLabels = {
+  memory: 'memory between runs',
+  charts: 'chart generation',
+  browser: 'browser access'
+};
+
 function readableList(values, conjunction) {
   conjunction = conjunction || 'and';
   if (values.length < 2) return values[0] || '';
@@ -50,14 +56,10 @@ export function buildWorkflowSummary(answers, patterns) {
     ? answers.customDescription
     : archetype && archetype.description;
   var engine = answers.engine ? (engineLabels[answers.engine] || 'Copilot') : null;
-  var context = [];
-
-  if ((answers.extras || []).indexOf('memory') !== -1) {
-    context.push('memory between runs');
-  }
-  if (answers.dataDescription) {
-    context.push('project-specific context');
-  }
+  var capabilities = (answers.extras || []).map(function (extra) { return extraLabels[extra] || extra; });
+  var agent = engine && (capabilities.length
+    ? engine + ' with ' + readableList(capabilities)
+    : engine);
 
   return {
     trigger: {
@@ -82,9 +84,8 @@ export function buildWorkflowSummary(answers, patterns) {
       complete: answers.outputs.length > 0
     },
     engine: {
-      value: engine || 'choose an agent',
+      value: agent || 'choose an agent',
       complete: Boolean(engine)
-    },
-    context: readableList(context)
+    }
   };
 }

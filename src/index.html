@@ -58,6 +58,10 @@
         <h1>GitHub Agentic Workflow Generator</h1>
       </div>
       <p class="subtitle">Add Agentic Automation to your Repository in minutes</p>
+      <p class="header-callout">
+        <svg class="octicon" aria-hidden="true"><use href="#octicon-zap"></use></svg>
+        New to agentic workflows? Learn more at <a href="https://gh.io/gh-aw" target="_blank" rel="noopener">gh.io/gh-aw</a>.
+      </p>
     </div>
   </header>
 
@@ -256,38 +260,14 @@
           </section>
         </div>
 
-        <!-- Step 4: Customize -->
+        <!-- Step 4: Agent -->
         <div class="recipe-item is-placeholder">
-          <button class="recipe-clause progress-step is-placeholder" type="button" data-step="4" aria-expanded="false" aria-controls="step-4" disabled>
+          <button class="recipe-clause progress-step" type="button" data-step="4" aria-expanded="false" aria-controls="step-4" disabled>
             <span class="step-indicator" aria-hidden="true">4</span>
-            <span class="recipe-key recipe-key-extras">Extras</span>
-            <span class="recipe-value" id="summary-context">choose how it works</span>
-          </button>
-          <section class="wizard-step" id="step-4">
-            <div class="option-group" id="data-options">
-              <label class="option-card">
-                <input type="checkbox" name="extra" value="memory">
-                <div class="option-info">
-                  <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-cache"></use></svg>Remember across runs</div>
-                  <div class="option-desc">Track trends and context between workflow executions</div>
-                </div>
-              </label>
-            </div>
-            <div class="customize-field">
-              <label for="data-description">Anything specific the workflow should know about your project?</label>
-              <textarea class="text-area" id="data-description" placeholder="e.g., We use a monorepo with packages in /packages/*, the main API is in /src/api/, we follow conventional commits…"></textarea>
-            </div>
-          </section>
-        </div>
-
-        <!-- Step 5: Agent -->
-        <div class="recipe-item is-placeholder">
-          <button class="recipe-clause progress-step" type="button" data-step="5" aria-expanded="false" aria-controls="step-5" disabled>
-            <span class="step-indicator" aria-hidden="true">5</span>
             <span class="recipe-key recipe-key-agent">Agent</span>
             <span class="recipe-value" id="summary-engine">choose an agent</span>
           </button>
-          <section class="wizard-step" id="step-5">
+          <section class="wizard-step" id="step-4">
             <div class="engine-selector">
               <div class="option-group" id="engine-options">
                 <label class="option-card">
@@ -343,18 +323,40 @@
                 </label>
               </div>
             </div>
-
+            <div class="option-group" id="agent-options">
+              <label class="option-card">
+                <input type="checkbox" name="extra" value="memory">
+                <div class="option-info">
+                  <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-cache"></use></svg>Remember across runs</div>
+                  <div class="option-desc">Track trends and context between workflow executions</div>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="checkbox" name="extra" value="charts">
+                <div class="option-info">
+                  <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-graph"></use></svg>Generate charts</div>
+                  <div class="option-desc">Upload generated charts and other visual assets</div>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="checkbox" name="extra" value="browser">
+                <div class="option-info">
+                  <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-device-desktop"></use></svg>Use browser</div>
+                  <div class="option-desc">Enable Playwright CLI for browser automation</div>
+                </div>
+              </label>
+            </div>
           </section>
         </div>
 
-        <!-- Step 6: Preview -->
+        <!-- Step 5: Preview -->
         <div class="recipe-item">
-          <button class="recipe-clause progress-step" type="button" data-step="6" aria-expanded="false" aria-controls="step-6" disabled>
-            <span class="step-indicator" aria-hidden="true">6</span>
+          <button class="recipe-clause progress-step" type="button" data-step="5" aria-expanded="false" aria-controls="step-5" disabled>
+            <span class="step-indicator" aria-hidden="true">5</span>
             <span class="recipe-key recipe-key-preview">Finish</span>
             <span class="recipe-value">copy your prompt and run it</span>
           </button>
-          <section class="wizard-step" id="step-6">
+          <section class="wizard-step" id="step-5">
 
             <div class="preview-container prompt-panel">
               <div class="finish-cta">
@@ -376,8 +378,6 @@
                   <div class="preview-code" id="preview-code"></div>
                 </div>
               </div>
-
-              <div class="next-steps-panel" id="next-steps-panel"></div>
             </div>
 
           </section>

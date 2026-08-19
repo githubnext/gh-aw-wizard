@@ -101,6 +101,9 @@ export function generateWorkflowFile(answers, patterns) {
         safeSet.add('create-pull-request'); break;
     }
   });
+  if ((answers.extras || []).indexOf('charts') !== -1) {
+    safeSet.add('upload-assets');
+  }
   var safeOutputs = Array.from(safeSet);
 
   // Timeout
@@ -135,7 +138,7 @@ export function generateWorkflowFile(answers, patterns) {
   fm += 'engine: ' + engine + '\n';
 
   // Tools section
-  if (inferred.bash || inferred.githubToolsets || extras.indexOf('memory') !== -1) {
+  if (inferred.bash || inferred.githubToolsets || extras.indexOf('memory') !== -1 || extras.indexOf('browser') !== -1) {
     fm += 'tools:\n';
     if (inferred.bash) {
       fm += '  bash: true\n';
@@ -147,6 +150,9 @@ export function generateWorkflowFile(answers, patterns) {
     if (extras.indexOf('memory') !== -1) {
       fm += '  cache-memory:\n';
     }
+    if (extras.indexOf('browser') !== -1) {
+      fm += '  playwright:\n    mode: cli\n';
+    }
   }
 
   if (safeOutputs.length) {
@@ -156,13 +162,6 @@ export function generateWorkflowFile(answers, patterns) {
   fm += 'timeout-minutes: ' + timeout + '\n';
 
   fm += '---\n\n';
-
-  // Add project context if provided
-  var context = answers.dataDescription;
-  var contextSection = '';
-  if (context) {
-    contextSection = '## Project Context\n\n' + context + '\n\n';
-  }
 
   // Body — varies by archetype
   var body = '';
@@ -192,7 +191,7 @@ export function generateWorkflowFile(answers, patterns) {
       body = buildCustom(answers, label);
   }
 
-  return fm + body + contextSection;
+  return fm + body;
 }
 
 export function fencedBlock(content, lang) {
@@ -295,8 +294,11 @@ export function generateAgentPrompt(answers, patterns) {
   if (extras.indexOf('memory') !== -1) {
     prompt += '- Add cache-memory tool for persistent memory across runs\n';
   }
-  if (answers.dataDescription) {
-    prompt += '- Additional project context: ' + answers.dataDescription + '\n';
+  if (extras.indexOf('charts') !== -1) {
+    prompt += '- Add upload-assets safe output to publish generated charts\n';
+  }
+  if (extras.indexOf('browser') !== -1) {
+    prompt += '- Enable Playwright CLI for browser automation\n';
   }
 
   prompt += '\nThe workflow should be saved to .github/workflows/' + name + '.md';

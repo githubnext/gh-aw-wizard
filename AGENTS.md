@@ -13,8 +13,10 @@ A wizard interface to create GitHub Agentic Workflows. Create ready-to-use [GitH
 | `src/js/` | ES modules — `main.js` (entry), `ui.js` (DOM wiring), `workflow.js` (workflow/prompt generation), `bodies.js` (archetype prompt bodies), `highlight.js`, `next-steps.js`, `patterns.js`, `theme.js` |
 | `test/` | Vitest unit tests for the pure generation logic |
 | `patterns.json` | Pattern data powering the wizard — archetypes, triggers, tips |
-| `scripts/scan.sh` | Weekly scanner that discovers agentic workflows across GitHub |
-| `.github/workflows/deep-research.md` | Agentic workflow that analyzes trends and opens PRs with updates |
+| `scripts/scan.sh` | Scanner that discovers agentic workflows across GitHub |
+| `scripts/generate-patterns.py` | Deterministically generates `patterns.json` from scan results |
+| `.github/workflows/update-patterns.yml` | Weekly scan and stable pattern-library PR automation |
+| `.github/workflows/deep-research.md` | Read-only, manually dispatched analysis of committed pattern data |
 
 ### Development
 
@@ -33,7 +35,10 @@ development and copied into `dist/` at build time.
 
 ### Self-updating pipeline
 
-A weekly GitHub Actions scan discovers new repos, refreshes run history, and updates the dataset. A [deep research agent](.github/workflows/deep-research.md) then analyzes the results and opens PRs when patterns shift.
+A weekly GitHub Actions workflow discovers active repos, refreshes run history, regenerates
+`patterns.json`, and creates or updates a stable pull request when the generated file changes. The
+[deep research agent](.github/workflows/deep-research.md) is manually dispatched and only analyzes
+the committed pattern library; it never scans or writes repository content.
 
 ## License
 
