@@ -338,7 +338,7 @@ a:hover {
 .recipe-key-what { background: var(--label-pink); }
 .recipe-key-when { background: var(--label-blue); }
 .recipe-key-where { background: var(--label-green); }
-.recipe-key-how {
+.recipe-key-extras {
   background: var(--label-orange);
   color: #000000;
 }
