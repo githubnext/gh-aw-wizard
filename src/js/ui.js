@@ -2,12 +2,10 @@
 
 import { loadPatterns, getRecommendedConfiguration } from './patterns.js';
 import {
-  workflowName,
   inferNeedsPreSteps,
   generateAgentPrompt
 } from './workflow.js';
 import { highlightMarkdown } from './highlight.js';
-import { nextStepsHtml } from './next-steps.js';
 import { initTheme } from './theme.js';
 import { buildWorkflowSummary } from './summary.js';
 
@@ -34,21 +32,11 @@ function generateAndShow() {
   refreshGeneratedContent();
   goToStep(6);
   showPreview(generatedPrompt);
-  var answers = gatherAnswers();
-  showNextSteps('prompt', workflowName(answers.archetype, answers.customDescription), answers.engine);
 }
 
 function refreshPreview() {
   refreshGeneratedContent();
   showPreview(generatedPrompt);
-  var answers = gatherAnswers();
-  showNextSteps('prompt', workflowName(answers.archetype, answers.customDescription), answers.engine);
-}
-
-function showNextSteps(format, name, engine) {
-  var panel = document.getElementById('next-steps-panel');
-  if (!panel) return;
-  panel.innerHTML = nextStepsHtml(format, name, engine);
 }
 
 function refreshGeneratedContent() {
