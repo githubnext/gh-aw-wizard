@@ -184,11 +184,6 @@ a:hover {
 /* IFTTT-inspired workflow recipe and progress */
 .workflow-recipe {
   margin-bottom: 2.5rem;
-  padding: 1.25rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
 }
 .recipe-header {
   display: flex;
