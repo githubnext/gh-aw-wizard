@@ -1,6 +1,7 @@
 // Readable, progressive summary of the workflow being configured.
 
 import { getArchetype } from './patterns.js';
+import { formatEngineLabel } from './engines.js';
 
 var triggerLabels = {
   issues: 'a new issue is opened',
@@ -55,7 +56,7 @@ export function buildWorkflowSummary(answers, patterns) {
   var purpose = answers.archetype === 'custom'
     ? answers.customDescription
     : archetype && archetype.description;
-  var engine = answers.engine ? (engineLabels[answers.engine] || 'Copilot') : null;
+  var engine = answers.engine ? (engineLabels[answers.engine] || formatEngineLabel(answers.engine)) : null;
   var capabilities = (answers.extras || []).map(function (extra) { return extraLabels[extra] || extra; });
 
   return {

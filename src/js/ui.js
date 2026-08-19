@@ -8,6 +8,7 @@ import {
 import { highlightMarkdown } from './highlight.js';
 import { initTheme } from './theme.js';
 import { buildWorkflowSummary } from './summary.js';
+import { formatEngineLabel, loadDefinitionEngines } from './engines.js';
 
 var patterns = null;
 var currentStep = 1;
@@ -22,6 +23,7 @@ export function initWizard() {
   });
   bindNavigation();
   bindFormEvents();
+  loadDefinitionEngines().then(addDefinitionEngineOptions);
   initNavigationHistory();
   renderWorkflowSummary();
 }
@@ -280,22 +282,62 @@ function bindFormEvents() {
   });
 
   // Step 5: engine radio cards
-  var engineRadios = document.querySelectorAll('input[name="engine"]');
-  bindRadioDeselect(engineRadios, clearEngineSelection);
-  engineRadios.forEach(function (radio) {
-    radio.addEventListener('change', function () {
+  var engineOptions = document.getElementById('engine-options');
+  bindRadioDeselect(engineOptions.querySelectorAll('input[name="engine"]'), clearEngineSelection);
+  engineOptions.addEventListener('change', function (event) {
+    if (event.target.name === 'engine') {
       updateCardSelection('#engine-options', 'radio');
       if (currentStep === 6) refreshPreview();
-    });
+    }
   });
   updateCardSelection('#engine-options', 'radio');
 
-  document.querySelectorAll('input').forEach(function (input) {
-    input.addEventListener('change', function () {
+  document.addEventListener('change', function (event) {
+    if (event.target.matches('input')) {
       renderWorkflowSummary();
       syncProgressStepAvailability();
-    });
+    }
   });
+}
+
+function addDefinitionEngineOptions(engines) {
+  var container = document.getElementById('engine-options');
+  var existing = new Set(Array.from(container.querySelectorAll('input[name="engine"]')).map(function (input) {
+    return input.value;
+  }));
+  var added = [];
+
+  engines.forEach(function (engine) {
+    if (existing.has(engine.id)) return;
+    existing.add(engine.id);
+
+    var card = document.createElement('label');
+    card.className = 'option-card';
+
+    var input = document.createElement('input');
+    input.type = 'radio';
+    input.name = 'engine';
+    input.value = engine.id;
+
+    var info = document.createElement('div');
+    info.className = 'option-info';
+
+    var label = document.createElement('div');
+    label.className = 'option-label option-label-with-icon';
+    label.innerHTML = '<svg class="octicon" aria-hidden="true"><use href="#octicon-tools"></use></svg>';
+    label.appendChild(document.createTextNode(formatEngineLabel(engine.id) + ' (definition-based)'));
+
+    var description = document.createElement('div');
+    description.className = 'option-desc';
+    description.textContent = 'Definition-based engine provided by gh-aw';
+
+    info.append(label, description);
+    card.append(input, info);
+    container.appendChild(card);
+    added.push(input);
+  });
+
+  bindRadioDeselect(added, clearEngineSelection);
 }
 
 // Reset any selections that depend on the "what" (archetype) choice, since they

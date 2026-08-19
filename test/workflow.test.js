@@ -212,9 +212,14 @@ describe('generateWorkflowFile', () => {
     expect(md).toContain('timeout-minutes: 30\n');
   });
 
-  it('falls back to copilot engine for unknown values', () => {
-    const md = generateWorkflowFile(answers({ engine: 'invalid' }), patterns);
+  it('falls back to copilot engine for malformed ids', () => {
+    const md = generateWorkflowFile(answers({ engine: 'Invalid engine' }), patterns);
     expect(md).toContain('engine: copilot\n');
+  });
+
+  it('supports definition-based engines', () => {
+    const md = generateWorkflowFile(answers({ engine: 'pydantic-ai' }), patterns);
+    expect(md).toContain('engine: pydantic-ai\n');
   });
 
   it('accepts all supported built-in engines', () => {

@@ -13,7 +13,7 @@ import {
 } from './bodies.js';
 
 export function normalizeEngine(engine) {
-  return ['copilot', 'claude', 'codex', 'gemini', 'pi'].includes(engine) ? engine : 'copilot';
+  return typeof engine === 'string' && /^[a-z0-9][a-z0-9-]*$/.test(engine) ? engine : 'copilot';
 }
 
 export function workflowName(archetype, customDesc) {
