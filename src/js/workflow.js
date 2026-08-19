@@ -196,6 +196,13 @@ export function generateWorkflowFile(answers, patterns) {
     // minimal read permission explicitly rather than relying on defaults.
     fm += 'permissions:\n';
     BASH_ONLY_PERMISSIONS.forEach((p) => { fm += `  ${  p  }: read\n`; });
+  } else {
+    // Archetypes with no inferred bash/github toolset (e.g. issue-triage, which
+    // relies solely on safe-outputs like add-labels/add-comment) still check out
+    // the repo and read the triggering issue/PR, so declare minimal read
+    // permissions explicitly rather than relying on the default GITHUB_TOKEN scope.
+    fm += 'permissions:\n';
+    BASH_ONLY_PERMISSIONS.forEach((p) => { fm += `  ${  p  }: read\n`; });
   }
   fm += `engine: ${  engine  }\n`;
 
