@@ -266,7 +266,7 @@ export function generateAgentPrompt(answers, patterns) {
       'labels': 'add labels',
       'new-issues': 'create new issues',
       'pull-requests': 'open pull requests',
-      'commits': 'open pull requests'
+      'commits': 'commit file changes'
     };
     return map[o] || o;
   }).join(', ');
