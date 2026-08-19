@@ -568,6 +568,11 @@ a:hover {
   height: 0.92rem;
   fill: currentColor;
 }
+.engine-logo-mark {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
 #engine-options .option-card:hover .engine-vendor-icon {
   color: var(--text-primary);
   border-color: var(--border-hover);
