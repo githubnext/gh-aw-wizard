@@ -39,7 +39,7 @@ function revealWhatPane() {
 }
 
 function focusFirstArchetype() {
-  var first = document.querySelector('#archetype-options input[type="radio"]');
+  const first = document.querySelector('#archetype-options input[type="radio"]');
   if (first) first.focus();
 }
 
