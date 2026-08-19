@@ -49,7 +49,7 @@ export function engineIconMarkup(engine) {
   if (symbol) {
     return '<span class="engine-vendor-icon" aria-hidden="true"><svg class="vendor-icon" focusable="false"><use href="#' + symbol + '"></use></svg></span>';
   }
-  var labelParts = formatEngineLabel(engine).split(/\s+/);
+  var labelParts = formatEngineLabel(engine).split(/\s+/).filter(Boolean);
   var upperFirstWord = labelParts[0].toUpperCase();
   var fallbackMark = labelParts.length === 1 ? (upperFirstWord + upperFirstWord).slice(0, 2) : labelParts.slice(0, 2).map(function (part) {
     return part.charAt(0);
