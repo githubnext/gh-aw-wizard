@@ -3,6 +3,7 @@
 export var ENGINES_URL = 'https://raw.githubusercontent.com/github/gh-aw/main/.github/aw/engines.json';
 
 var ENGINE_ID_PATTERN = /^[a-z0-9][a-z0-9-]*$/;
+var knownEngineIds = new Set(['copilot', 'claude', 'codex', 'gemini', 'pi']);
 
 export function formatEngineLabel(engine) {
   return engine.split('-').map(function (part) {
@@ -21,6 +22,16 @@ export function parseDefinitionEngines(data) {
     seen.add(engine.id);
     return true;
   });
+}
+
+export function registerDefinitionEngines(engines) {
+  engines.forEach(function (engine) {
+    knownEngineIds.add(engine.id);
+  });
+}
+
+export function isKnownEngine(engine) {
+  return knownEngineIds.has(engine);
 }
 
 export function loadDefinitionEngines(fetchImpl) {

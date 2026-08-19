@@ -9,6 +9,7 @@ import {
   inferNeedsPreSteps,
   workflowName
 } from '../src/js/workflow.js';
+import { registerDefinitionEngines } from '../src/js/engines.js';
 
 const patterns = {
   archetypes: [
@@ -218,6 +219,7 @@ describe('generateWorkflowFile', () => {
   });
 
   it('supports definition-based engines', () => {
+    registerDefinitionEngines([{ id: 'pydantic-ai' }]);
     const md = generateWorkflowFile(answers({ engine: 'pydantic-ai' }), patterns);
     expect(md).toContain('engine: pydantic-ai\n');
   });

@@ -8,7 +8,7 @@ import {
 import { highlightMarkdown } from './highlight.js';
 import { initTheme } from './theme.js';
 import { buildWorkflowSummary } from './summary.js';
-import { formatEngineLabel, loadDefinitionEngines } from './engines.js';
+import { formatEngineLabel, loadDefinitionEngines, registerDefinitionEngines } from './engines.js';
 
 var patterns = null;
 var currentStep = 1;
@@ -23,7 +23,10 @@ export function initWizard() {
   });
   bindNavigation();
   bindFormEvents();
-  loadDefinitionEngines().then(addDefinitionEngineOptions);
+  loadDefinitionEngines().then(function (engines) {
+    registerDefinitionEngines(engines);
+    addDefinitionEngineOptions(engines);
+  });
   initNavigationHistory();
   renderWorkflowSummary();
 }
