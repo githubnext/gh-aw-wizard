@@ -46,7 +46,7 @@ is_reusable() {
   [ -s "$file" ] || return 1
   python3 -c "import json,sys; json.load(open(sys.argv[1]))" "$file" >/dev/null 2>&1 || return 1
   python3 -c \
-    "import json,sys; repos=json.load(open(sys.argv[1])).values(); sys.exit(not any(repo.get('priority') for repo in repos))" \
+    "import json,sys; data=json.load(open(sys.argv[1])); repos=data.values() if isinstance(data, dict) else data; sys.exit(not any(isinstance(repo, dict) and repo.get('priority') for repo in repos))" \
     "$file" >/dev/null 2>&1 || return 1
   find "$file" -mtime "-${MAX_AGE_DAYS}" -print -quit 2>/dev/null | grep -q . || return 1
   return 0
@@ -380,7 +380,7 @@ def fetch_source(repo, path, ref):
         encoded = "".join(result.stdout.split())
         return base64.b64decode(encoded).decode("utf-8", errors="replace")
     if result.returncode == 0:
-        print(f"    Warning: empty API content for {repo}/{path}; trying raw URL", file=sys.stderr)
+        print(f"    Note: API content unavailable for {repo}/{path}; trying raw URL", file=sys.stderr)
 
     raw_url = f"https://raw.githubusercontent.com/{repo}/{ref}/{path}"
     try:
