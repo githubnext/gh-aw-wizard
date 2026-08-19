@@ -514,7 +514,32 @@
     </div>
   </footer>
 
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <dialog class="copy-modal" id="copy-modal" aria-labelledby="copy-modal-title" aria-describedby="copy-modal-description">
+    <div class="copy-modal-card">
+      <button class="copy-modal-close" type="button" data-copy-modal-close aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <div class="copy-modal-celebration" aria-hidden="true">
+        <span class="copy-modal-spark copy-modal-spark-one"></span>
+        <span class="copy-modal-spark copy-modal-spark-two"></span>
+        <span class="copy-modal-spark copy-modal-spark-three"></span>
+        <div class="copy-modal-icon">
+          <svg class="octicon" aria-hidden="true"><use href="#octicon-check"></use></svg>
+        </div>
+      </div>
+      <p class="copy-modal-eyebrow">Prompt copied</p>
+      <h2 id="copy-modal-title">Your workflow is one prompt away</h2>
+      <p id="copy-modal-description">Open your coding agent from the repository you want to automate, then paste the prompt to generate your agentic workflow.</p>
+      <div class="copy-modal-next-step">
+        <svg class="octicon" aria-hidden="true"><use href="#octicon-terminal"></use></svg>
+        <div>
+          <strong>Run it in your repository</strong>
+          <span>Your agent will take it from there.</span>
+        </div>
+      </div>
+      <button class="btn copy-modal-action" type="button" data-copy-modal-close>Got it</button>
+    </div>
+  </dialog>
   <script type="module" src="./js/main.js"></script>
 </body>
 </html>

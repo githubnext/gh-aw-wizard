@@ -64,6 +64,7 @@ function refreshGeneratedContent() {
 // ── Navigation ─────────────────────────────────────────────────────────────
 function bindNavigation() {
   document.getElementById('btn-copy').addEventListener('click', copyToClipboard);
+  bindCopyModal();
 
   // Clickable progress steps
   const steps = document.querySelectorAll('.progress-step');
@@ -73,6 +74,16 @@ function bindNavigation() {
       if (target === currentStep) {
         toggleCurrentStep();
         return;
+      }
+
+      function bindCopyModal() {
+        const modal = document.getElementById('copy-modal');
+        modal.querySelectorAll('[data-copy-modal-close]').forEach((button) => {
+          button.addEventListener('click', () => modal.close());
+        });
+        modal.addEventListener('click', (event) => {
+          if (event.target === modal) modal.close();
+        });
       }
       if (target < currentStep) {
         goToStep(target);
@@ -539,7 +550,7 @@ function showPreview(md) {
 function copyToClipboard() {
   const text = generatedPrompt;
   navigator.clipboard.writeText(text).then(() => {
-    showToast('Copied to clipboard!');
+    showCopySuccess();
   }).catch(() => {
     const ta = document.createElement('textarea');
     ta.value = text;
@@ -549,13 +560,11 @@ function copyToClipboard() {
     ta.select();
     document.execCommand('copy');
     document.body.removeChild(ta);
-    showToast('Copied to clipboard!');
+    showCopySuccess();
   });
 }
 
-function showToast(msg) {
-  const toast = document.getElementById('toast');
-  toast.textContent = msg;
-  toast.classList.add('show');
-  setTimeout(() => { toast.classList.remove('show'); }, 2500);
+export function showCopySuccess() {
+  const modal = document.getElementById('copy-modal');
+  if (!modal.open) modal.showModal();
 }
