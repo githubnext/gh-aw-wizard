@@ -45,6 +45,10 @@ export function initWizard() {
   loadPatterns().then((data) => {
     patterns = data;
     renderArchetypeOptions(data);
+  }).catch(() => {
+    patterns = null;
+    renderArchetypeOptions(null);
+  }).finally(() => {
     bindFormEvents();
     renderWorkflowSummary();
   });
@@ -55,7 +59,6 @@ export function initWizard() {
   });
   initNavigationHistory();
   initLanding(revealWhatPane);
-  renderWorkflowSummary();
 }
 
 function archetypeIconId(archetypeId) {
@@ -68,12 +71,19 @@ function archetypeSort(a, b) {
   return 0;
 }
 
-function renderArchetypeOptions(data) {
+export function renderArchetypeOptions(data) {
   const container = document.getElementById('archetype-options');
   if (!container) return;
 
   const source = data && Array.isArray(data.archetypes) ? data.archetypes : [];
-  const archetypes = (source.length ? source : [{
+  const withCustom = source.some((archetype) => archetype.id === 'custom')
+    ? source
+    : source.concat({
+      id: 'custom',
+      label: 'Custom',
+      description: 'Describe your own workflow — start from scratch'
+    });
+  const archetypes = (withCustom.length ? withCustom : [{
     id: 'custom',
     label: 'Custom',
     description: 'Describe your own workflow — start from scratch'
@@ -93,7 +103,13 @@ function renderArchetypeOptions(data) {
 
     const icon = document.createElement('div');
     icon.className = 'archetype-icon';
-    icon.innerHTML = `<svg class="octicon" aria-hidden="true"><use href="#octicon-${archetypeIconId(archetype.id)}"></use></svg>`;
+    const iconSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    iconSvg.setAttribute('class', 'octicon');
+    iconSvg.setAttribute('aria-hidden', 'true');
+    const iconUse = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+    iconUse.setAttribute('href', `#octicon-${archetypeIconId(archetype.id)}`);
+    iconSvg.appendChild(iconUse);
+    icon.appendChild(iconSvg);
 
     const info = document.createElement('div');
     info.className = 'option-info';

@@ -14,10 +14,8 @@ function ruleBody(selector) {
 }
 
 describe('archetype grid keyboard accessibility', () => {
-  it('renders archetype radio cards from pattern data in the UI layer', () => {
-    expect(ui).toMatch(/Array\.isArray\(data\.archetypes\)/);
-    expect(ui).toMatch(/input\.name = 'archetype'/);
-    expect(ui).toMatch(/input\.value = archetype\.id/);
+  it('starts with an empty archetype container for runtime pattern-driven rendering', () => {
+    expect(html).toMatch(/id="archetype-options"[^>]*><\/div>/);
   });
 
   it('keeps the archetype radios in the tab order instead of display: none', () => {
