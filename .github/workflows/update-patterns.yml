@@ -22,8 +22,10 @@ jobs:
 
       - name: Check required secret
         id: check-token
+        env:
+          TOKEN: ${{ secrets.GH_AW_GITHUB_TOKEN }}
         run: |
-          if [ -n "${{ secrets.GH_AW_GITHUB_TOKEN }}" ]; then
+          if [ -n "$TOKEN" ]; then
             echo "has_token=true" >> "$GITHUB_OUTPUT"
           else
             echo "has_token=false" >> "$GITHUB_OUTPUT"
