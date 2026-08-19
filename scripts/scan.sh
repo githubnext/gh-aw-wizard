@@ -53,7 +53,8 @@ is_reusable() {
 }
 
 CUTOFF_DATE=$(date -v-${CUTOFF_DAYS}d +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -d "-${CUTOFF_DAYS} days" --iso-8601=seconds 2>/dev/null)
-OUTDIR="$(cd "$(dirname "$0")/.." && pwd)/data"
+REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+OUTDIR="$REPO_ROOT/data"
 mkdir -p "$OUTDIR" /tmp/aw-scan
 
 echo "══════════════════════════════════════════════════════════════"
@@ -131,7 +132,7 @@ fi
 
 # Parse into unique repos + workflow files
 if [ "$DISCOVERY_FALLBACK" = "false" ]; then
-IMPORT_SOURCES_PATH="$OUTDIR/import-sources.json" python3 << 'PYEOF'
+IMPORT_SOURCES_PATH="$REPO_ROOT/data/import-sources.json" python3 << 'PYEOF'
 import json, os, subprocess, sys
 from pathlib import Path
 
@@ -377,7 +378,10 @@ def fetch_source(repo, path, ref):
         capture_output=True, text=True, timeout=15
     )
     if result.returncode == 0 and result.stdout.strip():
-        encoded = "".join(result.stdout.split())
+        encoded = result.stdout.strip()
+        if encoded.startswith('"'):
+            encoded = json.loads(encoded)
+        encoded = "".join(encoded.split())
         return base64.b64decode(encoded).decode("utf-8", errors="replace")
     if result.returncode == 0:
         print(f"    Note: API content unavailable for {repo}/{path}; trying raw URL", file=sys.stderr)
