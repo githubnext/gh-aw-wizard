@@ -13,6 +13,7 @@
   --accent-blue-rgb: 9, 105, 218;
   --accent-green: var(--color-success-emphasis, #1f883d);
   --accent-green-rgb: 31, 136, 61;
+  --accent-green-solid: var(--color-success-emphasis, #1f883d);
   --accent-green-hover: #1a7f37;
   --border-color: var(--color-border-default, #d0d7de);
   --border-default: var(--color-border-default, #d0d7de);
@@ -57,12 +58,13 @@
   --bg-inset: #000000;
   --text-primary: #ffffff;
   --text-secondary: #d1d1d6;
-  --text-muted: #8e8e93;
-  --accent-blue: #007aff;
-  --accent-blue-rgb: 0, 122, 255;
+  --text-muted: #98989d;
+  --accent-blue: #409cff;
+  --accent-blue-rgb: 64, 156, 255;
   --accent-green: #34c759;
   --accent-green-rgb: 52, 199, 89;
-  --accent-green-hover: #30b955;
+  --accent-green-solid: #1a7f37;
+  --accent-green-hover: #157030;
   --border-color: #48484a;
   --border-default: #48484a;
   --border-subtle: #3a3a3c;
@@ -78,12 +80,12 @@
   --warning: #ffd60a;
   --danger: #ff453a;
   --header-gradient-start: rgba(0, 0, 0, 0.95);
-  --label-blue: #007aff;
-  --label-purple: #af52de;
-  --label-green: #34c759;
+  --label-blue: #0969da;
+  --label-purple: #8250df;
+  --label-green: #1a7f37;
   --label-orange: #ffd60a;
-  --label-pink: #ff375f;
-  --label-gray: #8e8e93;
+  --label-pink: #bf3989;
+  --label-gray: #656d76;
   --shadow-card: 0 2px 8px rgba(0,0,0,0.2);
   --shadow-floating: 0 4px 16px rgba(0,0,0,0.3);
   --shadow-btn-primary-hover: 0 2px 6px rgba(52,199,89,0.3);
@@ -302,8 +304,8 @@ a:hover {
 }
 .progress-step.completed .step-indicator {
   color: var(--control-fg-on-emphasis);
-  background: var(--accent-green);
-  border-color: var(--accent-green);
+  background: var(--accent-green-solid);
+  border-color: var(--accent-green-solid);
 }
 .recipe-key {
   display: flex;
@@ -633,9 +635,9 @@ a:hover {
   transition: all var(--transition-fast);
 }
 .btn-primary {
-  background: var(--accent-green);
+  background: var(--accent-green-solid);
   color: var(--control-fg-on-emphasis);
-  border-color: var(--accent-green);
+  border-color: var(--accent-green-solid);
   box-shadow: var(--color-shadow-small, 0 1px 3px rgba(27,31,36,0.12));
 }
 .btn-primary:hover {
@@ -734,7 +736,7 @@ a:hover {
   height: 2.75rem;
   border-radius: 50%;
   color: var(--control-fg-on-emphasis);
-  background: var(--accent-green);
+  background: var(--accent-green-solid);
   font-size: 1.25rem;
   font-weight: 700;
 }
@@ -1026,6 +1028,10 @@ a:hover {
   outline-offset: 2px;
 }
 .btn:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}
+.btn-copy-prompt:focus {
   outline: 2px solid var(--accent-blue);
   outline-offset: 2px;
 }
