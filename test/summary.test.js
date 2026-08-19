@@ -38,13 +38,13 @@ describe('buildWorkflowSummary', () => {
     const summary = buildWorkflowSummary(answers({
       archetype: 'issue-triage',
       triggers: ['issues', 'workflow_dispatch'],
-      outputs: ['labels', 'comments'],
+      outputs: ['add-labels', 'add-comment'],
       engine: 'claude'
     }), patterns);
 
     expect(summary.trigger.value).toBe('a new issue is opened or it is started manually');
     expect(summary.purpose).toEqual({ value: 'Classify and label new issues', complete: true });
-    expect(summary.output.value).toBe('manage labels and post comments');
+    expect(summary.output.value).toBe('add label and add comment');
     expect(summary.engine.value).toBe('Claude');
   });
 
@@ -93,5 +93,21 @@ describe('buildWorkflowSummary', () => {
       value: 'Check release notes for breaking changes',
       complete: true
     });
+  });
+
+  it('summarizes all safe outputs in the wizard order', () => {
+    const summary = buildWorkflowSummary(answers({
+      outputs: [
+        'create-issue',
+        'add-comment',
+        'add-labels',
+        'create-pull-request',
+        'create-pull-request-review-comment'
+      ]
+    }), patterns);
+
+    expect(summary.output.value).toBe(
+      'create issue, add comment, add label, create pull request, and add review comment'
+    );
   });
 });

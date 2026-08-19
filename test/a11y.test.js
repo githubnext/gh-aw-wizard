@@ -37,11 +37,12 @@ describe('Primer iconography', () => {
 
   it('adds decorative Octicons to every output option', () => {
     const outputOptions = html.slice(html.indexOf('id="output-options"'), html.indexOf('</section>', html.indexOf('id="output-options"')));
-    expect(outputOptions.match(/<svg class="octicon" aria-hidden="true">/g)).toHaveLength(4);
+    expect(outputOptions.match(/<svg class="octicon" aria-hidden="true">/g)).toHaveLength(5);
     expect(outputOptions).toContain('<use href="#octicon-comment-discussion"></use>');
     expect(outputOptions).toContain('<use href="#octicon-tag"></use>');
     expect(outputOptions).toContain('<use href="#octicon-issue-opened"></use>');
     expect(outputOptions).toContain('<use href="#octicon-git-pull-request"></use>');
+    expect(outputOptions).toContain('<use href="#octicon-eye"></use>');
   });
 
   it('uses Octicons for every extras option', () => {

@@ -59,7 +59,7 @@ describe('getRecommendedConfiguration', () => {
 
     expect(getRecommendedConfiguration(patterns, 'status-report')).toEqual({
       triggers: ['schedule', 'workflow_dispatch'],
-      outputs: ['new-issues', 'comments'],
+      outputs: ['create-issue', 'add-comment'],
       profile: patterns.configuration_profiles[3]
     });
   });
@@ -78,7 +78,7 @@ describe('getRecommendedConfiguration', () => {
 
     expect(getRecommendedConfiguration(patterns, 'issue-triage')).toEqual({
       triggers: ['slash_command'],
-      outputs: ['comments'],
+      outputs: ['add-comment'],
       profile: patterns.configuration_profiles[0]
     });
   });
@@ -94,7 +94,7 @@ describe('getRecommendedConfiguration', () => {
 
     expect(getRecommendedConfiguration(patterns, 'issue-triage')).toEqual({
       triggers: ['issues', 'workflow_dispatch'],
-      outputs: ['labels', 'comments'],
+      outputs: ['add-labels', 'add-comment'],
       profile: null
     });
   });

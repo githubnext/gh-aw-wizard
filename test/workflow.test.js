@@ -35,7 +35,7 @@ function answers(overrides) {
     archetype: 'issue-triage',
     customDescription: '',
     triggers: ['issues', 'workflow_dispatch'],
-    outputs: ['labels', 'comments'],
+    outputs: ['add-labels', 'add-comment'],
     engine: 'copilot',
     extras: [],
     needsData: false,
@@ -156,7 +156,7 @@ describe('generateWorkflowFile', () => {
       answers({
         archetype: 'status-report',
         triggers: ['workflow_dispatch'],
-        outputs: ['new-issues'],
+        outputs: ['create-issue'],
         extras: ['memory', 'charts', 'browser'],
         needsData: true
       }),
@@ -198,13 +198,13 @@ describe('generateWorkflowFile', () => {
   });
 
   it('deduplicates safe outputs', () => {
-    const md = generateWorkflowFile(answers({ outputs: ['comments', 'labels'] }), patterns);
+    const md = generateWorkflowFile(answers({ outputs: ['add-comment', 'add-labels'] }), patterns);
     const commentsCount = md.split('\n').filter((line) => line === '  add-comment:').length;
     expect(commentsCount).toBe(1);
   });
 
   it('routes file changes through pull requests instead of direct commits', () => {
-    const md = generateWorkflowFile(answers({ outputs: ['pull-requests', 'commits'] }), patterns);
+    const md = generateWorkflowFile(answers({ outputs: ['create-pull-request', 'commits'] }), patterns);
     const pullRequestCount = md.split('\n').filter((line) => line === '  create-pull-request:').length;
     expect(pullRequestCount).toBe(1);
     expect(md).not.toContain('commit-files');
@@ -217,7 +217,7 @@ describe('generateAgentPrompt', () => {
     expect(prompt).toContain('- Name: issue-triage\n');
     expect(prompt).toContain('- Engine: copilot\n');
     expect(prompt).toContain('when a new issue is opened, on manual dispatch');
-    expect(prompt).toContain('add/remove labels, post comments on issues/PRs');
+    expect(prompt).toContain('add labels, add comments on issues/PRs');
     expect(prompt).toContain('.github/workflows/issue-triage.md');
     expect(prompt).toContain('Create a pull request with the generated agentic workflow files.');
   });
