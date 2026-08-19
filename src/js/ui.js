@@ -167,6 +167,8 @@ function maxReachableStep() {
   if (!document.querySelector('input[name="archetype"]:checked')) return 1;
   if (!hasChecked('trigger')) return 2;
   if (!hasChecked('output')) return 3;
+  // Step 4 is optional context, so step 5 is always reachable once required steps are complete.
+  if (!hasChecked('engine')) return 5;
   return 6;
 }
 
@@ -352,7 +354,7 @@ function gatherAnswers() {
     customDescription: document.getElementById('custom-description').value.trim(),
     triggers: triggers,
     outputs: outputs,
-    engine: (document.querySelector('input[name="engine"]:checked') || { value: 'copilot' }).value,
+    engine: (document.querySelector('input[name="engine"]:checked') || {}).value || null,
     extras: extras,
     needsData: inferNeedsPreSteps(archetypeId),
     dataDescription: document.getElementById('data-description').value.trim()

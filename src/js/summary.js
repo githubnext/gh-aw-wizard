@@ -44,7 +44,7 @@ export function buildWorkflowSummary(answers, patterns) {
   var purpose = answers.archetype === 'custom'
     ? answers.customDescription
     : archetype && archetype.description;
-  var engine = engineLabels[answers.engine] || 'Copilot';
+  var engine = answers.engine ? (engineLabels[answers.engine] || 'Copilot') : null;
   var context = [];
 
   if ((answers.extras || []).indexOf('memory') !== -1) {
@@ -77,8 +77,8 @@ export function buildWorkflowSummary(answers, patterns) {
       complete: answers.outputs.length > 0
     },
     engine: {
-      value: engine,
-      complete: true
+      value: engine || 'choose an agent',
+      complete: Boolean(engine)
     },
     context: readableList(context)
   };

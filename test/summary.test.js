@@ -17,7 +17,7 @@ function answers(overrides = {}) {
     customDescription: '',
     triggers: [],
     outputs: [],
-    engine: 'copilot',
+    engine: null,
     extras: [],
     dataDescription: '',
     ...overrides
@@ -31,7 +31,7 @@ describe('buildWorkflowSummary', () => {
     expect(summary.trigger).toEqual({ value: 'choose when it runs', complete: false });
     expect(summary.purpose).toEqual({ value: 'choose what the agent should do', complete: false });
     expect(summary.output).toEqual({ value: 'choose what it can write', complete: false });
-    expect(summary.engine).toEqual({ value: 'Copilot', complete: true });
+    expect(summary.engine).toEqual({ value: 'choose an agent', complete: false });
   });
 
   it('turns selected answers into a readable recipe', () => {
