@@ -557,6 +557,36 @@ a:hover {
   align-items: center;
   gap: 0.4rem;
 }
+.option-label-with-engine-icon {
+  gap: 0.55rem;
+}
+.engine-vendor-icon {
+  width: 1.45rem;
+  height: 1.45rem;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+  transition: color var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
+}
+.vendor-icon {
+  width: 0.92rem;
+  height: 0.92rem;
+  fill: currentColor;
+}
+#engine-options .option-card:hover .engine-vendor-icon {
+  color: var(--text-primary);
+  border-color: var(--border-hover);
+}
+#engine-options .option-card.selected .engine-vendor-icon {
+  color: var(--accent-blue);
+  border-color: rgba(var(--accent-blue-rgb), 0.35);
+  background: rgba(var(--accent-blue-rgb), 0.08);
+}
 .option-info .option-desc {
   color: var(--text-secondary);
   font-size: 0.8rem;
