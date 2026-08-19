@@ -17,5 +17,7 @@ describe('next steps', () => {
 
     expect(html).toContain('&lt;script&gt;.md');
     expect(html).not.toContain('<script>');
+    expect(html).toContain('gh extension install github/gh-aw && gh aw upgrade');
+    expect(html).toContain('gh aw init --engine claude');
   });
 });
