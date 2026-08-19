@@ -44,12 +44,12 @@ describe('Primer iconography', () => {
     expect(outputOptions).toContain('<use href="#octicon-git-pull-request"></use>');
   });
 
-  it('uses Octicons for every optional agent capability', () => {
-    const agentOptions = html.slice(html.indexOf('id="agent-options"'), html.indexOf('</section>', html.indexOf('id="agent-options"')));
-    expect(agentOptions.match(/<svg class="octicon" aria-hidden="true">/g)).toHaveLength(3);
-    expect(agentOptions).toContain('<use href="#octicon-cache"></use>');
-    expect(agentOptions).toContain('<use href="#octicon-graph"></use>');
-    expect(agentOptions).toContain('<use href="#octicon-device-desktop"></use>');
+  it('uses Octicons for every extras option', () => {
+    const extrasOptions = html.slice(html.indexOf('id="extras-options"'), html.indexOf('</section>', html.indexOf('id="extras-options"')));
+    expect(extrasOptions.match(/<svg class="octicon" aria-hidden="true">/g)).toHaveLength(3);
+    expect(extrasOptions).toContain('<use href="#octicon-cache"></use>');
+    expect(extrasOptions).toContain('<use href="#octicon-graph"></use>');
+    expect(extrasOptions).toContain('<use href="#octicon-device-desktop"></use>');
   });
 
   it('adds decorative Octicons to every trigger option', () => {

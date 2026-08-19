@@ -12,7 +12,7 @@ import { buildWorkflowSummary } from './summary.js';
 var patterns = null;
 var currentStep = 1;
 var generatedPrompt = '';
-var TOTAL_STEPS = 5;
+var TOTAL_STEPS = 6;
 var SELECTION_STORAGE_KEY = 'gh-aw-wizard-selection';
 
 export function initWizard() {
@@ -30,7 +30,7 @@ export function initWizard() {
 
 function generateAndShow() {
   refreshGeneratedContent();
-  goToStep(5);
+  goToStep(6);
   showPreview(generatedPrompt);
 }
 
@@ -68,12 +68,12 @@ function bindNavigation() {
 }
 
 function advanceOneStepLikeNext() {
-  if (currentStep >= 1 && currentStep <= 3) {
+  if (currentStep >= 1 && currentStep <= 4) {
     if (currentStep + 1 > maxReachableStep()) return false;
     goToStep(currentStep + 1);
     return true;
   }
-  if (currentStep === 4) {
+  if (currentStep === 5) {
     generateAndShow();
     return true;
   }
@@ -155,9 +155,9 @@ function maxReachableStep() {
   if (!document.querySelector('input[name="archetype"]:checked')) return 1;
   if (!hasChecked('trigger')) return 2;
   if (!hasChecked('output')) return 3;
-  // Step 4 includes optional capabilities; choosing an engine unlocks Finish.
-  if (!hasChecked('engine')) return 4;
-  return 5;
+  // Step 4 is optional extras, so step 5 is always reachable once required steps are complete.
+  if (!hasChecked('engine')) return 5;
+  return 6;
 }
 
 function syncProgressStepAvailability() {
@@ -226,19 +226,19 @@ function bindFormEvents() {
     });
   });
 
-  // Step 4: optional agent capabilities
+  // Step 4: extras (optional checkboxes, no validation needed)
   document.querySelectorAll('input[name="extra"]').forEach(function (cb) {
     cb.addEventListener('change', function () {
-      updateCardSelection('#agent-options', 'checkbox');
-      if (currentStep === 5) refreshPreview();
+      updateCardSelection('#extras-options', 'checkbox');
+      if (currentStep === 6) refreshPreview();
     });
   });
 
-  // Step 4: engine radio cards
+  // Step 5: engine radio cards
   document.querySelectorAll('input[name="engine"]').forEach(function (radio) {
     radio.addEventListener('change', function () {
       updateCardSelection('#engine-options', 'radio');
-      if (currentStep === 5) refreshPreview();
+      if (currentStep === 6) refreshPreview();
     });
   });
   updateCardSelection('#engine-options', 'radio');
@@ -276,7 +276,7 @@ function clearArchetypeSelection() {
   updateCardSelection('#output-options', 'checkbox');
 
   document.querySelectorAll('input[name="extra"]').forEach(function (cb) { cb.checked = false; });
-  updateCardSelection('#agent-options', 'checkbox');
+  updateCardSelection('#extras-options', 'checkbox');
 
   renderWorkflowSummary();
   syncProgressStepAvailability();
@@ -315,9 +315,9 @@ function prefillFromArchetype(id) {
   });
   updateCardSelection('#output-options', 'checkbox');
 
-  // Reset optional agent capabilities
+  // Reset extras
   document.querySelectorAll('input[name="extra"]').forEach(function (cb) { cb.checked = false; });
-  updateCardSelection('#agent-options', 'checkbox');
+  updateCardSelection('#extras-options', 'checkbox');
 }
 
 // ── Gather answers ─────────────────────────────────────────────────────────
@@ -408,7 +408,7 @@ function restoreSelectionState() {
     var cb = document.querySelector('input[name="extra"][value="' + extra + '"]');
     if (cb) cb.checked = true;
   });
-  updateCardSelection('#agent-options', 'checkbox');
+  updateCardSelection('#extras-options', 'checkbox');
 
   if (state.engine) {
     var engineRadio = document.querySelector('input[name="engine"][value="' + state.engine + '"]');
@@ -423,6 +423,7 @@ function renderWorkflowSummary() {
   updateSummaryClause('summary-purpose', summary.purpose);
   updateSummaryClause('summary-trigger', summary.trigger);
   updateSummaryClause('summary-output', summary.output);
+  updateSummaryClause('summary-extras', summary.extras);
   updateSummaryClause('summary-engine', summary.engine);
 }
 

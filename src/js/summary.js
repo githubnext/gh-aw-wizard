@@ -52,9 +52,6 @@ export function buildWorkflowSummary(answers, patterns) {
     : archetype && archetype.description;
   var engine = answers.engine ? (engineLabels[answers.engine] || 'Copilot') : null;
   var capabilities = (answers.extras || []).map(function (extra) { return extraLabels[extra] || extra; });
-  var agent = engine && (capabilities.length
-    ? engine + ' with ' + readableList(capabilities)
-    : engine);
 
   return {
     trigger: {
@@ -78,8 +75,12 @@ export function buildWorkflowSummary(answers, patterns) {
         : 'choose what it can write',
       complete: answers.outputs.length > 0
     },
+    extras: {
+      value: capabilities.length ? readableList(capabilities) : 'choose optional capabilities',
+      complete: capabilities.length > 0
+    },
     engine: {
-      value: agent || 'choose an agent',
+      value: engine || 'choose an agent',
       complete: Boolean(engine)
     }
   };
