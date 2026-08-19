@@ -285,6 +285,7 @@ export function generateAgentPrompt(answers, patterns) {
   prompt += '- Engine: ' + engine + '\n';
   prompt += '- Triggers: ' + triggersReadable + '\n';
   prompt += '- Allowed outputs: ' + outputsReadable + '\n';
+  prompt += '- Choose an appropriate kebab-case filename for the new .github/workflows/*.md file\n';
 
   // Auto-inferred capabilities communicated to the agent
   if (answers.needsData) {
@@ -301,13 +302,13 @@ export function generateAgentPrompt(answers, patterns) {
     prompt += '- Enable Playwright CLI for browser automation\n';
   }
 
-  prompt += '\nThe workflow should be saved to .github/workflows/' + name + '.md';
+  prompt += '\nThe workflow should be saved as a new Markdown file in .github/workflows/.';
   prompt += '\nCreate a pull request with the generated agentic workflow files.';
 
   // Inline the generated workflow markdown as a starting-point suggestion.
   var suggestion = sampleWorkflowFile(answers, patterns, label);
   prompt += '\n\n## Suggested workflow file\n\n' +
-    'Use this generated draft as a starting point for `.github/workflows/' + name + '.md`, ' +
+    'Use this generated draft as a starting point for the new `.github/workflows/*.md` file, ' +
     'adapting it to the repository as needed:\n\n' +
     fencedBlock(suggestion, 'markdown') + '\n';
 

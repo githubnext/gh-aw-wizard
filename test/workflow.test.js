@@ -218,7 +218,9 @@ describe('generateAgentPrompt', () => {
     expect(prompt).toContain('- Engine: copilot\n');
     expect(prompt).toContain('when a new issue is opened, on manual dispatch');
     expect(prompt).toContain('add labels, add comments on issues/PRs');
-    expect(prompt).toContain('.github/workflows/issue-triage.md');
+    expect(prompt).toContain('Choose an appropriate kebab-case filename');
+    expect(prompt).toContain('The workflow should be saved as a new Markdown file in .github/workflows/.');
+    expect(prompt).not.toContain('.github/workflows/issue-triage.md');
     expect(prompt).toContain('Create a pull request with the generated agentic workflow files.');
   });
 
@@ -271,8 +273,9 @@ describe('generateAgentPrompt', () => {
     const prompt = generateAgentPrompt(answers(), patterns);
     expect(prompt).toContain('## Suggested workflow file');
     expect(prompt.indexOf('## Suggested workflow file')).toBeGreaterThan(
-      prompt.indexOf('.github/workflows/issue-triage.md')
+      prompt.indexOf('The workflow should be saved as a new Markdown file in .github/workflows/.')
     );
+    expect(prompt).toContain('the new `.github/workflows/*.md` file');
     expect(prompt).toContain('```markdown\n');
     expect(prompt).toContain('Let the agent generate the detailed issue triage prompt for this repository...\n');
     expect(prompt).not.toContain('## Instructions\n');
