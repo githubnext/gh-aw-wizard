@@ -36,7 +36,6 @@ function generateAndShow() {
   showPreview(generatedPrompt);
   var answers = gatherAnswers();
   showNextSteps('prompt', workflowName(answers.archetype, answers.customDescription), answers.engine);
-  document.getElementById('preview-filename').textContent = 'Agent prompt';
 }
 
 function refreshPreview() {

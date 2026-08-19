@@ -21,7 +21,7 @@ function engineLabel(engine) {
 export function nextStepsHtml(format, workflowName, engine) {
   var name = escapeHtml(workflowName);
   var label = engineLabel(engine);
-  var html = '<h3>Next steps</h3>';
+  var html = '<h3>' + (format === 'workflow' ? 'Next steps' : 'Run the prompt in your agent') + '</h3>';
 
   if (format === 'workflow') {
     html += step(1, 'Make sure <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository" target="_blank">GitHub Actions is enabled</a> on your repository');
@@ -32,7 +32,7 @@ export function nextStepsHtml(format, workflowName, engine) {
     html += step(6, 'Commit both files and push:<br><code>git add .github/workflows/' + name + '.md .github/workflows/' + name + '.lock.yml && git push</code>');
     html += step(7, 'Trigger a run from the Actions tab or with:<br><code>gh aw run ' + name + '</code>');
   } else {
-    html += step(1, 'Open <strong>' + label + '</strong> in your repository and run this prompt');
+    html += step(1, 'Open <strong>' + label + '</strong> in your repository and run the copied prompt');
   }
 
   html += '<div style="margin-top:0.75rem;font-size:0.8rem;color:var(--text-muted);">' +

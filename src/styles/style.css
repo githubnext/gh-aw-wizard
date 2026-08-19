@@ -661,24 +661,68 @@ a:hover {
 .prompt-panel {
   border-color: var(--accent-blue);
 }
-.prompt-panel .preview-header {
-  padding: 0.85rem 1rem;
+.finish-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: linear-gradient(135deg, rgba(var(--accent-blue-rgb), 0.12), rgba(31, 136, 61, 0.12));
+  border-bottom: 1px solid var(--border-color);
 }
-.prompt-panel .preview-header h3 {
-  font-size: 1rem;
-  font-weight: 600;
+.finish-eyebrow {
+  margin-bottom: 0.2rem;
+  color: var(--accent-blue);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.finish-cta h3 {
   color: var(--text-primary);
+  font-size: 1.25rem;
+  line-height: 1.25;
+  margin-bottom: 0.25rem;
 }
-.prompt-panel .preview-header h3::before {
-  content: '✨';
-  font-size: 1rem;
+.finish-cta p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.prompt-preview {
+  position: relative;
+  overflow: hidden;
+}
+.prompt-preview::after {
+  content: '';
+  position: absolute;
+  right: 10px;
+  bottom: 0;
+  left: 0;
+  height: 4rem;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(246, 248, 250, 0), var(--code-bg));
+}
+[data-color-mode="dark"] .prompt-preview::after {
+  background: linear-gradient(180deg, rgba(13, 17, 23, 0), var(--code-bg));
 }
 .prompt-panel .preview-code {
   font-size: 0.85rem;
+  max-height: 12rem;
+  overflow-y: auto;
+  padding-bottom: 3rem;
+}
+.prompt-panel .next-steps-panel {
+  margin-top: 0;
+  border-width: 1px 0 0;
+  border-radius: 0;
+  background: var(--bg-secondary);
 }
 .btn-copy-prompt {
-  padding: 0.7rem 1.6rem;
-  font-size: 0.95rem;
+  flex-shrink: 0;
+  padding: 0.9rem 1.8rem;
+  font-size: 1rem;
+  box-shadow: 0 8px 20px rgba(31, 136, 61, 0.25);
 }
 
 /* Toast */
@@ -815,8 +859,10 @@ a:hover {
   .step-nav { flex-direction: column-reverse; gap: 0.75rem; }
   .step-nav .btn { width: 100%; justify-content: center; }
   .preview-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+  .finish-cta { flex-direction: column; align-items: stretch; }
   .preview-actions { width: 100%; }
   .preview-actions .btn { flex: 1; justify-content: center; }
+  .btn-copy-prompt { justify-content: center; }
   .insights-grid { gap: 1rem; }
   .insight-item { min-width: 70px; }
 }
