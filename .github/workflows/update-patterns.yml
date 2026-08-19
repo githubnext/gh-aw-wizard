@@ -22,7 +22,7 @@ jobs:
 
       - name: Scan active workflows
         env:
-          GH_TOKEN: ${{ secrets.GH_AW_GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_AW_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
         run: scripts/scan.sh --active-only --run-history
 
       - name: Generate patterns
