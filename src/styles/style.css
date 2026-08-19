@@ -384,6 +384,10 @@ a:hover {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.65rem;
+  max-height: 32rem;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+  scrollbar-gutter: stable;
 }
 
 .option-card {

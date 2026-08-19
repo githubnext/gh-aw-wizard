@@ -45,6 +45,9 @@ is_reusable() {
   [ "$RESUME" = "true" ] || return 1
   [ -s "$file" ] || return 1
   python3 -c "import json,sys; json.load(open(sys.argv[1]))" "$file" >/dev/null 2>&1 || return 1
+  python3 -c \
+    "import json,sys; source=json.load(open(sys.argv[1])).get('githubnext/agentics', {}); sys.exit(not source.get('priority'))" \
+    "$file" >/dev/null 2>&1 || return 1
   find "$file" -mtime "-${MAX_AGE_DAYS}" -print -quit 2>/dev/null | grep -q . || return 1
   return 0
 }
@@ -120,7 +123,11 @@ fi
 
 # Parse into unique repos + workflow files
 python3 << 'PYEOF'
-import json, sys
+import json, subprocess, sys
+
+PRIORITY_SOURCES = {
+    "githubnext/agentics": "workflows",
+}
 
 repos = {}
 with open("/tmp/aw-scan/raw-results.jsonl") as f:
@@ -148,7 +155,7 @@ with open("/tmp/aw-scan/raw-results.jsonl") as f:
                 repos[name]["lock_files"].append(wf)
 
 # Verify visibility via gh api (authenticated, high rate limit)
-import subprocess, time as _time
+import time as _time
 print("  Verifying repo visibility via gh api...")
 public = {}
 skipped = {}
@@ -185,6 +192,46 @@ for i, (name, info) in enumerate(sorted(repos.items())):
         skipped[name] = info
     _time.sleep(0.05)
 sys.stdout.write("\n")
+
+# Mine every workflow sample from the GetUpNext Agentics collection, even though
+# its reusable sources live outside .github/workflows and have no local lock files.
+for name, source_directory in PRIORITY_SOURCES.items():
+    try:
+        repo_result = subprocess.run(
+            ["gh", "api", f"repos/{name}"],
+            capture_output=True, text=True, timeout=15
+        )
+        source_result = subprocess.run(
+            ["gh", "api", f"repos/{name}/contents/{source_directory}"],
+            capture_output=True, text=True, timeout=15
+        )
+        if repo_result.returncode != 0 or source_result.returncode != 0:
+            print(f"    Warning: priority source unavailable: {name}")
+            continue
+
+        repo = json.loads(repo_result.stdout)
+        source_files = sorted(
+            item["path"] for item in json.loads(source_result.stdout)
+            if item.get("type") == "file" and item.get("name", "").endswith(".md")
+        )
+        if not source_files:
+            print(f"    Warning: no workflow samples found in {name}/{source_directory}")
+            continue
+
+        existing = public.get(name, {})
+        public[name] = {
+            **existing,
+            "url": repo["html_url"],
+            "visibility": repo.get("visibility", "public"),
+            "stars": repo.get("stargazers_count", 0),
+            "description": (repo.get("description") or "")[:200],
+            "lock_files": existing.get("lock_files", []),
+            "source_files": source_files,
+            "priority": True,
+        }
+        print(f"  Added priority source {name}: {len(source_files)} workflow samples")
+    except Exception as e:
+        print(f"    Warning: could not load priority source {name}: {e}")
 
 with open("/tmp/aw-scan/discovered.json", "w") as f:
     json.dump(public, f, indent=2)
@@ -224,6 +271,16 @@ skipped_count = 0
 for i, (name, info) in enumerate(sorted(repos.items())):
     sys.stdout.write(f"\r  Checking {i+1}/{len(repos)}: {name[:50]}...")
     sys.stdout.flush()
+
+    if info.get("priority"):
+        verified[name] = {
+            **info,
+            "active_workflows": [],
+            "inactive_workflows": [],
+            "status": "reference",
+        }
+        sys.stdout.write(f"\r  Priority source: {name} ({len(info.get('source_files', []))} samples)\n")
+        continue
     
     active_workflows = []
     inactive_workflows = []
@@ -327,14 +384,17 @@ for i, (name, info) in enumerate(sorted(repos.items())):
     sys.stdout.flush()
     
     workflows = []
-    lock_files = [w["lock_file"] for w in info.get("active_workflows", [])] or info.get("lock_files", [])
+    source_files = info.get("source_files") or [
+        f".github/workflows/{lock_file.replace('.lock.yml', '.md')}"
+        for lock_file in ([w["lock_file"] for w in info.get("active_workflows", [])] or info.get("lock_files", []))
+    ]
     
-    for lock_file in lock_files:
-        md_file = lock_file.replace(".lock.yml", ".md")
+    for source_file in source_files:
+        md_file = source_file.rsplit("/", 1)[-1]
         
         try:
             result = subprocess.run(
-                ["gh", "api", f"repos/{name}/contents/.github/workflows/{md_file}",
+                ["gh", "api", f"repos/{name}/contents/{source_file}",
                  "-q", ".content", "--header", "Accept: application/vnd.github.v3+json"],
                 capture_output=True, text=True, timeout=15
             )
@@ -390,9 +450,9 @@ for i, (name, info) in enumerate(sorted(repos.items())):
                 wf["source_available"] = True
                 workflows.append(wf)
             else:
-                workflows.append({"name": lock_file.replace(".lock.yml", ""), "file": md_file, "source_available": False})
+                workflows.append({"name": md_file.replace(".md", ""), "file": md_file, "source_available": False})
         except Exception as e:
-            workflows.append({"name": lock_file.replace(".lock.yml", ""), "file": md_file, "source_available": False, "error": str(e)})
+            workflows.append({"name": md_file.replace(".md", ""), "file": md_file, "source_available": False, "error": str(e)})
         
         time.sleep(0.3)
     
@@ -405,6 +465,7 @@ for i, (name, info) in enumerate(sorted(repos.items())):
         "stars": info.get("stars", 0),
         "description": info.get("description", ""),
         "status": info.get("status", "unknown"),
+        "priority": info.get("priority", False),
         "recent_runs": recent_runs,
         "workflows": workflows
     }
