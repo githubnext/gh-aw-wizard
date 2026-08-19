@@ -495,9 +495,17 @@ a:hover {
   font-weight: 700;
   color: var(--control-fg-on-emphasis);
 }
-/* Hide radio/checkbox in archetype grid — icon replaces it */
+/* Hide radio in archetype grid — icon replaces it. Kept in the accessibility
+   tree and tab order so the cards stay keyboard-operable. */
 .archetype-grid .option-card input[type="radio"] {
-  display: none;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .option-info {

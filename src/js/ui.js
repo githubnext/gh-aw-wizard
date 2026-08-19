@@ -185,6 +185,15 @@ function bindFormEvents() {
     radio.addEventListener('mousedown', function () {
       wasChecked = radio.checked;
     });
+    radio.addEventListener('keydown', function (e) {
+      // Chrome does not fire `click` when Space is pressed on an already-checked
+      // radio, so handle keyboard deselection here to match the pointer behaviour.
+      if ((e.key === ' ' || e.key === 'Spacebar') && radio.checked) {
+        e.preventDefault();
+        radio.checked = false;
+        clearArchetypeSelection();
+      }
+    });
     radio.addEventListener('click', function (e) {
       if (wasChecked) {
         e.preventDefault();
@@ -200,7 +209,13 @@ function bindFormEvents() {
       clearDownstreamSelections(radio.value);
       // Auto-fill triggers/outputs from archetype data
       prefillFromArchetype(radio.value);
-      if (radio.value !== 'custom') goToStep(2);
+      if (radio.value !== 'custom') {
+        var hadFocus = document.activeElement === radio;
+        goToStep(2);
+        // The collapsing step would otherwise drop keyboard focus to the body.
+        var nextClause = document.querySelector('.recipe-clause[data-step="2"]');
+        if (hadFocus && nextClause) nextClause.focus();
+      }
     });
   });
 
