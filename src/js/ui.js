@@ -15,6 +15,8 @@ let patterns = null;
 let currentStep = 1;
 let generatedPrompt = '';
 const TOTAL_STEPS = 6;
+const ACCORDION_OPEN_ANIMATION = 'accordionOpen 0.3s ease';
+const ACCORDION_OPEN_REVERSE_ANIMATION = 'accordionOpenReverse 0.3s ease';
 
 export function initWizard() {
   initTheme();
@@ -118,7 +120,7 @@ function goToStep(n, options) {
   const next = document.getElementById(`step-${  n}`);
   next.style.animation = 'none';
   next.offsetHeight; // reflow
-  next.style.animation = direction === 'forward' ? 'accordionOpen 0.3s ease' : 'accordionOpenReverse 0.3s ease';
+  next.style.animation = direction === 'forward' ? ACCORDION_OPEN_ANIMATION : ACCORDION_OPEN_REVERSE_ANIMATION;
   next.classList.add('active');
   if (!skipHistory) {
     window.history.pushState({ step: n }, '');
@@ -136,7 +138,7 @@ export function resetNavigationPane() {
   if (whatPane) {
     whatPane.style.animation = 'none';
     void whatPane.offsetHeight; // reflow
-    whatPane.style.animation = 'accordionOpen 0.3s ease';
+    whatPane.style.animation = ACCORDION_OPEN_ANIMATION;
   }
 }
 

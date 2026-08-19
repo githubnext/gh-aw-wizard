@@ -24,7 +24,9 @@ describe('wizard navigation', () => {
 
     globalThis.document = {
       getElementById(id) {
-        return id === 'step-1' ? step1Pane : null;
+        if (id === 'step-1') return step1Pane;
+        if (id === 'step-2') return step2Pane;
+        return null;
       },
       querySelectorAll(selector) {
         if (selector === '.wizard-step') return [step1Pane, step2Pane];
