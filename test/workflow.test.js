@@ -220,8 +220,12 @@ describe('generateWorkflowFile', () => {
 
   it('supports definition-based engines', () => {
     registerDefinitionEngines([{ id: 'pydantic-ai' }]);
-    const md = generateWorkflowFile(answers({ engine: 'pydantic-ai' }), patterns);
-    expect(md).toContain('engine: pydantic-ai\n');
+    try {
+      const md = generateWorkflowFile(answers({ engine: 'pydantic-ai' }), patterns);
+      expect(md).toContain('engine: pydantic-ai\n');
+    } finally {
+      registerDefinitionEngines([]);
+    }
   });
 
   it('accepts all supported built-in engines', () => {
