@@ -22,7 +22,7 @@ var outputLabels = {
   labels: 'add label',
   'new-issues': 'create issue',
   'pull-requests': 'create pull request',
-  commits: 'create pull request'
+  commits: 'commit changes'
 };
 
 var engineLabels = {

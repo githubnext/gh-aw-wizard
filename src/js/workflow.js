@@ -87,7 +87,6 @@ export function generateWorkflowFile(answers, patterns) {
       case 'create-pull-request':
       case 'create-pull-request-review-comment':
         safeSet.add(o); break;
-      case 'add-label':
       case 'add-labels':
         safeSet.add('add-labels'); break;
       case 'comments':
@@ -257,7 +256,6 @@ export function generateAgentPrompt(answers, patterns) {
   var outputsReadable = answers.outputs.map(function (o) {
     var map = {
       'add-comment': 'add comments on issues/PRs',
-      'add-label': 'add labels',
       'add-labels': 'add labels',
       'create-issue': 'create new issues',
       'create-pull-request': 'open pull requests',
