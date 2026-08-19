@@ -28,10 +28,11 @@ var engineLabels = {
   pi: 'Pi'
 };
 
-function readableList(values) {
+function readableList(values, conjunction) {
+  conjunction = conjunction || 'and';
   if (values.length < 2) return values[0] || '';
-  if (values.length === 2) return values[0] + ' and ' + values[1];
-  return values.slice(0, -1).join(', ') + ', and ' + values[values.length - 1];
+  if (values.length === 2) return values[0] + ' ' + conjunction + ' ' + values[1];
+  return values.slice(0, -1).join(', ') + ', ' + conjunction + ' ' + values[values.length - 1];
 }
 
 function mapLabels(values, labels) {
@@ -61,7 +62,7 @@ export function buildWorkflowSummary(answers, patterns) {
             return 'a pull request is ready for review';
           }
           return triggerLabels[trigger] || trigger;
-        }))
+        }), 'or')
         : 'choose when it runs',
       complete: answers.triggers.length > 0
     },
