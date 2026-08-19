@@ -1238,6 +1238,128 @@ a:hover {
 .landing.is-leaving {
   animation: landingLeave 0.3s ease forwards;
 }
+
+/* Landing diagram: actions runner -> when/what/where phases */
+.landing-diagram {
+  margin-top: 2.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem;
+  animation: landingRise 0.6s ease 0.42s both;
+}
+.ld-runner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.ld-runner-icon {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+.ld-phases {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+.ld-phase {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  width: 8.5rem;
+  padding: 0.9rem 0.6rem;
+  border-radius: var(--radius-md, 10px);
+  border: 1px solid var(--border-color);
+  background: var(--bg-primary);
+}
+.ld-phase-icon {
+  width: 2rem;
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-blue);
+}
+.ld-phase-icon .octicon {
+  width: 1.35rem;
+  height: 1.35rem;
+}
+.ld-phase-icon-multi {
+  width: auto;
+  gap: 0.3rem;
+  color: var(--text-secondary);
+}
+.ld-phase-icon-multi .vendor-icon {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+.ld-phase-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.ld-phase-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+.ld-arrow {
+  width: 2.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+  overflow: visible;
+}
+.ld-arrow-line {
+  fill: none;
+  stroke: var(--accent-blue);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 4 4;
+  animation: ldArrowFlow 0.8s linear infinite;
+}
+.ld-arrow-head {
+  fill: var(--accent-blue);
+}
+.ld-arrow-dot {
+  fill: var(--accent-green);
+  offset-path: path('M2 12 H38');
+  offset-rotate: 0deg;
+  animation: ldArrowDot 1.6s ease-in-out infinite;
+}
+@keyframes ldArrowFlow {
+  from { stroke-dashoffset: 8; }
+  to   { stroke-dashoffset: 0; }
+}
+@keyframes ldArrowDot {
+  0%   { offset-distance: 0%; opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+@media (max-width: 640px) {
+  .ld-phases {
+    flex-direction: column;
+  }
+  .ld-arrow {
+    width: 1.5rem;
+    height: 2.5rem;
+    transform: rotate(90deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ld-arrow-line,
+  .ld-arrow-dot {
+    animation: none;
+  }
+}
 .wizard-revealed .site-header,
 .wizard-revealed .workflow-recipe,
 .wizard-revealed .info-callout {
