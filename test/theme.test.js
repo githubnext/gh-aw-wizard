@@ -1,6 +1,11 @@
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
 import { describe, expect, it } from 'vitest';
 
 import { nextThemeMode, normalizeThemeMode, resolveColorMode, themeCopy } from '../src/js/theme.js';
+
+const html = readFileSync(fileURLToPath(new URL('../src/index.html', import.meta.url)), 'utf8');
 
 describe('normalizeThemeMode', () => {
   it('keeps supported modes', () => {
@@ -42,5 +47,18 @@ describe('themeCopy', () => {
     expect(themeCopy('dark').label).toBe('Dark theme');
     expect(themeCopy('auto').icon).toBe('device-desktop');
     expect(themeCopy('nope')).toEqual(themeCopy('auto'));
+  });
+});
+
+describe('theme selector placement', () => {
+  it('places the selector in the footer link row', () => {
+    const footer = html.slice(html.indexOf('<footer'), html.indexOf('</footer>'));
+    expect(footer).not.toContain('footer-actions');
+    expect(footer.indexOf('Report an issue')).toBeLessThan(footer.indexOf('id="theme-toggle"'));
+    expect(footer.indexOf('id="theme-toggle"')).toBeLessThan(footer.indexOf('>Terms</a>'));
+  });
+
+  it('provides an accessible label for the icon-only selector', () => {
+    expect(html).toMatch(/<span class="visually-hidden" id="theme-toggle-label">Auto theme<\/span>/);
   });
 });
