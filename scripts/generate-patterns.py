@@ -13,7 +13,7 @@ CURATED_ARCHETYPES = {
     "accessibility-expert": {
         "label": "Web Accessibility Expert",
         "description": "Audit web interfaces for accessibility barriers",
-        "recommended_triggers": ["pull_request", "workflow_dispatch"],
+        "recommended_triggers": ["pull_request"],
         "recommended_safe_outputs": ["pull-requests"],
         "recommended_tools": ["add-comment"],
         "prompt_style": "role-rules",
@@ -27,7 +27,7 @@ CURATED_ARCHETYPES = {
     "performance-nut": {
         "label": "Performance Nut",
         "description": "Find and fix one measurable performance bottleneck",
-        "recommended_triggers": ["schedule", "workflow_dispatch"],
+        "recommended_triggers": ["schedule"],
         "recommended_safe_outputs": ["pull-requests"],
         "recommended_tools": ["create-pull-request"],
         "prompt_style": "phase-based",
@@ -41,7 +41,7 @@ CURATED_ARCHETYPES = {
     "user-simulator": {
         "label": "User Simulator",
         "description": "Simulate representative users and evaluate their workflows",
-        "recommended_triggers": ["schedule", "workflow_dispatch"],
+        "recommended_triggers": ["schedule"],
         "recommended_safe_outputs": ["issues"],
         "recommended_tools": ["create-issue"],
         "prompt_style": "scenario-based",
@@ -55,7 +55,7 @@ CURATED_ARCHETYPES = {
     "daily-test-improver": {
         "label": "Daily Test Improver",
         "description": "Add high-value tests and improve test quality",
-        "recommended_triggers": ["schedule", "workflow_dispatch"],
+        "recommended_triggers": ["schedule"],
         "recommended_safe_outputs": ["pull-requests"],
         "recommended_tools": ["create-pull-request"],
         "prompt_style": "phase-based",
@@ -69,7 +69,7 @@ CURATED_ARCHETYPES = {
     "repo-maintainer": {
         "label": "Repo Maintainer",
         "description": "Proactively triage, fix, and maintain a repository",
-        "recommended_triggers": ["schedule", "workflow_dispatch"],
+        "recommended_triggers": ["schedule"],
         "recommended_safe_outputs": ["issues", "pull-requests"],
         "recommended_tools": ["add-comment", "add-labels", "create-issue", "create-pull-request"],
         "prompt_style": "role-steps",
@@ -83,7 +83,7 @@ CURATED_ARCHETYPES = {
     "linter-workflows": {
         "label": "Linter Workflows",
         "description": "Create workflows to mine, refine, and apply lint rules",
-        "recommended_triggers": ["workflow_dispatch"],
+        "recommended_triggers": ["schedule"],
         "recommended_safe_outputs": ["pull-requests"],
         "recommended_tools": ["create-pull-request"],
         "prompt_style": "phase-based",
@@ -97,7 +97,7 @@ CURATED_ARCHETYPES = {
     "linter-miner": {
         "label": "Linter Miner",
         "description": "Discover recurring defects and create custom lint rules",
-        "recommended_triggers": ["schedule", "workflow_dispatch"],
+        "recommended_triggers": ["schedule"],
         "recommended_safe_outputs": ["pull-requests"],
         "recommended_tools": ["create-pull-request"],
         "prompt_style": "phase-based",
@@ -111,7 +111,7 @@ CURATED_ARCHETYPES = {
     "linter-refiner": {
         "label": "Linter Refiner",
         "description": "Improve lint rule accuracy, diagnostics, and performance",
-        "recommended_triggers": ["workflow_dispatch", "pull_request"],
+        "recommended_triggers": ["pull_request"],
         "recommended_safe_outputs": ["pull-requests"],
         "recommended_tools": ["create-pull-request"],
         "prompt_style": "phase-based",
@@ -125,7 +125,7 @@ CURATED_ARCHETYPES = {
     "linter-applier": {
         "label": "Linter Applier",
         "description": "Fix a focused group of existing lint findings",
-        "recommended_triggers": ["schedule", "workflow_dispatch"],
+        "recommended_triggers": ["schedule"],
         "recommended_safe_outputs": ["pull-requests"],
         "recommended_tools": ["create-pull-request"],
         "prompt_style": "phase-based",
@@ -139,7 +139,7 @@ CURATED_ARCHETYPES = {
     "skill-pr-reviewer": {
         "label": "Skill PR Reviewer",
         "description": "Review pull requests with installed expert skills",
-        "recommended_triggers": ["pull_request", "workflow_dispatch"],
+        "recommended_triggers": ["pull_request"],
         "recommended_safe_outputs": ["pull-requests"],
         "recommended_tools": ["create-pull-request-review-comment"],
         "prompt_style": "role-rules",
@@ -189,6 +189,13 @@ def wilson_lower(successes, total, z=1.96):
     centre = rate + z * z / (2 * total)
     margin = z * ((rate * (1 - rate) / total + z * z / (4 * total * total)) ** 0.5)
     return (centre - margin) / denominator
+
+
+def filtered_triggers(triggers):
+    return [
+        trigger for trigger in triggers
+        if trigger != "workflow_dispatch"
+    ]
 
 
 # Classify workflows into archetypes
@@ -242,7 +249,7 @@ for wf in workflows:
     sr = parse_sr(wf.get("success_rate"))
     if sr is not None:
         ad["success_rates"].append(sr)
-    for trigger in wf.get("triggers", []):
+    for trigger in filtered_triggers(wf.get("triggers", [])):
         ad["triggers"][trigger] += 1
     ad["repos"].append((wf["_repo"], wf["_stars"], wf["_priority"]))
 
@@ -278,7 +285,7 @@ for arch_id, ad in sorted(
             "prompt_style": "role-steps",
             "size_range": [3000, 7000],
             "tips": [
-                "Add workflow_dispatch as a fallback trigger — adds ~21pp to success rate",
+                "Prefer event-driven triggers like issues and schedule over manual-only execution",
                 "Include explicit label taxonomy in your prompt so the agent knows valid options",
                 "Use DO NOT constraints (e.g., 'Do NOT close issues') — 61% more likely to be healthy",
             ],
@@ -289,7 +296,7 @@ for arch_id, ad in sorted(
             "prompt_style": "phase-based",
             "size_range": [5000, 12000],
             "tips": [
-                "Use schedule+workflow_dispatch triggers (80% success rate)",
+                "Use schedule triggers for continuous maintenance coverage",
                 "Add pre-steps to run tests/linters before the agent starts — validates baseline",
                 "Avoid pr-fix and ci-doctor templates — both have <20% success in practice",
             ],
@@ -301,7 +308,7 @@ for arch_id, ad in sorted(
             "size_range": [2000, 5000],
             "tips": [
                 "Pre-fetch data in a steps: block — #1 predictor of workflow health",
-                "Use schedule+workflow_dispatch triggers (80% success rate)",
+                "Use schedule triggers for repeatable reporting",
                 "Keep prompts focused on one report — multi-source reports need pre-steps",
             ],
         },
@@ -311,7 +318,7 @@ for arch_id, ad in sorted(
             "prompt_style": "checklist",
             "size_range": [3000, 6000],
             "tips": [
-                "Use schedule+workflow_dispatch triggers for reliable periodic checks",
+                "Use schedule triggers for reliable periodic checks",
                 "Include a checklist of specific dependencies to monitor — don't leave it open-ended",
                 "Enable network access for fetching upstream release data",
             ],
@@ -345,7 +352,7 @@ for arch_id, ad in sorted(
             "size_range": [3000, 7000],
             "tips": [
                 "Focus on specific review criteria (security, performance, style)",
-                "Use pull_request+workflow_dispatch triggers for flexibility",
+                "Use pull_request triggers focused on ready-to-review activity",
                 "Include DO NOT constraints to avoid false positive comments",
             ],
         },
@@ -355,7 +362,7 @@ for arch_id, ad in sorted(
             "prompt_style": "role-steps",
             "size_range": [3000, 8000],
             "tips": [
-                "Add workflow_dispatch as a trigger — adds ~21pp to success rate",
+                "Prefer concrete repository events or schedules over manual-only execution",
                 "Prompts between 3-8KB perform best — too short lacks context, too long has diminishing returns",
                 "Use DO NOT constraints to bound agent behavior — 61% more likely to be healthy",
             ],
@@ -426,7 +433,7 @@ all_anti.sort(key=lambda item: item["success_rate"])
 # Compute trigger combo success rates
 combo_stats = defaultdict(lambda: {"s": 0, "t": 0})
 for wf in workflows:
-    triggers = sorted(set(wf.get("triggers", [])))
+    triggers = sorted(set(filtered_triggers(wf.get("triggers", []))))
     if not triggers:
         continue
     combo_key = "+".join(triggers)
@@ -460,7 +467,7 @@ profile_stats = defaultdict(lambda: {
     "s": 0, "t": 0, "workflows": set(), "repos": set()
 })
 for wf in workflows:
-    triggers = sorted(set(wf.get("triggers", [])))
+    triggers = sorted(set(filtered_triggers(wf.get("triggers", []))))
     safe_outputs = sorted(set(wf.get("safe_outputs", [])))
     if not triggers or not safe_outputs:
         continue
@@ -525,7 +532,6 @@ output = {
         "timeout_by_trigger": {
             "issues": 15,
             "schedule": 30,
-            "workflow_dispatch": 30,
             "push": 15,
             "slash_command": 15,
             "workflow_run": 15,

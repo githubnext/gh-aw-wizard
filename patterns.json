@@ -18,10 +18,6 @@
           "config": {}
         },
         {
-          "type": "workflow_dispatch",
-          "config": {}
-        },
-        {
           "type": "schedule",
           "config": {}
         }
@@ -57,7 +53,7 @@
         }
       ],
       "tips": [
-        "Add workflow_dispatch as a trigger \u2014 adds ~17pp to success rate",
+        "Prefer concrete repository events or schedules over manual-only execution",
         "Prompts between 3-8KB perform best \u2014 too short lacks context, too long has diminishing returns",
         "Use DO NOT constraints to bound agent behavior \u2014 61% more likely to be healthy"
       ],
@@ -78,10 +74,6 @@
       "recommended_triggers": [
         {
           "type": "pull_request",
-          "config": {}
-        },
-        {
-          "type": "workflow_dispatch",
           "config": {}
         }
       ],
@@ -115,10 +107,6 @@
         {
           "type": "schedule",
           "config": {}
-        },
-        {
-          "type": "workflow_dispatch",
-          "config": {}
         }
       ],
       "recommended_safe_outputs": [
@@ -151,10 +139,6 @@
         {
           "type": "schedule",
           "config": {}
-        },
-        {
-          "type": "workflow_dispatch",
-          "config": {}
         }
       ],
       "recommended_safe_outputs": [
@@ -184,14 +168,23 @@
       "success_rate": null,
       "count": 0,
       "recommended_triggers": [
-        { "type": "schedule", "config": {} },
-        { "type": "workflow_dispatch", "config": {} }
+        {
+          "type": "schedule",
+          "config": {}
+        }
       ],
-      "recommended_safe_outputs": ["pull-requests"],
-      "recommended_tools": ["create-pull-request"],
+      "recommended_safe_outputs": [
+        "pull-requests"
+      ],
+      "recommended_tools": [
+        "create-pull-request"
+      ],
       "timeout_minutes": 30,
       "prompt_style": "phase-based",
-      "size_range_bytes": [5000, 12000],
+      "size_range_bytes": [
+        5000,
+        12000
+      ],
       "top_repos": [],
       "tips": [
         "Establish a passing baseline before changing tests",
@@ -207,14 +200,27 @@
       "success_rate": null,
       "count": 0,
       "recommended_triggers": [
-        { "type": "schedule", "config": {} },
-        { "type": "workflow_dispatch", "config": {} }
+        {
+          "type": "schedule",
+          "config": {}
+        }
       ],
-      "recommended_safe_outputs": ["issues", "pull-requests"],
-      "recommended_tools": ["add-comment", "add-labels", "create-issue", "create-pull-request"],
+      "recommended_safe_outputs": [
+        "issues",
+        "pull-requests"
+      ],
+      "recommended_tools": [
+        "add-comment",
+        "add-labels",
+        "create-issue",
+        "create-pull-request"
+      ],
       "timeout_minutes": 30,
       "prompt_style": "role-steps",
-      "size_range_bytes": [5000, 12000],
+      "size_range_bytes": [
+        5000,
+        12000
+      ],
       "top_repos": [],
       "tips": [
         "Use persistent memory and check for existing work before acting",
@@ -231,18 +237,28 @@
       "anti_patterns": [],
       "label": "Linter Workflows",
       "description": "Create workflows to mine, refine, and apply lint rules",
-      "recommended_safe_outputs": ["pull-requests"],
-      "recommended_tools": ["create-pull-request"],
+      "recommended_safe_outputs": [
+        "pull-requests"
+      ],
+      "recommended_tools": [
+        "create-pull-request"
+      ],
       "timeout_minutes": 30,
       "prompt_style": "phase-based",
-      "size_range_bytes": [5000, 12000],
+      "size_range_bytes": [
+        5000,
+        12000
+      ],
       "tips": [
         "Generate separate workflows for mining, refining, and applying lint rules",
         "Keep each workflow focused on one linting responsibility",
         "Route all code changes through pull requests"
       ],
       "recommended_triggers": [
-        { "type": "workflow_dispatch", "config": {} }
+        {
+          "type": "schedule",
+          "config": {}
+        }
       ]
     },
     {
@@ -252,14 +268,23 @@
       "success_rate": null,
       "count": 0,
       "recommended_triggers": [
-        { "type": "schedule", "config": {} },
-        { "type": "workflow_dispatch", "config": {} }
+        {
+          "type": "schedule",
+          "config": {}
+        }
       ],
-      "recommended_safe_outputs": ["pull-requests"],
-      "recommended_tools": ["create-pull-request"],
+      "recommended_safe_outputs": [
+        "pull-requests"
+      ],
+      "recommended_tools": [
+        "create-pull-request"
+      ],
       "timeout_minutes": 30,
       "prompt_style": "phase-based",
-      "size_range_bytes": [4000, 8000],
+      "size_range_bytes": [
+        4000,
+        8000
+      ],
       "top_repos": [],
       "tips": [
         "Require repository evidence for every proposed rule",
@@ -275,14 +300,23 @@
       "success_rate": null,
       "count": 0,
       "recommended_triggers": [
-        { "type": "workflow_dispatch", "config": {} },
-        { "type": "pull_request", "config": {} }
+        {
+          "type": "pull_request",
+          "config": {}
+        }
       ],
-      "recommended_safe_outputs": ["pull-requests"],
-      "recommended_tools": ["create-pull-request"],
+      "recommended_safe_outputs": [
+        "pull-requests"
+      ],
+      "recommended_tools": [
+        "create-pull-request"
+      ],
       "timeout_minutes": 30,
       "prompt_style": "phase-based",
-      "size_range_bytes": [3000, 7000],
+      "size_range_bytes": [
+        3000,
+        7000
+      ],
       "top_repos": [],
       "tips": [
         "Require concrete false-positive or missed-case evidence",
@@ -298,14 +332,23 @@
       "success_rate": null,
       "count": 0,
       "recommended_triggers": [
-        { "type": "schedule", "config": {} },
-        { "type": "workflow_dispatch", "config": {} }
+        {
+          "type": "schedule",
+          "config": {}
+        }
       ],
-      "recommended_safe_outputs": ["pull-requests"],
-      "recommended_tools": ["create-pull-request"],
+      "recommended_safe_outputs": [
+        "pull-requests"
+      ],
+      "recommended_tools": [
+        "create-pull-request"
+      ],
       "timeout_minutes": 30,
       "prompt_style": "phase-based",
-      "size_range_bytes": [3000, 7000],
+      "size_range_bytes": [
+        3000,
+        7000
+      ],
       "top_repos": [],
       "tips": [
         "Group fixes by one rule and subsystem",
@@ -321,14 +364,23 @@
       "success_rate": null,
       "count": 0,
       "recommended_triggers": [
-        { "type": "pull_request", "config": {} },
-        { "type": "workflow_dispatch", "config": {} }
+        {
+          "type": "pull_request",
+          "config": {}
+        }
       ],
-      "recommended_safe_outputs": ["pull-requests"],
-      "recommended_tools": ["create-pull-request-review-comment"],
+      "recommended_safe_outputs": [
+        "pull-requests"
+      ],
+      "recommended_tools": [
+        "create-pull-request-review-comment"
+      ],
       "timeout_minutes": 30,
       "prompt_style": "role-rules",
-      "size_range_bytes": [3000, 8000],
+      "size_range_bytes": [
+        3000,
+        8000
+      ],
       "top_repos": [],
       "tips": [
         "Select skills that match the pull request's change type",
@@ -346,10 +398,6 @@
       "recommended_triggers": [
         {
           "type": "issues",
-          "config": {}
-        },
-        {
-          "type": "workflow_dispatch",
           "config": {}
         },
         {
@@ -393,7 +441,7 @@
         }
       ],
       "tips": [
-        "Add workflow_dispatch as a fallback trigger \u2014 adds ~17pp to success rate",
+        "Prefer event-driven triggers like issues and schedule over manual-only execution",
         "Include explicit label taxonomy in your prompt so the agent knows valid options",
         "Use DO NOT constraints (e.g., 'Do NOT close issues') \u2014 61% more likely to be healthy"
       ],
@@ -414,10 +462,6 @@
       "recommended_triggers": [
         {
           "type": "issues",
-          "config": {}
-        },
-        {
-          "type": "workflow_dispatch",
           "config": {}
         },
         {
@@ -460,7 +504,7 @@
         }
       ],
       "tips": [
-        "Use schedule+workflow_dispatch triggers (80% success rate)",
+        "Use schedule triggers for repeatable reporting",
         "Add pre-steps to run tests/linters before the agent starts \u2014 validates baseline",
         "Avoid pr-fix and ci-doctor templates \u2014 both have <20% success in practice"
       ],
@@ -479,10 +523,6 @@
       "success_rate": 0.45,
       "count": 74,
       "recommended_triggers": [
-        {
-          "type": "workflow_dispatch",
-          "config": {}
-        },
         {
           "type": "issues",
           "config": {}
@@ -528,7 +568,7 @@
       ],
       "tips": [
         "Focus on specific review criteria (security, performance, style)",
-        "Use pull_request+workflow_dispatch triggers for flexibility",
+        "Use pull_request triggers focused on ready-to-review activity",
         "Include DO NOT constraints to avoid false positive comments"
       ],
       "anti_patterns": [
@@ -546,10 +586,6 @@
       "success_rate": 0.52,
       "count": 69,
       "recommended_triggers": [
-        {
-          "type": "workflow_dispatch",
-          "config": {}
-        },
         {
           "type": "schedule",
           "config": {}
@@ -595,7 +631,7 @@
       ],
       "tips": [
         "Pre-fetch data in a steps: block \u2014 #1 predictor of workflow health",
-        "Use schedule+workflow_dispatch triggers (80% success rate)",
+        "Use schedule triggers for repeatable reporting",
         "Keep prompts focused on one report \u2014 multi-source reports need pre-steps"
       ],
       "anti_patterns": [
@@ -615,10 +651,6 @@
       "recommended_triggers": [
         {
           "type": "schedule",
-          "config": {}
-        },
-        {
-          "type": "workflow_dispatch",
           "config": {}
         },
         {
@@ -663,7 +695,7 @@
         }
       ],
       "tips": [
-        "Use schedule+workflow_dispatch triggers for reliable periodic checks",
+        "Use schedule triggers for reliable periodic checks",
         "Include a checklist of specific dependencies to monitor \u2014 don't leave it open-ended",
         "Enable network access for fetching upstream release data"
       ],
@@ -682,10 +714,6 @@
       "success_rate": 0.6,
       "count": 25,
       "recommended_triggers": [
-        {
-          "type": "workflow_dispatch",
-          "config": {}
-        },
         {
           "type": "issues",
           "config": {}
@@ -755,10 +783,6 @@
         },
         {
           "type": "pull_request",
-          "config": {}
-        },
-        {
-          "type": "workflow_dispatch",
           "config": {}
         }
       ],
@@ -935,7 +959,6 @@
     "timeout_by_trigger": {
       "issues": 15,
       "schedule": 30,
-      "workflow_dispatch": 30,
       "push": 15,
       "slash_command": 15,
       "workflow_run": 15,
@@ -949,65 +972,9 @@
   },
   "trigger_combos": [
     {
-      "combo": "pull_request+schedule+workflow_dispatch",
-      "success_rate": 1.0,
-      "count": 10,
-      "risk": "low",
-      "recommendation": "Recommended"
-    },
-    {
-      "combo": "discussion+issues+workflow_dispatch",
-      "success_rate": 0.93,
-      "count": 171,
-      "risk": "low",
-      "recommendation": "Recommended"
-    },
-    {
-      "combo": "issues+push+schedule+workflow_dispatch",
-      "success_rate": 0.9,
-      "count": 30,
-      "risk": "low",
-      "recommendation": "Recommended"
-    },
-    {
-      "combo": "discussion+schedule+workflow_dispatch",
-      "success_rate": 0.88,
-      "count": 25,
-      "risk": "low",
-      "recommendation": "Recommended"
-    },
-    {
       "combo": "push",
       "success_rate": 0.83,
       "count": 18,
-      "risk": "low",
-      "recommendation": "Recommended"
-    },
-    {
-      "combo": "workflow_dispatch",
-      "success_rate": 0.77,
-      "count": 131,
-      "risk": "low",
-      "recommendation": "Recommended"
-    },
-    {
-      "combo": "issues+schedule+workflow_dispatch+workflow_run",
-      "success_rate": 0.7,
-      "count": 20,
-      "risk": "low",
-      "recommendation": "Recommended"
-    },
-    {
-      "combo": "issues+workflow_dispatch",
-      "success_rate": 0.67,
-      "count": 518,
-      "risk": "low",
-      "recommendation": "Recommended"
-    },
-    {
-      "combo": "discussion+issues+schedule+workflow_dispatch",
-      "success_rate": 0.67,
-      "count": 166,
       "risk": "low",
       "recommendation": "Recommended"
     },
@@ -1017,34 +984,6 @@
       "count": 160,
       "risk": "low",
       "recommendation": "Recommended"
-    },
-    {
-      "combo": "issues+push+workflow_dispatch",
-      "success_rate": 0.65,
-      "count": 57,
-      "risk": "low",
-      "recommendation": "Recommended"
-    },
-    {
-      "combo": "schedule+workflow_dispatch",
-      "success_rate": 0.58,
-      "count": 423,
-      "risk": "medium",
-      "recommendation": "Use with caution"
-    },
-    {
-      "combo": "issues+pull_request+schedule+workflow_dispatch",
-      "success_rate": 0.57,
-      "count": 58,
-      "risk": "medium",
-      "recommendation": "Use with caution"
-    },
-    {
-      "combo": "issues+schedule+workflow_dispatch",
-      "success_rate": 0.53,
-      "count": 1351,
-      "risk": "medium",
-      "recommendation": "Use with caution"
     },
     {
       "combo": "issues+push",

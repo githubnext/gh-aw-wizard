@@ -91,7 +91,7 @@ function answers(overrides) {
   return {
     archetype: 'issue-triage',
     customDescription: '',
-    triggers: ['issues', 'workflow_dispatch'],
+    triggers: ['issues', 'schedule'],
     outputs: ['add-labels', 'add-comment'],
     engine: 'copilot',
     extras: [],
@@ -219,7 +219,6 @@ describe('buildTriggerYaml', () => {
       'issues',
       'pull_request',
       'schedule',
-      'workflow_dispatch',
       'slash_command',
       'label_command',
       'push'
@@ -227,7 +226,6 @@ describe('buildTriggerYaml', () => {
     expect(yaml).toContain('  issues:\n    types: [opened]\n');
     expect(yaml).toContain('  pull_request:\n    types: [opened]\n');
     expect(yaml).toContain('  schedule:\n    - cron: "0 9 * * 1-5"\n');
-    expect(yaml).toContain('  workflow_dispatch:\n');
     expect(yaml).toContain('  slash_command:\n    name: triage-agent\n');
     expect(yaml).toContain('  label_command:\n    name: triage-agent\n');
     expect(yaml).toContain('  push:\n    branches: [main]\n');
@@ -277,7 +275,7 @@ describe('generateWorkflowFile', () => {
 
   it('raises the timeout when a trigger requires more time', () => {
     const md = generateWorkflowFile(
-      answers({ triggers: ['schedule', 'workflow_dispatch'] }),
+      answers({ triggers: ['schedule', 'push'] }),
       patterns
     );
     expect(md).toContain('timeout-minutes: 45\n');
@@ -287,7 +285,7 @@ describe('generateWorkflowFile', () => {
     const md = generateWorkflowFile(
       answers({
         archetype: 'pr-review',
-        triggers: ['pull_request', 'workflow_dispatch'],
+        triggers: ['pull_request', 'push'],
         outputs: ['create-pull-request-review-comment']
       }),
       patterns
@@ -300,7 +298,7 @@ describe('generateWorkflowFile', () => {
     const md = generateWorkflowFile(
       answers({
         archetype: 'code-improvement',
-        triggers: ['schedule', 'workflow_dispatch'],
+        triggers: ['schedule', 'push'],
         outputs: ['create-pull-request']
       }),
       patterns
@@ -313,7 +311,7 @@ describe('generateWorkflowFile', () => {
     const md = generateWorkflowFile(
       answers({
         archetype: 'status-report',
-        triggers: ['workflow_dispatch'],
+        triggers: ['schedule'],
         outputs: ['create-issue'],
         extras: ['memory', 'charts', 'browser'],
         needsData: true
@@ -399,7 +397,7 @@ describe('generateWorkflowFile', () => {
     const md = generateWorkflowFile(
       answers({
         archetype,
-        triggers: ['workflow_dispatch'],
+        triggers: ['schedule'],
         outputs: ['create-pull-request']
       }),
       patterns
@@ -414,7 +412,7 @@ describe('generateAgentPrompt', () => {
     const prompt = generateAgentPrompt(answers(), patterns);
     expect(prompt).toContain('- Name: issue-triage\n');
     expect(prompt).toContain('- Engine: copilot\n');
-    expect(prompt).toContain('when a new issue is opened, on manual dispatch');
+    expect(prompt).toContain('when a new issue is opened, on a daily/weekly schedule');
     expect(prompt).toContain('add labels, add comments on issues/PRs');
     expect(prompt).toContain('Choose an appropriate kebab-case filename');
     expect(prompt).toContain('The workflow should be saved as a new Markdown file in .github/workflows/.');

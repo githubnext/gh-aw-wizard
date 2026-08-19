@@ -4,7 +4,6 @@ description: Daily evaluation of pattern data and generated prompts, opening a P
 engine: copilot
 on:
   schedule: daily
-  workflow_dispatch:
   skip-if-match: 'is:open in:title "Pattern quality eval"'
 permissions:
   contents: read
@@ -64,7 +63,7 @@ steps:
           id: 'status-report-daily',
           answers: {
             archetype: 'status-report',
-            triggers: ['schedule', 'workflow_dispatch'],
+            triggers: ['schedule'],
             outputs: ['create-issue'],
             engine: 'copilot',
             needsData: true,
@@ -76,7 +75,7 @@ steps:
           id: 'issue-triage-opened',
           answers: {
             archetype: 'issue-triage',
-            triggers: ['issues', 'workflow_dispatch'],
+            triggers: ['issues'],
             outputs: ['add-labels', 'add-comment'],
             engine: 'copilot',
             needsData: false,
@@ -87,7 +86,7 @@ steps:
           id: 'code-improvement-daily',
           answers: {
             archetype: 'code-improvement',
-            triggers: ['schedule', 'workflow_dispatch'],
+            triggers: ['schedule'],
             outputs: ['create-pull-request'],
             engine: 'copilot',
             needsData: true,
@@ -99,7 +98,7 @@ steps:
           id: 'documentation-updater-push',
           answers: {
             archetype: 'documentation-updater',
-            triggers: ['push', 'workflow_dispatch'],
+            triggers: ['push'],
             outputs: ['create-pull-request'],
             engine: 'copilot',
             needsData: false,
@@ -110,7 +109,7 @@ steps:
           id: 'dependency-monitor-daily',
           answers: {
             archetype: 'dependency-monitor',
-            triggers: ['schedule', 'workflow_dispatch'],
+            triggers: ['schedule'],
             outputs: ['create-issue', 'create-pull-request'],
             engine: 'copilot',
             needsData: true,
@@ -122,7 +121,7 @@ steps:
           id: 'pr-review-ready',
           answers: {
             archetype: 'pr-review',
-            triggers: ['pull_request', 'workflow_dispatch'],
+            triggers: ['pull_request'],
             outputs: ['create-pull-request-review-comment'],
             engine: 'copilot',
             needsData: false,
