@@ -72,7 +72,7 @@ function bindNavigation() {
 
 function advanceOneStepLikeNext() {
   if (currentStep >= 1 && currentStep <= 4) {
-    if (currentStep + 1 > maxReachableStep()) return false;
+    if (currentStep + 1 > maxReachableStep(hasChecked('archetype'))) return false;
     goToStep(currentStep + 1);
     return true;
   }
@@ -154,17 +154,12 @@ function updateProgress(from, to) {
   });
 }
 
-function maxReachableStep() {
-  if (!document.querySelector('input[name="archetype"]:checked')) return 1;
-  if (!hasChecked('trigger')) return 2;
-  if (!hasChecked('output')) return 3;
-  // Step 4 is optional extras, so step 5 is always reachable once required steps are complete.
-  if (!hasChecked('engine')) return 5;
-  return 6;
+export function maxReachableStep(hasArchetype) {
+  return hasArchetype ? TOTAL_STEPS : 1;
 }
 
 function syncProgressStepAvailability() {
-  var maxStep = maxReachableStep();
+  var maxStep = maxReachableStep(hasChecked('archetype'));
   document.querySelectorAll('.progress-step').forEach(function (el) {
     var step = parseInt(el.getAttribute('data-step'));
     el.disabled = step > maxStep;
