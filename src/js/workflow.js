@@ -411,8 +411,8 @@ export function generateAgentPrompt(answers, patterns) {
     return map[o] || o;
   }).join(', ');
 
-  var prompt = 'Create ' + (multiple ? workflows.length + ' workflows' : 'a workflow') +
-    ' for GitHub Agentic Workflows using these instructions:\n';
+  var prompt = 'Create a draft PR that adds ' + (multiple ? workflows.length + ' agentic workflows' : 'an agentic workflow') +
+    ' using these instructions:\n';
   var instructionSet = new Set();
   workflows.forEach(function (workflow) {
     instructionUrls(workflow.answers.archetype).forEach(function (url) { instructionSet.add(url); });

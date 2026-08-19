@@ -447,7 +447,7 @@ describe('generateAgentPrompt', () => {
   it('generates all grouped linter workflows in one prompt', () => {
     const prompt = generateAgentPrompt(answers({ archetype: 'linter-workflows' }), patterns);
 
-    expect(prompt).toContain('Create 3 workflows for GitHub Agentic Workflows');
+    expect(prompt).toContain('Create a draft PR that adds 3 agentic workflows using these instructions:');
     expect(prompt).toContain('- Generate exactly 3 independent workflow files:');
     expect(prompt).toContain('Linter Miner: name it linter-miner');
     expect(prompt).toContain('Linter Refiner: name it linter-refiner');
