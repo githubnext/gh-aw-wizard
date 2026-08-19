@@ -129,13 +129,14 @@ function goToStep(n, options) {
 
 export function resetNavigationPane() {
   const previousStep = currentStep;
+  let whatPane = null;
   document.querySelectorAll('.wizard-step').forEach((step) => {
+    if (step.id === 'step-1') whatPane = step;
     step.classList.toggle('active', step.id === 'step-1');
   });
   currentStep = 1;
   updateProgress(previousStep, 1);
-  const whatPane = document.getElementById('step-1');
-  if (whatPane) {
+  if (whatPane && previousStep !== 1) {
     whatPane.style.animation = 'none';
     void whatPane.offsetHeight; // reflow
     whatPane.style.animation = ACCORDION_OPEN_ANIMATION;

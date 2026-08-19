@@ -40,7 +40,6 @@ describe('wizard navigation', () => {
 
     expect(step1Pane.classList.contains('active')).toBe(true);
     expect(step2Pane.classList.contains('active')).toBe(false);
-    expect(step1Pane.style.animation).toBe('accordionOpen 0.3s ease');
     expect(step1Button.classList.contains('active')).toBe(true);
     expect(step1Button.attributes.get('aria-expanded')).toBe('true');
     expect(step1Button.attributes.get('aria-current')).toBe('step');
