@@ -18,7 +18,7 @@ describe('getArchetype', () => {
 });
 
 describe('getRecommendedConfiguration', () => {
-  it('selects the highest-confidence trigger and safe-output profile', () => {
+  it('selects the most relevant trigger from the highest-confidence safe-output profile', () => {
     const patterns = {
       archetypes: [{
         id: 'status-report',
@@ -49,7 +49,7 @@ describe('getRecommendedConfiguration', () => {
         },
         {
           archetype: 'status-report',
-          triggers: ['schedule', 'workflow_dispatch'],
+          triggers: ['workflow_dispatch', 'schedule'],
           safe_outputs: ['create-issue', 'add-comment'],
           confidence_score: 0.72,
           total_runs: 80
@@ -58,7 +58,7 @@ describe('getRecommendedConfiguration', () => {
     };
 
     expect(getRecommendedConfiguration(patterns, 'status-report')).toEqual({
-      triggers: ['schedule', 'workflow_dispatch'],
+      triggers: ['schedule'],
       outputs: ['create-issue', 'add-comment'],
       profile: patterns.configuration_profiles[3]
     });
@@ -83,7 +83,7 @@ describe('getRecommendedConfiguration', () => {
     });
   });
 
-  it('falls back to exact recommended tools when no profile is available', () => {
+  it('falls back to the single most relevant trigger and exact recommended tools', () => {
     const patterns = {
       archetypes: [{
         id: 'issue-triage',
@@ -93,7 +93,7 @@ describe('getRecommendedConfiguration', () => {
     };
 
     expect(getRecommendedConfiguration(patterns, 'issue-triage')).toEqual({
-      triggers: ['issues', 'workflow_dispatch'],
+      triggers: ['issues'],
       outputs: ['add-labels', 'add-comment'],
       profile: null
     });
