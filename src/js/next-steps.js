@@ -2,6 +2,7 @@
 
 import { escapeHtml } from './highlight.js';
 import { normalizeEngine } from './workflow.js';
+import { formatEngineLabel } from './engines.js';
 
 export function step(n, content) {
   return '<div class="next-step"><div class="next-step-num">' + n + '</div><div>' + content + '</div></div>';
@@ -15,7 +16,8 @@ function engineLabel(engine) {
     gemini: 'Gemini',
     pi: 'Pi'
   };
-  return labels[normalizeEngine(engine)];
+  var normalized = normalizeEngine(engine);
+  return labels[normalized] || formatEngineLabel(normalized);
 }
 
 export function nextStepsHtml(format, workflowName, engine) {

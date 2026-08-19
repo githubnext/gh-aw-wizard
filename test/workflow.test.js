@@ -9,6 +9,7 @@ import {
   inferNeedsPreSteps,
   workflowName
 } from '../src/js/workflow.js';
+import { registerDefinitionEngines } from '../src/js/engines.js';
 
 const patterns = {
   archetypes: [
@@ -212,9 +213,19 @@ describe('generateWorkflowFile', () => {
     expect(md).toContain('timeout-minutes: 30\n');
   });
 
-  it('falls back to copilot engine for unknown values', () => {
-    const md = generateWorkflowFile(answers({ engine: 'invalid' }), patterns);
+  it('falls back to copilot engine for malformed ids', () => {
+    const md = generateWorkflowFile(answers({ engine: 'Invalid engine' }), patterns);
     expect(md).toContain('engine: copilot\n');
+  });
+
+  it('supports definition-based engines', () => {
+    registerDefinitionEngines([{ id: 'pydantic-ai' }]);
+    try {
+      const md = generateWorkflowFile(answers({ engine: 'pydantic-ai' }), patterns);
+      expect(md).toContain('engine: pydantic-ai\n');
+    } finally {
+      registerDefinitionEngines([]);
+    }
   });
 
   it('accepts all supported built-in engines', () => {

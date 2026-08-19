@@ -1,6 +1,7 @@
 // Workflow file generation — pure functions, no DOM access.
 
 import { getArchetype } from './patterns.js';
+import { isKnownEngine } from './engines.js';
 import {
   buildIssueTriage,
   buildCodeImprovement,
@@ -13,7 +14,7 @@ import {
 } from './bodies.js';
 
 export function normalizeEngine(engine) {
-  return ['copilot', 'claude', 'codex', 'gemini', 'pi'].includes(engine) ? engine : 'copilot';
+  return isKnownEngine(engine) ? engine : 'copilot';
 }
 
 export function workflowName(archetype, customDesc) {
