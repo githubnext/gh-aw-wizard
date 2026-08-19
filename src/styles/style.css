@@ -13,7 +13,7 @@
   --accent-blue-rgb: 9, 105, 218;
   --accent-green: var(--color-success-emphasis, #1f883d);
   --accent-green-rgb: 31, 136, 61;
-  --accent-green-solid: var(--color-success-emphasis, #1f883d);
+  --accent-green-solid: #1f883d;
   --accent-green-hover: #1a7f37;
   --border-color: var(--color-border-default, #d0d7de);
   --border-default: var(--color-border-default, #d0d7de);
