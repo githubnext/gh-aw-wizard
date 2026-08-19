@@ -18,22 +18,114 @@ let copyFeedbackTimer = null;
 const TOTAL_STEPS = 6;
 const ACCORDION_OPEN_ANIMATION = 'accordionOpen 0.3s ease';
 const ACCORDION_OPEN_REVERSE_ANIMATION = 'accordionOpenReverse 0.3s ease';
+const ARCHETYPE_ICON_BY_ID = {
+  'pr-review': 'eye',
+  'issue-triage': 'tag',
+  'code-improvement': 'tools',
+  'status-report': 'graph',
+  'dependency-monitor': 'package',
+  'documentation-updater': 'book',
+  'content-moderation': 'shield',
+  'accessibility-expert': 'eye',
+  'performance-nut': 'graph',
+  'user-simulator': 'device-desktop',
+  'daily-test-improver': 'check',
+  'repo-maintainer': 'tools',
+  'linter-workflows': 'tools',
+  'linter-miner': 'tools',
+  'linter-refiner': 'tools',
+  'linter-applier': 'tools',
+  'skill-pr-reviewer': 'eye',
+  'security-scanner': 'shield',
+  custom: 'zap'
+};
 
 export function initWizard() {
   initTheme();
   loadPatterns().then((data) => {
     patterns = data;
+    renderArchetypeOptions(data);
+  }).catch(() => {
+    patterns = null;
+    renderArchetypeOptions(null);
+  }).finally(() => {
+    bindFormEvents();
     renderWorkflowSummary();
   });
   bindNavigation();
-  bindFormEvents();
   loadDefinitionEngines().then((engines) => {
     registerDefinitionEngines(engines);
     addDefinitionEngineOptions(engines);
   });
   initNavigationHistory();
   initLanding(revealWhatPane);
-  renderWorkflowSummary();
+}
+
+function archetypeIconId(archetypeId) {
+  return ARCHETYPE_ICON_BY_ID[archetypeId] || 'tools';
+}
+
+function archetypeSort(a, b) {
+  if (a.id === 'custom' && b.id !== 'custom') return 1;
+  if (b.id === 'custom' && a.id !== 'custom') return -1;
+  return 0;
+}
+
+export function renderArchetypeOptions(data) {
+  const container = document.getElementById('archetype-options');
+  if (!container) return;
+
+  const source = data && Array.isArray(data.archetypes) ? data.archetypes : [];
+  const withCustom = source.some((archetype) => archetype.id === 'custom')
+    ? source
+    : source.concat({
+      id: 'custom',
+      label: 'Custom',
+      description: 'Describe your own workflow — start from scratch'
+    });
+  const archetypes = (withCustom.length ? withCustom : [{
+    id: 'custom',
+    label: 'Custom',
+    description: 'Describe your own workflow — start from scratch'
+  }]).slice().sort(archetypeSort);
+  container.innerHTML = '';
+
+  archetypes.forEach((archetype) => {
+    const card = document.createElement('label');
+    card.className = 'option-card';
+    card.dataset.value = archetype.id;
+    if (archetype.id === 'custom') card.style.gridColumn = '1 / -1';
+
+    const input = document.createElement('input');
+    input.type = 'radio';
+    input.name = 'archetype';
+    input.value = archetype.id;
+
+    const icon = document.createElement('div');
+    icon.className = 'archetype-icon';
+    const iconSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    iconSvg.setAttribute('class', 'octicon');
+    iconSvg.setAttribute('aria-hidden', 'true');
+    const iconUse = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+    iconUse.setAttribute('href', `#octicon-${archetypeIconId(archetype.id)}`);
+    iconSvg.appendChild(iconUse);
+    icon.appendChild(iconSvg);
+
+    const info = document.createElement('div');
+    info.className = 'option-info';
+
+    const label = document.createElement('div');
+    label.className = 'option-label';
+    label.textContent = archetype.label || archetype.id;
+
+    const description = document.createElement('div');
+    description.className = 'option-desc';
+    description.textContent = archetype.description || '';
+
+    info.append(label, description);
+    card.append(input, icon, info);
+    container.appendChild(card);
+  });
 }
 
 function revealWhatPane() {

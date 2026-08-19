@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { maxReachableStep, resetNavigationPane, showCopySuccess } from '../src/js/ui.js';
+import { maxReachableStep, renderArchetypeOptions, resetNavigationPane, showCopySuccess } from '../src/js/ui.js';
 
 const originalDocument = globalThis.document;
 
@@ -12,6 +12,37 @@ describe('wizard navigation', () => {
   it('keeps only the What tab required', () => {
     expect(maxReachableStep(false)).toBe(1);
     expect(maxReachableStep(true)).toBe(6);
+  });
+
+  describe('archetype option rendering', () => {
+    it('renders archetype cards from pattern data and appends custom when missing', () => {
+      const container = createElement();
+      globalThis.document = {
+        getElementById(id) {
+          if (id === 'archetype-options') return container;
+          return null;
+        },
+        createElement() {
+          return createElement();
+        },
+        createElementNS() {
+          return createElement();
+        }
+      };
+
+      renderArchetypeOptions({
+        archetypes: [
+          { id: 'status-report', label: 'Status Report', description: 'Periodic status/activity reports' }
+        ]
+      });
+
+      expect(container.children).toHaveLength(2);
+      const values = container.children.map((card) => card.dataset.value);
+      expect(values).toEqual(['status-report', 'custom']);
+      const customCard = container.children[1];
+      expect(customCard.style.gridColumn).toBe('1 / -1');
+      expect(customCard.children[0].value).toBe('custom');
+    });
   });
 
   describe('copy prompt success', () => {
@@ -103,6 +134,8 @@ function createElement(options = {}) {
     id: options.id || '',
     attributes,
     classList: createClassList(options.classes || []),
+    children: [],
+    dataset: {},
     disabled: false,
     innerHTML: '',
     offsetHeight: 0,
@@ -110,6 +143,13 @@ function createElement(options = {}) {
     textContent: '',
     closest() {
       return null;
+    },
+    append(...nodes) {
+      nodes.forEach((node) => this.appendChild(node));
+    },
+    appendChild(node) {
+      this.children.push(node);
+      return node;
     },
     querySelector() {
       return null;
