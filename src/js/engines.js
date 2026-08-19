@@ -50,7 +50,8 @@ export function engineIconMarkup(engine) {
     return '<span class="engine-vendor-icon" aria-hidden="true"><svg class="vendor-icon" focusable="false"><use href="#' + symbol + '"></use></svg></span>';
   }
   var labelParts = formatEngineLabel(engine).split(/\s+/);
-  var fallbackMark = labelParts.length === 1 ? labelParts[0].slice(0, 2).toUpperCase() : labelParts.slice(0, 2).map(function (part) {
+  var singleWordMark = labelParts[0].toUpperCase();
+  var fallbackMark = labelParts.length === 1 ? (singleWordMark + singleWordMark).slice(0, 2) : labelParts.slice(0, 2).map(function (part) {
     return part.charAt(0);
   }).join('').toUpperCase();
   var mark = extensionLogoText[engine] || fallbackMark;
