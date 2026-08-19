@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
 
 const css = readFileSync(fileURLToPath(new URL('../src/styles/style.css', import.meta.url)), 'utf8');
 const html = readFileSync(fileURLToPath(new URL('../src/index.html', import.meta.url)), 'utf8');
+const ui = readFileSync(fileURLToPath(new URL('../src/js/ui.js', import.meta.url)), 'utf8');
 
 function ruleBody(selector) {
   const start = css.indexOf(`${selector  } {`);
@@ -13,20 +14,10 @@ function ruleBody(selector) {
 }
 
 describe('archetype grid keyboard accessibility', () => {
-  it.each([
-    'daily-test-improver',
-    'accessibility-expert',
-    'performance-nut',
-    'user-simulator',
-    'repo-maintainer',
-    'linter-workflows',
-    'skill-pr-reviewer'
-  ])('exposes the %s archetype as a radio option', (archetype) => {
-    expect(html).toContain(`name="archetype" value="${archetype}"`);
-  });
-
-  it('groups the linter workflows into one option', () => {
-    expect(html).not.toMatch(/name="archetype" value="linter-(miner|refiner|applier)"/);
+  it('renders archetype radio cards from pattern data in the UI layer', () => {
+    expect(ui).toMatch(/Array\.isArray\(data\.archetypes\)/);
+    expect(ui).toMatch(/input\.name = 'archetype'/);
+    expect(ui).toMatch(/input\.value = archetype\.id/);
   });
 
   it('keeps the archetype radios in the tab order instead of display: none', () => {
@@ -123,8 +114,6 @@ describe('Copy prompt success modal', () => {
 });
 
 describe('Archetype radiogroup arrow-key focus', () => {
-  const ui = readFileSync(fileURLToPath(new URL('../src/js/ui.js', import.meta.url)), 'utf8');
-
   it('tracks arrow-key navigation within the archetype radiogroup', () => {
     expect(ui).toMatch(/arrowKeyNav/);
     expect(ui).toMatch(/ArrowDown['"]|ArrowUp['"]|ArrowLeft['"]|ArrowRight['"]/);
