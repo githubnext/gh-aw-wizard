@@ -169,13 +169,20 @@ function syncProgressStepAvailability() {
 }
 
 // ── Form events ────────────────────────────────────────────────────────────
-function bindFormEvents() {
-  // Step 1: archetype radios
-  document.querySelectorAll('input[name="archetype"]').forEach(function (radio) {
-    // Native radio inputs cannot be unchecked by clicking them again. Track whether
-    // the radio was already selected before the click so we can toggle it off.
+
+// Native radio inputs cannot be unchecked by clicking them again. This wires up
+// each radio in the group so that clicking (or pressing Space on) an already-
+// selected item unchecks it and invokes `onDeselect` instead.
+function bindRadioDeselect(radios, onDeselect) {
+  radios.forEach(function (radio) {
+    // Track whether the radio was already selected before the click so we can
+    // toggle it off. The `mousedown` listener is bound to the enclosing card
+    // rather than the radio itself: users click anywhere on the card, and that
+    // press lands on whatever element is under the pointer (the label, icon,
+    // or text), not necessarily the (sometimes visually hidden) input.
+    var card = radio.closest('.option-card') || radio;
     var wasChecked = false;
-    radio.addEventListener('mousedown', function () {
+    card.addEventListener('mousedown', function () {
       wasChecked = radio.checked;
     });
     radio.addEventListener('keydown', function (e) {
@@ -184,16 +191,28 @@ function bindFormEvents() {
       if ((e.key === ' ' || e.key === 'Spacebar') && radio.checked) {
         e.preventDefault();
         radio.checked = false;
-        clearArchetypeSelection();
+        onDeselect();
       }
     });
-    radio.addEventListener('click', function (e) {
+    radio.addEventListener('click', function () {
+      // Note: no preventDefault() here. Calling it would make the browser treat
+      // the click as canceled, which reverts `checked` back to its pre-click
+      // value (still `true`, since the click didn't change the checked radio in
+      // the group) *after* every listener finishes — undoing the manual uncheck
+      // below.
       if (wasChecked) {
-        e.preventDefault();
         radio.checked = false;
-        clearArchetypeSelection();
+        onDeselect();
       }
     });
+  });
+}
+
+function bindFormEvents() {
+  // Step 1: archetype radios
+  var archetypeRadios = document.querySelectorAll('input[name="archetype"]');
+  bindRadioDeselect(archetypeRadios, clearArchetypeSelection);
+  archetypeRadios.forEach(function (radio) {
     radio.addEventListener('change', function () {
       updateCardSelection('#archetype-options', 'radio');
       var customField = document.getElementById('custom-description-field');
@@ -235,7 +254,9 @@ function bindFormEvents() {
   });
 
   // Step 5: engine radio cards
-  document.querySelectorAll('input[name="engine"]').forEach(function (radio) {
+  var engineRadios = document.querySelectorAll('input[name="engine"]');
+  bindRadioDeselect(engineRadios, clearEngineSelection);
+  engineRadios.forEach(function (radio) {
     radio.addEventListener('change', function () {
       updateCardSelection('#engine-options', 'radio');
       if (currentStep === 6) refreshPreview();
@@ -281,6 +302,17 @@ function clearArchetypeSelection() {
   renderWorkflowSummary();
   syncProgressStepAvailability();
   saveSelectionState();
+}
+
+// Deselect the engine choice. Used when the user clicks an already-selected
+// engine card to deselect it.
+function clearEngineSelection() {
+  document.querySelectorAll('input[name="engine"]').forEach(function (radio) { radio.checked = false; });
+  updateCardSelection('#engine-options', 'radio');
+  renderWorkflowSummary();
+  syncProgressStepAvailability();
+  saveSelectionState();
+  if (currentStep === 6) refreshPreview();
 }
 
 function updateCardSelection(containerSel, type) {
