@@ -29,8 +29,13 @@ export function initWizard() {
     addDefinitionEngineOptions(engines);
   });
   initNavigationHistory();
-  initLanding(focusFirstArchetype);
+  initLanding(revealWhatPane);
   renderWorkflowSummary();
+}
+
+function revealWhatPane() {
+  resetNavigationPane();
+  focusFirstArchetype();
 }
 
 function focusFirstArchetype() {
@@ -117,6 +122,21 @@ function goToStep(n, options) {
   next.classList.add('active');
   if (!skipHistory) {
     window.history.pushState({ step: n }, '');
+  }
+}
+
+export function resetNavigationPane() {
+  const previousStep = currentStep;
+  document.querySelectorAll('.wizard-step').forEach((step) => {
+    step.classList.toggle('active', step.id === 'step-1');
+  });
+  currentStep = 1;
+  updateProgress(previousStep, 1);
+  const whatPane = document.getElementById('step-1');
+  if (whatPane) {
+    whatPane.style.animation = 'none';
+    whatPane.offsetHeight; // reflow
+    whatPane.style.animation = 'accordionOpen 0.3s ease';
   }
 }
 
