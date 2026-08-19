@@ -77,9 +77,45 @@ function bindNavigation() {
   steps.forEach(function (el) {
     el.addEventListener('click', function () {
       var target = parseInt(el.getAttribute('data-step'));
-      if (target < currentStep) goToStep(target);
+      if (target < currentStep) {
+        goToStep(target);
+        return;
+      }
+      while (target > currentStep) {
+        var previous = currentStep;
+        if (!advanceOneStepLikeNext()) break;
+        if (currentStep === previous) break;
+      }
     });
   });
+  syncProgressStepAvailability();
+}
+
+function advanceOneStepLikeNext() {
+  if (currentStep === 1) {
+    if (document.getElementById('next-1').disabled) return false;
+    goToStep(2);
+    return true;
+  }
+  if (currentStep === 2) {
+    if (document.getElementById('next-2').disabled) return false;
+    goToStep(3);
+    return true;
+  }
+  if (currentStep === 3) {
+    if (document.getElementById('next-3').disabled) return false;
+    goToStep(4);
+    return true;
+  }
+  if (currentStep === 4) {
+    goToStep(5);
+    return true;
+  }
+  if (currentStep === 5) {
+    generateAndShow();
+    return true;
+  }
+  return false;
 }
 
 function goToStep(n, options) {
@@ -134,13 +170,13 @@ function updateProgress(from, to) {
       el.classList.add('active');
       el.setAttribute('aria-current', 'step');
     }
-    el.disabled = s > to;
     var item = el.closest('.recipe-item');
     if (item) {
       item.classList.toggle('active', s === to);
       item.classList.toggle('completed', s < to);
     }
   });
+  syncProgressStepAvailability();
   // Update checkmarks
   steps.forEach(function (el) {
     var ind = el.querySelector('.step-indicator');
@@ -148,6 +184,21 @@ function updateProgress(from, to) {
     ind.textContent = el.classList.contains('completed') ? '✓' : s;
   });
   document.getElementById('recipe-step-status').textContent = 'Step ' + to + ' of ' + TOTAL_STEPS;
+}
+
+function maxReachableStep() {
+  if (!document.querySelector('input[name="archetype"]:checked')) return 1;
+  if (!hasChecked('trigger')) return 2;
+  if (!hasChecked('output')) return 3;
+  return 6;
+}
+
+function syncProgressStepAvailability() {
+  var maxStep = maxReachableStep();
+  document.querySelectorAll('.progress-step').forEach(function (el) {
+    var step = parseInt(el.getAttribute('data-step'));
+    el.disabled = step > maxStep;
+  });
 }
 
 // ── Form events ────────────────────────────────────────────────────────────
@@ -215,6 +266,7 @@ function bindFormEvents() {
   document.querySelectorAll('input').forEach(function (input) {
     input.addEventListener('change', function () {
       renderWorkflowSummary();
+      syncProgressStepAvailability();
       saveSelectionState();
     });
   });
@@ -257,6 +309,7 @@ function clearArchetypeSelection() {
   updateCardSelection('#data-options', 'checkbox');
 
   renderWorkflowSummary();
+  syncProgressStepAvailability();
   saveSelectionState();
 }
 
@@ -401,6 +454,7 @@ function restoreSelectionState() {
     if (engineRadio) engineRadio.checked = true;
   }
   updateCardSelection('#engine-options', 'radio');
+  syncProgressStepAvailability();
 }
 
 function renderWorkflowSummary() {
