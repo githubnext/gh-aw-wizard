@@ -34,6 +34,9 @@
   --danger: var(--color-danger-fg, #cf222e);
   --control-fg-on-emphasis: var(--color-fg-on-emphasis, #ffffff);
   --header-gradient-start: rgba(246, 248, 250, 0.85);
+  --title-gradient-start: var(--color-accent-fg, #0969da);
+  --title-gradient-mid: var(--color-done-emphasis, #8250df);
+  --title-gradient-end: var(--color-sponsors-emphasis, #bf3989);
   --label-blue: var(--color-accent-emphasis, #0969da);
   --label-purple: var(--color-done-emphasis, #8250df);
   --label-green: var(--color-success-emphasis, #1a7f37);
@@ -185,6 +188,16 @@ a:hover {
   line-height: 1.15;
   letter-spacing: -0.04em;
   color: var(--heading-color);
+}
+
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .site-header h1 {
+    background: linear-gradient(90deg, var(--title-gradient-start), var(--title-gradient-mid), var(--title-gradient-end));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
 }
 .site-header .subtitle {
   font-size: 0.95rem;
