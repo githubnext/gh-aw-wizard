@@ -18,6 +18,7 @@
     "linter-applier",
     "skill-pr-reviewer",
     "issue-triage",
+    "issue-hierarchy-manager",
     "code-improvement",
     "pr-review",
     "status-report",

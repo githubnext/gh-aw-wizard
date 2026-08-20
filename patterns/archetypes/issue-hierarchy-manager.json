@@ -1,0 +1,33 @@
+{
+  "id": "issue-hierarchy-manager",
+  "label": "Issue Hierarchy Manager",
+  "description": "Organize issues into parent/sub-issue relationships and keep the hierarchy in sync",
+  "success_rate": null,
+  "count": 0,
+  "recommended_triggers": [
+    {
+      "type": "schedule",
+      "config": {}
+    }
+  ],
+  "recommended_safe_outputs": [
+    "issues"
+  ],
+  "recommended_tools": [
+    "link-sub-issue"
+  ],
+  "timeout_minutes": 15,
+  "prompt_style": "role-steps",
+  "size_range_bytes": [
+    3000,
+    8000
+  ],
+  "top_repos": [],
+  "tips": [
+    "Pre-fetch open issues in a steps: block before reasoning about relationships",
+    "Use link-sub-issue with parent/sub label or title-prefix filters to bound which issues can be linked",
+    "Recursively close parent issues only after confirming every sub-issue is complete",
+    "Read-only issues permission is enough — rely on safe-outputs like link-sub-issue and update-issue for writes"
+  ],
+  "anti_patterns": []
+}
