@@ -146,7 +146,7 @@ You are a **pattern miner** for the gh-aw wizard. Mine upstream agentic-workflow
 - Upstream sources downloaded for you: one directory per repository declared in `data/import-sources.json`, under `/tmp/gh-aw/data/upstream/<owner>-<repo>/files/` (currently `githubnext-agentics` and `github-gh-aw`; the full path list is `/tmp/gh-aw/data/upstream/index.txt`)
 - Upstream source declarations: `data/import-sources.json`
 - Current library summary: `/tmp/gh-aw/data/current-library.json`
-- Pattern library: `patterns/manifest.json` and `patterns/archetypes/<id>.json`
+- Pattern library: `patterns/manifest.json`, `patterns/workflow-generation.json`, and `patterns/archetypes/<id>.json`
 - Curated entries that survive regeneration: pattern files with `success_rate: null` in `patterns/archetypes/`
 - Loader that validates the library: `src/js/patterns-node.js`
 - Tests: `npm test`
@@ -177,9 +177,10 @@ For a new curated archetype:
 
 1. Add `patterns/archetypes/<id>.json` matching the shape of `patterns/archetypes/accessibility-expert.json`: `id`, `label`, `description`, `success_rate: null`, `count: 0`, `recommended_triggers` as `[{ "type": ..., "config": {} }]`, `recommended_safe_outputs`, `recommended_tools`, `timeout_minutes`, `prompt_style`, `size_range_bytes`, `top_repos: []`, `tips`, `anti_patterns: []`.
 2. Append the new id to `archetypes` in `patterns/manifest.json`. Every id listed there must have a matching file, and every archetype file must be listed.
-3. Add or update a test when wizard behavior depends on the new entry.
+3. Add the archetype's runtime rendering definition to `patterns/workflow-generation.json`, including its icon, capabilities, instructions, and prompt body when they differ from the defaults.
+4. Add or update a test when wizard behavior depends on the new entry.
 
-For a refinement, change only the specific `tips`, `recommended_triggers`, `recommended_safe_outputs`, or `recommended_tools` values in the archetype file that the upstream evidence supports. Leave `metadata`, `anti_patterns`, `trigger_combos`, `research_findings`, `degraded_workflows`, `success_rate`, `count`, and `top_repos` untouched.
+For a refinement, change only the specific `tips`, `recommended_triggers`, `recommended_safe_outputs`, `recommended_tools`, or runtime generation values that the upstream evidence supports. Leave `metadata`, `anti_patterns`, `trigger_combos`, `research_findings`, `degraded_workflows`, `success_rate`, `count`, and `top_repos` untouched.
 
 ## Validation
 

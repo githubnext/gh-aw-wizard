@@ -196,7 +196,8 @@
   ],
   "archetypes": {
     "custom": {
-      "icon": "zap"
+      "icon": "zap",
+      "title": "Custom Workflow"
     },
     "issue-triage": {
       "icon": "tag",

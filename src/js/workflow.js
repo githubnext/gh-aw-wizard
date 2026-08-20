@@ -147,7 +147,7 @@ function renderWorkflowBody(answers, patterns, archetype) {
     ? answers.customDescription
     : archetype.description || answers.customDescription || 'Perform the specified task on this repository.';
   return `${renderTemplate(template.join('\n'), {
-    label: archetype.label || 'Custom Workflow',
+    label: definition.title || archetype.label || 'Custom Workflow',
     purpose,
     pre_steps: renderPreSteps(answers, patterns)
   }).replace(/\n{3,}/g, '\n\n').trimEnd()  }\n`;
@@ -170,7 +170,7 @@ function toolsetsFor(patterns, archetype) {
 }
 
 export function generateWorkflowFile(answers, patterns) {
-  const generation = generationModel(patterns);
+  generationModel(patterns);
   const definition = workflowDefinition(patterns, answers.archetype);
   if (definition.file_generation_error) throw new Error(definition.file_generation_error);
 

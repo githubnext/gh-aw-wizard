@@ -10,9 +10,9 @@ A wizard interface to create GitHub Agentic Workflows. Create ready-to-use [GitH
 |------|-------------|
 | `src/index.html` | The generator site markup |
 | `src/styles/style.css` | Site styles |
-| `src/js/` | ES modules — `main.js` (entry), `ui.js` (DOM wiring), `workflow.js` (workflow/prompt generation), `bodies.js` (archetype prompt bodies), `highlight.js`, `next-steps.js`, `patterns.js`, `theme.js` |
+| `src/js/` | ES modules — `main.js` (entry), `ui.js` (DOM wiring), `workflow.js` (data-driven workflow/prompt rendering), `highlight.js`, `next-steps.js`, `patterns.js`, `theme.js` |
 | `test/` | Vitest unit tests for the pure generation logic |
-| `patterns/` | Pattern data powering the wizard — `manifest.json` plus one file per archetype under `archetypes/` |
+| `patterns/` | Pattern data powering the wizard — `manifest.json`, runtime generation data in `workflow-generation.json`, and one file per archetype under `archetypes/` |
 | `scripts/scan.sh` | Scanner that discovers agentic workflows across GitHub |
 | `scripts/generate-patterns.py` | Deterministically generates `patterns/` from scan results |
 | `.github/workflows/update-patterns.yml` | Weekly scan and stable pattern-library PR automation |

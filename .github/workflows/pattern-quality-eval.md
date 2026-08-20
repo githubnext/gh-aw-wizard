@@ -156,8 +156,8 @@ You are a **workflow quality evaluator** for the gh-aw wizard. Evaluate whether 
 
 - Repository: `${{ github.repository }}`
 - Generated pattern and prompt samples: `/tmp/gh-aw/data/generated-patterns-and-prompts.json`
-- Pattern data: `patterns/manifest.json`, `patterns/archetypes/*.json`
-- Generator logic: `src/js/workflow.js`, `src/js/bodies.js`, `src/js/patterns.js`
+- Pattern data: `patterns/manifest.json`, `patterns/workflow-generation.json`, `patterns/archetypes/*.json`
+- Generator logic: `src/js/workflow.js`, `src/js/patterns.js`
 - Tests: `npm test`
 - Build: `npm run build`
 
@@ -170,7 +170,7 @@ Before evaluating, search this repository for any open issue or pull request abo
 
 ## Evaluation process
 
-1. Read `/tmp/gh-aw/data/generated-patterns-and-prompts.json`, `patterns/manifest.json`, `patterns/archetypes/*.json`, and the generator files listed above.
+1. Read `/tmp/gh-aw/data/generated-patterns-and-prompts.json`, `patterns/manifest.json`, `patterns/workflow-generation.json`, `patterns/archetypes/*.json`, and the generator files listed above.
 2. For each sample, first generate the pattern you would expect the wizard to use for that archetype: recommended triggers, safe outputs, tools, constraints, and prompt-generation guidance. Compare that generated pattern with the current `pattern` object in the sample.
 3. Ask the `prompt-solution-simulator` subagent to simulate a downstream agent following the generated pattern and prompt, then evaluate the likely solution quality.
 4. Synthesize the subagent reports into a compact matrix with one row per sample:
@@ -190,7 +190,7 @@ Before evaluating, search this repository for any open issue or pull request abo
 
 When an improvement is justified:
 
-1. Make the smallest useful change to `patterns/manifest.json`, an archetype file under `patterns/archetypes/`, `src/js/workflow.js`, `src/js/bodies.js`, or related tests.
+1. Make the smallest useful change to `patterns/manifest.json`, `patterns/workflow-generation.json`, an archetype file under `patterns/archetypes/`, `src/js/workflow.js`, or related tests.
 2. Prefer improvements that make generated prompts more specific, safer, easier to validate, or more aligned with current gh-aw guidance.
 3. Add or update tests when generation behavior changes.
 4. Run `npm test` and `npm run build`.

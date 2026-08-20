@@ -44,8 +44,8 @@ export function initWizard() {
   initLanding(revealWhatPane);
 }
 
-function archetypeIconId(archetypeId) {
-  const definition = getWorkflowDefinition(patterns, archetypeId);
+function archetypeIconId(archetypeId, data) {
+  const definition = getWorkflowDefinition(data, archetypeId);
   return definition && definition.icon ? definition.icon : 'tools';
 }
 
@@ -91,7 +91,7 @@ export function renderArchetypeOptions(data) {
     iconSvg.setAttribute('class', 'octicon');
     iconSvg.setAttribute('aria-hidden', 'true');
     const iconUse = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-    iconUse.setAttribute('href', `#octicon-${archetypeIconId(archetype.id)}`);
+    iconUse.setAttribute('href', `#octicon-${archetypeIconId(archetype.id, data)}`);
     iconSvg.appendChild(iconUse);
     icon.appendChild(iconSvg);
 

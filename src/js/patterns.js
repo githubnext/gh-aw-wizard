@@ -19,10 +19,13 @@ export function mergePatterns(manifest, archetypes, workflowGeneration) {
   return merged;
 }
 
-function archetypesBaseUrlFor(manifestUrl) {
+function patternsBaseUrlFor(manifestUrl) {
   const lastSlash = manifestUrl.lastIndexOf('/');
-  const dir = lastSlash === -1 ? '' : manifestUrl.slice(0, lastSlash + 1);
-  return `${dir  }archetypes/`;
+  return lastSlash === -1 ? '' : manifestUrl.slice(0, lastSlash + 1);
+}
+
+function archetypesBaseUrlFor(manifestUrl) {
+  return `${patternsBaseUrlFor(manifestUrl)  }archetypes/`;
 }
 
 export function loadPatterns(manifestUrl) {
@@ -33,7 +36,7 @@ export function loadPatterns(manifestUrl) {
     .then((manifest) => {
       const ids = Array.isArray(manifest.archetypes) ? manifest.archetypes : [];
       const workflowGenerationUrl = manifest.workflow_generation
-        ? `${archetypesBaseUrlFor(resolvedManifestUrl)  }../${  manifest.workflow_generation}`
+        ? patternsBaseUrlFor(resolvedManifestUrl) + manifest.workflow_generation
         : null;
       const archetypesPromise = Promise.all(ids.map((id) => {
         return fetch(`${archetypesBaseUrl + id  }.json`).then((r) => { return r.json(); });
