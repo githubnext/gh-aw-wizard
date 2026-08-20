@@ -9,12 +9,13 @@ export const PATTERNS_MANIFEST_URL = 'patterns/manifest.json';
 
 // Combine a manifest (with an `archetypes` array of ids) and the loaded
 // archetype objects back into the shape the rest of the app expects.
-export function mergePatterns(manifest, archetypes) {
+export function mergePatterns(manifest, archetypes, workflowGeneration) {
   const merged = {};
   for (const key in manifest) {
     if (Object.prototype.hasOwnProperty.call(manifest, key)) merged[key] = manifest[key];
   }
   merged.archetypes = archetypes;
+  merged.workflow_generation = workflowGeneration || null;
   return merged;
 }
 
@@ -31,16 +32,32 @@ export function loadPatterns(manifestUrl) {
     .then((r) => { return r.json(); })
     .then((manifest) => {
       const ids = Array.isArray(manifest.archetypes) ? manifest.archetypes : [];
-      return Promise.all(ids.map((id) => {
+      const workflowGenerationUrl = manifest.workflow_generation
+        ? `${archetypesBaseUrlFor(resolvedManifestUrl)  }../${  manifest.workflow_generation}`
+        : null;
+      const archetypesPromise = Promise.all(ids.map((id) => {
         return fetch(`${archetypesBaseUrl + id  }.json`).then((r) => { return r.json(); });
-      })).then((archetypes) => {
-        return mergePatterns(manifest, archetypes);
+      }));
+      const workflowGenerationPromise = workflowGenerationUrl
+        ? fetch(workflowGenerationUrl).then((r) => { return r.json(); })
+        : Promise.resolve(null);
+      return Promise.all([archetypesPromise, workflowGenerationPromise]).then(([archetypes, workflowGeneration]) => {
+        return mergePatterns(manifest, archetypes, workflowGeneration);
       });
     })
     .catch(() => {
       // patterns unavailable — generator still works with defaults
       return null;
     });
+}
+
+export function getWorkflowGeneration(patterns) {
+  return patterns && patterns.workflow_generation ? patterns.workflow_generation : null;
+}
+
+export function getWorkflowDefinition(patterns, id) {
+  const generation = getWorkflowGeneration(patterns);
+  return generation && generation.archetypes ? generation.archetypes[id] || null : null;
 }
 
 export function getArchetype(patterns, id) {

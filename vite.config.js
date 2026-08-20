@@ -9,10 +9,12 @@ const patternsDir = fileURLToPath(new URL('./patterns', import.meta.url));
 // workflow) as one manifest plus one file per archetype, so its contents are
 // served in dev and emitted into the build output from there.
 function listPatternsFiles() {
+  const rootFiles = readdirSync(patternsDir)
+    .filter((name) => name.endsWith('.json'));
   const archetypeFiles = readdirSync(join(patternsDir, 'archetypes'))
     .filter((name) => name.endsWith('.json'))
     .map((name) => posix.join('archetypes', name));
-  return ['manifest.json', ...archetypeFiles];
+  return [...rootFiles, ...archetypeFiles];
 }
 
 function patternsPlugin() {

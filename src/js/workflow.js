@@ -1,26 +1,11 @@
-// Workflow file generation — pure functions, no DOM access.
+// Workflow generation controller — renders the runtime pattern data without DOM access.
 
-import { getArchetype } from './patterns.js';
-import { isKnownEngine } from './engines.js';
 import {
-  buildIssueTriage,
-  buildCodeImprovement,
-  buildStatusReport,
-  buildDependencyMonitor,
-  buildContentModeration,
-  buildDocumentationUpdater,
-  buildAccessibilityExpert,
-  buildPerformanceNut,
-  buildUserSimulator,
-  buildPrReview,
-  buildDailyTestImprover,
-  buildRepoMaintainer,
-  buildLinterMiner,
-  buildLinterRefiner,
-  buildLinterApplier,
-  buildSkillPrReviewer,
-  buildCustom
-} from './bodies.js';
+  getArchetype,
+  getWorkflowDefinition,
+  getWorkflowGeneration
+} from './patterns.js';
+import { isKnownEngine } from './engines.js';
 
 export function normalizeEngine(engine) {
   return isKnownEngine(engine) ? engine : 'copilot';
@@ -33,319 +18,231 @@ export function workflowName(archetype, customDesc) {
   return archetype;
 }
 
-export function inferNeedsPreSteps(archetype) {
-  // These archetypes deal with lots of data — auto-add pre-steps
-  return ['status-report', 'dependency-monitor', 'repo-maintainer', 'linter-workflows', 'linter-miner'].indexOf(archetype) !== -1;
+function generationModel(patterns) {
+  const generation = getWorkflowGeneration(patterns);
+  if (!generation) throw new Error('Workflow generation pattern data is unavailable.');
+  return generation;
 }
 
-export function inferCapabilities(archetype) {
-  // Auto-infer what tools/capabilities the archetype needs
-  const caps = { preSteps: false, bash: false, githubToolsets: false, browser: false, network: false };
-  switch (archetype) {
-    case 'status-report':
-      caps.preSteps = true; caps.githubToolsets = true; break;
-    case 'dependency-monitor':
-      // Dependency monitoring requires fetching upstream release/changelog data
-      // (npm, PyPI, GitHub releases, etc.) — needs egress beyond the default-deny sandbox.
-      caps.preSteps = true; caps.bash = true; caps.network = true; break;
-    case 'code-improvement':
-    case 'documentation-updater':
-    case 'performance-nut':
-    case 'daily-test-improver':
-    case 'linter-refiner':
-    case 'linter-applier':
-      caps.bash = true; break;
-    case 'accessibility-expert':
-      caps.bash = true; caps.githubToolsets = true; caps.browser = true; break;
-    case 'user-simulator':
-      caps.githubToolsets = true; break;
-    case 'pr-review':
-    case 'skill-pr-reviewer':
-      caps.githubToolsets = true; break;
-    case 'repo-maintainer':
-    case 'linter-workflows':
-    case 'linter-miner':
-      caps.preSteps = true; caps.bash = true; caps.githubToolsets = true; break;
-  }
-  return caps;
+function workflowDefinition(patterns, archetype) {
+  return getWorkflowDefinition(patterns, archetype) || {};
 }
 
-// Per-archetype GitHub toolset scope — narrower than the default set so
-// reviewers only get the read access they actually need to see PR diffs.
-const GITHUB_TOOLSETS_BY_ARCHETYPE = {
-  'pr-review': ['repos', 'issues', 'pull_requests'],
-  'skill-pr-reviewer': ['repos', 'issues', 'pull_requests'],
-  'accessibility-expert': ['repos', 'issues', 'pull_requests'],
-  'user-simulator': ['repos', 'issues', 'pull_requests']
-};
-const DEFAULT_GITHUB_TOOLSETS = ['repos', 'issues', 'pull_requests', 'actions', 'code_security', 'discussions'];
+function mergeCapabilities(patterns, archetype) {
+  const generation = generationModel(patterns);
+  return Object.assign(
+    {},
+    generation.default_capabilities || {},
+    workflowDefinition(patterns, archetype).capabilities || {}
+  );
+}
 
-// Per-archetype read permissions — pr-review only needs enough to read the
-// PR diff/metadata, not the full status-report surface (actions, security, discussions).
-const PERMISSIONS_BY_ARCHETYPE = {
-  'pr-review': ['contents', 'issues', 'pull-requests'],
-  'skill-pr-reviewer': ['contents', 'issues', 'pull-requests'],
-  'accessibility-expert': ['contents', 'issues', 'pull-requests'],
-  'user-simulator': ['contents', 'issues', 'pull-requests']
-};
-const DEFAULT_PERMISSIONS = ['actions', 'contents', 'discussions', 'issues', 'pull-requests', 'security-events'];
-// Bash-only archetypes (no github toolset) still need read access to check out and
-// inspect the repo — without this they were emitting no `permissions:` block at all,
-// leaving the job on the default (often broader) GITHUB_TOKEN scope.
-const BASH_ONLY_PERMISSIONS = ['contents'];
+export function inferNeedsPreSteps(archetype, patterns) {
+  return Boolean(mergeCapabilities(patterns, archetype).pre_steps);
+}
 
-export function buildTriggerYaml(triggers, commandName, archetype) {
-  let lines = '';
+export function inferCapabilities(archetype, patterns) {
+  const capabilities = mergeCapabilities(patterns, archetype);
+  return {
+    preSteps: Boolean(capabilities.pre_steps),
+    bash: Boolean(capabilities.bash),
+    githubToolsets: Boolean(capabilities.github_toolsets),
+    browser: Boolean(capabilities.browser),
+    network: Boolean(capabilities.network)
+  };
+}
+
+function renderTemplate(value, variables) {
+  return String(value).replace(/\{\{([a-z_]+)\}\}/g, (match, key) => {
+    return Object.prototype.hasOwnProperty.call(variables, key) ? variables[key] : match;
+  });
+}
+
+function indentYaml(yaml) {
+  return `${yaml.split('\n').map((line) => `  ${  line}`).join('\n')  }\n`;
+}
+
+function triggerDefinition(patterns, archetype, trigger) {
+  const generation = generationModel(patterns);
+  const definitions = generation.triggers || {};
+  const original = definitions[trigger];
+  if (!original) return null;
+  const resolved = original.alias ? definitions[original.alias] : original;
+  if (!resolved) return null;
+  const overrides = workflowDefinition(patterns, archetype).trigger_overrides || {};
+  return Object.assign({}, resolved, overrides[trigger] || {});
+}
+
+export function buildTriggerYaml(triggers, commandName, archetype, patterns) {
   const name = commandName || 'agentic-workflow';
-  let pullRequestWritten = false;
-  triggers.forEach((t) => {
-    switch (t) {
-      case 'issues':
-        lines += '  issues:\n    types: [opened]\n'; break;
-      case 'pull_request':
-      case 'pull_request_ready_for_review': {
-        if (pullRequestWritten) break;
-        const pullRequestTypes = [];
-        if (triggers.indexOf('pull_request') !== -1 &&
-            archetype !== 'pr-review' && archetype !== 'skill-pr-reviewer') {
-          pullRequestTypes.push('opened');
-        }
-        if (triggers.indexOf('pull_request_ready_for_review') !== -1 ||
-            archetype === 'pr-review' || archetype === 'skill-pr-reviewer') {
-          pullRequestTypes.push('ready_for_review');
-        }
-        lines += `  pull_request:\n    types: [${  pullRequestTypes.join(', ')  }]\n`;
-        pullRequestWritten = true;
-        break;
-      }
-      case 'schedule':
-        lines += '  schedule:\n    - cron: "0 9 * * 1-5"\n'; break;
-      case 'slash_command':
-      case 'issue_comment':
-        lines += `  slash_command:\n    name: ${  name  }\n`; break;
-      case 'label_command':
-        lines += `  label_command:\n    name: ${  name  }\n`; break;
-      case 'push':
-        lines += '  push:\n    branches: [main]\n'; break;
+  const yamlBlocks = [];
+  const seenYaml = new Set();
+  const activityTypes = new Map();
+
+  triggers.forEach((trigger) => {
+    const definition = triggerDefinition(patterns, archetype, trigger);
+    if (!definition) return;
+    if (definition.event && definition.activity_type) {
+      const types = activityTypes.get(definition.event) || [];
+      if (types.indexOf(definition.activity_type) === -1) types.push(definition.activity_type);
+      activityTypes.set(definition.event, types);
+      return;
+    }
+    if (!definition.yaml) return;
+    const yaml = renderTemplate(definition.yaml, { name });
+    if (!seenYaml.has(yaml)) {
+      seenYaml.add(yaml);
+      yamlBlocks.push(yaml);
     }
   });
-  return lines;
+
+  activityTypes.forEach((types, event) => {
+    yamlBlocks.push(`${event  }:\n  types: [${  types.join(', ')  }]`);
+  });
+  return yamlBlocks.map(indentYaml).join('');
+}
+
+function outputDefinition(patterns, output) {
+  const definitions = generationModel(patterns).outputs || {};
+  const original = definitions[output];
+  if (!original) return null;
+  const resolved = original.alias ? definitions[original.alias] : original;
+  return resolved ? Object.assign({}, resolved, original) : null;
+}
+
+function selectedExtras(answers, patterns) {
+  const definitions = generationModel(patterns).extras || {};
+  return (answers.extras || []).map((id) => {
+    return definitions[id] ? Object.assign({ id }, definitions[id]) : null;
+  }).filter(Boolean);
+}
+
+function safeOutputsFor(answers, patterns) {
+  const safeOutputs = new Set();
+  (answers.outputs || []).forEach((output) => {
+    const definition = outputDefinition(patterns, output);
+    if (definition && definition.safe_output) safeOutputs.add(definition.safe_output);
+  });
+  selectedExtras(answers, patterns).forEach((extra) => {
+    if (extra.safe_output) safeOutputs.add(extra.safe_output);
+  });
+  return Array.from(safeOutputs);
+}
+
+function renderPreSteps(answers, patterns) {
+  if (!answers.needsData) return '';
+  const generation = generationModel(patterns);
+  const lines = (generation.pre_steps || {})[answers.archetype] ||
+    (generation.pre_steps || {}).default || [];
+  return renderTemplate(lines.join('\n'), {
+    data_description: answers.dataDescription || 'the required external data'
+  });
+}
+
+function renderWorkflowBody(answers, patterns, archetype) {
+  const generation = generationModel(patterns);
+  const definition = workflowDefinition(patterns, answers.archetype);
+  const template = definition.body || generation.default_body || [];
+  const purpose = answers.archetype === 'custom' && answers.customDescription
+    ? answers.customDescription
+    : archetype.description || answers.customDescription || 'Perform the specified task on this repository.';
+  return `${renderTemplate(template.join('\n'), {
+    label: archetype.label || 'Custom Workflow',
+    purpose,
+    pre_steps: renderPreSteps(answers, patterns)
+  }).replace(/\n{3,}/g, '\n\n').trimEnd()  }\n`;
+}
+
+function permissionsFor(patterns, archetype, inferred) {
+  const generation = generationModel(patterns);
+  const definition = workflowDefinition(patterns, archetype);
+  if (definition.permissions) return definition.permissions;
+  if (inferred.githubToolsets) {
+    return generation.github_permissions || generation.default_permissions || [];
+  }
+  return generation.default_permissions || [];
+}
+
+function toolsetsFor(patterns, archetype) {
+  const generation = generationModel(patterns);
+  return workflowDefinition(patterns, archetype).github_toolsets ||
+    generation.default_github_toolsets || [];
 }
 
 export function generateWorkflowFile(answers, patterns) {
-  if (answers.archetype === 'linter-workflows') {
-    throw new Error('Linter Workflows generates multiple files; use the prompt format.');
-  }
-  const arch = getArchetype(patterns, answers.archetype);
+  const generation = generationModel(patterns);
+  const definition = workflowDefinition(patterns, answers.archetype);
+  if (definition.file_generation_error) throw new Error(definition.file_generation_error);
+
+  const archetype = getArchetype(patterns, answers.archetype) || {};
   const name = workflowName(answers.archetype, answers.customDescription);
-  const label = arch ? arch.label : 'Custom Workflow';
-  const desc = arch ? arch.description : answers.customDescription || 'Custom agentic workflow';
+  const description = answers.archetype === 'custom' && answers.customDescription
+    ? answers.customDescription
+    : archetype.description || answers.customDescription || 'Custom agentic workflow';
+  const safeOutputs = safeOutputsFor(answers, patterns);
+  const inferred = inferCapabilities(answers.archetype, patterns);
+  const extras = selectedExtras(answers, patterns);
 
-  // Build safe outputs
-  const safeSet = new Set();
-  answers.outputs.forEach((o) => {
-    switch (o) {
-      case 'add-comment':
-      case 'add-labels':
-      case 'create-issue':
-      case 'create-pull-request':
-      case 'create-pull-request-review-comment':
-        safeSet.add(o); break;
-      // Keep older stored wizard values working for users with saved selections.
-      case 'comments':
-        safeSet.add('add-comment'); break;
-      case 'labels':
-        safeSet.add('add-labels'); break;
-      case 'new-issues':
-        safeSet.add('create-issue'); break;
-      case 'pull-requests':
-        safeSet.add('create-pull-request'); break;
-      case 'commits':
-        safeSet.add('create-pull-request'); break;
-    }
-  });
-  if ((answers.extras || []).indexOf('charts') !== -1) {
-    safeSet.add('upload-assets');
-  }
-  const safeOutputs = Array.from(safeSet);
-
-  // Timeout
-  let timeout = (arch && arch.timeout_minutes) ? arch.timeout_minutes : 30;
-  if (patterns && patterns.config_defaults && patterns.config_defaults.timeout_by_trigger) {
-    answers.triggers.forEach((t) => {
-      const val = patterns.config_defaults.timeout_by_trigger[t];
-      if (val && val > timeout) timeout = val;
+  let timeout = archetype.timeout_minutes || 30;
+  const timeoutByTrigger = patterns.config_defaults && patterns.config_defaults.timeout_by_trigger;
+  if (timeoutByTrigger) {
+    answers.triggers.forEach((trigger) => {
+      if (timeoutByTrigger[trigger] > timeout) timeout = timeoutByTrigger[trigger];
     });
   }
 
-  // Trigger config YAML
-  const triggerYaml = buildTriggerYaml(answers.triggers, name, answers.archetype);
-
-  // Frontmatter — auto-infer capabilities from archetype
-  const inferred = inferCapabilities(answers.archetype);
-  const extras = answers.extras || [];
-  const engine = normalizeEngine(answers.engine);
-  let fm = '---\n';
-  fm += `name: ${  name  }\n`;
-  fm += `description: ${  desc  }\n`;
-  fm += `on:\n${  triggerYaml}`;
-  if (inferred.githubToolsets) {
-    const perms = PERMISSIONS_BY_ARCHETYPE[answers.archetype] || DEFAULT_PERMISSIONS;
-    fm += 'permissions:\n';
-    perms.forEach((p) => { fm += `  ${  p  }: read\n`; });
-  } else if (inferred.bash) {
-    // Bash-only archetypes still check out and read the repo, so declare the
-    // minimal read permission explicitly rather than relying on defaults.
-    fm += 'permissions:\n';
-    BASH_ONLY_PERMISSIONS.forEach((p) => { fm += `  ${  p  }: read\n`; });
-  } else {
-    // Archetypes with no inferred bash/github toolset (e.g. issue-triage, which
-    // relies solely on safe-outputs like add-labels/add-comment) still check out
-    // the repo and read the triggering issue/PR, so declare minimal read
-    // permissions explicitly rather than relying on the default GITHUB_TOKEN scope.
-    fm += 'permissions:\n';
-    BASH_ONLY_PERMISSIONS.forEach((p) => { fm += `  ${  p  }: read\n`; });
-  }
+  let frontmatter = '---\n';
+  frontmatter += `name: ${  name  }\n`;
+  frontmatter += `description: ${  description  }\n`;
+  frontmatter += `on:\n${  buildTriggerYaml(answers.triggers, name, answers.archetype, patterns)}`;
+  frontmatter += 'permissions:\n';
+  permissionsFor(patterns, answers.archetype, inferred).forEach((permission) => {
+    frontmatter += `  ${  permission  }: read\n`;
+  });
   if (inferred.network) {
-    // Default-deny network sandbox blocks external egress unless explicitly allowed —
-    // archetypes that fetch upstream data (e.g. dependency-monitor) need this declared,
-    // otherwise the agent silently has no access to the data it's supposed to check.
-    fm += 'network:\n  allowed:\n    - defaults\n    - github\n';
+    frontmatter += 'network:\n  allowed:\n    - defaults\n    - github\n';
   }
-  fm += `engine: ${  engine  }\n`;
+  frontmatter += `engine: ${  normalizeEngine(answers.engine)  }\n`;
 
-  // Tools section
-  if (inferred.bash || inferred.githubToolsets || inferred.browser || extras.indexOf('memory') !== -1 || extras.indexOf('browser') !== -1) {
-    fm += 'tools:\n';
-    if (inferred.bash) {
-      fm += '  bash: true\n';
-    }
+  if (inferred.bash || inferred.githubToolsets || inferred.browser || extras.some((extra) => extra.tool)) {
+    frontmatter += 'tools:\n';
+    if (inferred.bash) frontmatter += '  bash: true\n';
     if (inferred.githubToolsets) {
-      const toolsets = GITHUB_TOOLSETS_BY_ARCHETYPE[answers.archetype] || DEFAULT_GITHUB_TOOLSETS;
-      fm += '  github:\n';
-      fm += `    toolsets: [${  toolsets.join(', ')  }]\n`;
+      frontmatter += `  github:\n    toolsets: [${  toolsetsFor(patterns, answers.archetype).join(', ')  }]\n`;
     }
-    if (extras.indexOf('memory') !== -1) {
-      fm += '  cache-memory:\n';
-    }
-    if (inferred.browser || extras.indexOf('browser') !== -1) {
-      fm += '  playwright:\n    mode: cli\n';
+    if (extras.some((extra) => extra.tool === 'cache-memory')) frontmatter += '  cache-memory:\n';
+    if (inferred.browser || extras.some((extra) => extra.tool === 'playwright')) {
+      frontmatter += '  playwright:\n    mode: cli\n';
     }
   }
-
   if (safeOutputs.length) {
-    fm += 'safe-outputs:\n';
-    safeOutputs.forEach((safeOutput) => { fm += `  ${  safeOutput  }:\n`; });
+    frontmatter += 'safe-outputs:\n';
+    safeOutputs.forEach((safeOutput) => { frontmatter += `  ${  safeOutput  }:\n`; });
   }
-  fm += `timeout-minutes: ${  timeout  }\n`;
+  frontmatter += `timeout-minutes: ${  timeout  }\n`;
+  frontmatter += '---\n\n';
 
-  fm += '---\n\n';
-
-  // Body — varies by archetype
-  let body;
-  switch (answers.archetype) {
-    case 'issue-triage':
-      body = buildIssueTriage(answers, label);
-      break;
-    case 'code-improvement':
-      body = buildCodeImprovement(answers, label);
-      break;
-    case 'status-report':
-      body = buildStatusReport(answers, label);
-      break;
-    case 'dependency-monitor':
-      body = buildDependencyMonitor(answers, label);
-      break;
-    case 'content-moderation':
-      body = buildContentModeration(answers, label);
-      break;
-    case 'documentation-updater':
-      body = buildDocumentationUpdater(answers, label);
-      break;
-    case 'accessibility-expert':
-      body = buildAccessibilityExpert(answers, label);
-      break;
-    case 'performance-nut':
-      body = buildPerformanceNut(answers, label);
-      break;
-    case 'user-simulator':
-      body = buildUserSimulator(answers, label);
-      break;
-    case 'pr-review':
-      body = buildPrReview(answers, label);
-      break;
-    case 'daily-test-improver':
-      body = buildDailyTestImprover(answers, label);
-      break;
-    case 'repo-maintainer':
-      body = buildRepoMaintainer(answers, label);
-      break;
-    case 'linter-miner':
-      body = buildLinterMiner(answers, label);
-      break;
-    case 'linter-refiner':
-      body = buildLinterRefiner(answers, label);
-      break;
-    case 'linter-applier':
-      body = buildLinterApplier(answers, label);
-      break;
-    case 'skill-pr-reviewer':
-      body = buildSkillPrReviewer(answers, label);
-      break;
-    default:
-      body = buildCustom(answers, label);
-  }
-
-  return fm + body;
+  return frontmatter + renderWorkflowBody(answers, patterns, archetype);
 }
 
 export function fencedBlock(content, lang) {
-  // Use a fence longer than the longest backtick run inside the content so
-  // nested code blocks in the generated markdown stay intact.
   const body = String(content).replace(/\s+$/, '');
   let longest = 0;
   const matches = body.match(/`+/g) || [];
-  matches.forEach((m) => { if (m.length > longest) longest = m.length; });
+  matches.forEach((match) => { if (match.length > longest) longest = match.length; });
   const fence = '`'.repeat(Math.max(3, longest + 1));
   return `${fence + (lang || '')  }\n${  body  }\n${  fence}`;
 }
 
-const GH_AW_INSTRUCTIONS_BASE = 'https://raw.githubusercontent.com/github/gh-aw/main/.github/aw/';
-const SCENARIO_INSTRUCTIONS = {
-  'issue-triage': ['maintainer.md'],
-  'code-improvement': ['maintainer.md'],
-  'status-report': ['report.md'],
-  'dependency-monitor': ['maintainer.md'],
-  'documentation-updater': ['maintainer.md'],
-  'accessibility-expert': [
-    'https://raw.githubusercontent.com/github/gh-aw/main/docs/src/content/docs/reference/playwright.md',
-    'syntax-tools-imports.md',
-    'create-agentic-workflow-trigger-details.md'
-  ],
-  'performance-nut': [
-    'https://raw.githubusercontent.com/github/gh-aw/main/.github/copilot/instructions/cli-performance.md',
-    'https://raw.githubusercontent.com/github/gh-aw/main/.github/copilot/instructions/build-performance.md',
-    'maintainer.md',
-    'memory-stateful-patterns.md'
-  ],
-  'user-simulator': ['github-agentic-workflows.md'],
-  'pr-review': ['pr-reviewer.md'],
-  'daily-test-improver': ['test-coverage.md'],
-  'repo-maintainer': ['maintainer.md'],
-  'linter-workflows': ['linter-workflows.md'],
-  'linter-miner': ['linter-workflows.md'],
-  'linter-refiner': ['linter-workflows.md'],
-  'linter-applier': ['linter-workflows.md'],
-  'skill-pr-reviewer': ['pr-reviewer.md', 'skills.md']
-};
-
-function instructionUrls(archetype) {
-  const urls = [`${GH_AW_INSTRUCTIONS_BASE  }create-agentic-workflow.md`];
-  const scenarioInstructions = SCENARIO_INSTRUCTIONS[archetype] || [];
-  scenarioInstructions.forEach((instruction) => {
-    urls.push(instruction.indexOf('https://') === 0 ? instruction : GH_AW_INSTRUCTIONS_BASE + instruction);
+function instructionUrls(patterns, archetype) {
+  const generation = generationModel(patterns);
+  const definition = workflowDefinition(patterns, archetype);
+  const files = (generation.default_instructions || []).concat(definition.instructions || []);
+  return files.map((instruction) => {
+    return instruction.indexOf('https://') === 0
+      ? instruction
+      : generation.instruction_base_url + instruction;
   });
-  return urls;
 }
 
 function sampleWorkflowFile(answers, patterns, label) {
@@ -355,89 +252,57 @@ function sampleWorkflowFile(answers, patterns, label) {
   return `${frontmatter  }Let the agent generate the detailed ${  label.toLowerCase()  } prompt for this repository...\n`;
 }
 
-const MULTI_WORKFLOW_ARCHETYPES = {
-  'linter-workflows': ['linter-miner', 'linter-refiner', 'linter-applier']
-};
-
 function requestedWorkflows(answers, patterns) {
-  const archetypes = MULTI_WORKFLOW_ARCHETYPES[answers.archetype];
-  if (!archetypes) {
-    const arch = getArchetype(patterns, answers.archetype);
-    return [{
-      answers,
-      archetype: arch,
-      label: arch ? arch.label : 'Custom Workflow',
-      description: arch ? arch.description : answers.customDescription || 'Custom agentic workflow'
-    }];
-  }
-  return archetypes.map((archetype) => {
-    const arch = getArchetype(patterns, archetype);
+  const definition = workflowDefinition(patterns, answers.archetype);
+  const archetypes = definition.workflows || [answers.archetype];
+  return archetypes.map((archetypeId) => {
+    const archetype = getArchetype(patterns, archetypeId) || {};
     return {
       answers: Object.assign({}, answers, {
-        archetype,
-        needsData: inferNeedsPreSteps(archetype)
+        archetype: archetypeId,
+        needsData: archetypeId === answers.archetype
+          ? answers.needsData
+          : inferNeedsPreSteps(archetypeId, patterns)
       }),
-      archetype: arch,
-      label: arch ? arch.label : 'Custom Workflow',
-      description: arch ? arch.description : answers.customDescription || 'Custom agentic workflow'
+      label: archetype.label || 'Custom Workflow',
+      description: archetype.description || answers.customDescription || 'Custom agentic workflow'
     };
   });
 }
 
+function readableTriggers(answers, patterns) {
+  return answers.triggers.map((trigger) => {
+    const definition = triggerDefinition(patterns, answers.archetype, trigger);
+    return definition && definition.description ? definition.description : trigger;
+  }).join(', ');
+}
+
+function readableOutputs(answers, patterns) {
+  return answers.outputs.map((output) => {
+    const definition = outputDefinition(patterns, output);
+    return definition && definition.description ? definition.description : output;
+  }).join(', ');
+}
+
 export function generateAgentPrompt(answers, patterns) {
-  const arch = getArchetype(patterns, answers.archetype);
+  const archetype = getArchetype(patterns, answers.archetype) || {};
   const name = workflowName(answers.archetype, answers.customDescription);
-  const desc = arch ? arch.description : answers.customDescription || 'Custom agentic workflow';
-  const engine = normalizeEngine(answers.engine);
-  const inferred = inferCapabilities(answers.archetype);
+  const description = answers.archetype === 'custom' && answers.customDescription
+    ? answers.customDescription
+    : archetype.description || answers.customDescription || 'Custom agentic workflow';
   const workflows = requestedWorkflows(answers, patterns);
   const multiple = workflows.length > 1;
-
-  const triggersReadable = answers.triggers.map((t) => {
-    const map = {
-      'issues': 'when a new issue is opened',
-      'pull_request': (answers.archetype === 'pr-review' || answers.archetype === 'skill-pr-reviewer')
-        ? 'when a pull request is marked ready for review'
-        : 'when a pull request is opened',
-      'pull_request_ready_for_review': 'when a pull request is marked ready for review',
-      'schedule': 'on a daily/weekly schedule',
-      'slash_command': 'on slash commands in comments',
-      'label_command': 'when a matching label is added',
-      'issue_comment': 'on slash commands in comments',
-      'push': 'on push to main'
-    };
-    return map[t] || t;
-  }).join(', ');
-
-  const outputsReadable = answers.outputs.map((o) => {
-    const map = {
-      'add-comment': 'add comments on issues/PRs',
-      'add-labels': 'add labels',
-      'create-issue': 'create new issues',
-      'create-pull-request': 'open pull requests',
-      'create-pull-request-review-comment': 'add review comments on pull request diffs',
-      // Keep older stored wizard values readable for users with saved selections.
-      'comments': 'add comments on issues/PRs',
-      'labels': 'add labels',
-      'new-issues': 'create new issues',
-      'pull-requests': 'open pull requests',
-      'commits': 'commit file changes'
-    };
-    return map[o] || o;
-  }).join(', ');
 
   let prompt = `Create a draft PR that adds ${
     multiple ? `${workflows.length} agentic workflows` : 'an agentic workflow'
   } using these instructions:\n`;
   const instructionSet = new Set();
   workflows.forEach((workflow) => {
-    instructionUrls(workflow.answers.archetype).forEach((url) => { instructionSet.add(url); });
+    instructionUrls(patterns, workflow.answers.archetype).forEach((url) => instructionSet.add(url));
   });
-  instructionSet.forEach((url) => {
-    prompt += `- ${  url  }\n`;
-  });
+  instructionSet.forEach((url) => { prompt += `- ${  url  }\n`; });
   prompt += '\n';
-  prompt += `The purpose of ${  multiple ? 'the workflows' : 'the workflow'  } is: ${  desc  }\n\n`;
+  prompt += `The purpose of ${  multiple ? 'the workflows' : 'the workflow'  } is: ${  description  }\n\n`;
   prompt += `First, analyze this repository so the ${  multiple ? 'workflows are' : 'workflow is'  } optimized for it:\n`;
   prompt += '- Read the README, AGENTS.md (and any CONTRIBUTING or docs files) to understand the project purpose and conventions\n';
   prompt += '- Identify the languages, package managers, build/test/lint commands and CI setup actually used\n';
@@ -447,56 +312,39 @@ export function generateAgentPrompt(answers, patterns) {
   if (multiple) {
     prompt += `- Generate exactly ${  workflows.length  } independent workflow files:\n`;
     workflows.forEach((workflow) => {
-      prompt += `  - ${  workflow.label  }: name it ${ 
-        workflowName(workflow.answers.archetype, workflow.answers.customDescription) 
-        } and use it to ${  workflow.description.charAt(0).toLowerCase()  }${workflow.description.slice(1)  }\n`;
+      prompt += `  - ${  workflow.label  }: name it ${
+        workflowName(workflow.answers.archetype, workflow.answers.customDescription)
+      } and use it to ${  workflow.description.charAt(0).toLowerCase()  }${workflow.description.slice(1)  }\n`;
     });
   } else {
     prompt += `- Name: ${  name  }\n`;
   }
-  prompt += `- Engine: ${  engine  }\n`;
-  prompt += `- Triggers: ${  triggersReadable  }\n`;
-  prompt += `- Allowed outputs: ${  outputsReadable  }\n`;
+  prompt += `- Engine: ${  normalizeEngine(answers.engine)  }\n`;
+  prompt += `- Triggers: ${  readableTriggers(answers, patterns)  }\n`;
+  prompt += `- Allowed outputs: ${  readableOutputs(answers, patterns)  }\n`;
   prompt += multiple
     ? '- Save each workflow in its own appropriately named .github/workflows/*.md file\n'
     : '- Choose an appropriate kebab-case filename for the new .github/workflows/*.md file\n';
-
-  // Auto-inferred capabilities communicated to the agent
-  if (answers.needsData) {
-    prompt += '- Add a pre-step to fetch external data before the agent runs\n';
-  }
-  const extras = answers.extras || [];
-  if (extras.indexOf('memory') !== -1) {
-    prompt += '- Add cache-memory tool for persistent memory across runs\n';
-  }
-  if (extras.indexOf('charts') !== -1) {
-    prompt += '- Add upload-assets safe output to publish generated charts\n';
-  }
-  if (inferred.browser || extras.indexOf('browser') !== -1) {
-    prompt += '- Enable Playwright CLI for browser automation\n';
-  }
-
+  if (answers.needsData) prompt += '- Add a pre-step to fetch external data before the agent runs\n';
+  selectedExtras(answers, patterns).forEach((extra) => {
+    if (extra.requirement) prompt += `- ${  extra.requirement  }\n`;
+  });
   prompt += multiple
     ? '\nAll workflows should be saved as separate Markdown files in .github/workflows/.'
     : '\nThe workflow should be saved as a new Markdown file in .github/workflows/.';
   prompt += '\nCreate a pull request with the generated agentic workflow files.';
-
-  // Inline generated workflow markdown as starting-point suggestions.
   prompt += `\n\n## Suggested workflow ${  multiple ? 'files' : 'file'  }\n\n`;
   if (!multiple) {
     prompt += 'Use this generated draft as a starting point for the new `.github/workflows/*.md` file, ' +
       'adapting it to the repository as needed:\n\n';
   }
   workflows.forEach((workflow) => {
-    if (multiple) {
-      prompt += `### ${  workflow.label  }\n\n`;
-    }
+    if (multiple) prompt += `### ${  workflow.label  }\n\n`;
     prompt += `${fencedBlock(
       sampleWorkflowFile(workflow.answers, patterns, workflow.label),
       'markdown'
     )  }\n`;
     if (multiple) prompt += '\n';
   });
-
   return prompt;
 }

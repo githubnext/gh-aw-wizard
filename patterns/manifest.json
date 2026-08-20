@@ -27,6 +27,7 @@
     "content-moderation",
     "security-scanner"
   ],
+  "workflow_generation": "workflow-generation.json",
   "anti_patterns": [
     {
       "pattern": "documentation-audit",
