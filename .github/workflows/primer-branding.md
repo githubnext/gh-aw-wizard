@@ -59,7 +59,7 @@ The `primer-brand` MCP server exposes the official Primer brand guidance (colors
 
 Review `src/index.html`, `src/styles/style.css`, and the markup produced in `src/js/` for deviations from the guidance you retrieved, focusing on:
 
-- **Color**: hard-coded hex values that should use Primer CSS variables or brand tokens; gradients and accent colors that are off-brand; light/dark mode parity.
+- **Color**: hard-coded hex values that should use Primer CSS variables or brand tokens; gradients and accent colors that are off-brand, mix unrelated hues, or fail contrast; light/dark mode parity.
 - **Typography**: font families, weights, sizes, and line heights that diverge from the brand type scale.
 - **Spacing and layout**: ad-hoc pixel values where Primer spacing tokens exist.
 - **Voice and tone**: headings, button labels, and helper text that do not match brand voice guidance.
@@ -69,7 +69,7 @@ Prioritize findings: fix the highest-impact, lowest-risk deviations first. A foc
 
 ### Step 3: Apply fixes
 
-1. Make the changes in the existing files. Prefer Primer CSS variables and tokens over new hard-coded values.
+1. Make the changes in the existing files. Prefer Primer CSS variables and tokens over new hard-coded values. Do not flatten every gradient or highlight by default: tasteful shine is allowed when every color comes from Primer tokens, Primer CSS variables, or existing site accent variables in one aligned color family, and it passes contrast.
 2. Run `npm test` and `npm run build`. Both must pass before you open a pull request.
 3. If a fix breaks tests or the build and you cannot resolve it cleanly, revert that fix and describe it in the PR body as a follow-up instead.
 

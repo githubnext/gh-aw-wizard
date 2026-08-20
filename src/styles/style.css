@@ -925,7 +925,7 @@ a:hover {
   height: 3.75rem;
   place-items: center;
   color: var(--control-fg-on-emphasis);
-  background: var(--agent-purple);
+  background: linear-gradient(135deg, var(--agent-purple), var(--agent-purple-dark));
   border-radius: var(--radius-lg);
   animation: copyModalIcon 0.6s 0.12s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
@@ -998,7 +998,7 @@ a:hover {
   width: 100%;
   justify-content: center;
   color: var(--control-fg-on-emphasis);
-  background: var(--agent-purple);
+  background: linear-gradient(135deg, var(--agent-purple), var(--agent-purple-dark));
   border-color: var(--agent-purple-dark);
 }
 .copy-modal-action:hover {
