@@ -107,7 +107,10 @@ function outputDefinition(patterns, output) {
   const original = definitions[output];
   if (!original) return null;
   const resolved = original.alias ? definitions[original.alias] : original;
-  return resolved ? Object.assign({}, resolved, original) : null;
+  if (!resolved) return null;
+  const definition = Object.assign({}, resolved, original);
+  delete definition.alias;
+  return definition;
 }
 
 function selectedExtras(answers, patterns) {
