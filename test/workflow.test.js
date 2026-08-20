@@ -140,7 +140,8 @@ describe('inferCapabilities', () => {
       preSteps: true,
       bash: false,
       githubToolsets: true,
-      browser: false
+      browser: false,
+      network: false
     });
   });
 
@@ -148,12 +149,20 @@ describe('inferCapabilities', () => {
     expect(inferCapabilities('code-improvement').bash).toBe(true);
   });
 
+  it('enables network access for dependency-monitor so upstream release data can be fetched', () => {
+    const caps = inferCapabilities('dependency-monitor');
+    expect(caps.network).toBe(true);
+    expect(caps.bash).toBe(true);
+    expect(caps.preSteps).toBe(true);
+  });
+
   it('returns no capabilities for unknown archetypes', () => {
     expect(inferCapabilities('custom')).toEqual({
       preSteps: false,
       bash: false,
       githubToolsets: false,
-      browser: false
+      browser: false,
+      network: false
     });
   });
 
@@ -162,7 +171,8 @@ describe('inferCapabilities', () => {
       preSteps: false,
       bash: false,
       githubToolsets: true,
-      browser: false
+      browser: false,
+      network: false
     });
   });
 
@@ -172,19 +182,22 @@ describe('inferCapabilities', () => {
       preSteps: true,
       bash: true,
       githubToolsets: true,
-      browser: false
+      browser: false,
+      network: false
     });
     expect(inferCapabilities('linter-miner')).toEqual({
       preSteps: true,
       bash: true,
       githubToolsets: true,
-      browser: false
+      browser: false,
+      network: false
     });
     expect(inferCapabilities('linter-workflows')).toEqual({
       preSteps: true,
       bash: true,
       githubToolsets: true,
-      browser: false
+      browser: false,
+      network: false
     });
     expect(inferCapabilities('linter-refiner').bash).toBe(true);
     expect(inferCapabilities('linter-applier').bash).toBe(true);
@@ -196,19 +209,22 @@ describe('inferCapabilities', () => {
       preSteps: false,
       bash: true,
       githubToolsets: true,
-      browser: true
+      browser: true,
+      network: false
     });
     expect(inferCapabilities('user-simulator')).toEqual({
       preSteps: false,
       bash: false,
       githubToolsets: true,
-      browser: false
+      browser: false,
+      network: false
     });
     expect(inferCapabilities('performance-nut')).toEqual({
       preSteps: false,
       bash: true,
       githubToolsets: false,
-      browser: false
+      browser: false,
+      network: false
     });
   });
 });
@@ -279,6 +295,14 @@ describe('generateWorkflowFile', () => {
     // triggering issue — it should not be left with the default (broader) token scope.
     const md = generateWorkflowFile(answers(), patterns);
     expect(md).toContain('permissions:\n  contents: read\n');
+  });
+
+  it('adds a network allowlist for dependency-monitor so upstream release data can be fetched', () => {
+    const md = generateWorkflowFile(
+      answers({ archetype: 'dependency-monitor', triggers: ['schedule'], outputs: ['create-issue', 'create-pull-request'] }),
+      patterns
+    );
+    expect(md).toContain('network:\n  allowed:\n    - defaults\n    - github\n');
   });
 
   it('raises the timeout when a trigger requires more time', () => {

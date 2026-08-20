@@ -40,12 +40,14 @@ export function inferNeedsPreSteps(archetype) {
 
 export function inferCapabilities(archetype) {
   // Auto-infer what tools/capabilities the archetype needs
-  const caps = { preSteps: false, bash: false, githubToolsets: false, browser: false };
+  const caps = { preSteps: false, bash: false, githubToolsets: false, browser: false, network: false };
   switch (archetype) {
     case 'status-report':
       caps.preSteps = true; caps.githubToolsets = true; break;
     case 'dependency-monitor':
-      caps.preSteps = true; caps.bash = true; break;
+      // Dependency monitoring requires fetching upstream release/changelog data
+      // (npm, PyPI, GitHub releases, etc.) — needs egress beyond the default-deny sandbox.
+      caps.preSteps = true; caps.bash = true; caps.network = true; break;
     case 'code-improvement':
     case 'documentation-updater':
     case 'performance-nut':
@@ -203,6 +205,12 @@ export function generateWorkflowFile(answers, patterns) {
     // permissions explicitly rather than relying on the default GITHUB_TOKEN scope.
     fm += 'permissions:\n';
     BASH_ONLY_PERMISSIONS.forEach((p) => { fm += `  ${  p  }: read\n`; });
+  }
+  if (inferred.network) {
+    // Default-deny network sandbox blocks external egress unless explicitly allowed —
+    // archetypes that fetch upstream data (e.g. dependency-monitor) need this declared,
+    // otherwise the agent silently has no access to the data it's supposed to check.
+    fm += 'network:\n  allowed:\n    - defaults\n    - github\n';
   }
   fm += `engine: ${  engine  }\n`;
 
