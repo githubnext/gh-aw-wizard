@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { fileURLToPath } from 'node:url';
 
-import { getArchetype, getRecommendedConfiguration } from '../src/js/patterns.js';
+import {
+  getArchetype,
+  getRecommendedConfiguration,
+  getWorkflowDefinition,
+  getWorkflowGeneration,
+  loadPatterns
+} from '../src/js/patterns.js';
 import { loadPatternsFromDir } from '../src/js/patterns-node.js';
 import { nextStepsHtml } from '../src/js/next-steps.js';
 
@@ -12,6 +18,68 @@ describe('getArchetype', () => {
 
   it('finds an archetype by id', () => {
     expect(getArchetype(patterns, 'pr-review').label).toBe('PR Review');
+  });
+
+  describe('workflow generation model', () => {
+    it('loads the runtime generation data referenced by the manifest', () => {
+      expect(getWorkflowGeneration(generatedPatterns)).not.toBeNull();
+      expect(getWorkflowDefinition(generatedPatterns, 'status-report')).toMatchObject({
+        icon: 'graph',
+        capabilities: {
+          pre_steps: true,
+          github_toolsets: true
+        }
+      });
+    });
+
+    it('defines generation metadata for every archetype', () => {
+      generatedPatterns.archetypes.forEach((archetype) => {
+        expect(
+          getWorkflowDefinition(generatedPatterns, archetype.id),
+          `missing workflow generation definition for ${archetype.id}`
+        ).not.toBeNull();
+      });
+    });
+
+    it('loads archetypes and workflow generation data from the manifest at runtime', async () => {
+      const originalFetch = globalThis.fetch;
+      const requestedUrls = [];
+      globalThis.fetch = async (url) => {
+        requestedUrls.push(url);
+        const responses = {
+          '/patterns/manifest.json': {
+            archetypes: ['example'],
+            workflow_generation: 'workflow-generation.json'
+          },
+          '/patterns/archetypes/example.json': {
+            id: 'example',
+            label: 'Example'
+          },
+          '/patterns/workflow-generation.json': {
+            archetypes: {
+              example: {
+                capabilities: { bash: true }
+              }
+            }
+          }
+        };
+        return {
+          json: async () => responses[url]
+        };
+      };
+
+      try {
+        const loaded = await loadPatterns('/patterns/manifest.json');
+        expect(requestedUrls).toEqual([
+          '/patterns/manifest.json',
+          '/patterns/archetypes/example.json',
+          '/patterns/workflow-generation.json'
+        ]);
+        expect(getWorkflowDefinition(loaded, 'example').capabilities.bash).toBe(true);
+      } finally {
+        globalThis.fetch = originalFetch;
+      }
+    });
   });
 
   describe('curated archetypes', () => {

@@ -14,5 +14,8 @@ export async function loadPatternsFromDir(patternsDir) {
     const contents = await readFile(join(patternsDir, 'archetypes', `${id}.json`), 'utf8');
     return JSON.parse(contents);
   }));
-  return mergePatterns(manifest, archetypes);
+  const workflowGeneration = manifest.workflow_generation
+    ? JSON.parse(await readFile(join(patternsDir, manifest.workflow_generation), 'utf8'))
+    : null;
+  return mergePatterns(manifest, archetypes, workflowGeneration);
 }

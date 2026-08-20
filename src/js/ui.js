@@ -1,6 +1,10 @@
 // DOM wiring for the wizard UI.
 
-import { loadPatterns, getRecommendedConfiguration } from './patterns.js';
+import {
+  getWorkflowDefinition,
+  loadPatterns,
+  getRecommendedConfiguration
+} from './patterns.js';
 import {
   inferNeedsPreSteps,
   generateAgentPrompt
@@ -18,27 +22,6 @@ let copyFeedbackTimer = null;
 const TOTAL_STEPS = 6;
 const ACCORDION_OPEN_ANIMATION = 'accordionOpen 0.3s ease';
 const ACCORDION_OPEN_REVERSE_ANIMATION = 'accordionOpenReverse 0.3s ease';
-const ARCHETYPE_ICON_BY_ID = {
-  'pr-review': 'eye',
-  'issue-triage': 'tag',
-  'code-improvement': 'tools',
-  'status-report': 'graph',
-  'dependency-monitor': 'package',
-  'documentation-updater': 'book',
-  'content-moderation': 'shield',
-  'accessibility-expert': 'eye',
-  'performance-nut': 'graph',
-  'user-simulator': 'device-desktop',
-  'daily-test-improver': 'check',
-  'repo-maintainer': 'tools',
-  'linter-workflows': 'tools',
-  'linter-miner': 'tools',
-  'linter-refiner': 'tools',
-  'linter-applier': 'tools',
-  'skill-pr-reviewer': 'eye',
-  'security-scanner': 'shield',
-  custom: 'zap'
-};
 
 export function initWizard() {
   initTheme();
@@ -61,8 +44,9 @@ export function initWizard() {
   initLanding(revealWhatPane);
 }
 
-function archetypeIconId(archetypeId) {
-  return ARCHETYPE_ICON_BY_ID[archetypeId] || 'tools';
+function archetypeIconId(archetypeId, data) {
+  const definition = getWorkflowDefinition(data, archetypeId);
+  return definition && definition.icon ? definition.icon : 'tools';
 }
 
 function archetypeSort(a, b) {
@@ -107,7 +91,7 @@ export function renderArchetypeOptions(data) {
     iconSvg.setAttribute('class', 'octicon');
     iconSvg.setAttribute('aria-hidden', 'true');
     const iconUse = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-    iconUse.setAttribute('href', `#octicon-${archetypeIconId(archetype.id)}`);
+    iconUse.setAttribute('href', `#octicon-${archetypeIconId(archetype.id, data)}`);
     iconSvg.appendChild(iconUse);
     icon.appendChild(iconSvg);
 
@@ -611,7 +595,7 @@ function gatherAnswers() {
     outputs,
     engine: (document.querySelector('input[name="engine"]:checked') || {}).value || null,
     extras,
-    needsData: inferNeedsPreSteps(archetypeId)
+    needsData: inferNeedsPreSteps(archetypeId, patterns)
   };
 }
 

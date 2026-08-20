@@ -1,90 +1,23 @@
 import { describe, expect, it } from 'vitest';
+import { fileURLToPath } from 'node:url';
 
 import {
-  buildTriggerYaml,
+  buildTriggerYaml as buildTriggerYamlFromPatterns,
   fencedBlock,
   generateAgentPrompt,
   generateWorkflowFile,
-  inferCapabilities,
-  inferNeedsPreSteps,
+  inferCapabilities as inferCapabilitiesFromPatterns,
+  inferNeedsPreSteps as inferNeedsPreStepsFromPatterns,
   workflowName
 } from '../src/js/workflow.js';
 import { registerDefinitionEngines } from '../src/js/engines.js';
+import { loadPatternsFromDir } from '../src/js/patterns-node.js';
 
-const patterns = {
-  archetypes: [
-    {
-      id: 'issue-triage',
-      label: 'Issue Triage',
-      description: 'Classify and label incoming issues',
-      timeout_minutes: 15
-    },
-    {
-      id: 'status-report',
-      label: 'Status Report',
-      description: 'Summarize repository activity',
-      timeout_minutes: 20
-    },
-    {
-      id: 'pr-review',
-      label: 'PR Review',
-      description: 'Review pull requests for quality and issues',
-      timeout_minutes: 30
-    },
-    {
-      id: 'accessibility-expert',
-      label: 'Web Accessibility Expert',
-      description: 'Audit web interfaces for accessibility barriers'
-    },
-    {
-      id: 'performance-nut',
-      label: 'Performance Nut',
-      description: 'Find and fix one measurable performance bottleneck'
-    },
-    {
-      id: 'user-simulator',
-      label: 'User Simulator',
-      description: 'Simulate representative users and evaluate their workflows'
-    },
-    {
-      id: 'daily-test-improver',
-      label: 'Daily Test Improver',
-      description: 'Add high-value tests and improve test quality'
-    },
-    {
-      id: 'repo-maintainer',
-      label: 'Repo Maintainer',
-      description: 'Proactively triage, fix, and maintain a repository'
-    },
-    {
-      id: 'linter-workflows',
-      label: 'Linter Workflows',
-      description: 'Create workflows to mine, refine, and apply lint rules'
-    },
-    {
-      id: 'linter-miner',
-      label: 'Linter Miner',
-      description: 'Discover recurring defects and create custom lint rules'
-    },
-    {
-      id: 'linter-refiner',
-      label: 'Linter Refiner',
-      description: 'Improve lint rule accuracy, diagnostics, and performance'
-    },
-    {
-      id: 'linter-applier',
-      label: 'Linter Applier',
-      description: 'Fix a focused group of existing lint findings'
-    },
-    {
-      id: 'skill-pr-reviewer',
-      label: 'Skill PR Reviewer',
-      description: 'Review pull requests with installed expert skills'
-    }
-  ],
-  config_defaults: {
-    timeout_by_trigger: { schedule: 45 }
-  }
+const patterns = await loadPatternsFromDir(fileURLToPath(new URL('../patterns', import.meta.url)));
+const inferCapabilities = (archetype) => inferCapabilitiesFromPatterns(archetype, patterns);
+const inferNeedsPreSteps = (archetype) => inferNeedsPreStepsFromPatterns(archetype, patterns);
+const buildTriggerYaml = (triggers, commandName, archetype) => {
+  return buildTriggerYamlFromPatterns(triggers, commandName, archetype, patterns);
 };
 
 function answers(overrides) {
@@ -281,11 +214,11 @@ describe('generateWorkflowFile', () => {
     const md = generateWorkflowFile(answers(), patterns);
     expect(md.startsWith('---\n')).toBe(true);
     expect(md).toContain('name: issue-triage\n');
-    expect(md).toContain('description: Classify and label incoming issues\n');
+    expect(md).toContain('description: Classify and label new issues\n');
     expect(md).toContain('engine: copilot\n');
     expect(md).toContain('safe-outputs:\n  add-labels:\n  add-comment:\n');
     expect(md).not.toContain('tools:\n');
-    expect(md).toContain('timeout-minutes: 15\n');
+    expect(md).toContain('timeout-minutes: 30\n');
     expect(md).toContain('# Issue Triage');
   });
 
@@ -306,9 +239,19 @@ describe('generateWorkflowFile', () => {
   });
 
   it('raises the timeout when a trigger requires more time', () => {
+    const configuredPatterns = {
+      ...patterns,
+      config_defaults: {
+        ...patterns.config_defaults,
+        timeout_by_trigger: {
+          ...patterns.config_defaults.timeout_by_trigger,
+          schedule: 45
+        }
+      }
+    };
     const md = generateWorkflowFile(
       answers({ triggers: ['schedule', 'push'] }),
-      patterns
+      configuredPatterns
     );
     expect(md).toContain('timeout-minutes: 45\n');
   });
@@ -363,14 +306,25 @@ describe('generateWorkflowFile', () => {
     expect(md).not.toContain('## Project Context');
   });
 
-  it('falls back to a custom body and default timeout without patterns', () => {
-    const md = generateWorkflowFile(
+  it('reports when runtime workflow pattern data is unavailable', () => {
+    expect(() => generateWorkflowFile(
       answers({ archetype: 'custom', customDescription: 'Do a thing' }),
       null
-    );
-    expect(md).toContain('# Custom Workflow');
-    expect(md).toContain('Your job is: Do a thing');
-    expect(md).toContain('timeout-minutes: 30\n');
+    )).toThrow('Workflow generation pattern data is unavailable.');
+  });
+
+  it('renders capabilities and body content from the workflow generation model', () => {
+    const configuredPatterns = structuredClone(patterns);
+    configuredPatterns.workflow_generation.archetypes['issue-triage'] = {
+      capabilities: { bash: true },
+      body: ['# {{label}}', '', 'Configured entirely in JSON']
+    };
+
+    const md = generateWorkflowFile(answers(), configuredPatterns);
+
+    expect(md).toContain('  bash: true\n');
+    expect(md).toContain('# Issue Triage\n\nConfigured entirely in JSON\n');
+    expect(md).not.toContain('You are an **issue triage specialist**');
   });
 
   it('rejects direct file generation for a multi-workflow archetype', () => {

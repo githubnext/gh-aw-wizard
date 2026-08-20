@@ -448,6 +448,7 @@ output = {
 manifest = {
     "metadata": output["metadata"],
     "archetypes": [archetype["id"] for archetype in archetypes],
+    "workflow_generation": "workflow-generation.json",
     "anti_patterns": output["anti_patterns"],
     "config_defaults": output["config_defaults"],
     "trigger_combos": output["trigger_combos"],
