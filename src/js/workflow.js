@@ -287,6 +287,22 @@ function readableOutputs(answers, patterns) {
   }).join(', ');
 }
 
+// Surface each archetype's own "DO NOT" tips (from patterns/archetypes/*.json) as
+// explicit behavioral constraints in the generated prompt. gh-aw's research findings
+// show workflows with explicit DO NOT instructions are 61% more likely to be healthy,
+// but that guidance previously stayed in the pattern library and never reached the
+// prompt the downstream agent actually follows.
+function doNotConstraints(workflows, patterns) {
+  const constraints = [];
+  workflows.forEach((workflow) => {
+    const archetype = getArchetype(patterns, workflow.answers.archetype) || {};
+    (archetype.tips || []).forEach((tip) => {
+      if (/do not/i.test(tip) && constraints.indexOf(tip) === -1) constraints.push(tip);
+    });
+  });
+  return constraints;
+}
+
 export function generateAgentPrompt(answers, patterns) {
   const archetype = getArchetype(patterns, answers.archetype) || {};
   const name = workflowName(answers.archetype, answers.customDescription);
@@ -332,6 +348,12 @@ export function generateAgentPrompt(answers, patterns) {
   selectedExtras(answers, patterns).forEach((extra) => {
     if (extra.requirement) prompt += `- ${  extra.requirement  }\n`;
   });
+  const constraints = doNotConstraints(workflows, patterns);
+  if (constraints.length) {
+    prompt += `- Include explicit boundary constraints in the workflow prompt, for example: ${
+      constraints.join('; ')
+    }\n`;
+  }
   prompt += multiple
     ? '\nAll workflows should be saved as separate Markdown files in .github/workflows/.'
     : '\nThe workflow should be saved as a new Markdown file in .github/workflows/.';
