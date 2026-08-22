@@ -431,6 +431,12 @@ describe('generateAgentPrompt', () => {
     expect(prompt).toContain('- Engine: claude\n');
   });
 
+  it('surfaces the archetype DO NOT tip as an explicit boundary constraint', () => {
+    const prompt = generateAgentPrompt(answers({ archetype: 'issue-triage' }), patterns);
+    expect(prompt).toContain('Include explicit boundary constraints in the workflow prompt');
+    expect(prompt).toContain('Do NOT close issues');
+  });
+
   it('generates all grouped linter workflows in one prompt', () => {
     const prompt = generateAgentPrompt(answers({ archetype: 'linter-workflows' }), patterns);
 
