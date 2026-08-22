@@ -51,7 +51,8 @@
   "tips": [
     "Use schedule triggers for repeatable reporting",
     "Add pre-steps to run tests/linters before the agent starts \u2014 validates baseline",
-    "Avoid pr-fix and ci-doctor templates \u2014 both have <20% success in practice"
+    "Avoid pr-fix and ci-doctor templates \u2014 both have <20% success in practice",
+    "Use DO NOT constraints to keep changes scoped \u2014 avoid touching unrelated files, CI/workflow configs, or secrets"
   ],
   "anti_patterns": [
     "ci-doctor",

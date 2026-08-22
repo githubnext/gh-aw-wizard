@@ -51,7 +51,8 @@
   "tips": [
     "Pre-fetch data in a steps: block \u2014 #1 predictor of workflow health",
     "Use schedule triggers for repeatable reporting",
-    "Keep prompts focused on one report \u2014 multi-source reports need pre-steps"
+    "Keep prompts focused on one report \u2014 multi-source reports need pre-steps",
+    "Use DO NOT constraints to keep the report read-only \u2014 do NOT modify code, files, or existing issues"
   ],
   "anti_patterns": [
     "daily-repo-status",
