@@ -437,6 +437,22 @@ describe('generateAgentPrompt', () => {
     expect(prompt).toContain('Do NOT close issues');
   });
 
+  it('surfaces a DO NOT boundary constraint for the highest-risk code-improvement archetype', () => {
+    // code-improvement has the lowest historical success rate (37%) and opens code-modifying
+    // PRs autonomously, so it must never generate a prompt with zero scope-limiting guardrails.
+    const prompt = generateAgentPrompt(answers({ archetype: 'code-improvement' }), patterns);
+    expect(prompt).toContain('Include explicit boundary constraints in the workflow prompt');
+    expect(prompt).toContain('DO NOT constraints to keep changes scoped');
+  });
+
+  it('surfaces a DO NOT boundary constraint for dependency-monitor and status-report', () => {
+    const depPrompt = generateAgentPrompt(answers({ archetype: 'dependency-monitor' }), patterns);
+    expect(depPrompt).toContain('Include explicit boundary constraints in the workflow prompt');
+
+    const reportPrompt = generateAgentPrompt(answers({ archetype: 'status-report' }), patterns);
+    expect(reportPrompt).toContain('Include explicit boundary constraints in the workflow prompt');
+  });
+
   it('generates all grouped linter workflows in one prompt', () => {
     const prompt = generateAgentPrompt(answers({ archetype: 'linter-workflows' }), patterns);
 
