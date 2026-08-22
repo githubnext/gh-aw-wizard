@@ -26,7 +26,8 @@
   "tips": [
     "Scope analysis to a bounded recent window (e.g. last 3 days of commits) rather than the whole history",
     "Report findings as code-scanning alerts, not issues, so they surface in the Security tab",
-    "Call noop when the scan is clean instead of leaving no output"
+    "Call noop when the scan is clean instead of leaving no output",
+    "Add skip-if-match to the schedule trigger and expires to create-issue so scheduled runs don't reopen a duplicate finding every day"
   ],
   "anti_patterns": []
 }

@@ -53,7 +53,8 @@
   "tips": [
     "Use schedule triggers for reliable periodic checks",
     "Include a checklist of specific dependencies to monitor \u2014 don't leave it open-ended",
-    "Enable network access for fetching upstream release data"
+    "Enable network access for fetching upstream release data",
+    "Add skip-if-match to the schedule trigger and expires to create-issue so scheduled runs don't reopen a duplicate finding every day"
   ],
   "anti_patterns": [
     "docs-sync",
