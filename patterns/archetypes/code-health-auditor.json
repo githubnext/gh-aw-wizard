@@ -1,0 +1,33 @@
+{
+  "id": "code-health-auditor",
+  "label": "Code Health Auditor",
+  "description": "Find one structural code-health issue (oversized file, duplication) and report or fix it",
+  "success_rate": null,
+  "count": 0,
+  "recommended_triggers": [
+    {
+      "type": "schedule",
+      "config": {}
+    }
+  ],
+  "recommended_safe_outputs": [
+    "issues"
+  ],
+  "recommended_tools": [
+    "create-issue"
+  ],
+  "timeout_minutes": 15,
+  "prompt_style": "phase-based",
+  "size_range_bytes": [
+    3000,
+    8000
+  ],
+  "top_repos": [],
+  "tips": [
+    "Scope each run to one structural dimension (file size, duplication, complexity) rather than a broad audit",
+    "Use tracker-id and skip-if-match so a scheduled run doesn't reopen the same finding every day",
+    "Set expires on the created issue or pull request so stale findings don't accumulate",
+    "Assign findings to copilot so remediation can be picked up automatically"
+  ],
+  "anti_patterns": []
+}
