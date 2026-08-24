@@ -476,6 +476,19 @@ describe('generateAgentPrompt', () => {
     expect(reportPrompt).toContain('Include explicit boundary constraints in the workflow prompt');
   });
 
+  it('surfaces duplicate-prevention guidance for scheduled findings archetypes', () => {
+    // dependency-monitor creates issues/PRs on a daily schedule; without skip-if-match/expires
+    // guidance reaching the prompt, a downstream agent has no reason to prevent the same
+    // finding from reopening as a new issue every single day.
+    const depPrompt = generateAgentPrompt(answers({ archetype: 'dependency-monitor' }), patterns);
+    expect(depPrompt).toContain('Prevent duplicate scheduled findings');
+    expect(depPrompt).toContain('skip-if-match');
+
+    // status-report has no such tip and should not fabricate one.
+    const reportPrompt = generateAgentPrompt(answers({ archetype: 'status-report' }), patterns);
+    expect(reportPrompt).not.toContain('Prevent duplicate scheduled findings');
+  });
+
   it('generates all grouped linter workflows in one prompt', () => {
     const prompt = generateAgentPrompt(answers({ archetype: 'linter-workflows' }), patterns);
 
