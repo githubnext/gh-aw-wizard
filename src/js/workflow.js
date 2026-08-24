@@ -174,7 +174,14 @@ function toolsetsFor(patterns, archetype) {
 
 function lspFor(patterns, archetype, engine) {
   if (normalizeEngine(engine) !== 'copilot') return null;
-  return workflowDefinition(patterns, archetype).lsp || null;
+  const lsp = workflowDefinition(patterns, archetype).lsp || {};
+  const validLsp = {};
+  Object.entries(lsp).forEach(([language, config]) => {
+    if (config && config.command && config.fileExtensions && Object.keys(config.fileExtensions).length) {
+      validLsp[language] = config;
+    }
+  });
+  return Object.keys(validLsp).length ? validLsp : null;
 }
 
 export function generateWorkflowFile(answers, patterns) {
