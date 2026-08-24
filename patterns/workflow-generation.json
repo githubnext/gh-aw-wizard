@@ -770,6 +770,21 @@
         "bash": true,
         "github_toolsets": true
       },
+      "lsp": {
+        "typescript": {
+          "command": "typescript-language-server",
+          "args": [
+            "--stdio"
+          ],
+          "fileExtensions": {
+            ".ts": "typescript",
+            ".tsx": "typescriptreact",
+            ".js": "javascript",
+            ".cjs": "javascript",
+            ".mjs": "javascript"
+          }
+        }
+      },
       "instructions": [
         "maintainer.md"
       ],
@@ -778,7 +793,7 @@
         "",
         "You are a **code health auditor** for this repository.",
         "",
-        "Your job is to inspect one structural dimension of code health each run — file size, duplication, or complexity — and report the single most actionable finding.",
+        "Your job is to inspect one structural dimension of code health each run — file size, duplication, or complexity — and report the single most actionable finding. Use LSP symbol and reference analysis before text search when it is available.",
         "",
         "## Process",
         "",

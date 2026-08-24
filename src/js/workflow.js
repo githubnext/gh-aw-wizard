@@ -172,6 +172,11 @@ function toolsetsFor(patterns, archetype) {
     generation.default_github_toolsets || [];
 }
 
+function lspFor(patterns, archetype, engine) {
+  if (normalizeEngine(engine) !== 'copilot') return null;
+  return workflowDefinition(patterns, archetype).lsp || null;
+}
+
 export function generateWorkflowFile(answers, patterns) {
   generationModel(patterns);
   const definition = workflowDefinition(patterns, answers.archetype);
@@ -185,6 +190,7 @@ export function generateWorkflowFile(answers, patterns) {
   const safeOutputs = safeOutputsFor(answers, patterns);
   const inferred = inferCapabilities(answers.archetype, patterns);
   const extras = selectedExtras(answers, patterns);
+  const lsp = lspFor(patterns, answers.archetype, answers.engine);
 
   let timeout = archetype.timeout_minutes || 30;
   const timeoutByTrigger = patterns.config_defaults && patterns.config_defaults.timeout_by_trigger;
@@ -202,10 +208,23 @@ export function generateWorkflowFile(answers, patterns) {
   permissionsFor(patterns, answers.archetype, inferred).forEach((permission) => {
     frontmatter += `  ${  permission  }: read\n`;
   });
-  if (inferred.network) {
+  if (inferred.network || lsp) {
     frontmatter += 'network:\n  allowed:\n    - defaults\n    - github\n';
+    if (lsp) frontmatter += '    - node\n';
   }
   frontmatter += `engine: ${  normalizeEngine(answers.engine)  }\n`;
+  if (lsp) {
+    frontmatter += 'lsp:\n';
+    Object.entries(lsp).forEach(([language, config]) => {
+      frontmatter += `  ${  language  }:\n`;
+      frontmatter += `    command: ${  config.command  }\n`;
+      if (config.args && config.args.length) frontmatter += `    args: [${  config.args.map((arg) => `"${  arg  }"`).join(', ')  }]\n`;
+      frontmatter += '    fileExtensions:\n';
+      Object.entries(config.fileExtensions).forEach(([extension, id]) => {
+        frontmatter += `      "${  extension  }": ${  id  }\n`;
+      });
+    });
+  }
 
   if (inferred.bash || inferred.githubToolsets || inferred.browser || extras.some((extra) => extra.tool)) {
     frontmatter += 'tools:\n';
