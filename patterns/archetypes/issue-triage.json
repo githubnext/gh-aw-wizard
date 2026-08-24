@@ -2,15 +2,19 @@
   "id": "issue-triage",
   "label": "Issue Triage",
   "description": "Classify and label new issues",
-  "success_rate": 0.65,
-  "count": 98,
+  "success_rate": 0.81,
+  "count": 30,
   "recommended_triggers": [
     {
       "type": "issues",
       "config": {}
     },
     {
-      "type": "schedule",
+      "type": "roles",
+      "config": {}
+    },
+    {
+      "type": "reaction",
       "config": {}
     }
   ],
@@ -29,24 +33,24 @@
   ],
   "top_repos": [
     {
-      "repo": "appwrite/appwrite",
-      "stars": 57047
+      "repo": "githubnext/agentics",
+      "stars": 918
     },
     {
-      "repo": "moeru-ai/airi",
-      "stars": 48057
+      "repo": "primer/react",
+      "stars": 3891
     },
     {
-      "repo": "taosdata/TDengine",
-      "stars": 25068
+      "repo": "Azure/azure-sdk-for-java",
+      "stars": 2566
     },
     {
-      "repo": "czlonkowski/n8n-mcp",
-      "stars": 22721
+      "repo": "Azure/azure-sdk-for-go",
+      "stars": 1849
     },
     {
-      "repo": "prowler-cloud/prowler",
-      "stars": 14612
+      "repo": "dgreif/ring",
+      "stars": 1520
     }
   ],
   "tips": [
@@ -55,10 +59,6 @@
     "Use DO NOT constraints (e.g., 'Do NOT close issues') \u2014 61% more likely to be healthy"
   ],
   "anti_patterns": [
-    "issue-triage",
-    "issue-triage",
-    "marketplace-harness-gap-triage",
-    "issue-triage",
-    "issue-triage"
+    "gh-aw-pr-labeler"
   ]
 }

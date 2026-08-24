@@ -2,15 +2,11 @@
   "id": "status-report",
   "label": "Status Report",
   "description": "Generate periodic status summaries",
-  "success_rate": 0.52,
-  "count": 69,
+  "success_rate": 0.9,
+  "count": 10,
   "recommended_triggers": [
     {
       "type": "schedule",
-      "config": {}
-    },
-    {
-      "type": "issues",
       "config": {}
     }
   ],
@@ -28,20 +24,12 @@
   ],
   "top_repos": [
     {
-      "repo": "taosdata/TDengine",
-      "stars": 25068
-    },
-    {
-      "repo": "Z3Prover/z3",
-      "stars": 12567
-    },
-    {
       "repo": "github/gh-aw",
-      "stars": 4953
+      "stars": 4990
     },
     {
-      "repo": "Azure/git-ape",
-      "stars": 267
+      "repo": "githubnext/agentics",
+      "stars": 918
     },
     {
       "repo": "adoptium/adoptium",
@@ -53,11 +41,5 @@
     "Use schedule triggers for repeatable reporting",
     "Keep prompts focused on one report \u2014 multi-source reports need pre-steps"
   ],
-  "anti_patterns": [
-    "daily-repo-status",
-    "daily-repo-status",
-    "daily-repo-status",
-    "daily-repo-status",
-    "pbir-report-rules-check"
-  ]
+  "anti_patterns": []
 }

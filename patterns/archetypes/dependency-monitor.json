@@ -3,14 +3,18 @@
   "label": "Dependency Monitor",
   "description": "Track and update dependencies",
   "success_rate": 0.5,
-  "count": 55,
+  "count": 8,
   "recommended_triggers": [
+    {
+      "type": "issues",
+      "config": {}
+    },
     {
       "type": "schedule",
       "config": {}
     },
     {
-      "type": "issues",
+      "type": "push",
       "config": {}
     }
   ],
@@ -30,37 +34,33 @@
   ],
   "top_repos": [
     {
-      "repo": "mono/SkiaSharp",
-      "stars": 5546
-    },
-    {
       "repo": "github/gh-aw",
-      "stars": 4953
-    },
-    {
-      "repo": "dotnet/Open-XML-SDK",
-      "stars": 4583
-    },
-    {
-      "repo": "dotnet/arcade",
-      "stars": 727
+      "stars": 4990
     },
     {
       "repo": "OpenMS/OpenMS",
-      "stars": 611
+      "stars": 613
+    },
+    {
+      "repo": "YousefHadder/markdown-plus.nvim",
+      "stars": 286
+    },
+    {
+      "repo": "EvergineTeam/ImGui.Net",
+      "stars": 79
+    },
+    {
+      "repo": "EvergineTeam/RenderDoc.NET",
+      "stars": 27
     }
   ],
   "tips": [
     "Use schedule triggers for reliable periodic checks",
     "Include a checklist of specific dependencies to monitor \u2014 don't leave it open-ended",
-    "Enable network access for fetching upstream release data",
-    "Add skip-if-match to the schedule trigger and expires to create-issue so scheduled runs don't reopen a duplicate finding every day"
+    "Enable network access for fetching upstream release data"
   ],
   "anti_patterns": [
-    "docs-sync",
-    "skills-updater",
     "doc-sync",
-    "update-github-info",
-    "doc-sync"
+    "changelog-sync"
   ]
 }

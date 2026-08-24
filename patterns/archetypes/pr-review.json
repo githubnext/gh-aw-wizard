@@ -2,15 +2,19 @@
   "id": "pr-review",
   "label": "PR Review",
   "description": "Review pull requests for quality and issues",
-  "success_rate": 0.45,
-  "count": 74,
+  "success_rate": 0.41,
+  "count": 12,
   "recommended_triggers": [
     {
-      "type": "issues",
+      "type": "slash_command",
       "config": {}
     },
     {
-      "type": "pull_request",
+      "type": "pull_request_target",
+      "config": {}
+    },
+    {
+      "type": "roles",
       "config": {}
     }
   ],
@@ -28,24 +32,24 @@
   ],
   "top_repos": [
     {
-      "repo": "pydantic/pydantic-ai",
-      "stars": 19374
-    },
-    {
-      "repo": "dotnet/msbuild",
-      "stars": 5542
-    },
-    {
       "repo": "github/gh-aw",
-      "stars": 4953
+      "stars": 4990
     },
     {
-      "repo": "runhey/OnmyojiAutoScript",
-      "stars": 4746
+      "repo": "githubnext/agentics",
+      "stars": 918
     },
     {
-      "repo": "microsoft/apm",
-      "stars": 3565
+      "repo": "dotnet/macios",
+      "stars": 2897
+    },
+    {
+      "repo": "Azure/azure-sdk-for-go",
+      "stars": 1849
+    },
+    {
+      "repo": "drasi-project/drasi-platform",
+      "stars": 1245
     }
   ],
   "tips": [
@@ -54,10 +58,8 @@
     "Include DO NOT constraints to avoid false positive comments"
   ],
   "anti_patterns": [
-    "data-plane-api-review",
-    "mgmt-review",
     "pr-review",
-    "fix-review-comment",
-    "android-reviewer"
+    "macios-reviewer",
+    "pr-docs-reviewer"
   ]
 }

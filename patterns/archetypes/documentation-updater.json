@@ -2,11 +2,15 @@
   "id": "documentation-updater",
   "label": "Documentation Updater",
   "description": "Keep docs accurate and up-to-date",
-  "success_rate": 0.6,
-  "count": 25,
+  "success_rate": 1.0,
+  "count": 4,
   "recommended_triggers": [
     {
-      "type": "issues",
+      "type": "push",
+      "config": {}
+    },
+    {
+      "type": "permissions",
       "config": {}
     },
     {
@@ -28,24 +32,12 @@
   ],
   "top_repos": [
     {
-      "repo": "microsoft/hve-core",
-      "stars": 1347
+      "repo": "githubnext/agentics",
+      "stars": 918
     },
     {
       "repo": "OP5dev/TF-via-PR",
-      "stars": 335
-    },
-    {
-      "repo": "github/gh-aw-firewall",
-      "stars": 130
-    },
-    {
-      "repo": "AndreaGriffiths11/IssueCrush",
-      "stars": 17
-    },
-    {
-      "repo": "verkyyi/github-agent-runner",
-      "stars": 10
+      "stars": 338
     }
   ],
   "tips": [
@@ -53,11 +45,5 @@
     "Add pre-steps to validate docs build before the agent starts",
     "Use DO NOT constraints to prevent deleting existing content"
   ],
-  "anti_patterns": [
-    "update-docs",
-    "daily-doc-updater",
-    "daily-doc-updater",
-    "daily-doc-updater",
-    "daily-doc-updater"
-  ]
+  "anti_patterns": []
 }

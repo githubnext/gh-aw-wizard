@@ -2,15 +2,19 @@
   "id": "custom",
   "label": "Custom",
   "description": "Custom or uncategorized workflow",
-  "success_rate": 0.49,
-  "count": 416,
+  "success_rate": 0.57,
+  "count": 115,
   "recommended_triggers": [
     {
-      "type": "issues",
+      "type": "schedule",
       "config": {}
     },
     {
-      "type": "schedule",
+      "type": "slash_command",
+      "config": {}
+    },
+    {
+      "type": "reaction",
       "config": {}
     }
   ],
@@ -24,24 +28,24 @@
   ],
   "top_repos": [
     {
-      "repo": "github/spec-kit",
-      "stars": 130114
+      "repo": "github/gh-aw",
+      "stars": 4990
     },
     {
-      "repo": "OtterMind/Chat2DB",
-      "stars": 27971
+      "repo": "githubnext/agentics",
+      "stars": 918
     },
     {
-      "repo": "elastic/kibana",
-      "stars": 21249
+      "repo": "microsoft/gctoolkit",
+      "stars": 1299
     },
     {
-      "repo": "pydantic/pydantic-ai",
-      "stars": 19374
+      "repo": "drhelius/Gearboy",
+      "stars": 1192
     },
     {
-      "repo": "dotnet/runtime",
-      "stars": 18205
+      "repo": "benbalter/wordpress-static-site-exporter",
+      "stars": 1079
     }
   ],
   "tips": [
@@ -50,10 +54,10 @@
     "Use DO NOT constraints to bound agent behavior \u2014 61% more likely to be healthy"
   ],
   "anti_patterns": [
-    "documentation-audit",
-    "breaking-change-checker",
-    "agent-planner-staiot",
-    "validate-pr",
-    "planner"
+    "planner",
+    "q",
+    "keybot",
+    "release",
+    "gh-aw-plan"
   ]
 }

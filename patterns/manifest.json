@@ -1,70 +1,34 @@
 {
   "metadata": {
-    "generated_at": "2026-08-18T23:58:10.787155+00:00",
-    "source_repos": 518,
-    "active_workflows": 340,
-    "total_workflows": 819
+    "generated_at": "2026-08-24T09:27:10.139058Z",
+    "source_repos": 75,
+    "active_workflows": 62,
+    "total_workflows": 227
   },
   "archetypes": [
     "custom",
+    "code-improvement",
+    "status-report",
+    "pr-review",
+    "content-moderation",
+    "documentation-updater",
+    "issue-triage",
+    "dependency-monitor",
+    "daily-test-improver",
+    "repo-maintainer",
     "accessibility-expert",
     "performance-nut",
     "user-simulator",
-    "daily-test-improver",
-    "repo-maintainer",
     "linter-workflows",
     "linter-miner",
     "linter-refiner",
     "linter-applier",
     "skill-pr-reviewer",
-    "issue-triage",
     "issue-hierarchy-manager",
-    "code-improvement",
-    "pr-review",
-    "status-report",
-    "dependency-monitor",
-    "documentation-updater",
-    "content-moderation",
     "security-scanner"
   ],
   "workflow_generation": "workflow-generation.json",
   "anti_patterns": [
-    {
-      "pattern": "documentation-audit",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in Alvin-Wu-Garden/COBOL2SPEC"
-    },
-    {
-      "pattern": "data-plane-api-review",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in Azure/azure-rest-api-specs"
-    },
-    {
-      "pattern": "mgmt-review",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in Azure/azure-sdk-for-go"
-    },
-    {
-      "pattern": "docs-sync",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in Azure/typespec-azure"
-    },
-    {
-      "pattern": "skills-updater",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in C-Ross/LlamaOfFate"
-    },
-    {
-      "pattern": "breaking-change-checker",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in Canepro/pipelinehealer-demo"
-    },
     {
       "pattern": "pr-review",
       "success_rate": 0.0,
@@ -72,64 +36,10 @@
       "reason": "Very low success rate in CliMA/ClimaAtmos.jl"
     },
     {
-      "pattern": "doc-sync",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in DefaceRoot/agentic-documentation"
-    },
-    {
-      "pattern": "daily-repo-status",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in DoriniTT/PS-TEROS"
-    },
-    {
-      "pattern": "ci-doctor",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in EvergineTeam/CesiumC"
-    },
-    {
-      "pattern": "ci-doctor",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in EvergineTeam/Meshoptimizer.NET"
-    },
-    {
-      "pattern": "update-github-info",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in Josephine-LiMin/skills-agentic-workflows-that-read-the-room"
-    },
-    {
-      "pattern": "agent-planner-staiot",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in Karkina/TestAgentPlaywright"
-    },
-    {
-      "pattern": "fix-review-comment",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in Kawatan1927/cooking-planner"
-    },
-    {
-      "pattern": "validate-pr",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in LeMegaGeek/bgobs"
-    },
-    {
       "pattern": "planner",
       "success_rate": 0.0,
       "repos_seen": 1,
       "reason": "Very low success rate in MaggieAppleton/maggieappleton.com-V3"
-    },
-    {
-      "pattern": "docs-noob-tester",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in Michael-demo/github-adlc"
     },
     {
       "pattern": "q",
@@ -144,10 +54,100 @@
       "reason": "Very low success rate in NikiforovAll/keycloak-authorization-services-dotnet"
     },
     {
-      "pattern": "daily-repo-status",
+      "pattern": "doc-sync",
       "success_rate": 0.0,
       "repos_seen": 1,
-      "reason": "Very low success rate in Nithinlinga/spring-boot-demo-workflow"
+      "reason": "Very low success rate in OpenMS/OpenMS"
+    },
+    {
+      "pattern": "changelog-sync",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in OpenMS/OpenMS"
+    },
+    {
+      "pattern": "pr-fix",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in baizhiheizi/quill"
+    },
+    {
+      "pattern": "repo-assist",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in baizhiheizi/quill"
+    },
+    {
+      "pattern": "release",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in colindembovsky/cols-agent-tasks"
+    },
+    {
+      "pattern": "macios-reviewer",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in dotnet/macios"
+    },
+    {
+      "pattern": "pr-docs-reviewer",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in drasi-project/drasi-platform"
+    },
+    {
+      "pattern": "build-doctor",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in drhelius/Gearboy"
+    },
+    {
+      "pattern": "build-doctor",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in drhelius/Gearcoleco"
+    },
+    {
+      "pattern": "build-doctor",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in drhelius/Geargrafx"
+    },
+    {
+      "pattern": "build-doctor",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in drhelius/Gearsystem"
+    },
+    {
+      "pattern": "gh-aw-plan",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in elastic/ai-github-actions"
+    },
+    {
+      "pattern": "gh-aw-pr-labeler",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in elastic/ai-github-actions"
+    },
+    {
+      "pattern": "code-simplifier",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in microsoft/agentrc"
+    },
+    {
+      "pattern": "relevance-check",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in microsoft/gctoolkit"
+    },
+    {
+      "pattern": "pr-iteration",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in microsoft/vstest"
     }
   ],
   "config_defaults": {
@@ -168,68 +168,183 @@
   },
   "trigger_combos": [
     {
+      "combo": "issue_comment+issues+pull_request+roles+skip-bots+skip-roles",
+      "success_rate": 1.0,
+      "count": 10,
+      "risk": "low",
+      "recommendation": "Recommended"
+    },
+    {
       "combo": "push",
-      "success_rate": 0.83,
-      "count": 18,
+      "success_rate": 1.0,
+      "count": 10,
+      "risk": "low",
+      "recommendation": "Recommended"
+    },
+    {
+      "combo": "push+skip-if-match",
+      "success_rate": 1.0,
+      "count": 10,
+      "risk": "low",
+      "recommendation": "Recommended"
+    },
+    {
+      "combo": "issues+reaction+stop-after",
+      "success_rate": 1.0,
+      "count": 10,
+      "risk": "low",
+      "recommendation": "Recommended"
+    },
+    {
+      "combo": "issues+reaction+roles",
+      "success_rate": 0.97,
+      "count": 30,
+      "risk": "low",
+      "recommendation": "Recommended"
+    },
+    {
+      "combo": "issues",
+      "success_rate": 0.95,
+      "count": 20,
       "risk": "low",
       "recommendation": "Recommended"
     },
     {
       "combo": "pull_request",
-      "success_rate": 0.65,
-      "count": 160,
+      "success_rate": 0.85,
+      "count": 20,
       "risk": "low",
       "recommendation": "Recommended"
     },
     {
-      "combo": "issues+push",
-      "success_rate": 0.53,
-      "count": 58,
+      "combo": "issues+roles",
+      "success_rate": 0.84,
+      "count": 43,
+      "risk": "low",
+      "recommendation": "Recommended"
+    },
+    {
+      "combo": "roles+workflow_run",
+      "success_rate": 0.8,
+      "count": 10,
+      "risk": "low",
+      "recommendation": "Recommended"
+    },
+    {
+      "combo": "schedule",
+      "success_rate": 0.74,
+      "count": 38,
+      "risk": "low",
+      "recommendation": "Recommended"
+    },
+    {
+      "combo": "issues+skip-if-no-match+stop-after",
+      "success_rate": 0.6,
+      "count": 10,
+      "risk": "low",
+      "recommendation": "Recommended"
+    },
+    {
+      "combo": "env+permissions+schedule+slash_command+steps",
+      "success_rate": 0.6,
+      "count": 10,
+      "risk": "low",
+      "recommendation": "Recommended"
+    },
+    {
+      "combo": "permissions+roles+schedule",
+      "success_rate": 0.6,
+      "count": 10,
+      "risk": "low",
+      "recommendation": "Recommended"
+    },
+    {
+      "combo": "permissions+reaction+schedule+slash_command+steps",
+      "success_rate": 0.56,
+      "count": 70,
       "risk": "medium",
       "recommendation": "Use with caution"
     },
     {
-      "combo": "issues+workflow_run",
-      "success_rate": 0.12,
-      "count": 130,
-      "risk": "high",
-      "recommendation": "Avoid"
-    },
-    {
-      "combo": "slash_command",
-      "success_rate": 0.05,
-      "count": 111,
-      "risk": "high",
-      "recommendation": "Avoid"
-    },
-    {
-      "combo": "discussion+issues+slash_command",
-      "success_rate": 0.0,
-      "count": 40,
-      "risk": "high",
-      "recommendation": "Avoid"
-    },
-    {
-      "combo": "issues+pull_request+workflow_run",
-      "success_rate": 0.03,
-      "count": 30,
-      "risk": "high",
-      "recommendation": "Avoid"
-    },
-    {
-      "combo": "push+slash_command",
-      "success_rate": 0.04,
-      "count": 28,
-      "risk": "high",
-      "recommendation": "Avoid"
+      "combo": "issue_comment+issues",
+      "success_rate": 0.52,
+      "count": 50,
+      "risk": "medium",
+      "recommendation": "Use with caution"
     }
   ],
-  "configuration_profiles": [],
+  "configuration_profiles": [
+    {
+      "archetype": "issue-triage",
+      "triggers": [
+        "issues",
+        "roles"
+      ],
+      "safe_outputs": [
+        "add-comment",
+        "add-labels",
+        "allowed-github-references",
+        "close-issue",
+        "mentions",
+        "messages"
+      ],
+      "success_rate": 1.0,
+      "confidence_score": 0.857,
+      "total_runs": 23,
+      "n_workflows": 3,
+      "n_repos": 3,
+      "rank": 1
+    },
+    {
+      "archetype": "issue-triage",
+      "triggers": [
+        "issue_comment",
+        "issues"
+      ],
+      "safe_outputs": [
+        "add-comment",
+        "messages",
+        "noop"
+      ],
+      "success_rate": 0.52,
+      "confidence_score": 0.385,
+      "total_runs": 50,
+      "n_workflows": 5,
+      "n_repos": 5,
+      "rank": 2
+    },
+    {
+      "archetype": "repo-maintainer",
+      "triggers": [
+        "permissions",
+        "reaction",
+        "schedule",
+        "slash_command",
+        "steps"
+      ],
+      "safe_outputs": [
+        "add-comment",
+        "add-labels",
+        "create-issue",
+        "create-pull-request",
+        "messages",
+        "push-to-pull-request-branch",
+        "remove-labels",
+        "update-issue"
+      ],
+      "success_rate": 0.65,
+      "confidence_score": 0.524,
+      "total_runs": 60,
+      "n_workflows": 7,
+      "n_repos": 7,
+      "rank": 1
+    }
+  ],
   "research_findings": {
     "bimodal_distribution": "38% of workflows always succeed, 21% always fail, 41% are mixed. The average hides this.",
     "do_not_constraints": "Workflows with explicit DO NOT instructions are 61% more likely to be healthy (p=0.009).",
-    "slash_command_broken": "slash_command triggers have 0-17% success rate across all combos (e.g. 5% success across 111 runs, 14 workflows, 14 repos). Avoid until platform stabilizes.",
-    "workflow_run_risky": "workflow_run chaining has 3-12% success rate (e.g. issues+workflow_run: 12% across 130 runs, 15 workflows, 15 repos). Use pre-steps or schedule instead.",
+    "slash_command_broken": "slash_command triggers have 0-2% success rate across all combos. Avoid until platform stabilizes.",
+    "workflow_run_risky": "workflow_run chaining has 13-16% success rate. Use pre-steps or schedule instead.",
     "pre_steps_help": "Workflows with pre-steps are more likely to be active (+13pp internal, +5pp community).",
     "prompt_size_matters": "Active workflows have 35-48% larger prompts. More detail = better outcomes.",
     "template_clones_fragile": "32% of workflows are template copies. Copied templates have lower success than customized ones."
