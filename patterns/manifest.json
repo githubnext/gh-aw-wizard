@@ -25,7 +25,8 @@
     "dependency-monitor",
     "documentation-updater",
     "content-moderation",
-    "security-scanner"
+    "security-scanner",
+    "code-health-auditor"
   ],
   "workflow_generation": "workflow-generation.json",
   "anti_patterns": [

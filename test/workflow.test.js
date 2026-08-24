@@ -160,6 +160,29 @@ describe('inferCapabilities', () => {
       network: false
     });
   });
+
+  it('configures TypeScript LSP for code health audits', () => {
+    const md = generateWorkflowFile(
+      answers({ archetype: 'code-health-auditor', triggers: ['schedule'], outputs: ['create-issue'] }),
+      patterns
+    );
+    expect(md).toContain('lsp:\n  typescript:\n    command: typescript-language-server\n    args: ["--stdio"]\n');
+    expect(md).toContain('      ".ts": typescript\n');
+    expect(md).toContain('network:\n  allowed:\n    - defaults\n    - github\n    - node\n');
+  });
+
+  it('does not configure LSP for a non-Copilot engine', () => {
+    const md = generateWorkflowFile(
+      answers({
+        archetype: 'code-health-auditor',
+        triggers: ['schedule'],
+        outputs: ['create-issue'],
+        engine: 'claude'
+      }),
+      patterns
+    );
+    expect(md).not.toContain('lsp:\n');
+  });
 });
 
 describe('buildTriggerYaml', () => {
