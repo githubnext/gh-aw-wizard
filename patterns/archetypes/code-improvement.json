@@ -52,7 +52,8 @@
     "Use schedule triggers for repeatable reporting",
     "Add pre-steps to run tests/linters before the agent starts \u2014 validates baseline",
     "Avoid pr-fix and ci-doctor templates \u2014 both have <20% success in practice",
-    "Use DO NOT constraints to keep changes scoped \u2014 avoid touching unrelated files, CI/workflow configs, or secrets"
+    "Use DO NOT constraints to keep changes scoped \u2014 avoid touching unrelated files, CI/workflow configs, or secrets",
+    "Set protected-files: fallback-to-issue on create-pull-request so edits to manifests, CI configs, or agent instructions become a review issue instead of an unreviewed PR"
   ],
   "anti_patterns": [
     "ci-doctor",
