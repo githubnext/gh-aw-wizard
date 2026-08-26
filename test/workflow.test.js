@@ -489,6 +489,24 @@ describe('generateAgentPrompt', () => {
     expect(reportPrompt).not.toContain('Prevent duplicate scheduled findings');
   });
 
+  it('surfaces protected-files guidance for archetypes that open unattended PRs', () => {
+    // code-improvement and documentation-updater both open pull requests autonomously,
+    // and their pattern tips recommend protected-files: fallback-to-issue so edits to
+    // manifests/CI configs/agent instructions get reviewed instead of merged unattended.
+    // This guidance must reach the generated prompt, not just live in the pattern JSON.
+    const codePrompt = generateAgentPrompt(answers({ archetype: 'code-improvement' }), patterns);
+    expect(codePrompt).toContain('Guard sensitive files');
+    expect(codePrompt).toContain('protected-files');
+
+    const docsPrompt = generateAgentPrompt(answers({ archetype: 'documentation-updater' }), patterns);
+    expect(docsPrompt).toContain('Guard sensitive files');
+    expect(docsPrompt).toContain('protected-files');
+
+    // status-report has no such tip and should not fabricate one.
+    const reportPrompt = generateAgentPrompt(answers({ archetype: 'status-report' }), patterns);
+    expect(reportPrompt).not.toContain('Guard sensitive files');
+  });
+
   it('generates all grouped linter workflows in one prompt', () => {
     const prompt = generateAgentPrompt(answers({ archetype: 'linter-workflows' }), patterns);
 
