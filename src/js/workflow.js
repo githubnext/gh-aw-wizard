@@ -329,6 +329,22 @@ function doNotConstraints(workflows, patterns) {
   return constraints;
 }
 
+// Surface each archetype's duplicate-prevention tips (skip-if-match, tracker-id,
+// expires) as explicit requirements in the generated prompt. Scheduled workflows
+// that create-issue/create-pull-request on every run will otherwise reopen the
+// same finding on every scheduled run, since nothing else in the generated prompt
+// mentions this guidance even though it lives in the pattern library.
+function duplicatePreventionTips(workflows, patterns) {
+  const tips = [];
+  workflows.forEach((workflow) => {
+    const archetype = getArchetype(patterns, workflow.answers.archetype) || {};
+    (archetype.tips || []).forEach((tip) => {
+      if (/skip-if-match|tracker-id|\bexpires\b/i.test(tip) && tips.indexOf(tip) === -1) tips.push(tip);
+    });
+  });
+  return tips;
+}
+
 export function generateAgentPrompt(answers, patterns) {
   const archetype = getArchetype(patterns, answers.archetype) || {};
   const name = workflowName(answers.archetype, answers.customDescription);
@@ -378,6 +394,12 @@ export function generateAgentPrompt(answers, patterns) {
   if (constraints.length) {
     prompt += `- Include explicit boundary constraints in the workflow prompt, for example: ${
       constraints.join('; ')
+    }\n`;
+  }
+  const duplicateTips = duplicatePreventionTips(workflows, patterns);
+  if (duplicateTips.length) {
+    prompt += `- Prevent duplicate scheduled findings, for example: ${
+      duplicateTips.join('; ')
     }\n`;
   }
   prompt += multiple
