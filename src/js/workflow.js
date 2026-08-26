@@ -345,6 +345,23 @@ function duplicatePreventionTips(workflows, patterns) {
   return tips;
 }
 
+// Surface each archetype's protected-files guidance as an explicit requirement.
+// Archetypes that open pull requests unattended (code-improvement,
+// documentation-updater) otherwise lose this tip entirely: it doesn't match
+// doNotConstraints' /do not/i filter or duplicatePreventionTips' skip-if-match
+// filter, so it was silently dropped even though it guards against an
+// unreviewed PR touching manifests, CI configs, or agent instructions.
+function protectedFilesTips(workflows, patterns) {
+  const tips = [];
+  workflows.forEach((workflow) => {
+    const archetype = getArchetype(patterns, workflow.answers.archetype) || {};
+    (archetype.tips || []).forEach((tip) => {
+      if (/protected-files/i.test(tip) && tips.indexOf(tip) === -1) tips.push(tip);
+    });
+  });
+  return tips;
+}
+
 export function generateAgentPrompt(answers, patterns) {
   const archetype = getArchetype(patterns, answers.archetype) || {};
   const name = workflowName(answers.archetype, answers.customDescription);
@@ -400,6 +417,12 @@ export function generateAgentPrompt(answers, patterns) {
   if (duplicateTips.length) {
     prompt += `- Prevent duplicate scheduled findings, for example: ${
       duplicateTips.join('; ')
+    }\n`;
+  }
+  const protectedTips = protectedFilesTips(workflows, patterns);
+  if (protectedTips.length) {
+    prompt += `- Guard sensitive files, for example: ${
+      protectedTips.join('; ')
     }\n`;
   }
   prompt += multiple
