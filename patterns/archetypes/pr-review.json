@@ -2,15 +2,19 @@
   "id": "pr-review",
   "label": "PR Review",
   "description": "Review pull requests for quality and issues",
-  "success_rate": 0.45,
-  "count": 74,
+  "success_rate": 0.46,
+  "count": 71,
   "recommended_triggers": [
     {
-      "type": "issues",
+      "type": "pull_request",
       "config": {}
     },
     {
-      "type": "pull_request",
+      "type": "slash_command",
+      "config": {}
+    },
+    {
+      "type": "schedule",
       "config": {}
     }
   ],
@@ -28,24 +32,24 @@
   ],
   "top_repos": [
     {
-      "repo": "pydantic/pydantic-ai",
-      "stars": 19374
-    },
-    {
-      "repo": "dotnet/msbuild",
-      "stars": 5542
-    },
-    {
       "repo": "github/gh-aw",
-      "stars": 4953
+      "stars": 5016
     },
     {
-      "repo": "runhey/OnmyojiAutoScript",
-      "stars": 4746
+      "repo": "githubnext/agentics",
+      "stars": 922
     },
     {
-      "repo": "microsoft/apm",
-      "stars": 3565
+      "repo": "elastic/kibana",
+      "stars": 21262
+    },
+    {
+      "repo": "pydantic/pydantic-ai",
+      "stars": 19518
+    },
+    {
+      "repo": "Azure/azure-sdk-for-net",
+      "stars": 6042
     }
   ],
   "tips": [
@@ -54,10 +58,10 @@
     "Include DO NOT constraints to avoid false positive comments"
   ],
   "anti_patterns": [
-    "data-plane-api-review",
-    "mgmt-review",
     "pr-review",
-    "fix-review-comment",
-    "android-reviewer"
+    "macios-reviewer",
+    "pr-security-reviewer",
+    "pr-docs-reviewer",
+    "reviewer-codex"
   ]
 }

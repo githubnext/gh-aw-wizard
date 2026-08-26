@@ -2,15 +2,19 @@
   "id": "code-improvement",
   "label": "Code Improvement",
   "description": "Diagnose and fix code or CI issues",
-  "success_rate": 0.37,
-  "count": 76,
+  "success_rate": 0.38,
+  "count": 81,
   "recommended_triggers": [
     {
-      "type": "issues",
+      "type": "schedule",
       "config": {}
     },
     {
-      "type": "schedule",
+      "type": "workflow_run",
+      "config": {}
+    },
+    {
+      "type": "skip-if-match",
       "config": {}
     }
   ],
@@ -28,32 +32,30 @@
   ],
   "top_repos": [
     {
-      "repo": "dotnet/maui",
-      "stars": 23302
+      "repo": "github/gh-aw",
+      "stars": 5016
+    },
+    {
+      "repo": "githubnext/agentics",
+      "stars": 922
     },
     {
       "repo": "elastic/kibana",
-      "stars": 21249
+      "stars": 21262
     },
     {
-      "repo": "vercel/vercel",
-      "stars": 16104
+      "repo": "dotnet/macios",
+      "stars": 2897
     },
     {
-      "repo": "openvinotoolkit/openvino",
-      "stars": 10673
-    },
-    {
-      "repo": "dotnet/skills",
-      "stars": 5188
+      "repo": "drhelius/Gearboy",
+      "stars": 1192
     }
   ],
   "tips": [
-    "Use schedule triggers for repeatable reporting",
+    "Use schedule triggers for continuous maintenance coverage",
     "Add pre-steps to run tests/linters before the agent starts \u2014 validates baseline",
-    "Avoid pr-fix and ci-doctor templates \u2014 both have <20% success in practice",
-    "Use DO NOT constraints to keep changes scoped \u2014 avoid touching unrelated files, CI/workflow configs, or secrets",
-    "Set protected-files: fallback-to-issue on create-pull-request so edits to manifests, CI configs, or agent instructions become a review issue instead of an unreviewed PR"
+    "Avoid pr-fix and ci-doctor templates \u2014 both have <20% success in practice"
   ],
   "anti_patterns": [
     "ci-doctor",

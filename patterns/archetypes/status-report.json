@@ -2,15 +2,19 @@
   "id": "status-report",
   "label": "Status Report",
   "description": "Generate periodic status summaries",
-  "success_rate": 0.52,
-  "count": 69,
+  "success_rate": 0.49,
+  "count": 76,
   "recommended_triggers": [
     {
       "type": "schedule",
       "config": {}
     },
     {
-      "type": "issues",
+      "type": "stop-after",
+      "config": {}
+    },
+    {
+      "type": "push",
       "config": {}
     }
   ],
@@ -28,37 +32,36 @@
   ],
   "top_repos": [
     {
+      "repo": "github/gh-aw",
+      "stars": 5016
+    },
+    {
+      "repo": "githubnext/agentics",
+      "stars": 922
+    },
+    {
       "repo": "taosdata/TDengine",
-      "stars": 25068
+      "stars": 25090
     },
     {
       "repo": "Z3Prover/z3",
-      "stars": 12567
+      "stars": 12610
     },
     {
-      "repo": "github/gh-aw",
-      "stars": 4953
-    },
-    {
-      "repo": "Azure/git-ape",
-      "stars": 267
-    },
-    {
-      "repo": "adoptium/adoptium",
-      "stars": 185
+      "repo": "MicrosoftDocs/architecture-center",
+      "stars": 2019
     }
   ],
   "tips": [
     "Pre-fetch data in a steps: block \u2014 #1 predictor of workflow health",
     "Use schedule triggers for repeatable reporting",
-    "Keep prompts focused on one report \u2014 multi-source reports need pre-steps",
-    "Use DO NOT constraints to keep the report read-only \u2014 do NOT modify code, files, or existing issues"
+    "Keep prompts focused on one report \u2014 multi-source reports need pre-steps"
   ],
   "anti_patterns": [
     "daily-repo-status",
     "daily-repo-status",
     "daily-repo-status",
-    "daily-repo-status",
+    "weekly-agents-md-maintenance",
     "pbir-report-rules-check"
   ]
 }

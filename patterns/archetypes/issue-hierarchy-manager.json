@@ -27,7 +27,7 @@
     "Pre-fetch open issues in a steps: block before reasoning about relationships",
     "Use link-sub-issue with parent/sub label or title-prefix filters to bound which issues can be linked",
     "Recursively close parent issues only after confirming every sub-issue is complete",
-    "Read-only issues permission is enough — rely on safe-outputs like link-sub-issue and update-issue for writes"
+    "Read-only issues permission is enough \u2014 rely on safe-outputs like link-sub-issue and update-issue for writes"
   ],
   "anti_patterns": []
 }

@@ -2,11 +2,19 @@
   "id": "daily-test-improver",
   "label": "Daily Test Improver",
   "description": "Add high-value tests and improve test quality",
-  "success_rate": null,
-  "count": 0,
+  "success_rate": 1.0,
+  "count": 4,
   "recommended_triggers": [
     {
       "type": "schedule",
+      "config": {}
+    },
+    {
+      "type": "permissions",
+      "config": {}
+    },
+    {
+      "type": "reaction",
       "config": {}
     }
   ],
@@ -22,7 +30,20 @@
     5000,
     12000
   ],
-  "top_repos": [],
+  "top_repos": [
+    {
+      "repo": "githubnext/agentics",
+      "stars": 922
+    },
+    {
+      "repo": "rancher/dashboard",
+      "stars": 621
+    },
+    {
+      "repo": "tastybamboo/panda-cms",
+      "stars": 4
+    }
+  ],
   "tips": [
     "Establish a passing baseline before changing tests",
     "Prefer regression-prone and critical paths over coverage inflation",

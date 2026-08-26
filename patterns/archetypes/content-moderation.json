@@ -2,15 +2,19 @@
   "id": "content-moderation",
   "label": "Content Moderation",
   "description": "Review content for quality or policy",
-  "success_rate": 0.73,
-  "count": 6,
+  "success_rate": 0.87,
+  "count": 8,
   "recommended_triggers": [
     {
-      "type": "issues",
+      "type": "pull_request",
       "config": {}
     },
     {
-      "type": "pull_request",
+      "type": "permissions",
+      "config": {}
+    },
+    {
+      "type": "steps",
       "config": {}
     }
   ],
@@ -31,23 +35,23 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 4953
+      "stars": 5016
+    },
+    {
+      "repo": "githubnext/agentics",
+      "stars": 922
     },
     {
       "repo": "Bertverbeek4PS/bc2adls",
-      "stars": 169
+      "stars": 170
     },
     {
       "repo": "SSWConsulting/SSW.Rules.Content",
-      "stars": 62
+      "stars": 61
     },
     {
       "repo": "chrizbo/agentics-beyond-code",
       "stars": 21
-    },
-    {
-      "repo": "SSWConsulting/SSW.Website",
-      "stars": 14
     }
   ],
   "tips": [
@@ -55,7 +59,5 @@
     "Include explicit rules for what IS legitimate to reduce false positives",
     "Use DO NOT constraints for actions the agent should never take"
   ],
-  "anti_patterns": [
-    "ai-moderator"
-  ]
+  "anti_patterns": []
 }

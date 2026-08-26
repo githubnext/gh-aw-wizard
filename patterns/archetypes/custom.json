@@ -2,15 +2,19 @@
   "id": "custom",
   "label": "Custom",
   "description": "Custom or uncategorized workflow",
-  "success_rate": 0.49,
-  "count": 416,
+  "success_rate": 0.46,
+  "count": 438,
   "recommended_triggers": [
     {
-      "type": "issues",
+      "type": "schedule",
       "config": {}
     },
     {
-      "type": "schedule",
+      "type": "pull_request",
+      "config": {}
+    },
+    {
+      "type": "reaction",
       "config": {}
     }
   ],
@@ -24,24 +28,24 @@
   ],
   "top_repos": [
     {
+      "repo": "github/gh-aw",
+      "stars": 5016
+    },
+    {
+      "repo": "githubnext/agentics",
+      "stars": 922
+    },
+    {
       "repo": "github/spec-kit",
-      "stars": 130114
+      "stars": 131684
     },
     {
-      "repo": "OtterMind/Chat2DB",
-      "stars": 27971
+      "repo": "home-assistant/core",
+      "stars": 90119
     },
     {
-      "repo": "elastic/kibana",
-      "stars": 21249
-    },
-    {
-      "repo": "pydantic/pydantic-ai",
-      "stars": 19374
-    },
-    {
-      "repo": "dotnet/runtime",
-      "stars": 18205
+      "repo": "dotnet/aspnetcore",
+      "stars": 38394
     }
   ],
   "tips": [
