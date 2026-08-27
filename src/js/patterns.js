@@ -71,49 +71,35 @@ export function getArchetype(patterns, id) {
   return null;
 }
 
-const SAFE_OUTPUT_MAP = {
-  'add-comment': ['add-comment'],
-  'add-label': ['add-labels'],
-  'add-labels': ['add-labels'],
-  'create-issue': ['create-issue'],
-  'create-pull-request': ['create-pull-request'],
-  'create-pull-request-review-comment': ['create-pull-request-review-comment'],
-  'commit-files': ['create-pull-request'],
-  'issues': ['add-comment', 'add-labels', 'create-issue'],
-  'pull-requests': ['create-pull-request', 'add-comment', 'create-pull-request-review-comment'],
-  'contents': ['create-pull-request']
-};
-const RECOMMENDABLE_TRIGGERS = [
-  'issues',
-  'pull_request',
-  'schedule',
-  'slash_command',
-  'label_command',
-  'push'
-];
-
-function wizardOutputs(safeOutputs) {
+function wizardOutputs(safeOutputs, safeOutputMap) {
   const outputs = [];
   (safeOutputs || []).forEach((safeOutput) => {
-    (SAFE_OUTPUT_MAP[safeOutput] || []).forEach((output) => {
+    (safeOutputMap[safeOutput] || []).forEach((output) => {
       if (outputs.indexOf(output) === -1) outputs.push(output);
     });
   });
   return outputs;
 }
 
-export function getRecommendedConfiguration(patterns, id) {
+export function getRecommendedConfiguration(patterns, id, wizardConfig) {
   const archetype = getArchetype(patterns, id);
   if (!archetype) return { triggers: [], outputs: [], profile: null };
+  const recommendations = wizardConfig && wizardConfig.recommendations
+    ? wizardConfig.recommendations
+    : {};
+  const recommendableTriggers = Array.isArray(recommendations.triggers)
+    ? recommendations.triggers
+    : [];
+  const safeOutputMap = recommendations.safe_outputs || {};
 
   const profiles = (patterns.configuration_profiles || [])
     .filter((profile) => {
       return profile.archetype === id &&
         Array.isArray(profile.triggers) &&
-        profile.triggers.every((trigger) => { return RECOMMENDABLE_TRIGGERS.indexOf(trigger) !== -1; }) &&
+        profile.triggers.every((trigger) => { return recommendableTriggers.indexOf(trigger) !== -1; }) &&
         Array.isArray(profile.safe_outputs) &&
         profile.safe_outputs.length > 0 &&
-        profile.safe_outputs.every((safeOutput) => { return SAFE_OUTPUT_MAP[safeOutput]; });
+        profile.safe_outputs.every((safeOutput) => { return safeOutputMap[safeOutput]; });
     })
     .slice()
     .sort((a, b) => {
@@ -136,7 +122,7 @@ export function getRecommendedConfiguration(patterns, id) {
 
   return {
     triggers,
-    outputs: wizardOutputs(safeOutputs),
+    outputs: wizardOutputs(safeOutputs, safeOutputMap),
     profile
   };
 }

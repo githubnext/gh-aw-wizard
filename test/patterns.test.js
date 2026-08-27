@@ -12,6 +12,11 @@ import { loadPatternsFromDir } from '../src/js/patterns-node.js';
 import { nextStepsHtml } from '../src/js/next-steps.js';
 
 const generatedPatterns = await loadPatternsFromDir(fileURLToPath(new URL('../patterns', import.meta.url)));
+const wizardConfig = JSON.parse(
+  await import('node:fs/promises').then(({ readFile }) => {
+    return readFile(fileURLToPath(new URL('../src/wizard.json', import.meta.url)), 'utf8');
+  })
+);
 
 describe('getArchetype', () => {
   const patterns = { archetypes: [{ id: 'pr-review', label: 'PR Review' }] };
@@ -150,7 +155,7 @@ describe('getRecommendedConfiguration', () => {
       ]
     };
 
-    expect(getRecommendedConfiguration(patterns, 'status-report')).toEqual({
+    expect(getRecommendedConfiguration(patterns, 'status-report', wizardConfig)).toEqual({
       triggers: ['schedule'],
       outputs: ['create-issue', 'add-comment'],
       profile: patterns.configuration_profiles[3]
@@ -169,7 +174,7 @@ describe('getRecommendedConfiguration', () => {
       }]
     };
 
-    expect(getRecommendedConfiguration(patterns, 'issue-triage')).toEqual({
+    expect(getRecommendedConfiguration(patterns, 'issue-triage', wizardConfig)).toEqual({
       triggers: ['slash_command'],
       outputs: ['add-comment'],
       profile: patterns.configuration_profiles[0]
@@ -185,7 +190,7 @@ describe('getRecommendedConfiguration', () => {
       }]
     };
 
-    expect(getRecommendedConfiguration(patterns, 'issue-triage')).toEqual({
+    expect(getRecommendedConfiguration(patterns, 'issue-triage', wizardConfig)).toEqual({
       triggers: ['issues'],
       outputs: ['add-labels', 'add-comment'],
       profile: null
@@ -193,7 +198,7 @@ describe('getRecommendedConfiguration', () => {
   });
 
   it('returns an empty recommendation for an unknown archetype', () => {
-    expect(getRecommendedConfiguration({ archetypes: [] }, 'unknown')).toEqual({
+    expect(getRecommendedConfiguration({ archetypes: [] }, 'unknown', wizardConfig)).toEqual({
       triggers: [],
       outputs: [],
       profile: null

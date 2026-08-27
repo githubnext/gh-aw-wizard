@@ -2,43 +2,7 @@
 
 import { getArchetype } from './patterns.js';
 import { formatEngineLabel } from './engines.js';
-
-const triggerLabels = {
-  issues: 'a new issue is opened',
-  pull_request: 'a pull request is opened',
-  pull_request_ready_for_review: 'a pull request is ready for review',
-  schedule: 'the schedule runs',
-  slash_command: 'a slash command is posted (not recommended)',
-  label_command: 'a matching label is added',
-  push: 'code is pushed to main'
-};
-
-const outputLabels = {
-  'add-comment': 'add comment',
-  'add-labels': 'add label',
-  'create-issue': 'create issue',
-  'create-pull-request': 'create pull request',
-  'create-pull-request-review-comment': 'add review comment',
-  comments: 'add comment',
-  labels: 'add label',
-  'new-issues': 'create issue',
-  'pull-requests': 'create pull request',
-  commits: 'commit changes'
-};
-
-const engineLabels = {
-  copilot: 'Copilot',
-  claude: 'Claude',
-  codex: 'Codex',
-  gemini: 'Gemini',
-  pi: 'Pi'
-};
-
-const extraLabels = {
-  memory: 'memory between runs',
-  charts: 'chart generation',
-  browser: 'browser access'
-};
+import { wizardOptions, wizardStep } from './wizard-config.js';
 
 function readableList(values, conjunction) {
   conjunction = conjunction || 'and';
@@ -51,8 +15,22 @@ function mapLabels(values, labels) {
   return readableList(values.map((value) => { return labels[value] || value; }));
 }
 
-export function buildWorkflowSummary(answers, patterns) {
+function optionLabels(config, stepId) {
+  return Object.fromEntries(wizardOptions(config, stepId).map((option) => {
+    return [option.id, option.summary || option.label || option.id];
+  }));
+}
+
+export function buildWorkflowSummary(answers, patterns, wizardConfig) {
   const archetype = getArchetype(patterns, answers.archetype);
+  const triggerLabels = optionLabels(wizardConfig, 'trigger');
+  const outputLabels = optionLabels(wizardConfig, 'output');
+  const engineLabels = optionLabels(wizardConfig, 'engine');
+  const extraLabels = optionLabels(wizardConfig, 'extra');
+  const summaryOverrides = wizardConfig && wizardConfig.summary_overrides &&
+    wizardConfig.summary_overrides[answers.archetype]
+    ? wizardConfig.summary_overrides[answers.archetype]
+    : {};
   const purpose = answers.archetype === 'custom'
     ? answers.customDescription
     : archetype && archetype.description;
@@ -63,30 +41,29 @@ export function buildWorkflowSummary(answers, patterns) {
     trigger: {
       value: answers.triggers.length
         ? readableList(answers.triggers.map((trigger) => {
-          if (trigger === 'pull_request' && answers.archetype === 'pr-review') {
-            return 'a pull request is ready for review';
-          }
-          return triggerLabels[trigger] || trigger;
+          return (summaryOverrides.trigger || {})[trigger] || triggerLabels[trigger] || trigger;
         }), 'or')
-        : 'choose when it runs',
+        : wizardStep(wizardConfig, 'trigger').placeholder || '',
       complete: answers.triggers.length > 0
     },
     purpose: {
-      value: purpose || 'choose what the agent should do',
+      value: purpose || wizardStep(wizardConfig, 'purpose').placeholder || '',
       complete: Boolean(purpose)
     },
     output: {
       value: answers.outputs.length
         ? mapLabels(answers.outputs, outputLabels)
-        : 'choose what it can write',
+        : wizardStep(wizardConfig, 'output').placeholder || '',
       complete: answers.outputs.length > 0
     },
     extras: {
-      value: capabilities.length ? readableList(capabilities) : 'choose optional capabilities',
+      value: capabilities.length
+        ? readableList(capabilities)
+        : wizardStep(wizardConfig, 'extra').placeholder || '',
       complete: capabilities.length > 0
     },
     engine: {
-      value: engine || 'choose an agent',
+      value: engine || wizardStep(wizardConfig, 'engine').placeholder || '',
       complete: Boolean(engine)
     }
   };

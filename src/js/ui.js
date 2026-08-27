@@ -13,9 +13,23 @@ import { highlightMarkdown } from './highlight.js';
 import { initTheme } from './theme.js';
 import { initLanding } from './landing.js';
 import { buildWorkflowSummary } from './summary.js';
-import { engineIconMarkup, formatEngineOptionLabel, loadDefinitionEngines, registerDefinitionEngines } from './engines.js';
+import {
+  engineIconMarkup,
+  formatEngineOptionLabel,
+  loadDefinitionEngines,
+  registerBuiltInEngines,
+  registerDefinitionEngines
+} from './engines.js';
+import {
+  WIZARD_CONFIG_URL,
+  applyPageContent,
+  loadWizardConfig,
+  resolveWizardAssetUrl,
+  wizardOptions
+} from './wizard-config.js';
 
 let patterns = null;
+let wizardConfig = null;
 let currentStep = 1;
 let generatedPrompt = '';
 let copyFeedbackTimer = null;
@@ -23,25 +37,50 @@ const TOTAL_STEPS = 6;
 const ACCORDION_OPEN_ANIMATION = 'accordionOpen 0.3s ease';
 const ACCORDION_OPEN_REVERSE_ANIMATION = 'accordionOpenReverse 0.3s ease';
 
-export function initWizard() {
+function configuredUrl() {
+  const element = document.querySelector('meta[name="gh-aw-wizard-config"]');
+  return element && element.content ? element.content : WIZARD_CONFIG_URL;
+}
+
+export function initWizard(options) {
+  const opts = options || {};
   initTheme();
-  loadPatterns().then((data) => {
+  const configUrl = opts.configUrl || configuredUrl();
+  const ready = loadWizardConfig(configUrl).catch(() => {
+    return null;
+  }).then((config) => {
+    if (!config) {
+      const container = document.getElementById('archetype-options');
+      if (container) {
+        container.setAttribute('role', 'status');
+        container.textContent = 'Unable to load the wizard configuration.';
+      }
+      return null;
+    }
+    wizardConfig = config;
+    applyPageContent(config, configUrl);
+    const patternsUrl = resolveWizardAssetUrl(config.patterns_url, configUrl);
+    const enginesUrl = resolveWizardAssetUrl(config.engines_url, configUrl);
+    return Promise.all([
+      loadPatterns(patternsUrl),
+      loadDefinitionEngines(opts.fetch, enginesUrl)
+    ]);
+  }).then((loaded) => {
+    if (!loaded) return;
+    const [data, engines] = loaded;
     patterns = data;
-    renderArchetypeOptions(data);
-  }).catch(() => {
-    patterns = null;
-    renderArchetypeOptions(null);
-  }).finally(() => {
+    renderArchetypeOptions(data, wizardConfig);
+    renderConfiguredOptions(wizardConfig);
+    registerBuiltInEngines(wizardOptions(wizardConfig, 'engine'));
+    registerDefinitionEngines(engines);
+    addDefinitionEngineOptions(engines);
     bindFormEvents();
     renderWorkflowSummary();
   });
   bindNavigation();
-  loadDefinitionEngines().then((engines) => {
-    registerDefinitionEngines(engines);
-    addDefinitionEngineOptions(engines);
-  });
   initNavigationHistory();
   initLanding(revealWhatPane);
+  return ready;
 }
 
 function archetypeIconId(archetypeId, data) {
@@ -49,40 +88,25 @@ function archetypeIconId(archetypeId, data) {
   return definition && definition.icon ? definition.icon : 'tools';
 }
 
-const PINNED_ARCHETYPE_ORDER = [
-  'skill-pr-reviewer',
-  'code-improvement',
-  'daily-test-improver',
-  'documentation-updater'
-];
-
-const PINNED_ARCHETYPE_INDEX = new Map(
-  PINNED_ARCHETYPE_ORDER.map((id, index) => [id, index])
-);
-
-const PINNED_ARCHETYPE_ALIASES = new Map([
-  ['pr reviewer', 'skill-pr-reviewer'],
-  ['daily code improver', 'code-improvement'],
-  ['daily test generator', 'daily-test-improver'],
-  ['documentation updater', 'documentation-updater']
-]);
-
-function pinnedArchetypeOrder(archetype) {
+function pinnedArchetypeOrder(archetype, config) {
+  const archetypeConfig = config && config.archetypes ? config.archetypes : {};
+  const pinned = Array.isArray(archetypeConfig.pinned) ? archetypeConfig.pinned : [];
   const id = archetype && typeof archetype.id === 'string' ? archetype.id : '';
-  if (PINNED_ARCHETYPE_INDEX.has(id)) return PINNED_ARCHETYPE_INDEX.get(id);
+  const directIndex = pinned.indexOf(id);
+  if (directIndex !== -1) return directIndex;
   const label = archetype && typeof archetype.label === 'string'
     ? archetype.label.trim().toLowerCase()
     : '';
-  const canonicalId = PINNED_ARCHETYPE_ALIASES.get(label);
+  const canonicalId = (archetypeConfig.aliases || {})[label];
   if (!canonicalId) return -1;
-  return PINNED_ARCHETYPE_INDEX.get(canonicalId) ?? -1;
+  return pinned.indexOf(canonicalId);
 }
 
-function archetypeSort(a, b) {
+function archetypeSort(a, b, config) {
   if (a.id === 'custom' && b.id !== 'custom') return 1;
   if (b.id === 'custom' && a.id !== 'custom') return -1;
-  const aPinnedOrder = pinnedArchetypeOrder(a);
-  const bPinnedOrder = pinnedArchetypeOrder(b);
+  const aPinnedOrder = pinnedArchetypeOrder(a, config);
+  const bPinnedOrder = pinnedArchetypeOrder(b, config);
   const aPinned = aPinnedOrder !== -1;
   const bPinned = bPinnedOrder !== -1;
   if (aPinned && bPinned) return aPinnedOrder - bPinnedOrder;
@@ -91,31 +115,26 @@ function archetypeSort(a, b) {
   return 0;
 }
 
-export function renderArchetypeOptions(data) {
+export function renderArchetypeOptions(data, config) {
   const container = document.getElementById('archetype-options');
   if (!container) return;
 
   const source = data && Array.isArray(data.archetypes) ? data.archetypes : [];
+  const custom = config && config.archetypes ? config.archetypes.custom : null;
   const withCustom = source.some((archetype) => archetype.id === 'custom')
     ? source
-    : source.concat({
-      id: 'custom',
-      label: 'Custom',
-      description: 'Describe your own workflow — start from scratch'
-    });
-  const archetypes = (withCustom.length ? withCustom : [{
-    id: 'custom',
-    label: 'Custom',
-    description: 'Describe your own workflow — start from scratch'
-  }]).slice().sort(archetypeSort);
+    : source.concat(custom || []);
+  const archetypes = (withCustom.length ? withCustom : (custom ? [custom] : []))
+    .slice()
+    .sort((a, b) => archetypeSort(a, b, config));
   container.innerHTML = '';
 
   archetypes.forEach((archetype) => {
     const card = document.createElement('label');
     card.className = 'option-card';
     card.dataset.value = archetype.id;
-    if (pinnedArchetypeOrder(archetype) !== -1) card.classList.add('priority-archetype');
-    if (archetype.id === 'custom') card.style.gridColumn = '1 / -1';
+    if (pinnedArchetypeOrder(archetype, config) !== -1) card.classList.add('priority-archetype');
+    if (archetype.full_width || archetype.id === 'custom') card.style.gridColumn = '1 / -1';
 
     const input = document.createElement('input');
     input.type = 'radio';
@@ -146,6 +165,76 @@ export function renderArchetypeOptions(data) {
     info.append(label, description);
     card.append(input, icon, info);
     container.appendChild(card);
+  });
+}
+
+function iconElement(iconId) {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('class', 'octicon');
+  svg.setAttribute('aria-hidden', 'true');
+  const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+  use.setAttribute('href', `#octicon-${iconId}`);
+  svg.appendChild(use);
+  return svg;
+}
+
+function engineIconElement(iconId) {
+  const wrapper = document.createElement('span');
+  wrapper.className = 'engine-vendor-icon';
+  wrapper.setAttribute('aria-hidden', 'true');
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('class', 'vendor-icon');
+  svg.setAttribute('focusable', 'false');
+  const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+  use.setAttribute('href', `#${iconId}`);
+  svg.appendChild(use);
+  wrapper.appendChild(svg);
+  return wrapper;
+}
+
+export function renderChoiceOptions(config, stepId) {
+  const containerId = stepId === 'extra' ? 'extras-options' : `${stepId}-options`;
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = '';
+
+  wizardOptions(config, stepId).forEach((option) => {
+    const card = document.createElement('label');
+    card.className = 'option-card';
+    const input = document.createElement('input');
+    input.type = stepId === 'engine' ? 'radio' : 'checkbox';
+    input.name = stepId;
+    input.value = option.id;
+    const info = document.createElement('div');
+    info.className = 'option-info';
+    const label = document.createElement('div');
+    label.className = 'option-label option-label-with-icon';
+
+    if (stepId === 'engine') {
+      label.classList.add('option-label-with-engine-icon');
+      if (option.icon) label.appendChild(engineIconElement(option.icon));
+      label.appendChild(document.createTextNode(
+        option.label + (option.company ? ` (${option.company})` : '')
+      ));
+    } else {
+      if (option.icon) label.appendChild(iconElement(option.icon));
+      label.appendChild(document.createTextNode(option.label || option.id));
+    }
+    info.appendChild(label);
+    if (option.description) {
+      const description = document.createElement('div');
+      description.className = 'option-desc';
+      description.textContent = option.description;
+      info.appendChild(description);
+    }
+    card.append(input, info);
+    container.appendChild(card);
+  });
+}
+
+function renderConfiguredOptions(config) {
+  ['trigger', 'output', 'extra', 'engine'].forEach((stepId) => {
+    renderChoiceOptions(config, stepId);
   });
 }
 
@@ -590,7 +679,7 @@ function hasChecked(name) {
 }
 
 function prefillFromArchetype(id) {
-  const recommendation = getRecommendedConfiguration(patterns, id);
+  const recommendation = getRecommendedConfiguration(patterns, id, wizardConfig);
   if (!recommendation.triggers.length && !recommendation.outputs.length) return;
 
   // Pre-check recommended triggers
@@ -637,7 +726,7 @@ function gatherAnswers() {
 }
 
 function renderWorkflowSummary() {
-  const summary = buildWorkflowSummary(gatherAnswers(), patterns);
+  const summary = buildWorkflowSummary(gatherAnswers(), patterns, wizardConfig);
   updateSummaryClause('summary-purpose', summary.purpose);
   updateSummaryClause('summary-trigger', summary.trigger);
   updateSummaryClause('summary-output', summary.output);

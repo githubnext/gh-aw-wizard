@@ -6,6 +6,9 @@ import { describe, expect, it } from 'vitest';
 const css = readFileSync(fileURLToPath(new URL('../src/styles/style.css', import.meta.url)), 'utf8');
 const html = readFileSync(fileURLToPath(new URL('../src/index.html', import.meta.url)), 'utf8');
 const ui = readFileSync(fileURLToPath(new URL('../src/js/ui.js', import.meta.url)), 'utf8');
+const wizard = JSON.parse(
+  readFileSync(fileURLToPath(new URL('../src/wizard.json', import.meta.url)), 'utf8')
+);
 
 function ruleBody(selector) {
   const start = css.indexOf(`${selector  } {`);
@@ -144,7 +147,7 @@ describe('Archetype radiogroup arrow-key focus', () => {
 describe('Primer iconography', () => {
   it('uses hidden Octicons instead of emoji for decorative interface icons', () => {
     expect(html).toContain('id="octicon-eye"');
-    expect(html).toContain('<use href="#octicon-eye"></use>');
+    expect(wizard.steps.output.options.some((option) => option.icon === 'eye')).toBe(true);
     expect(html).not.toMatch(/\p{Extended_Pictographic}/u);
   });
 
@@ -157,41 +160,40 @@ describe('Primer iconography', () => {
     expect(reducedMotionRules).toMatch(/\.octicon:hover\s*\{\s*transform:\s*none;/);
   });
 
-  it('adds decorative Octicons to every output option', () => {
-    const outputOptions = html.slice(html.indexOf('id="output-options"'), html.indexOf('</section>', html.indexOf('id="output-options"')));
-    expect(outputOptions.match(/<svg class="octicon" aria-hidden="true">/g)).toHaveLength(5);
-    expect(outputOptions).toContain('<use href="#octicon-comment-discussion"></use>');
-    expect(outputOptions).toContain('<use href="#octicon-tag"></use>');
-    expect(outputOptions).toContain('<use href="#octicon-issue-opened"></use>');
-    expect(outputOptions).toContain('<use href="#octicon-git-pull-request"></use>');
-    expect(outputOptions).toContain('<use href="#octicon-eye"></use>');
+  it('configures decorative Octicons for every output option', () => {
+    expect(wizard.steps.output.options.map((option) => option.icon)).toEqual([
+      'issue-opened',
+      'comment-discussion',
+      'tag',
+      'git-pull-request',
+      'eye'
+    ]);
   });
 
-  it('uses Octicons for every extras option', () => {
-    const extrasOptions = html.slice(html.indexOf('id="extras-options"'), html.indexOf('</section>', html.indexOf('id="extras-options"')));
-    expect(extrasOptions.match(/<svg class="octicon" aria-hidden="true">/g)).toHaveLength(3);
-    expect(extrasOptions).toContain('<use href="#octicon-cache"></use>');
-    expect(extrasOptions).toContain('<use href="#octicon-graph"></use>');
-    expect(extrasOptions).toContain('<use href="#octicon-device-desktop"></use>');
+  it('configures Octicons for every extras option', () => {
+    expect(wizard.steps.extra.options.map((option) => option.icon)).toEqual([
+      'cache',
+      'graph',
+      'device-desktop'
+    ]);
   });
 
-  it('adds decorative Octicons to every trigger option', () => {
-    const triggerOptions = html.slice(html.indexOf('id="trigger-options"'), html.indexOf('</section>', html.indexOf('id="trigger-options"')));
-    expect(triggerOptions.match(/<svg class="octicon" aria-hidden="true">/g)).toHaveLength(7);
-    expect(triggerOptions).toContain('<use href="#octicon-issue-opened"></use>');
-    expect(triggerOptions).toContain('<use href="#octicon-git-pull-request"></use>');
-    expect(triggerOptions).toContain('name="trigger" value="pull_request_ready_for_review"');
-    expect(triggerOptions).toContain('PR ready for review');
-    expect(triggerOptions).toContain('<use href="#octicon-calendar"></use>');
-    expect(triggerOptions).toContain('<use href="#octicon-terminal"></use>');
-    expect(triggerOptions).toContain('<use href="#octicon-tag"></use>');
-    expect(triggerOptions).toContain('<use href="#octicon-git-commit"></use>');
+  it('configures decorative Octicons for every trigger option', () => {
+    expect(wizard.steps.trigger.options).toHaveLength(7);
+    expect(wizard.steps.trigger.options).toContainEqual(expect.objectContaining({
+      id: 'pull_request_ready_for_review',
+      label: 'PR ready for review',
+      icon: 'git-pull-request'
+    }));
   });
 
-  it('keeps engine options to engine and company only', () => {
-    const engineOptions = html.slice(html.indexOf('id="engine-options"'), html.indexOf('</section>', html.indexOf('id="engine-options"')));
-    expect(engineOptions).toContain('Copilot (GitHub)');
-    expect(engineOptions).not.toContain('option-desc');
-    expect(engineOptions).not.toContain('default)');
+  it('keeps configured engine options to engine and company only', () => {
+    expect(wizard.steps.engine.options[0]).toEqual({
+      id: 'copilot',
+      label: 'Copilot',
+      company: 'GitHub',
+      icon: 'vendor-github'
+    });
+    expect(wizard.steps.engine.options.every((option) => !option.description)).toBe(true);
   });
 });

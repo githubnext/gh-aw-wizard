@@ -1,0 +1,247 @@
+{
+  "patterns_url": "patterns/manifest.json",
+  "engines_url": "https://raw.githubusercontent.com/github/gh-aw/main/.github/aw/engines.json",
+  "landing": {
+    "title": "Automate your repository with AI agents",
+    "message": "Answer a few questions and get a ready-to-run agentic workflow for your repository.",
+    "button": "Create Your Agentic Workflow",
+    "hint": "Takes about a minute — no sign-in required.",
+    "runner": "Runs safely on GitHub Actions",
+    "trigger_label": "When",
+    "trigger_description": "Trigger",
+    "agent_label": "Agent",
+    "outputs_label": "Safe outputs"
+  },
+  "footer": {
+    "source": {
+      "url": "https://github.com/githubnext/gh-aw-wizard",
+      "label": "View source"
+    },
+    "report_issue": {
+      "url": "https://github.com/githubnext/gh-aw-wizard/issues",
+      "label": "Report an issue"
+    },
+    "terms": {
+      "url": "https://docs.github.com/en/site-policy/github-terms/github-terms-of-service",
+      "label": "Terms"
+    },
+    "privacy": {
+      "url": "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement",
+      "label": "Privacy"
+    },
+    "security": {
+      "url": "https://github.com/security",
+      "label": "Security"
+    }
+  },
+  "archetypes": {
+    "pinned": [
+      "skill-pr-reviewer",
+      "code-improvement",
+      "daily-test-improver",
+      "documentation-updater"
+    ],
+    "aliases": {
+      "pr reviewer": "skill-pr-reviewer",
+      "daily code improver": "code-improvement",
+      "daily test generator": "daily-test-improver",
+      "documentation updater": "documentation-updater"
+    },
+    "custom": {
+      "id": "custom",
+      "label": "Custom",
+      "description": "Describe your own workflow — start from scratch",
+      "icon": "tools",
+      "full_width": true
+    }
+  },
+  "steps": {
+    "trigger": {
+      "placeholder": "choose when it runs",
+      "options": [
+        {
+          "id": "issues",
+          "label": "New issue opened",
+          "description": "Runs when an issue is created",
+          "icon": "issue-opened",
+          "summary": "a new issue is opened"
+        },
+        {
+          "id": "pull_request",
+          "label": "Pull request opened",
+          "description": "Runs when a PR is created",
+          "icon": "git-pull-request",
+          "summary": "a pull request is opened"
+        },
+        {
+          "id": "pull_request_ready_for_review",
+          "label": "PR ready for review",
+          "description": "Runs when a draft PR is marked ready for review",
+          "icon": "git-pull-request",
+          "summary": "a pull request is ready for review"
+        },
+        {
+          "id": "schedule",
+          "label": "On a schedule (daily/weekly)",
+          "description": "Runs on a cron schedule",
+          "icon": "calendar",
+          "summary": "the schedule runs"
+        },
+        {
+          "id": "slash_command",
+          "label": "Slash command (/slash-command in comments)",
+          "description": "Runs when a matching slash command is posted",
+          "icon": "terminal",
+          "summary": "a slash command is posted (not recommended)"
+        },
+        {
+          "id": "label_command",
+          "label": "Label command (/label-command)",
+          "description": "Runs when a matching label is added",
+          "icon": "tag",
+          "summary": "a matching label is added"
+        },
+        {
+          "id": "push",
+          "label": "Push to branch",
+          "description": "Runs when code is pushed",
+          "icon": "git-commit",
+          "summary": "code is pushed to main"
+        }
+      ]
+    },
+    "output": {
+      "placeholder": "choose what it can write",
+      "options": [
+        {
+          "id": "create-issue",
+          "label": "Create issue",
+          "description": "Create new issues for tracking or reporting",
+          "icon": "issue-opened",
+          "summary": "create issue"
+        },
+        {
+          "id": "add-comment",
+          "label": "Add comment",
+          "description": "Post comments with analysis, feedback, or results",
+          "icon": "comment-discussion",
+          "summary": "add comment"
+        },
+        {
+          "id": "add-labels",
+          "label": "Add label",
+          "description": "Add labels on issues",
+          "icon": "tag",
+          "summary": "add label"
+        },
+        {
+          "id": "create-pull-request",
+          "label": "Create pull request",
+          "description": "Open pull requests with code changes",
+          "icon": "git-pull-request",
+          "summary": "create pull request"
+        },
+        {
+          "id": "create-pull-request-review-comment",
+          "label": "Add review comment",
+          "description": "Leave review comments on pull request diffs",
+          "icon": "eye",
+          "summary": "add review comment"
+        }
+      ]
+    },
+    "extra": {
+      "placeholder": "choose optional capabilities",
+      "options": [
+        {
+          "id": "memory",
+          "label": "Remember across runs",
+          "description": "Track trends and context between workflow executions",
+          "icon": "cache",
+          "summary": "memory between runs"
+        },
+        {
+          "id": "charts",
+          "label": "Generate charts",
+          "description": "Upload generated charts and other visual assets",
+          "icon": "graph",
+          "summary": "chart generation"
+        },
+        {
+          "id": "browser",
+          "label": "Use browser",
+          "description": "Enable Playwright CLI for browser automation",
+          "icon": "device-desktop",
+          "summary": "browser access"
+        }
+      ]
+    },
+    "engine": {
+      "placeholder": "choose an agent",
+      "options": [
+        {
+          "id": "copilot",
+          "label": "Copilot",
+          "company": "GitHub",
+          "icon": "vendor-github"
+        },
+        {
+          "id": "claude",
+          "label": "Claude",
+          "company": "Anthropic",
+          "icon": "vendor-anthropic"
+        },
+        {
+          "id": "codex",
+          "label": "Codex",
+          "company": "OpenAI",
+          "icon": "vendor-openai"
+        },
+        {
+          "id": "gemini",
+          "label": "Gemini",
+          "company": "Google",
+          "icon": "vendor-google"
+        },
+        {
+          "id": "pi",
+          "label": "Pi",
+          "company": "Inflection",
+          "icon": "vendor-pi"
+        }
+      ]
+    },
+    "purpose": {
+      "placeholder": "choose what the agent should do"
+    }
+  },
+  "recommendations": {
+    "triggers": [
+      "issues",
+      "pull_request",
+      "schedule",
+      "slash_command",
+      "label_command",
+      "push"
+    ],
+    "safe_outputs": {
+      "add-comment": ["add-comment"],
+      "add-label": ["add-labels"],
+      "add-labels": ["add-labels"],
+      "create-issue": ["create-issue"],
+      "create-pull-request": ["create-pull-request"],
+      "create-pull-request-review-comment": ["create-pull-request-review-comment"],
+      "commit-files": ["create-pull-request"],
+      "issues": ["add-comment", "add-labels", "create-issue"],
+      "pull-requests": ["create-pull-request", "add-comment", "create-pull-request-review-comment"],
+      "contents": ["create-pull-request"]
+    }
+  },
+  "summary_overrides": {
+    "pr-review": {
+      "trigger": {
+        "pull_request": "a pull request is ready for review"
+      }
+    }
+  }
+}

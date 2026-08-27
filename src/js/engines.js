@@ -84,13 +84,20 @@ export function registerDefinitionEngines(engines) {
   });
 }
 
+export function registerBuiltInEngines(engines) {
+  builtInEngineIds.clear();
+  engines.forEach((engine) => {
+    if (engine && ENGINE_ID_PATTERN.test(engine.id)) builtInEngineIds.add(engine.id);
+  });
+}
+
 export function isKnownEngine(engine) {
   return builtInEngineIds.has(engine) || definitionEngineIds.has(engine);
 }
 
-export function loadDefinitionEngines(fetchImpl) {
+export function loadDefinitionEngines(fetchImpl, url) {
   fetchImpl = fetchImpl || fetch;
-  return fetchImpl(ENGINES_URL).then((response) => {
+  return fetchImpl(url || ENGINES_URL).then((response) => {
     if (!response.ok) throw new Error('Unable to load gh-aw engines');
     return response.json();
   }).then(parseDefinitionEngines).catch(() => {

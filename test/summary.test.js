@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
 import { buildWorkflowSummary } from '../src/js/summary.js';
 
@@ -10,6 +12,9 @@ const patterns = {
     }
   ]
 };
+const wizardConfig = JSON.parse(
+  readFileSync(fileURLToPath(new URL('../src/wizard.json', import.meta.url)), 'utf8')
+);
 
 function answers(overrides = {}) {
   return {
@@ -26,7 +31,7 @@ function answers(overrides = {}) {
 
 describe('buildWorkflowSummary', () => {
   it('starts with prompts for choices that have not been made', () => {
-    const summary = buildWorkflowSummary(answers(), patterns);
+    const summary = buildWorkflowSummary(answers(), patterns, wizardConfig);
 
     expect(summary.trigger).toEqual({ value: 'choose when it runs', complete: false });
     expect(summary.purpose).toEqual({ value: 'choose what the agent should do', complete: false });
@@ -40,7 +45,7 @@ describe('buildWorkflowSummary', () => {
       triggers: ['issues', 'schedule'],
       outputs: ['add-labels', 'add-comment'],
       engine: 'claude'
-    }), patterns);
+    }), patterns, wizardConfig);
 
     expect(summary.trigger.value).toBe('a new issue is opened or the schedule runs');
     expect(summary.purpose).toEqual({ value: 'Classify and label new issues', complete: true });
@@ -52,7 +57,7 @@ describe('buildWorkflowSummary', () => {
     const summary = buildWorkflowSummary(answers({
       engine: 'copilot',
       extras: ['memory', 'charts', 'browser']
-    }), patterns);
+    }), patterns, wizardConfig);
 
     expect(summary.extras.value).toBe('memory between runs, chart generation, and browser access');
     expect(summary.extras.complete).toBe(true);
@@ -60,7 +65,7 @@ describe('buildWorkflowSummary', () => {
   });
 
   it('shows a placeholder for extras when none are selected', () => {
-    const summary = buildWorkflowSummary(answers({ engine: 'copilot', extras: [] }), patterns);
+    const summary = buildWorkflowSummary(answers({ engine: 'copilot', extras: [] }), patterns, wizardConfig);
 
     expect(summary.extras).toEqual({ value: 'choose optional capabilities', complete: false });
   });
@@ -69,7 +74,7 @@ describe('buildWorkflowSummary', () => {
     const summary = buildWorkflowSummary(answers({
       archetype: 'pr-review',
       triggers: ['pull_request']
-    }), patterns);
+    }), patterns, wizardConfig);
 
     expect(summary.trigger.value).toBe('a pull request is ready for review');
   });
@@ -77,7 +82,7 @@ describe('buildWorkflowSummary', () => {
   it('describes the explicit ready-for-review trigger accurately', () => {
     const summary = buildWorkflowSummary(answers({
       triggers: ['pull_request_ready_for_review']
-    }), patterns);
+    }), patterns, wizardConfig);
 
     expect(summary.trigger.value).toBe('a pull request is ready for review');
   });
@@ -85,7 +90,7 @@ describe('buildWorkflowSummary', () => {
   it('joins three trigger conditions with OR', () => {
     const summary = buildWorkflowSummary(answers({
       triggers: ['issues', 'schedule', 'push']
-    }), patterns);
+    }), patterns, wizardConfig);
 
     expect(summary.trigger.value).toBe(
       'a new issue is opened, the schedule runs, or code is pushed to main'
@@ -95,7 +100,7 @@ describe('buildWorkflowSummary', () => {
   it('uses custom descriptions as they are entered', () => {
     const summary = buildWorkflowSummary(answers({
       customDescription: 'Check release notes for breaking changes'
-    }), patterns);
+    }), patterns, wizardConfig);
 
     expect(summary.purpose).toEqual({
       value: 'Check release notes for breaking changes',
@@ -112,7 +117,7 @@ describe('buildWorkflowSummary', () => {
         'create-pull-request',
         'create-pull-request-review-comment'
       ]
-    }), patterns);
+    }), patterns, wizardConfig);
 
     expect(summary.output.value).toBe(
       'create issue, add comment, add label, create pull request, and add review comment'
