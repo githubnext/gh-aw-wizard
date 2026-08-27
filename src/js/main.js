@@ -2,4 +2,4 @@
 
 import { initWizard } from './ui.js';
 
-document.addEventListener('DOMContentLoaded', initWizard);
+document.addEventListener('DOMContentLoaded', () => initWizard());
