@@ -2,9 +2,17 @@
   "id": "repo-maintainer",
   "label": "Repo Maintainer",
   "description": "Proactively triage, fix, and maintain a repository",
-  "success_rate": null,
-  "count": 0,
+  "success_rate": 0.46,
+  "count": 21,
   "recommended_triggers": [
+    {
+      "type": "reaction",
+      "config": {}
+    },
+    {
+      "type": "slash_command",
+      "config": {}
+    },
     {
       "type": "schedule",
       "config": {}
@@ -26,11 +34,38 @@
     5000,
     12000
   ],
-  "top_repos": [],
+  "top_repos": [
+    {
+      "repo": "githubnext/agentics",
+      "stars": 922
+    },
+    {
+      "repo": "py-why/dowhy",
+      "stars": 8282
+    },
+    {
+      "repo": "fsprojects/Paket",
+      "stars": 2082
+    },
+    {
+      "repo": "fsprojects/FsHttp",
+      "stars": 498
+    },
+    {
+      "repo": "fsprojects/FSharp.TypeProviders.SDK",
+      "stars": 304
+    }
+  ],
   "tips": [
     "Use persistent memory and check for existing work before acting",
     "Limit each run to one high-value maintenance task",
     "Leave merges, approvals, and destructive actions to maintainers"
   ],
-  "anti_patterns": []
+  "anti_patterns": [
+    "repo-assist",
+    "repo-assist",
+    "repo-assist",
+    "repo-assist",
+    "repo-assist"
+  ]
 }

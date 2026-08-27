@@ -3,7 +3,7 @@
   "label": "Dependency Monitor",
   "description": "Track and update dependencies",
   "success_rate": 0.5,
-  "count": 55,
+  "count": 59,
   "recommended_triggers": [
     {
       "type": "schedule",
@@ -11,6 +11,10 @@
     },
     {
       "type": "issues",
+      "config": {}
+    },
+    {
+      "type": "skip-if-match",
       "config": {}
     }
   ],
@@ -30,38 +34,36 @@
   ],
   "top_repos": [
     {
-      "repo": "mono/SkiaSharp",
-      "stars": 5546
+      "repo": "github/gh-aw",
+      "stars": 5016
     },
     {
-      "repo": "github/gh-aw",
-      "stars": 4953
+      "repo": "mono/SkiaSharp",
+      "stars": 5558
     },
     {
       "repo": "dotnet/Open-XML-SDK",
-      "stars": 4583
+      "stars": 4589
+    },
+    {
+      "repo": "microsoft/testfx",
+      "stars": 1040
     },
     {
       "repo": "dotnet/arcade",
-      "stars": 727
-    },
-    {
-      "repo": "OpenMS/OpenMS",
-      "stars": 611
+      "stars": 728
     }
   ],
   "tips": [
     "Use schedule triggers for reliable periodic checks",
     "Include a checklist of specific dependencies to monitor \u2014 don't leave it open-ended",
-    "Enable network access for fetching upstream release data",
-    "Add skip-if-match to the schedule trigger and expires to create-issue so scheduled runs don't reopen a duplicate finding every day",
-    "Use DO NOT constraints to avoid auto-merging updates or bumping major versions without review"
+    "Enable network access for fetching upstream release data"
   ],
   "anti_patterns": [
-    "docs-sync",
     "skills-updater",
     "doc-sync",
     "update-github-info",
+    "dependency-api-monitor",
     "doc-sync"
   ]
 }
