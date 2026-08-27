@@ -1,6 +1,39 @@
 {
   "patterns_url": "patterns/manifest.json",
   "engines_url": "https://raw.githubusercontent.com/github/gh-aw/main/.github/aw/engines.json",
+  "landing": {
+    "title": "Automate your repository with AI agents",
+    "message": "Answer a few questions and get a ready-to-run agentic workflow for your repository.",
+    "button": "Create Your Agentic Workflow",
+    "hint": "Takes about a minute — no sign-in required.",
+    "runner": "Runs safely on GitHub Actions",
+    "trigger_label": "When",
+    "trigger_description": "Trigger",
+    "agent_label": "Agent",
+    "outputs_label": "Safe outputs"
+  },
+  "footer": {
+    "source": {
+      "url": "https://github.com/githubnext/gh-aw-wizard",
+      "label": "View source"
+    },
+    "report_issue": {
+      "url": "https://github.com/githubnext/gh-aw-wizard/issues",
+      "label": "Report an issue"
+    },
+    "terms": {
+      "url": "https://docs.github.com/en/site-policy/github-terms/github-terms-of-service",
+      "label": "Terms"
+    },
+    "privacy": {
+      "url": "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement",
+      "label": "Privacy"
+    },
+    "security": {
+      "url": "https://github.com/security",
+      "label": "Security"
+    }
+  },
   "archetypes": {
     "pinned": [
       "skill-pr-reviewer",

@@ -27,3 +27,53 @@ export function wizardOptions(config, id) {
   const step = wizardStep(config, id);
   return Array.isArray(step.options) ? step.options : [];
 }
+
+const LANDING_ELEMENTS = {
+  title: 'landing-title',
+  message: 'landing-message',
+  button: 'landing-button-label',
+  hint: 'landing-hint',
+  runner: 'landing-runner',
+  trigger_label: 'landing-trigger-label',
+  trigger_description: 'landing-trigger-description',
+  agent_label: 'landing-agent-label',
+  outputs_label: 'landing-outputs-label'
+};
+
+const FOOTER_ELEMENTS = {
+  source: ['footer-source', 'footer-source-label'],
+  report_issue: ['footer-report-issue', 'footer-report-issue'],
+  terms: ['footer-terms', 'footer-terms'],
+  privacy: ['footer-privacy', 'footer-privacy'],
+  security: ['footer-security', 'footer-security']
+};
+
+function setText(id, value) {
+  const element = document.getElementById(id);
+  if (element && typeof value === 'string') element.textContent = value;
+}
+
+function safeUrl(url, configUrl) {
+  const resolved = resolveWizardAssetUrl(url, configUrl);
+  if (!resolved) return null;
+  try {
+    const parsed = new URL(resolved, document.baseURI);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:' ? parsed.href : null;
+  } catch {
+    return null;
+  }
+}
+
+export function applyPageContent(config, configUrl) {
+  const landing = config && config.landing ? config.landing : {};
+  Object.entries(LANDING_ELEMENTS).forEach(([key, id]) => setText(id, landing[key]));
+
+  const footer = config && config.footer ? config.footer : {};
+  Object.entries(FOOTER_ELEMENTS).forEach(([key, ids]) => {
+    const item = footer[key] || {};
+    const link = document.getElementById(ids[0]);
+    const url = safeUrl(item.url, configUrl);
+    if (link && url) link.href = url;
+    setText(ids[1], item.label);
+  });
+}

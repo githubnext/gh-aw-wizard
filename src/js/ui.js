@@ -22,6 +22,7 @@ import {
 } from './engines.js';
 import {
   WIZARD_CONFIG_URL,
+  applyPageContent,
   loadWizardConfig,
   resolveWizardAssetUrl,
   wizardOptions
@@ -57,6 +58,7 @@ export function initWizard(options) {
       return null;
     }
     wizardConfig = config;
+    applyPageContent(config, configUrl);
     const patternsUrl = resolveWizardAssetUrl(config.patterns_url, configUrl);
     const enginesUrl = resolveWizardAssetUrl(config.engines_url, configUrl);
     return Promise.all([

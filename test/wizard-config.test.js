@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import {
+  applyPageContent,
   loadWizardConfig,
   resolveWizardAssetUrl,
   wizardOptions,
@@ -47,5 +48,47 @@ describe('wizard configuration', () => {
     expect(wizardOptions(config, 'output')).toEqual([{ id: 'publish' }]);
     expect(wizardStep(config, 'unknown')).toEqual({});
     expect(wizardOptions(config, 'unknown')).toEqual([]);
+  });
+
+  it('applies configured landing text and footer links safely', () => {
+    const elements = {
+      'landing-title': { textContent: '' },
+      'landing-button-label': { textContent: '' },
+      'footer-source': { href: '' },
+      'footer-source-label': { textContent: '' },
+      'footer-security': { href: '', textContent: '' }
+    };
+    globalThis.document = {
+      baseURI: 'https://wizard.example/app/',
+      getElementById(id) {
+        return elements[id] || null;
+      }
+    };
+
+    applyPageContent({
+      landing: {
+        title: 'Build an automation',
+        button: 'Start building'
+      },
+      footer: {
+        source: {
+          url: './source',
+          label: 'Source code'
+        },
+        security: {
+          url: 'javascript:alert(1)',
+          label: 'Security'
+        }
+      }
+    }, 'https://custom.example/config/wizard.json');
+
+    expect(elements['landing-title'].textContent).toBe('Build an automation');
+    expect(elements['landing-button-label'].textContent).toBe('Start building');
+    expect(elements['footer-source']).toMatchObject({
+      href: 'https://custom.example/config/source'
+    });
+    expect(elements['footer-source-label'].textContent).toBe('Source code');
+    expect(elements['footer-security'].href).toBe('');
+    expect(elements['footer-security'].textContent).toBe('Security');
   });
 });

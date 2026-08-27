@@ -7,8 +7,8 @@ A wizard interface to create GitHub Agentic Workflows. Create ready-to-use [GitH
 ## Customize the wizard
 
 The dashboard is rendered at runtime from [`src/wizard.json`](src/wizard.json). The file defines the
-archetype ordering, trigger/output/extra/engine cards, summary text, recommendation mappings, and
-the URLs of the pattern library and engine catalog.
+landing-page text, footer labels and URLs, archetype ordering, trigger/output/extra/engine cards,
+summary text, recommendation mappings, and the URLs of the pattern library and engine catalog.
 
 To host a customized wizard in another repository:
 
