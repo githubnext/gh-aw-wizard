@@ -56,10 +56,12 @@ describe('buildWorkflowSummary', () => {
   it('summarizes optional extras separately from the selected engine', () => {
     const summary = buildWorkflowSummary(answers({
       engine: 'copilot',
-      extras: ['memory', 'charts', 'browser']
+      extras: ['memory', 'charts', 'browser', 'agentic-workflows', 'lsp']
     }), patterns, wizardConfig);
 
-    expect(summary.extras.value).toBe('memory between runs, chart generation, and browser access');
+    expect(summary.extras.value).toBe(
+      'memory between runs, chart generation, browser access, agentic workflow analysis, and language service access'
+    );
     expect(summary.extras.complete).toBe(true);
     expect(summary.engine.value).toBe('Copilot');
   });

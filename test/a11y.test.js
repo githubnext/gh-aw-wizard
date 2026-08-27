@@ -174,7 +174,9 @@ describe('Primer iconography', () => {
     expect(wizard.steps.extra.options.map((option) => option.icon)).toEqual([
       'cache',
       'graph',
-      'device-desktop'
+      'device-desktop',
+      'tools',
+      'terminal'
     ]);
   });
 

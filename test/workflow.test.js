@@ -183,6 +183,22 @@ describe('inferCapabilities', () => {
     );
     expect(md).not.toContain('lsp:\n');
   });
+
+  it('adds selected agentic-workflows and LSP extras for Copilot workflows', () => {
+    const md = generateWorkflowFile(
+      answers({
+        extras: ['agentic-workflows', 'lsp'],
+        triggers: ['schedule'],
+        outputs: ['create-issue']
+      }),
+      patterns
+    );
+
+    expect(md).toContain('  agentic-workflows: true\n');
+    expect(md).toContain('lsp:\n  typescript:\n    command: typescript-language-server\n');
+    expect(md).toContain('      ".tsx": typescriptreact\n');
+    expect(md).toContain('network:\n  allowed:\n    - defaults\n    - github\n    - node\n');
+  });
 });
 
 describe('buildTriggerYaml', () => {
