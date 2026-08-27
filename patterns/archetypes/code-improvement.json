@@ -56,6 +56,8 @@
     "Use schedule triggers for continuous maintenance coverage",
     "Add pre-steps to run tests/linters before the agent starts \u2014 validates baseline",
     "Avoid pr-fix and ci-doctor templates \u2014 both have <20% success in practice",
+    "Use explicit DO NOT constraints to keep changes scoped to the requested improvement",
+    "Use protected-files: fallback-to-issue for manifests, CI configuration, and agent instructions",
     "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers"
   ],
   "anti_patterns": [

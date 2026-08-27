@@ -57,7 +57,9 @@
   "tips": [
     "Use schedule triggers for reliable periodic checks",
     "Include a checklist of specific dependencies to monitor \u2014 don't leave it open-ended",
-    "Enable network access for fetching upstream release data"
+    "Enable network access for fetching upstream release data",
+    "Use DO NOT constraints to prevent unrelated dependency or source changes",
+    "Use skip-if-match to prevent duplicate scheduled findings"
   ],
   "anti_patterns": [
     "skills-updater",
