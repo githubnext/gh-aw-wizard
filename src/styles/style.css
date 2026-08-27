@@ -429,16 +429,17 @@ a:hover {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  /* Keep long option lists within the viewport and scroll instead */
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+  scrollbar-gutter: stable;
 }
 /* 2-col grid for archetype cards */
 .option-group.archetype-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.65rem;
-  max-height: 32rem;
-  overflow-y: auto;
-  padding-right: 0.25rem;
-  scrollbar-gutter: stable;
 }
 
 .option-card {
