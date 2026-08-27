@@ -43,6 +43,8 @@
   --label-orange: var(--color-severe-emphasis, #bc4c00);
   --label-pink: var(--color-sponsors-emphasis, #bf3989);
   --label-gray: var(--color-neutral-emphasis, #656d76);
+  --label-orange-fg: var(--color-fg-on-emphasis, #ffffff);
+  /* light-mode label-orange (#bc4c00) passes 5:1 contrast against white per Primer color guidance */
   --shadow-card: var(--color-shadow-medium, 0 3px 12px rgba(27,31,36,0.15));
   --shadow-floating: var(--color-shadow-large, 0 8px 24px rgba(140,149,159,0.2));
   --shadow-btn-primary-hover: 0 2px 6px rgba(31, 136, 61, 0.25);
@@ -95,6 +97,8 @@
   --label-orange: #e3833e;
   --label-pink: #bf3989;
   --label-gray: #656d76;
+  /* dark-mode label-orange (#e3833e) needs dark text to meet contrast; light text fails */
+  --label-orange-fg: #1a1300;
   --shadow-card: 0 2px 8px rgba(1,4,9,0.4);
   --shadow-floating: 0 4px 16px rgba(1,4,9,0.5);
   --shadow-btn-primary-hover: 0 2px 6px rgba(63,185,80,0.3);
@@ -352,7 +356,7 @@ a:hover {
 .recipe-key-where { background: var(--label-green); }
 .recipe-key-extras {
   background: var(--label-orange);
-  color: #000000;
+  color: var(--label-orange-fg);
 }
 .recipe-key-agent { background: var(--label-gray); }
 .recipe-key-preview { background: var(--label-purple); }
