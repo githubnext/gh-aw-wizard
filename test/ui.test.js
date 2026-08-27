@@ -1,6 +1,25 @@
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { maxReachableStep, renderArchetypeOptions, resetNavigationPane, showCopySuccess } from '../src/js/ui.js';
+import {
+  maxReachableStep,
+  renderArchetypeOptions,
+  renderChoiceOptions,
+  resetNavigationPane,
+  showCopySuccess
+} from '../src/js/ui.js';
+
+const archetypeConfig = {
+  archetypes: {
+    pinned: ['skill-pr-reviewer', 'code-improvement', 'daily-test-improver', 'documentation-updater'],
+    aliases: {},
+    custom: {
+      id: 'custom',
+      label: 'Custom',
+      description: 'Describe your own workflow — start from scratch',
+      full_width: true
+    }
+  }
+};
 
 const originalDocument = globalThis.document;
 
@@ -34,7 +53,7 @@ describe('wizard navigation', () => {
         archetypes: [
           { id: 'status-report', label: 'Status Report', description: 'Periodic status/activity reports' }
         ]
-      });
+      }, archetypeConfig);
 
       expect(container.children).toHaveLength(2);
       const values = container.children.map((card) => card.dataset.value);
@@ -68,7 +87,7 @@ describe('wizard navigation', () => {
           { id: 'code-improvement', label: 'Code Improvement' },
           { id: 'skill-pr-reviewer', label: 'Skill PR Reviewer' }
         ]
-      });
+      }, archetypeConfig);
 
       const values = container.children.map((card) => card.dataset.value);
       expect(values).toEqual([
@@ -87,6 +106,44 @@ describe('wizard navigation', () => {
       expect(container.children[4].classList.contains('priority-archetype')).toBe(false);
       expect(container.children[5].classList.contains('priority-archetype')).toBe(false);
       expect(container.children[6].classList.contains('priority-archetype')).toBe(false);
+    });
+
+    it('renders choice cards from wizard configuration', () => {
+      const container = createElement();
+      globalThis.document = {
+        getElementById(id) {
+          return id === 'trigger-options' ? container : null;
+        },
+        createElement() {
+          return createElement();
+        },
+        createElementNS() {
+          return createElement();
+        },
+        createTextNode(text) {
+          return { textContent: text };
+        }
+      };
+
+      renderChoiceOptions({
+        steps: {
+          trigger: {
+            options: [{
+              id: 'release',
+              label: 'Release published',
+              description: 'Runs for a release',
+              icon: 'tag'
+            }]
+          }
+        }
+      }, 'trigger');
+
+      expect(container.children).toHaveLength(1);
+      expect(container.children[0].children[0]).toMatchObject({
+        name: 'trigger',
+        type: 'checkbox',
+        value: 'release'
+      });
     });
   });
 

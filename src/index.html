@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="gh-aw-wizard-config" content="wizard.json">
   <title>GitHub Agentic Workflow Generator</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
   <script>
@@ -146,57 +147,7 @@
             <span class="recipe-value" id="summary-trigger">choose when it runs</span>
           </button>
           <section class="wizard-step" id="step-2">
-            <div class="option-group" id="trigger-options">
-              <label class="option-card">
-                <input type="checkbox" name="trigger" value="issues">
-                <div class="option-info">
-                  <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-issue-opened"></use></svg>New issue opened</div>
-                  <div class="option-desc">Runs when an issue is created</div>
-                </div>
-              </label>
-              <label class="option-card">
-                <input type="checkbox" name="trigger" value="pull_request">
-                <div class="option-info">
-                  <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-git-pull-request"></use></svg>Pull request opened</div>
-                  <div class="option-desc">Runs when a PR is created</div>
-                </div>
-              </label>
-              <label class="option-card">
-                <input type="checkbox" name="trigger" value="pull_request_ready_for_review">
-                <div class="option-info">
-                  <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-git-pull-request"></use></svg>PR ready for review</div>
-                  <div class="option-desc">Runs when a draft PR is marked ready for review</div>
-                </div>
-              </label>
-              <label class="option-card">
-                <input type="checkbox" name="trigger" value="schedule">
-                <div class="option-info">
-                  <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-calendar"></use></svg>On a schedule (daily/weekly)</div>
-                  <div class="option-desc">Runs on a cron schedule</div>
-                </div>
-              </label>
-              <label class="option-card">
-                <input type="checkbox" name="trigger" value="slash_command">
-                <div class="option-info">
-                  <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-terminal"></use></svg>Slash command (/slash-command in comments)</div>
-                  <div class="option-desc">Runs when a matching slash command is posted</div>
-                </div>
-              </label>
-              <label class="option-card">
-                <input type="checkbox" name="trigger" value="label_command">
-                <div class="option-info">
-                  <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-tag"></use></svg>Label command (/label-command)</div>
-                  <div class="option-desc">Runs when a matching label is added</div>
-                </div>
-              </label>
-              <label class="option-card">
-                <input type="checkbox" name="trigger" value="push">
-                <div class="option-info">
-                  <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-git-commit"></use></svg>Push to branch</div>
-                  <div class="option-desc">Runs when code is pushed</div>
-                </div>
-              </label>
-            </div>
+            <div class="option-group" id="trigger-options"></div>
           </section>
         </div>
 
@@ -208,43 +159,7 @@
             <span class="recipe-value" id="summary-output">choose what it can write</span>
           </button>
           <section class="wizard-step" id="step-3">
-            <div class="option-group" id="output-options">
-              <label class="option-card">
-                <input type="checkbox" name="output" value="create-issue">
-                <div class="option-info">
-                  <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-issue-opened"></use></svg>Create issue</div>
-                  <div class="option-desc">Create new issues for tracking or reporting</div>
-                </div>
-              </label>
-              <label class="option-card">
-                <input type="checkbox" name="output" value="add-comment">
-                <div class="option-info">
-                  <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-comment-discussion"></use></svg>Add comment</div>
-                  <div class="option-desc">Post comments with analysis, feedback, or results</div>
-                </div>
-              </label>
-              <label class="option-card">
-                <input type="checkbox" name="output" value="add-labels">
-                <div class="option-info">
-                  <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-tag"></use></svg>Add label</div>
-                  <div class="option-desc">Add labels on issues</div>
-                </div>
-              </label>
-              <label class="option-card">
-                <input type="checkbox" name="output" value="create-pull-request">
-                <div class="option-info">
-                  <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-git-pull-request"></use></svg>Create pull request</div>
-                  <div class="option-desc">Open pull requests with code changes</div>
-                </div>
-              </label>
-              <label class="option-card">
-                <input type="checkbox" name="output" value="create-pull-request-review-comment">
-                <div class="option-info">
-                  <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-eye"></use></svg>Add review comment</div>
-                  <div class="option-desc">Leave review comments on pull request diffs</div>
-                </div>
-              </label>
-            </div>
+            <div class="option-group" id="output-options"></div>
           </section>
         </div>
 
@@ -256,29 +171,7 @@
             <span class="recipe-value" id="summary-extras">choose optional capabilities</span>
           </button>
           <section class="wizard-step" id="step-4">
-            <div class="option-group" id="extras-options">
-              <label class="option-card">
-                <input type="checkbox" name="extra" value="memory">
-                <div class="option-info">
-                  <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-cache"></use></svg>Remember across runs</div>
-                  <div class="option-desc">Track trends and context between workflow executions</div>
-                </div>
-              </label>
-              <label class="option-card">
-                <input type="checkbox" name="extra" value="charts">
-                <div class="option-info">
-                  <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-graph"></use></svg>Generate charts</div>
-                  <div class="option-desc">Upload generated charts and other visual assets</div>
-                </div>
-              </label>
-              <label class="option-card">
-                <input type="checkbox" name="extra" value="browser">
-                <div class="option-info">
-                  <div class="option-label option-label-with-icon"><svg class="octicon" aria-hidden="true"><use href="#octicon-device-desktop"></use></svg>Use browser</div>
-                  <div class="option-desc">Enable Playwright CLI for browser automation</div>
-                </div>
-              </label>
-            </div>
+            <div class="option-group" id="extras-options"></div>
           </section>
         </div>
 
@@ -291,38 +184,7 @@
           </button>
           <section class="wizard-step" id="step-5">
             <div class="engine-selector">
-              <div class="option-group" id="engine-options">
-                <label class="option-card">
-                  <input type="radio" name="engine" value="copilot">
-                  <div class="option-info">
-                    <div class="option-label option-label-with-icon option-label-with-engine-icon"><span class="engine-vendor-icon" aria-hidden="true"><svg class="vendor-icon" focusable="false"><use href="#vendor-github"></use></svg></span>Copilot (GitHub)</div>
-                  </div>
-                </label>
-                <label class="option-card">
-                  <input type="radio" name="engine" value="claude">
-                  <div class="option-info">
-                    <div class="option-label option-label-with-icon option-label-with-engine-icon"><span class="engine-vendor-icon" aria-hidden="true"><svg class="vendor-icon" focusable="false"><use href="#vendor-anthropic"></use></svg></span>Claude (Anthropic)</div>
-                  </div>
-                </label>
-                <label class="option-card">
-                  <input type="radio" name="engine" value="codex">
-                  <div class="option-info">
-                    <div class="option-label option-label-with-icon option-label-with-engine-icon"><span class="engine-vendor-icon" aria-hidden="true"><svg class="vendor-icon" focusable="false"><use href="#vendor-openai"></use></svg></span>Codex (OpenAI)</div>
-                  </div>
-                </label>
-                <label class="option-card">
-                  <input type="radio" name="engine" value="gemini">
-                  <div class="option-info">
-                    <div class="option-label option-label-with-icon option-label-with-engine-icon"><span class="engine-vendor-icon" aria-hidden="true"><svg class="vendor-icon" focusable="false"><use href="#vendor-google"></use></svg></span>Gemini (Google)</div>
-                  </div>
-                </label>
-                <label class="option-card">
-                  <input type="radio" name="engine" value="pi">
-                  <div class="option-info">
-                    <div class="option-label option-label-with-icon option-label-with-engine-icon"><span class="engine-vendor-icon" aria-hidden="true"><svg class="vendor-icon" focusable="false"><use href="#vendor-pi"></use></svg></span>Pi (Inflection)</div>
-                  </div>
-                </label>
-              </div>
+              <div class="option-group" id="engine-options"></div>
             </div>
           </section>
         </div>

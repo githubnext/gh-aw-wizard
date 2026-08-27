@@ -203,5 +203,12 @@
       "pull-requests": ["create-pull-request", "add-comment", "create-pull-request-review-comment"],
       "contents": ["create-pull-request"]
     }
+  },
+  "summary_overrides": {
+    "pr-review": {
+      "trigger": {
+        "pull_request": "a pull request is ready for review"
+      }
+    }
   }
 }
