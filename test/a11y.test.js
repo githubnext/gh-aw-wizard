@@ -108,8 +108,12 @@ describe('Copy prompt success modal', () => {
   });
 
   it('tells users to run the copied prompt in their repository', () => {
-    expect(html).toContain('Open your coding agent from the repository you want to automate');
-    expect(html).toContain('<strong>Run it in your repository</strong>');
+    expect(wizard.copy_success.description).toContain(
+      'Open your coding agent from the repository you want to automate'
+    );
+    expect(wizard.copy_success.next_step_title).toBe('Run it in your repository');
+    expect(html).toContain('id="copy-modal-description"');
+    expect(html).toContain('id="copy-modal-next-step-title"');
   });
 
   it('announces clipboard failures without opening the success modal', () => {
