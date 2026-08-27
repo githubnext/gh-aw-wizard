@@ -9,10 +9,14 @@ export function loadWizardConfig(configUrl, fetchImpl) {
   });
 }
 
-export function resolveWizardAssetUrl(assetUrl, configUrl) {
+export function resolveWizardAssetUrl(assetUrl, configUrl, baseUrl) {
   if (!assetUrl) return null;
   const base = configUrl || WIZARD_CONFIG_URL;
-  return new URL(assetUrl, new URL(base, document.baseURI)).href;
+  const documentBase = globalThis.document && globalThis.document.baseURI;
+  const locationBase = globalThis.location && globalThis.location.href;
+  const pageBase = baseUrl || documentBase || locationBase;
+  if (!pageBase) return assetUrl;
+  return new URL(assetUrl, new URL(base, pageBase)).href;
 }
 
 export function wizardStep(config, id) {

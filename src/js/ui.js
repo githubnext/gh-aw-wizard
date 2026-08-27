@@ -42,16 +42,16 @@ function configuredUrl() {
 }
 
 export function initWizard(options) {
-  options = options || {};
+  const opts = options || {};
   initTheme();
-  const configUrl = options.configUrl || configuredUrl();
+  const configUrl = opts.configUrl || configuredUrl();
   const ready = loadWizardConfig(configUrl).then((config) => {
     wizardConfig = config;
     const patternsUrl = resolveWizardAssetUrl(config.patterns_url, configUrl);
     const enginesUrl = resolveWizardAssetUrl(config.engines_url, configUrl);
     return Promise.all([
       loadPatterns(patternsUrl),
-      loadDefinitionEngines(options.fetch, enginesUrl)
+      loadDefinitionEngines(opts.fetch, enginesUrl)
     ]);
   }).then(([data, engines]) => {
     patterns = data;
@@ -62,6 +62,12 @@ export function initWizard(options) {
     addDefinitionEngineOptions(engines);
     bindFormEvents();
     renderWorkflowSummary();
+  }).catch(() => {
+    const container = document.getElementById('archetype-options');
+    if (container) {
+      container.setAttribute('role', 'status');
+      container.textContent = 'Unable to load the wizard configuration.';
+    }
   });
   bindNavigation();
   initNavigationHistory();

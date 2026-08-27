@@ -20,12 +20,17 @@ describe('wizard configuration', () => {
   });
 
   it('resolves data files relative to an external configuration', () => {
-    globalThis.document = { baseURI: 'https://wizard.example/app/' };
-
     expect(resolveWizardAssetUrl(
       'data/manifest.json',
-      'https://custom.example/config/wizard.json'
+      'https://custom.example/config/wizard.json',
+      'https://wizard.example/app/'
     )).toBe('https://custom.example/config/data/manifest.json');
+  });
+
+  it('leaves relative URLs usable without a browser base URL', () => {
+    expect(resolveWizardAssetUrl('patterns/manifest.json', 'wizard.json')).toBe(
+      'patterns/manifest.json'
+    );
   });
 
   it('reads configured steps and returns empty values for missing steps', () => {
