@@ -45,7 +45,17 @@ export function initWizard(options) {
   const opts = options || {};
   initTheme();
   const configUrl = opts.configUrl || configuredUrl();
-  const ready = loadWizardConfig(configUrl).then((config) => {
+  const ready = loadWizardConfig(configUrl).catch(() => {
+    return null;
+  }).then((config) => {
+    if (!config) {
+      const container = document.getElementById('archetype-options');
+      if (container) {
+        container.setAttribute('role', 'status');
+        container.textContent = 'Unable to load the wizard configuration.';
+      }
+      return null;
+    }
     wizardConfig = config;
     const patternsUrl = resolveWizardAssetUrl(config.patterns_url, configUrl);
     const enginesUrl = resolveWizardAssetUrl(config.engines_url, configUrl);
@@ -53,7 +63,9 @@ export function initWizard(options) {
       loadPatterns(patternsUrl),
       loadDefinitionEngines(opts.fetch, enginesUrl)
     ]);
-  }).then(([data, engines]) => {
+  }).then((loaded) => {
+    if (!loaded) return;
+    const [data, engines] = loaded;
     patterns = data;
     renderArchetypeOptions(data, wizardConfig);
     renderConfiguredOptions(wizardConfig);
@@ -62,12 +74,6 @@ export function initWizard(options) {
     addDefinitionEngineOptions(engines);
     bindFormEvents();
     renderWorkflowSummary();
-  }).catch(() => {
-    const container = document.getElementById('archetype-options');
-    if (container) {
-      container.setAttribute('role', 'status');
-      container.textContent = 'Unable to load the wizard configuration.';
-    }
   });
   bindNavigation();
   initNavigationHistory();

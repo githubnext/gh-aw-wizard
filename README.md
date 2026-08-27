@@ -16,6 +16,8 @@ To host a customized wizard in another repository:
 2. Edit the published `wizard.json` without rebuilding the JavaScript bundle.
 3. Point `patterns_url` at a compatible pattern manifest. Relative URLs are resolved from the
    location of `wizard.json`, so the configuration and its pattern library can be hosted together.
+   The `recommendations.safe_outputs` map retains singular and plural aliases where upstream pattern
+   libraries use both forms (for example, `add-label` and `add-labels`).
 
 The default page reads the configuration URL from:
 
