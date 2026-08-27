@@ -40,6 +40,25 @@ const LANDING_ELEMENTS = {
   outputs_label: 'landing-outputs-label'
 };
 
+const FINISH_ELEMENTS = {
+  step_label: 'finish-step-label',
+  step_description: 'finish-step-description',
+  title: 'finish-title',
+  message: 'finish-message',
+  copy_button: 'btn-copy',
+  preview_label: 'finish-preview-label',
+  preview_hint: 'finish-preview-hint'
+};
+
+const COPY_SUCCESS_ELEMENTS = {
+  eyebrow: 'copy-modal-eyebrow',
+  title: 'copy-modal-title',
+  description: 'copy-modal-description',
+  next_step_title: 'copy-modal-next-step-title',
+  next_step_description: 'copy-modal-next-step-description',
+  action: 'copy-modal-action'
+};
+
 const FOOTER_ELEMENTS = {
   source: ['footer-source', 'footer-source-label'],
   report_issue: ['footer-report-issue', 'footer-report-issue'],
@@ -67,6 +86,33 @@ function safeUrl(url, configUrl) {
 export function applyPageContent(config, configUrl) {
   const landing = config && config.landing ? config.landing : {};
   Object.entries(LANDING_ELEMENTS).forEach(([key, id]) => setText(id, landing[key]));
+
+  const finish = config && config.finish ? config.finish : {};
+  Object.entries(FINISH_ELEMENTS).forEach(([key, id]) => setText(id, finish[key]));
+  const copyButton = document.getElementById('btn-copy');
+  if (copyButton) {
+    if (typeof finish.copy_button === 'string') {
+      copyButton.dataset.defaultLabel = finish.copy_button;
+    }
+    if (typeof finish.copy_failure_button === 'string') {
+      copyButton.dataset.failureLabel = finish.copy_failure_button;
+    }
+  }
+  const copyStatus = document.getElementById('copy-status');
+  if (copyStatus && typeof finish.copy_failure_status === 'string') {
+    copyStatus.dataset.failureMessage = finish.copy_failure_status;
+  }
+  const preview = document.getElementById('finish-preview');
+  if (preview && typeof finish.preview_aria_label === 'string') {
+    preview.setAttribute('aria-label', finish.preview_aria_label);
+  }
+
+  const copySuccess = config && config.copy_success ? config.copy_success : {};
+  Object.entries(COPY_SUCCESS_ELEMENTS).forEach(([key, id]) => setText(id, copySuccess[key]));
+  const closeButton = document.getElementById('copy-modal-close');
+  if (closeButton && typeof copySuccess.close_label === 'string') {
+    closeButton.setAttribute('aria-label', copySuccess.close_label);
+  }
 
   const footer = config && config.footer ? config.footer : {};
   Object.entries(FOOTER_ELEMENTS).forEach(([key, ids]) => {

@@ -12,6 +12,27 @@
     "agent_label": "Agent",
     "outputs_label": "Safe outputs"
   },
+  "finish": {
+    "step_label": "Finish",
+    "step_description": "copy your prompt and run it",
+    "title": "Your workflow generator prompt is ready",
+    "message": "Copy it, then paste it into your agent from the repository you want to automate.",
+    "copy_button": "Copy prompt",
+    "copy_failure_button": "Copy failed — try again",
+    "copy_failure_status": "Prompt could not be copied. Please try again.",
+    "preview_label": "Prompt preview",
+    "preview_hint": "Review before copying",
+    "preview_aria_label": "Generated prompt preview"
+  },
+  "copy_success": {
+    "close_label": "Close",
+    "eyebrow": "Prompt copied",
+    "title": "Your workflow is one prompt away",
+    "description": "Open your coding agent from the repository you want to automate, then paste the prompt to generate your agentic workflow.",
+    "next_step_title": "Run it in your repository",
+    "next_step_description": "Your agent will take it from there.",
+    "action": "Got it"
+  },
   "footer": {
     "source": {
       "url": "https://github.com/githubnext/gh-aw-wizard",
