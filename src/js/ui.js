@@ -792,9 +792,9 @@ function showCopyFailure() {
   const status = document.getElementById('copy-status');
   clearTimeout(copyFeedbackTimer);
   button.dataset.defaultLabel ||= button.textContent;
-  button.textContent = 'Copy failed — try again';
+  button.textContent = button.dataset.failureLabel || 'Copy failed — try again';
   button.classList.add('copy-error');
-  status.textContent = 'Prompt could not be copied. Please try again.';
+  status.textContent = status.dataset.failureMessage || 'Prompt could not be copied. Please try again.';
   copyFeedbackTimer = setTimeout(resetCopyFeedback, 3000);
 }
 

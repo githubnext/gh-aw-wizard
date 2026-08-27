@@ -193,8 +193,8 @@
         <div class="recipe-item">
           <button class="recipe-clause progress-step" type="button" data-step="6" aria-expanded="false" aria-controls="step-6" disabled>
             <span class="step-indicator" aria-hidden="true">6</span>
-            <span class="recipe-key recipe-key-preview">Finish</span>
-            <span class="recipe-value">copy your prompt and run it</span>
+            <span class="recipe-key recipe-key-preview" id="finish-step-label">Finish</span>
+            <span class="recipe-value" id="finish-step-description">copy your prompt and run it</span>
           </button>
           <section class="wizard-step" id="step-6">
 
@@ -202,8 +202,8 @@
               <div class="finish-cta">
                 <div class="finish-icon" aria-hidden="true"><svg class="octicon" aria-hidden="true"><use href="#octicon-check"></use></svg></div>
                 <div class="finish-cta-copy">
-                  <h2>Your workflow generator prompt is ready</h2>
-                  <p>Copy it, then paste it into your agent from the repository you want to automate.</p>
+                  <h2 id="finish-title">Your workflow generator prompt is ready</h2>
+                  <p id="finish-message">Copy it, then paste it into your agent from the repository you want to automate.</p>
                 </div>
                 <button class="btn btn-primary btn-copy-prompt" id="btn-copy" type="button">Copy prompt</button>
                 <span class="visually-hidden" id="copy-status" role="status" aria-live="polite"></span>
@@ -211,10 +211,10 @@
 
               <div class="prompt-card">
                 <div class="prompt-card-header">
-                  <span>Prompt preview</span>
-                  <span class="prompt-card-hint">Review before copying</span>
+                  <span id="finish-preview-label">Prompt preview</span>
+                  <span class="prompt-card-hint" id="finish-preview-hint">Review before copying</span>
                 </div>
-                <div class="prompt-preview" aria-label="Generated prompt preview">
+                <div class="prompt-preview" id="finish-preview" aria-label="Generated prompt preview">
                   <div class="preview-code" id="preview-code"></div>
                 </div>
               </div>
@@ -258,7 +258,7 @@
 
   <dialog class="copy-modal" id="copy-modal" aria-labelledby="copy-modal-title" aria-describedby="copy-modal-description">
     <div class="copy-modal-card">
-      <button class="copy-modal-close" type="button" data-copy-modal-close aria-label="Close">
+      <button class="copy-modal-close" id="copy-modal-close" type="button" data-copy-modal-close aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
       <div class="copy-modal-celebration" aria-hidden="true">
@@ -269,17 +269,17 @@
           <svg class="octicon" aria-hidden="true"><use href="#octicon-check"></use></svg>
         </div>
       </div>
-      <p class="copy-modal-eyebrow">Prompt copied</p>
+      <p class="copy-modal-eyebrow" id="copy-modal-eyebrow">Prompt copied</p>
       <h2 id="copy-modal-title">Your workflow is one prompt away</h2>
       <p id="copy-modal-description">Open your coding agent from the repository you want to automate, then paste the prompt to generate your agentic workflow.</p>
       <div class="copy-modal-next-step">
         <svg class="octicon" aria-hidden="true"><use href="#octicon-terminal"></use></svg>
         <div>
-          <strong>Run it in your repository</strong>
-          <span>Your agent will take it from there.</span>
+          <strong id="copy-modal-next-step-title">Run it in your repository</strong>
+          <span id="copy-modal-next-step-description">Your agent will take it from there.</span>
         </div>
       </div>
-      <button class="btn copy-modal-action" type="button" data-copy-modal-close>Got it</button>
+      <button class="btn copy-modal-action" id="copy-modal-action" type="button" data-copy-modal-close>Got it</button>
     </div>
   </dialog>
   <script type="module" src="./js/main.js"></script>

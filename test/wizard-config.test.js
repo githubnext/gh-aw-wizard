@@ -54,6 +54,12 @@ describe('wizard configuration', () => {
     const elements = {
       'landing-title': { textContent: '' },
       'landing-button-label': { textContent: '' },
+      'finish-title': { textContent: '' },
+      'btn-copy': { textContent: '', dataset: {} },
+      'copy-status': { textContent: '', dataset: {} },
+      'finish-preview': { setAttribute: vi.fn() },
+      'copy-modal-title': { textContent: '' },
+      'copy-modal-close': { setAttribute: vi.fn() },
       'footer-source': { href: '' },
       'footer-source-label': { textContent: '' },
       'footer-security': { href: '', textContent: '' }
@@ -70,6 +76,17 @@ describe('wizard configuration', () => {
         title: 'Build an automation',
         button: 'Start building'
       },
+      finish: {
+        title: 'Your custom prompt is ready',
+        copy_button: 'Copy custom prompt',
+        copy_failure_button: 'Try copying again',
+        copy_failure_status: 'The custom prompt was not copied.',
+        preview_aria_label: 'Custom prompt preview'
+      },
+      copy_success: {
+        close_label: 'Dismiss',
+        title: 'Custom prompt copied'
+      },
       footer: {
         source: {
           url: './source',
@@ -84,6 +101,21 @@ describe('wizard configuration', () => {
 
     expect(elements['landing-title'].textContent).toBe('Build an automation');
     expect(elements['landing-button-label'].textContent).toBe('Start building');
+    expect(elements['finish-title'].textContent).toBe('Your custom prompt is ready');
+    expect(elements['btn-copy']).toMatchObject({
+      textContent: 'Copy custom prompt',
+      dataset: {
+        defaultLabel: 'Copy custom prompt',
+        failureLabel: 'Try copying again'
+      }
+    });
+    expect(elements['copy-status'].dataset.failureMessage).toBe('The custom prompt was not copied.');
+    expect(elements['finish-preview'].setAttribute).toHaveBeenCalledWith(
+      'aria-label',
+      'Custom prompt preview'
+    );
+    expect(elements['copy-modal-title'].textContent).toBe('Custom prompt copied');
+    expect(elements['copy-modal-close'].setAttribute).toHaveBeenCalledWith('aria-label', 'Dismiss');
     expect(elements['footer-source']).toMatchObject({
       href: 'https://custom.example/config/source'
     });
