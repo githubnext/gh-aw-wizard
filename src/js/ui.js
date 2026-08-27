@@ -114,6 +114,7 @@ export function renderArchetypeOptions(data) {
     const card = document.createElement('label');
     card.className = 'option-card';
     card.dataset.value = archetype.id;
+    if (pinnedArchetypeOrder(archetype) !== -1) card.classList.add('priority-archetype');
     if (archetype.id === 'custom') card.style.gridColumn = '1 / -1';
 
     const input = document.createElement('input');

@@ -80,6 +80,12 @@ describe('wizard navigation', () => {
         'status-report',
         'custom'
       ]);
+      expect(container.children[0].classList.contains('priority-archetype')).toBe(true);
+      expect(container.children[1].classList.contains('priority-archetype')).toBe(true);
+      expect(container.children[2].classList.contains('priority-archetype')).toBe(true);
+      expect(container.children[3].classList.contains('priority-archetype')).toBe(true);
+      expect(container.children[4].classList.contains('priority-archetype')).toBe(false);
+      expect(container.children[6].classList.contains('priority-archetype')).toBe(false);
     });
   });
 

@@ -459,6 +459,11 @@ a:hover {
   transform: translateY(-1px);
   box-shadow: var(--shadow-card);
 }
+.option-group.archetype-grid .option-card.priority-archetype {
+  border-color: rgba(var(--accent-blue-rgb), 0.35);
+  background:
+    linear-gradient(90deg, rgba(var(--accent-blue-rgb), 0.08) 0%, rgba(var(--accent-blue-rgb), 0.02) 45%, var(--bg-card) 100%);
+}
 .option-card.selected {
   border-color: var(--accent-blue);
   background: rgba(var(--accent-blue-rgb), 0.05);
