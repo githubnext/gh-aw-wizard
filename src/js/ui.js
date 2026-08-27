@@ -49,9 +49,45 @@ function archetypeIconId(archetypeId, data) {
   return definition && definition.icon ? definition.icon : 'tools';
 }
 
+const PINNED_ARCHETYPE_ORDER = [
+  'skill-pr-reviewer',
+  'code-improvement',
+  'daily-test-improver',
+  'documentation-updater'
+];
+
+const PINNED_ARCHETYPE_INDEX = new Map(
+  PINNED_ARCHETYPE_ORDER.map((id, index) => [id, index])
+);
+
+const PINNED_ARCHETYPE_ALIASES = new Map([
+  ['pr reviewer', 'skill-pr-reviewer'],
+  ['daily code improver', 'code-improvement'],
+  ['daily test generator', 'daily-test-improver'],
+  ['documentation updater', 'documentation-updater']
+]);
+
+function pinnedArchetypeOrder(archetype) {
+  const id = archetype && typeof archetype.id === 'string' ? archetype.id : '';
+  if (PINNED_ARCHETYPE_INDEX.has(id)) return PINNED_ARCHETYPE_INDEX.get(id);
+  const label = archetype && typeof archetype.label === 'string'
+    ? archetype.label.trim().toLowerCase()
+    : '';
+  const canonicalId = PINNED_ARCHETYPE_ALIASES.get(label);
+  if (!canonicalId) return -1;
+  return PINNED_ARCHETYPE_INDEX.get(canonicalId) ?? -1;
+}
+
 function archetypeSort(a, b) {
   if (a.id === 'custom' && b.id !== 'custom') return 1;
   if (b.id === 'custom' && a.id !== 'custom') return -1;
+  const aPinnedOrder = pinnedArchetypeOrder(a);
+  const bPinnedOrder = pinnedArchetypeOrder(b);
+  const aPinned = aPinnedOrder !== -1;
+  const bPinned = bPinnedOrder !== -1;
+  if (aPinned && bPinned) return aPinnedOrder - bPinnedOrder;
+  if (aPinned) return -1;
+  if (bPinned) return 1;
   return 0;
 }
 
@@ -78,6 +114,7 @@ export function renderArchetypeOptions(data) {
     const card = document.createElement('label');
     card.className = 'option-card';
     card.dataset.value = archetype.id;
+    if (pinnedArchetypeOrder(archetype) !== -1) card.classList.add('priority-archetype');
     if (archetype.id === 'custom') card.style.gridColumn = '1 / -1';
 
     const input = document.createElement('input');

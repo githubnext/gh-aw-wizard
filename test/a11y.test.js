@@ -28,6 +28,11 @@ describe('archetype grid keyboard accessibility', () => {
     expect(ruleBody('.option-card:focus-within')).toMatch(/outline:/);
   });
 
+  it('adds a subtle visual highlight for pinned priority archetypes', () => {
+    const body = ruleBody('.option-group.archetype-grid .option-card.priority-archetype');
+    expect(body).toMatch(/linear-gradient/);
+  });
+
   it('exposes the archetype options as a radio group', () => {
     expect(html).toMatch(/id="archetype-options"[^>]*role="radiogroup"/);
   });
