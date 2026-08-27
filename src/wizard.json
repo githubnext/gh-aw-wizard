@@ -173,6 +173,20 @@
           "description": "Enable Playwright CLI for browser automation",
           "icon": "device-desktop",
           "summary": "browser access"
+        },
+        {
+          "id": "agentic-workflows",
+          "label": "Analyze workflows",
+          "description": "Create meta-workflows that analyze and optimize agentic workflows",
+          "icon": "tools",
+          "summary": "agentic workflow analysis"
+        },
+        {
+          "id": "lsp",
+          "label": "Use language services",
+          "description": "Use language service protocol tools for symbol-aware code analysis",
+          "icon": "terminal",
+          "summary": "language service access"
         }
       ]
     },

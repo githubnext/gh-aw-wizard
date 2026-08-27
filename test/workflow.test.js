@@ -183,6 +183,22 @@ describe('inferCapabilities', () => {
     );
     expect(md).not.toContain('lsp:\n');
   });
+
+  it('adds selected agentic-workflows and LSP extras for Copilot workflows', () => {
+    const md = generateWorkflowFile(
+      answers({
+        extras: ['agentic-workflows', 'lsp'],
+        triggers: ['schedule'],
+        outputs: ['create-issue']
+      }),
+      patterns
+    );
+
+    expect(md).toContain('  agentic-workflows: true\n');
+    expect(md).toContain('lsp:\n  typescript:\n    command: typescript-language-server\n');
+    expect(md).toContain('      ".tsx": typescriptreact\n');
+    expect(md).toContain('network:\n  allowed:\n    - defaults\n    - github\n    - node\n');
+  });
 });
 
 describe('buildTriggerYaml', () => {
@@ -447,6 +463,14 @@ describe('generateAgentPrompt', () => {
     expect(prompt).toContain('- Add cache-memory tool for persistent memory across runs\n');
     expect(prompt).toContain('- Add upload-assets safe output to publish generated charts\n');
     expect(prompt).toContain('- Enable Playwright CLI for browser automation\n');
+  });
+
+  it('directs LSP workflows to detect relevant languages and install matching tooling', () => {
+    const prompt = generateAgentPrompt(answers({ extras: ['lsp'] }), patterns);
+
+    expect(prompt).toContain(
+      '- Detect the programming languages used in the repository and targeted by the workflow, then configure matching Language Server Protocol tools and add steps to install them\n'
+    );
   });
 
   it('includes the selected engine requirement', () => {

@@ -172,16 +172,21 @@ function toolsetsFor(patterns, archetype) {
     generation.default_github_toolsets || [];
 }
 
-function lspFor(patterns, archetype, engine) {
-  if (normalizeEngine(engine) !== 'copilot') return null;
-  const lsp = workflowDefinition(patterns, archetype).lsp || {};
-  const validLsp = {};
-  Object.entries(lsp).forEach(([language, config]) => {
+function validLsp(lsp) {
+  const valid = {};
+  Object.entries(lsp || {}).forEach(([language, config]) => {
     if (config && config.command && config.fileExtensions && Object.keys(config.fileExtensions).length) {
-      validLsp[language] = config;
+      valid[language] = config;
     }
   });
-  return Object.keys(validLsp).length ? validLsp : null;
+  return valid;
+}
+
+function lspFor(patterns, archetype, engine, extras) {
+  if (normalizeEngine(engine) !== 'copilot') return null;
+  const lsp = validLsp(workflowDefinition(patterns, archetype).lsp);
+  extras.forEach((extra) => Object.assign(lsp, validLsp(extra.lsp)));
+  return Object.keys(lsp).length ? lsp : null;
 }
 
 export function generateWorkflowFile(answers, patterns) {
@@ -197,7 +202,7 @@ export function generateWorkflowFile(answers, patterns) {
   const safeOutputs = safeOutputsFor(answers, patterns);
   const inferred = inferCapabilities(answers.archetype, patterns);
   const extras = selectedExtras(answers, patterns);
-  const lsp = lspFor(patterns, answers.archetype, answers.engine);
+  const lsp = lspFor(patterns, answers.archetype, answers.engine, extras);
 
   let timeout = archetype.timeout_minutes || 30;
   const timeoutByTrigger = patterns.config_defaults && patterns.config_defaults.timeout_by_trigger;
@@ -239,7 +244,10 @@ export function generateWorkflowFile(answers, patterns) {
     if (inferred.githubToolsets) {
       frontmatter += `  github:\n    toolsets: [${  toolsetsFor(patterns, answers.archetype).join(', ')  }]\n`;
     }
-    if (extras.some((extra) => extra.tool === 'cache-memory')) frontmatter += '  cache-memory:\n';
+    extras.forEach((extra) => {
+      if (extra.tool === 'cache-memory') frontmatter += '  cache-memory:\n';
+      if (extra.tool === 'agentic-workflows') frontmatter += '  agentic-workflows: true\n';
+    });
     if (inferred.browser || extras.some((extra) => extra.tool === 'playwright')) {
       frontmatter += '  playwright:\n    mode: cli\n';
     }

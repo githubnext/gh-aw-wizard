@@ -114,6 +114,28 @@
     "browser": {
       "tool": "playwright",
       "requirement": "Enable Playwright CLI for browser automation"
+    },
+    "agentic-workflows": {
+      "tool": "agentic-workflows",
+      "requirement": "Enable agentic-workflows tools to create meta-workflows that analyze and optimize agentic workflows"
+    },
+    "lsp": {
+      "lsp": {
+        "typescript": {
+          "command": "typescript-language-server",
+          "args": [
+            "--stdio"
+          ],
+          "fileExtensions": {
+            ".ts": "typescript",
+            ".tsx": "typescriptreact",
+            ".js": "javascript",
+            ".mjs": "javascript",
+            ".cjs": "javascript"
+          }
+        }
+      },
+      "requirement": "Detect the programming languages used in the repository and targeted by the workflow, then configure matching Language Server Protocol tools and add steps to install them"
     }
   },
   "pre_steps": {
