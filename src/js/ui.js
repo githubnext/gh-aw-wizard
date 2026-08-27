@@ -49,6 +49,35 @@ function archetypeIconId(archetypeId, data) {
   return definition && definition.icon ? definition.icon : 'tools';
 }
 
+const PINNED_ARCHETYPE_ORDER = [
+  'skill-pr-reviewer',
+  'code-improvement',
+  'daily-test-improver',
+  'documentation-updater'
+];
+
+const PINNED_ARCHETYPE_INDEX = new Map(
+  PINNED_ARCHETYPE_ORDER.map((id, index) => [id, index])
+);
+
+const PINNED_ARCHETYPE_ALIASES = new Map([
+  ['pr reviewer', 'skill-pr-reviewer'],
+  ['daily code improver', 'code-improvement'],
+  ['daily test generator', 'daily-test-improver'],
+  ['documentation updater', 'documentation-updater']
+]);
+
+function pinnedArchetypeOrder(archetype) {
+  const id = archetype && typeof archetype.id === 'string' ? archetype.id : '';
+  if (PINNED_ARCHETYPE_INDEX.has(id)) return PINNED_ARCHETYPE_INDEX.get(id);
+  const label = archetype && typeof archetype.label === 'string'
+    ? archetype.label.trim().toLowerCase()
+    : '';
+  const canonicalId = PINNED_ARCHETYPE_ALIASES.get(label);
+  if (!canonicalId) return -1;
+  return PINNED_ARCHETYPE_INDEX.get(canonicalId) ?? -1;
+}
+
 function archetypeSort(a, b) {
   if (a.id === 'custom' && b.id !== 'custom') return 1;
   if (b.id === 'custom' && a.id !== 'custom') return -1;
@@ -60,30 +89,6 @@ function archetypeSort(a, b) {
   if (aPinned) return -1;
   if (bPinned) return 1;
   return 0;
-}
-
-const PINNED_ARCHETYPE_IDS = [
-  'skill-pr-reviewer',
-  'code-improvement',
-  'daily-test-improver',
-  'documentation-updater'
-];
-
-const PINNED_ARCHETYPE_LABELS = [
-  'pr reviewer',
-  'daily code improver',
-  'daily test generator',
-  'documentation updater'
-];
-
-function pinnedArchetypeOrder(archetype) {
-  const id = archetype && typeof archetype.id === 'string' ? archetype.id : '';
-  const idOrder = PINNED_ARCHETYPE_IDS.indexOf(id);
-  if (idOrder !== -1) return idOrder;
-  const label = archetype && typeof archetype.label === 'string'
-    ? archetype.label.trim().toLowerCase()
-    : '';
-  return PINNED_ARCHETYPE_LABELS.indexOf(label);
 }
 
 export function renderArchetypeOptions(data) {
