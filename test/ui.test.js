@@ -43,6 +43,44 @@ describe('wizard navigation', () => {
       expect(customCard.style.gridColumn).toBe('1 / -1');
       expect(customCard.children[0].value).toBe('custom');
     });
+
+    it('pins priority archetypes to the top in a fixed order', () => {
+      const container = createElement();
+      globalThis.document = {
+        getElementById(id) {
+          if (id === 'archetype-options') return container;
+          return null;
+        },
+        createElement() {
+          return createElement();
+        },
+        createElementNS() {
+          return createElement();
+        }
+      };
+
+      renderArchetypeOptions({
+        archetypes: [
+          { id: 'dependency-monitor', label: 'Dependency Monitor' },
+          { id: 'documentation-updater', label: 'Documentation Updater' },
+          { id: 'status-report', label: 'Status Report' },
+          { id: 'daily-test-improver', label: 'Daily Test Improver' },
+          { id: 'code-improvement', label: 'Code Improvement' },
+          { id: 'skill-pr-reviewer', label: 'Skill PR Reviewer' }
+        ]
+      });
+
+      const values = container.children.map((card) => card.dataset.value);
+      expect(values).toEqual([
+        'skill-pr-reviewer',
+        'code-improvement',
+        'daily-test-improver',
+        'documentation-updater',
+        'dependency-monitor',
+        'status-report',
+        'custom'
+      ]);
+    });
   });
 
   describe('copy prompt success', () => {

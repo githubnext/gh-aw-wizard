@@ -52,7 +52,38 @@ function archetypeIconId(archetypeId, data) {
 function archetypeSort(a, b) {
   if (a.id === 'custom' && b.id !== 'custom') return 1;
   if (b.id === 'custom' && a.id !== 'custom') return -1;
+  const aPinnedOrder = pinnedArchetypeOrder(a);
+  const bPinnedOrder = pinnedArchetypeOrder(b);
+  const aPinned = aPinnedOrder !== -1;
+  const bPinned = bPinnedOrder !== -1;
+  if (aPinned && bPinned) return aPinnedOrder - bPinnedOrder;
+  if (aPinned) return -1;
+  if (bPinned) return 1;
   return 0;
+}
+
+const PINNED_ARCHETYPE_IDS = [
+  'skill-pr-reviewer',
+  'code-improvement',
+  'daily-test-improver',
+  'documentation-updater'
+];
+
+const PINNED_ARCHETYPE_LABELS = [
+  'pr reviewer',
+  'daily code improver',
+  'daily test generator',
+  'documentation updater'
+];
+
+function pinnedArchetypeOrder(archetype) {
+  const id = archetype && typeof archetype.id === 'string' ? archetype.id : '';
+  const idOrder = PINNED_ARCHETYPE_IDS.indexOf(id);
+  if (idOrder !== -1) return idOrder;
+  const label = archetype && typeof archetype.label === 'string'
+    ? archetype.label.trim().toLowerCase()
+    : '';
+  return PINNED_ARCHETYPE_LABELS.indexOf(label);
 }
 
 export function renderArchetypeOptions(data) {
