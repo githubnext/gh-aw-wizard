@@ -465,6 +465,14 @@ describe('generateAgentPrompt', () => {
     expect(prompt).toContain('- Enable Playwright CLI for browser automation\n');
   });
 
+  it('directs LSP workflows to detect relevant languages and install matching tooling', () => {
+    const prompt = generateAgentPrompt(answers({ extras: ['lsp'] }), patterns);
+
+    expect(prompt).toContain(
+      '- Detect the programming languages used in the repository and targeted by the workflow, then configure matching Language Server Protocol tools and add steps to install them\n'
+    );
+  });
+
   it('includes the selected engine requirement', () => {
     const prompt = generateAgentPrompt(answers({ engine: 'claude' }), patterns);
     expect(prompt).toContain('- Engine: claude\n');

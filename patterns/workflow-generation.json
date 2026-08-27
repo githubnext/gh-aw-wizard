@@ -135,7 +135,7 @@
           }
         }
       },
-      "requirement": "Configure TypeScript Language Server Protocol tools for symbol-aware code analysis"
+      "requirement": "Detect the programming languages used in the repository and targeted by the workflow, then configure matching Language Server Protocol tools and add steps to install them"
     }
   },
   "pre_steps": {
