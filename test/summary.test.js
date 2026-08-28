@@ -37,6 +37,13 @@ describe('buildWorkflowSummary', () => {
     expect(summary.purpose).toEqual({ value: 'choose what the agent should do', complete: false });
     expect(summary.output).toEqual({ value: 'choose what it can write', complete: false });
     expect(summary.engine).toEqual({ value: 'choose an agent', complete: false });
+    expect(summary.intent).toEqual({ value: 'add your own instructions (optional)', complete: false });
+  });
+
+  it('summarizes a provided intent', () => {
+    const summary = buildWorkflowSummary(answers({ intent: 'Keep release notes accurate' }), patterns, wizardConfig);
+
+    expect(summary.intent).toEqual({ value: 'Keep release notes accurate', complete: true });
   });
 
   it('turns selected answers into a readable recipe', () => {

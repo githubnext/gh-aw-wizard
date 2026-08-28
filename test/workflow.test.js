@@ -446,6 +446,22 @@ describe('generateAgentPrompt', () => {
     expect(prompt).toContain('Create a pull request with the generated agentic workflow files.');
   });
 
+  it('omits intent requirements when no intent is provided', () => {
+    const prompt = generateAgentPrompt(answers(), patterns);
+    expect(prompt).not.toContain('operational value');
+    expect(prompt).not.toContain('BinEval');
+  });
+
+  it('turns a provided intent into an operational value grader and BinEval evaluations', () => {
+    const prompt = generateAgentPrompt(answers({ intent: '  Keep release notes accurate  ' }), patterns);
+    expect(prompt).toContain('- Additional intent for this workflow, provided by the user: Keep release notes accurate\n');
+    expect(prompt).toContain('operational value');
+    expect(prompt).toContain('id: operational_value');
+    expect(prompt).toContain('- Add BinEval evaluations for the intent');
+    expect(prompt).toContain('`evals:`');
+    expect(prompt.indexOf('Keep release notes accurate')).toBeGreaterThan(prompt.indexOf('Requirements:'));
+  });
+
   it('asks the agent to analyze the repository first', () => {
     const prompt = generateAgentPrompt(answers(), patterns);
     expect(prompt).toContain('First, analyze this repository so the workflow is optimized for it:');

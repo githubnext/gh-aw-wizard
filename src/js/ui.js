@@ -33,7 +33,7 @@ let wizardConfig = null;
 let currentStep = 1;
 let generatedPrompt = '';
 let copyFeedbackTimer = null;
-const TOTAL_STEPS = 6;
+const TOTAL_STEPS = 7;
 const ACCORDION_OPEN_ANIMATION = 'accordionOpen 0.3s ease';
 const ACCORDION_OPEN_REVERSE_ANIMATION = 'accordionOpenReverse 0.3s ease';
 
@@ -250,7 +250,7 @@ function focusFirstArchetype() {
 
 function generateAndShow() {
   refreshGeneratedContent();
-  goToStep(6);
+  goToStep(TOTAL_STEPS);
   showPreview(generatedPrompt);
 }
 
@@ -353,6 +353,10 @@ function advanceOneStepLikeNext() {
     return true;
   }
   if (currentStep === 5) {
+    goToStep(6);
+    return true;
+  }
+  if (currentStep === 6) {
     generateAndShow();
     return true;
   }
@@ -567,7 +571,7 @@ function bindFormEvents() {
   document.querySelectorAll('input[name="extra"]').forEach((cb) => {
     cb.addEventListener('change', () => {
       updateCardSelection('#extras-options', 'checkbox');
-      if (currentStep === 6) refreshPreview();
+      if (currentStep === TOTAL_STEPS) refreshPreview();
     });
   });
 
@@ -577,11 +581,25 @@ function bindFormEvents() {
   engineOptions.addEventListener('change', (event) => {
     if (event.target.name === 'engine') {
       updateCardSelection('#engine-options', 'radio');
-      if (currentStep === 5) generateAndShow();
-      else if (currentStep === 6) refreshPreview();
+      if (currentStep === 5) goToStep(6);
+      else if (currentStep === TOTAL_STEPS) refreshPreview();
     }
   });
   updateCardSelection('#engine-options', 'radio');
+
+  // Step 6: free-form intent. The prompt is re-baked on every keystroke so the
+  // finish step always previews what will be copied.
+  const intent = document.getElementById('intent-description');
+  if (intent) {
+    intent.addEventListener('input', () => {
+      renderWorkflowSummary();
+      // Re-bake on every keystroke so the finish step (and the copy button) always
+      // reflect the current intent, even while the intent pane is still open.
+      refreshPreview();
+    });
+  }
+  const intentContinue = document.getElementById('btn-intent-continue');
+  if (intentContinue) intentContinue.addEventListener('click', generateAndShow);
 
   document.addEventListener('change', (event) => {
     if (event.target.matches('input')) {
@@ -652,6 +670,8 @@ function clearArchetypeSelection() {
 
   document.querySelectorAll('input[name="extra"]').forEach((cb) => { cb.checked = false; });
   updateCardSelection('#extras-options', 'checkbox');
+  const intent = document.getElementById('intent-description');
+  if (intent) intent.value = '';
   renderWorkflowSummary();
   syncProgressStepAvailability();
 }
@@ -663,7 +683,7 @@ function clearEngineSelection() {
   updateCardSelection('#engine-options', 'radio');
   renderWorkflowSummary();
   syncProgressStepAvailability();
-  if (currentStep === 6) refreshPreview();
+  if (currentStep === TOTAL_STEPS) refreshPreview();
 }
 
 function updateCardSelection(containerSel) {
@@ -721,8 +741,14 @@ function gatherAnswers() {
     outputs,
     engine: (document.querySelector('input[name="engine"]:checked') || {}).value || null,
     extras,
+    intent: intentValue(),
     needsData: inferNeedsPreSteps(archetypeId, patterns)
   };
+}
+
+function intentValue() {
+  const field = document.getElementById('intent-description');
+  return field ? field.value.trim() : '';
 }
 
 function renderWorkflowSummary() {
@@ -732,6 +758,7 @@ function renderWorkflowSummary() {
   updateSummaryClause('summary-output', summary.output);
   updateSummaryClause('summary-extras', summary.extras);
   updateSummaryClause('summary-engine', summary.engine);
+  updateSummaryClause('summary-intent', summary.intent);
 }
 
 function updateSummaryClause(id, clause) {
