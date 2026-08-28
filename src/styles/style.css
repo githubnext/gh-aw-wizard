@@ -13,10 +13,10 @@
   --accent-blue-rgb: 9, 105, 218;
   --accent-green: var(--color-success-emphasis, #1f883d);
   --accent-green-rgb: 31, 136, 61;
-  --accent-green-solid: #1f883d;
-  --accent-green-hover: #1a7f37;
-  --agent-purple: #8250df;
-  --agent-purple-dark: #6639ba;
+  --accent-green-solid: var(--color-success-emphasis, #1f883d);
+  --accent-green-hover: var(--color-success-fg, #1a7f37);
+  --agent-purple: var(--color-done-emphasis, #8250df);
+  --agent-purple-dark: var(--color-done-fg, #6639ba);
   --agent-purple-rgb: 130, 80, 223;
   --border-color: var(--color-border-default, #d0d7de);
   --border-default: var(--color-border-default, #d0d7de);
@@ -74,7 +74,7 @@
   --accent-green-solid: #238636;
   --accent-green-hover: #2ea043;
   --agent-purple: #ab7df8;
-  --agent-purple-dark: #8250df;
+  --agent-purple-dark: var(--color-done-emphasis, #8250df);
   --agent-purple-rgb: 171, 125, 248;
   --border-color: #30363d;
   --border-default: #30363d;
