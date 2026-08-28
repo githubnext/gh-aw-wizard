@@ -26,7 +26,8 @@
     "skill-pr-reviewer",
     "issue-hierarchy-manager",
     "security-scanner",
-    "code-health-auditor"
+    "code-health-auditor",
+    "ci-failure-triage"
   ],
   "workflow_generation": "workflow-generation.json",
   "anti_patterns": [

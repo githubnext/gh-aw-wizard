@@ -1,0 +1,34 @@
+{
+  "id": "ci-failure-triage",
+  "label": "CI Failure Triage",
+  "description": "Investigate a failed GitHub Actions run and report a root cause with remediation steps",
+  "success_rate": null,
+  "count": 0,
+  "recommended_triggers": [
+    {
+      "type": "workflow_run",
+      "config": {}
+    }
+  ],
+  "recommended_safe_outputs": [
+    "issues"
+  ],
+  "recommended_tools": [
+    "create-issue"
+  ],
+  "timeout_minutes": 15,
+  "prompt_style": "role-steps",
+  "size_range_bytes": [
+    2000,
+    6000
+  ],
+  "top_repos": [],
+  "tips": [
+    "Scope `workflows:` to the named CI workflow(s) and gate execution with `if:` on `github.event.workflow_run.conclusion` so only failing runs are analyzed",
+    "Derive a stable failure key (workflow + job + failing step or error signature) before writing anything",
+    "Search for an existing open incident by that key before creating a new issue",
+    "Call noop when the monitored run concludes success, the failure self-recovered on rerun, or an open incident already exists for the same key",
+    "Diagnostic only — report the root cause and next steps, do not attempt to fix the failure directly"
+  ],
+  "anti_patterns": []
+}
