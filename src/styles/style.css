@@ -430,7 +430,7 @@ a:hover {
   flex-direction: column;
   gap: 0.5rem;
   /* Keep long option lists within the viewport and scroll instead */
-  max-height: 60vh;
+  max-height: 50vh;
   overflow-y: auto;
   padding-right: 0.25rem;
   scrollbar-gutter: stable;
