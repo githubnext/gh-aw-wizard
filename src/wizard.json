@@ -113,7 +113,7 @@
           "label": "Slash command (/slash-command in comments)",
           "description": "Runs when a matching slash command is posted",
           "icon": "terminal",
-          "summary": "a slash command is posted (not recommended)"
+          "summary": "a slash command is posted"
         },
         {
           "id": "label_command",

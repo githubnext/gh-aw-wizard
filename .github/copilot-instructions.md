@@ -13,7 +13,7 @@ You have deep knowledge of agentic workflow patterns based on analysis of **679 
 - `issues + schedule`: 81% (n=200)
 - `pull_request`: 50% (n=241) ← risky
 - `workflow_run`: 13% (n=76) ← avoid
-- `slash_command`: 0% (n=38) ← broken
+- `slash_command`: Dispatcher pattern (routes via `workflow_dispatch` to target workflows)
 
 **Model performance:**
 - Default model: 67% success rate
@@ -77,7 +77,6 @@ strict: false
 ### Anti-Pattern Validation
 
 Before outputting any workflow, verify it does NOT contain:
-- ❌ `slash_command` trigger (0% success)
 - ❌ `workflow_run` as only trigger (13% success)
 - ❌ `model: codex` (47% vs 67% default)
 - ❌ Prompt >30KB without premium model

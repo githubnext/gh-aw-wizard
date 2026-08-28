@@ -1,18 +1,18 @@
 // Landing page: a minimal hero that hands over to the wizard on interaction.
 
-var LEAVE_DURATION = 300;
+const LEAVE_DURATION = 300;
 
 export function initLanding(onReveal) {
-  var landing = document.getElementById('landing');
-  var button = document.getElementById('btn-get-started');
+  const landing = document.getElementById('landing');
+  const button = document.getElementById('btn-get-started');
   if (!landing || !button) {
     showWizard();
     return;
   }
-  button.addEventListener('click', function () {
+  button.addEventListener('click', () => {
     startWizard(landing, onReveal);
   });
-  window.addEventListener('popstate', function (event) {
+  window.addEventListener('popstate', (event) => {
     // Only react to entries this app pushed, and only while the wizard is
     // showing, so unrelated history entries never bounce the user back.
     if (!event.state || event.state.started) return;
@@ -25,7 +25,7 @@ function startWizard(landing, onReveal) {
   if (!document.documentElement.classList.contains('is-landing')) return;
   window.history.pushState({ step: 1, started: true }, '');
   landing.classList.add('is-leaving');
-  window.setTimeout(function () {
+  window.setTimeout(() => {
     landing.classList.remove('is-leaving');
     showWizard();
     if (typeof onReveal === 'function') onReveal();
