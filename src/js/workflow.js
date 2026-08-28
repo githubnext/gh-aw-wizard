@@ -408,11 +408,15 @@ export function generateAgentPrompt(answers, patterns) {
   instructionSet.forEach((url) => { prompt += `- ${  url  }\n`; });
   prompt += '\n';
   prompt += `The purpose of ${  multiple ? 'the workflows' : 'the workflow'  } is: ${  description  }\n\n`;
+  const intent = typeof answers.intent === 'string' ? answers.intent.trim() : '';
   prompt += `First, analyze this repository so the ${  multiple ? 'workflows are' : 'workflow is'  } optimized for it:\n`;
   prompt += '- Read the README, AGENTS.md (and any CONTRIBUTING or docs files) to understand the project purpose and conventions\n';
   prompt += '- Identify the languages, package managers, build/test/lint commands and CI setup actually used\n';
   prompt += '- Note repository conventions such as labels, issue/PR templates and branch naming\n';
   prompt += '- Use those findings to tailor the workflow prompt, tools, and instructions to this repository\n\n';
+  if (intent) {
+    prompt += `## Intent\n${  intent  }\n\n`;
+  }
   prompt += 'Requirements:\n';
   if (multiple) {
     prompt += `- Generate exactly ${  workflows.length  } independent workflow files:\n`;
@@ -446,7 +450,6 @@ export function generateAgentPrompt(answers, patterns) {
       duplicateTips.join('; ')
     }\n`;
   }
-  const intent = typeof answers.intent === 'string' ? answers.intent.trim() : '';
   if (intent) {
     intentRequirements(intent).forEach((requirement) => { prompt += `${requirement}\n`; });
   }

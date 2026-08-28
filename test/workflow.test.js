@@ -459,7 +459,7 @@ describe('generateAgentPrompt', () => {
     expect(prompt).toContain('id: operational_value');
     expect(prompt).toContain('- Add BinEval evaluations for the intent');
     expect(prompt).toContain('`evals:`');
-    expect(prompt.indexOf('Keep release notes accurate')).toBeGreaterThan(prompt.indexOf('Requirements:'));
+    expect(prompt.indexOf('## Intent')).toBeLessThan(prompt.indexOf('Requirements:'));
   });
 
   it('asks the agent to analyze the repository first', () => {
@@ -620,6 +620,17 @@ describe('generateAgentPrompt', () => {
     expect(prompt).toContain('Let the agent generate the detailed issue triage prompt for this repository...\n');
     expect(prompt).not.toContain('## Instructions\n');
     expect(prompt).not.toContain('Your job is to read every newly opened issue');
+  });
+
+  it('adds the collected intent in a clearly labeled section', () => {
+    const prompt = generateAgentPrompt(
+      answers({ intent: 'Keep release notes accurate for on-call engineers.' }),
+      patterns
+    );
+
+    expect(prompt).toContain(
+      '## Intent\nKeep release notes accurate for on-call engineers.\n\n'
+    );
   });
 
   it('preserves explicit data-fetch settings in single-workflow suggestions', () => {
