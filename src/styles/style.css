@@ -359,6 +359,7 @@ a:hover {
   color: var(--label-orange-fg);
 }
 .recipe-key-agent { background: var(--label-gray); }
+.recipe-key-intent { background: var(--label-blue); }
 .recipe-key-preview { background: var(--label-purple); }
 .recipe-value {
   align-self: center;
@@ -667,6 +668,11 @@ a:hover {
   color: var(--text-secondary);
   margin-bottom: 0.4rem;
 }
+.field-hint {
+  margin: 0.5rem 0 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
 
 .btn {
   display: inline-flex;
@@ -853,6 +859,9 @@ a:hover {
   justify-content: center;
   padding: 0.75rem 1.25rem;
   font-size: 0.9rem;
+}
+#btn-intent-continue {
+  margin-top: 1rem;
 }
 .btn-copy-prompt.copy-error,
 .btn-copy-prompt.copy-error:hover {

@@ -30,7 +30,7 @@ afterEach(() => {
 describe('wizard navigation', () => {
   it('keeps only the What tab required', () => {
     expect(maxReachableStep(false)).toBe(1);
-    expect(maxReachableStep(true)).toBe(6);
+    expect(maxReachableStep(true)).toBe(7);
   });
 
   describe('archetype option rendering', () => {

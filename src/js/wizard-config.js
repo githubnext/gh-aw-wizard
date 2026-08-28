@@ -83,6 +83,11 @@ function safeUrl(url, configUrl) {
   }
 }
 
+const INTENT_ELEMENTS = {
+  label: 'intent-label',
+  hint: 'intent-hint'
+};
+
 export function applyPageContent(config, configUrl) {
   const landing = config && config.landing ? config.landing : {};
   Object.entries(LANDING_ELEMENTS).forEach(([key, id]) => setText(id, landing[key]));
@@ -105,6 +110,13 @@ export function applyPageContent(config, configUrl) {
   const preview = document.getElementById('finish-preview');
   if (preview && typeof finish.preview_aria_label === 'string') {
     preview.setAttribute('aria-label', finish.preview_aria_label);
+  }
+
+  const intent = wizardStep(config, 'intent');
+  Object.entries(INTENT_ELEMENTS).forEach(([key, id]) => setText(id, intent[key]));
+  const intentField = document.getElementById('intent-description');
+  if (intentField && typeof intent.field_placeholder === 'string') {
+    intentField.setAttribute('placeholder', intent.field_placeholder);
   }
 
   const copySuccess = config && config.copy_success ? config.copy_success : {};

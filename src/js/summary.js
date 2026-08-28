@@ -65,6 +65,10 @@ export function buildWorkflowSummary(answers, patterns, wizardConfig) {
     engine: {
       value: engine || wizardStep(wizardConfig, 'engine').placeholder || '',
       complete: Boolean(engine)
+    },
+    intent: {
+      value: answers.intent || wizardStep(wizardConfig, 'intent').placeholder || '',
+      complete: Boolean(answers.intent)
     }
   };
 }
