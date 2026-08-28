@@ -448,7 +448,7 @@ export function generateAgentPrompt(answers, patterns) {
   }
   const intent = typeof answers.intent === 'string' ? answers.intent.trim() : '';
   if (intent) {
-    intentRequirements(intent).forEach((requirement) => { prompt += `${  requirement  }\n`; });
+    intentRequirements(intent).forEach((requirement) => { prompt += `${requirement}\n`; });
   }
   const protectedTips = protectedFilesTips(workflows, patterns);
   if (protectedTips.length) {
