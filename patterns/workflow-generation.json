@@ -62,6 +62,10 @@
     "push": {
       "yaml": "push:\n  branches: [main]",
       "description": "on push to main"
+    },
+    "workflow_run": {
+      "yaml": "workflow_run:\n  workflows: [\"CI\"]\n  types: [completed]",
+      "description": "when a named CI workflow run completes"
     }
   },
   "outputs": {
@@ -830,6 +834,46 @@
         "- **DO NOT** modify generated, vendored, or lock files when proposing fixes.",
         "- **DO NOT** create a duplicate finding when a matching open issue or pull request already exists.",
         "- If nothing exceeds the healthy threshold, do nothing."
+      ]
+    },
+    "ci-failure-triage": {
+      "icon": "alert",
+      "capabilities": {
+        "github_toolsets": true
+      },
+      "permissions": [
+        "actions",
+        "contents",
+        "issues"
+      ],
+      "github_toolsets": [
+        "repos",
+        "issues",
+        "actions"
+      ],
+      "instructions": [
+        "triggers.md"
+      ],
+      "body": [
+        "# {{label}}",
+        "",
+        "You are a **CI failure triage agent** for this repository.",
+        "",
+        "Your job is to investigate a failed GitHub Actions run deeply enough to identify its most likely root cause and report specific, evidence-backed remediation steps.",
+        "",
+        "## Process",
+        "",
+        "1. Read the failing workflow run, its jobs, and step logs",
+        "2. Identify the most likely root cause from the logs and recent repository changes",
+        "3. Derive a stable failure key (workflow + job + failing step or error signature)",
+        "4. Search for an existing open incident with that key before writing anything",
+        "5. Report the root cause and concrete next steps, or update the existing incident",
+        "",
+        "## Constraints",
+        "",
+        "- **DO NOT** attempt to fix the failure directly — this is diagnostic only.",
+        "- **DO NOT** create a new issue when an open incident already exists for the same failure key.",
+        "- **DO NOT** report anything when the monitored run concluded successfully or the failure self-recovered on rerun."
       ]
     }
   }
