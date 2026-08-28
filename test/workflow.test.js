@@ -508,9 +508,11 @@ describe('generateAgentPrompt', () => {
     expect(depPrompt).toContain('Prevent duplicate scheduled findings');
     expect(depPrompt).toContain('skip-if-match');
 
-    // status-report has no such tip and should not fabricate one.
+    // status-report also runs on a schedule and creates issues, so it needs the same
+    // dedup guidance to avoid reopening the same status report as a new issue every run.
     const reportPrompt = generateAgentPrompt(answers({ archetype: 'status-report' }), patterns);
-    expect(reportPrompt).not.toContain('Prevent duplicate scheduled findings');
+    expect(reportPrompt).toContain('Prevent duplicate scheduled findings');
+    expect(reportPrompt).toContain('skip-if-match');
   });
 
   it('surfaces protected-files guidance for archetypes that open unattended PRs', () => {
