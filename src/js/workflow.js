@@ -405,7 +405,7 @@ export function generateAgentPrompt(answers, patterns) {
   workflows.forEach((workflow) => {
     instructionUrls(patterns, workflow.answers.archetype).forEach((url) => instructionSet.add(url));
   });
-  instructionSet.forEach((url) => { prompt += `- ${  url  }\n`;   });
+  instructionSet.forEach((url) => { prompt += `- ${  url  }\n`; });
   prompt += '\n';
   prompt += `The purpose of ${  multiple ? 'the workflows' : 'the workflow'  } is: ${  description  }\n\n`;
   const intent = typeof answers.intent === 'string' ? answers.intent.trim() : '';
