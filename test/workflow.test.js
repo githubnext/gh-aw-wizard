@@ -622,6 +622,17 @@ describe('generateAgentPrompt', () => {
     expect(prompt).not.toContain('Your job is to read every newly opened issue');
   });
 
+  it('adds the collected intent in a clearly labeled section', () => {
+    const prompt = generateAgentPrompt(
+      answers({ intent: 'Keep release notes accurate for on-call engineers.' }),
+      patterns
+    );
+
+    expect(prompt).toContain(
+      '## Intent\nKeep release notes accurate for on-call engineers.\n\n'
+    );
+  });
+
   it('preserves explicit data-fetch settings in single-workflow suggestions', () => {
     const prompt = generateAgentPrompt(
       answers({ archetype: 'status-report', needsData: false }),
