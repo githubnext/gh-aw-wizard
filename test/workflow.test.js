@@ -459,7 +459,7 @@ describe('generateAgentPrompt', () => {
     expect(prompt).toContain('id: operational_value');
     expect(prompt).toContain('- Add BinEval evaluations for the intent');
     expect(prompt).toContain('`evals:`');
-    expect(prompt.indexOf('Keep release notes accurate')).toBeGreaterThan(prompt.indexOf('Requirements:'));
+    expect(prompt.indexOf('## Intent')).toBeLessThan(prompt.indexOf('Requirements:'));
   });
 
   it('asks the agent to analyze the repository first', () => {

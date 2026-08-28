@@ -414,10 +414,10 @@ export function generateAgentPrompt(answers, patterns) {
   prompt += '- Identify the languages, package managers, build/test/lint commands and CI setup actually used\n';
   prompt += '- Note repository conventions such as labels, issue/PR templates and branch naming\n';
   prompt += '- Use those findings to tailor the workflow prompt, tools, and instructions to this repository\n\n';
-  prompt += 'Requirements:\n';
   if (intent) {
-    prompt += `\n## Intent\n${  intent  }\n\n`;
+    prompt += `## Intent\n${  intent  }\n\n`;
   }
+  prompt += 'Requirements:\n';
   if (multiple) {
     prompt += `- Generate exactly ${  workflows.length  } independent workflow files:\n`;
     workflows.forEach((workflow) => {
