@@ -449,6 +449,19 @@ export function generateAgentPrompt(answers, patterns) {
     prompt += `- Prevent duplicate scheduled findings, for example: ${
       duplicateTips.join('; ')
     }\n`;
+    prompt += '- Use the correct schema for these fields: `skip-if-match` is a sibling key ' +
+      'under `on:` (alongside `schedule:`), while `expires` and `max` nest under the specific ' +
+      'safe-output key that creates the item (e.g. under `create-issue:` or `create-pull-request:` ' +
+      'inside `safe-outputs:`), for example:\n' +
+      '  ```yaml\n' +
+      '  on:\n' +
+      '    schedule: every 30 minutes\n' +
+      "    skip-if-match: 'is:issue is:open \"gh-aw-workflow-id: <workflow-id>\" in:body'\n" +
+      '  safe-outputs:\n' +
+      '    create-issue:\n' +
+      '      max: 1\n' +
+      '      expires: 7\n' +
+      '  ```\n';
   }
   if (intent) {
     intentRequirements(intent).forEach((requirement) => { prompt += `${requirement}\n`; });

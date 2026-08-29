@@ -531,6 +531,17 @@ describe('generateAgentPrompt', () => {
     expect(reportPrompt).toContain('skip-if-match');
   });
 
+  it('shows the correct YAML schema for skip-if-match and expires so they land in the right place', () => {
+    // The prose tip alone ("Use skip-if-match and expires on create-issue") does not say
+    // skip-if-match is a sibling of `schedule:` under `on:`, while expires/max nest under the
+    // specific safe-output key. Without a concrete example, a downstream agent is likely to
+    // guess the wrong placement (e.g. put skip-if-match under safe-outputs).
+    const reportPrompt = generateAgentPrompt(answers({ archetype: 'status-report' }), patterns);
+    expect(reportPrompt).toContain('skip-if-match` is a sibling key');
+    expect(reportPrompt).toContain('on:\n    schedule: every 30 minutes');
+    expect(reportPrompt).toContain('safe-outputs:\n    create-issue:\n      max: 1\n      expires: 7');
+  });
+
   it('surfaces protected-files guidance for archetypes that open unattended PRs', () => {
     // code-improvement and documentation-updater both open pull requests autonomously,
     // and their pattern tips recommend protected-files: fallback-to-issue so edits to
