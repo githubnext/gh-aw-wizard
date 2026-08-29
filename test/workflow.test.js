@@ -542,6 +542,19 @@ describe('generateAgentPrompt', () => {
     expect(reportPrompt).toContain('safe-outputs:\n    create-issue:\n      max: 1\n      expires: 7');
   });
 
+  it('shows max/expires for every safe-output a workflow uses, not just create-issue', () => {
+    // dependency-monitor creates both issues and pull requests on a schedule. If the example
+    // only demonstrates max/expires under create-issue, a downstream agent has no reason to
+    // add the same guard under create-pull-request, so PRs would duplicate on every run
+    // even though issues are correctly deduplicated.
+    const depPrompt = generateAgentPrompt(
+      answers({ archetype: 'dependency-monitor', outputs: ['create-issue', 'create-pull-request'] }),
+      patterns
+    );
+    expect(depPrompt).toContain('create-issue:\n      max: 1\n      expires: 7');
+    expect(depPrompt).toContain('create-pull-request:\n      max: 1\n      expires: 7');
+  });
+
   it('surfaces protected-files guidance for archetypes that open unattended PRs', () => {
     // code-improvement and documentation-updater both open pull requests autonomously,
     // and their pattern tips recommend protected-files: fallback-to-issue so edits to

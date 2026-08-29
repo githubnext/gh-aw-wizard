@@ -449,18 +449,27 @@ export function generateAgentPrompt(answers, patterns) {
     prompt += `- Prevent duplicate scheduled findings, for example: ${
       duplicateTips.join('; ')
     }\n`;
+    // Show max/expires for every safe-output this workflow actually creates, not just
+    // create-issue: a workflow with both create-issue and create-pull-request otherwise
+    // only sees the pattern demonstrated for issues, and silently omits it for PRs —
+    // producing duplicate/spam pull requests on every scheduled run.
+    const usedSafeOutputs = new Set();
+    workflows.forEach((workflow) => {
+      safeOutputsFor(workflow.answers, patterns).forEach((output) => usedSafeOutputs.add(output));
+    });
+    const exampleOutputs = ['create-issue', 'create-pull-request'].filter((output) => usedSafeOutputs.has(output));
+    if (!exampleOutputs.length) exampleOutputs.push('create-issue');
     prompt += '- Use the correct schema for these fields: `skip-if-match` is a sibling key ' +
       'under `on:` (alongside `schedule:`), while `expires` and `max` nest under the specific ' +
       'safe-output key that creates the item (e.g. under `create-issue:` or `create-pull-request:` ' +
-      'inside `safe-outputs:`), for example:\n' +
+      'inside `safe-outputs:`), and must be repeated under every safe-output key this workflow uses ' +
+      '(not just one of them), for example:\n' +
       '  ```yaml\n' +
       '  on:\n' +
       '    schedule: every 30 minutes\n' +
       "    skip-if-match: 'is:issue is:open \"gh-aw-workflow-id: <workflow-id>\" in:body'\n" +
       '  safe-outputs:\n' +
-      '    create-issue:\n' +
-      '      max: 1\n' +
-      '      expires: 7\n' +
+      exampleOutputs.map((output) => `    ${output}:\n      max: 1\n      expires: 7\n`).join('') +
       '  ```\n';
   }
   if (intent) {
