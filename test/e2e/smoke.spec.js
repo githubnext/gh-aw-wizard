@@ -14,3 +14,14 @@ test('website loads and opens the wizard', async ({ page }) => {
     .toBeGreaterThan(0);
   await expect(page.locator('#archetype-options input[type="radio"]').first()).toBeVisible();
 });
+
+test('landing phase labels do not wrap on iPhone', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 667 });
+  await page.goto('/');
+
+  const labels = page.locator('.ld-phase-label');
+  await expect(labels).toHaveCount(3);
+  for (const label of await labels.all()) {
+    await expect(label).toHaveCSS('white-space', 'nowrap');
+  }
+});

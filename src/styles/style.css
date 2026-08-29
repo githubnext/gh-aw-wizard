@@ -1564,6 +1564,7 @@ a:hover {
   font-size: 0.78rem;
   font-weight: 700;
   color: var(--text-primary);
+  white-space: nowrap;
 }
 .ld-phase-sub {
   font-size: 0.65rem;
