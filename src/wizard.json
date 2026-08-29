@@ -168,6 +168,13 @@
           "description": "Leave review comments on pull request diffs",
           "icon": "eye",
           "summary": "add review comment"
+        },
+        {
+          "id": "create-discussion",
+          "label": "Create discussion",
+          "description": "Publish periodic narrative digests or reports as GitHub Discussions",
+          "icon": "comment-discussion",
+          "summary": "create discussion"
         }
       ]
     },
@@ -272,6 +279,8 @@
       "create-issue": ["create-issue"],
       "create-pull-request": ["create-pull-request"],
       "create-pull-request-review-comment": ["create-pull-request-review-comment"],
+      "create-discussion": ["create-discussion"],
+      "discussions": ["create-discussion"],
       "commit-files": ["create-pull-request"],
       "issues": ["add-comment", "add-labels", "create-issue"],
       "pull-requests": ["create-pull-request", "add-comment", "create-pull-request-review-comment"],

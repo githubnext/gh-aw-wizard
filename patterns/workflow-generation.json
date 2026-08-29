@@ -89,6 +89,10 @@
       "safe_output": "create-pull-request-review-comment",
       "description": "add review comments on pull request diffs"
     },
+    "create-discussion": {
+      "safe_output": "create-discussion",
+      "description": "publish periodic narrative digests as GitHub Discussions"
+    },
     "comments": {
       "alias": "add-comment"
     },
@@ -834,6 +838,48 @@
         "- **DO NOT** modify generated, vendored, or lock files when proposing fixes.",
         "- **DO NOT** create a duplicate finding when a matching open issue or pull request already exists.",
         "- If nothing exceeds the healthy threshold, do nothing."
+      ]
+    },
+    "community-digest": {
+      "icon": "comment-discussion",
+      "capabilities": {
+        "pre_steps": true,
+        "github_toolsets": true
+      },
+      "permissions": [
+        "contents",
+        "issues",
+        "pull-requests",
+        "discussions"
+      ],
+      "github_toolsets": [
+        "repos",
+        "issues",
+        "pull_requests",
+        "discussions"
+      ],
+      "instructions": [
+        "report.md"
+      ],
+      "body": [
+        "# {{label}}",
+        "",
+        "You are a **community digest reporter** for this repository.",
+        "",
+        "Your job is to gather recent activity and publish a narrative-style digest as a GitHub Discussion.",
+        "",
+        "{{pre_steps}}",
+        "## Instructions",
+        "",
+        "1. Gather issues, pull requests, commits, and discussions for the reporting period",
+        "2. Summarize the highlights in an engaging, readable narrative",
+        "3. Publish the digest with `create-discussion` in a category matching the content (e.g. announcements, audits, q-a)",
+        "",
+        "## Rules",
+        "",
+        "- Stick to facts drawn from the pre-fetched activity data. Do not fabricate events.",
+        "- If there is no notable activity, publish a brief digest noting that.",
+        "- Use `close-older-discussions: true` so digests don't accumulate as duplicate open discussions."
       ]
     },
     "ci-failure-triage": {
