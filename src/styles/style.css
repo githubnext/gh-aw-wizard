@@ -188,7 +188,7 @@ a:hover {
 }
 .site-header h1 {
   font-size: 1.75rem;
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.15;
   letter-spacing: -0.04em;
   color: var(--heading-color);
@@ -347,7 +347,7 @@ a:hover {
   padding: 0.65rem;
   color: var(--control-fg-on-emphasis, #ffffff);
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -982,7 +982,7 @@ a:hover {
   margin-bottom: 0.35rem;
   color: var(--agent-purple);
   font-size: 0.78rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
@@ -1413,7 +1413,7 @@ a:hover {
 }
 .landing-title {
   font-size: clamp(1.75rem, 5.5vw, 2.75rem);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.04em;
   max-width: 16ch;
