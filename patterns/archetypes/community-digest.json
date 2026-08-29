@@ -1,0 +1,33 @@
+{
+  "id": "community-digest",
+  "label": "Community Digest",
+  "description": "Publish a periodic narrative digest of repository activity as a GitHub Discussion",
+  "success_rate": null,
+  "count": 0,
+  "recommended_triggers": [
+    {
+      "type": "schedule",
+      "config": {}
+    }
+  ],
+  "recommended_safe_outputs": [
+    "discussions"
+  ],
+  "recommended_tools": [
+    "create-discussion"
+  ],
+  "timeout_minutes": 20,
+  "prompt_style": "template-driven",
+  "size_range_bytes": [
+    3000,
+    8000
+  ],
+  "top_repos": [],
+  "tips": [
+    "Use create-discussion instead of create-issue when the output is a periodic narrative or audit rather than an actionable task",
+    "Set close-older-discussions: true so scheduled digests don't accumulate as duplicate open discussions",
+    "Pick a category that matches the content (e.g. announcements, audits, q-a) so digests are easy to find",
+    "Pre-fetch issue, PR, and commit activity in a steps: block before the agent starts writing the narrative"
+  ],
+  "anti_patterns": []
+}

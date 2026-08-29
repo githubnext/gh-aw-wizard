@@ -27,7 +27,8 @@
     "issue-hierarchy-manager",
     "security-scanner",
     "code-health-auditor",
-    "ci-failure-triage"
+    "ci-failure-triage",
+    "community-digest"
   ],
   "workflow_generation": "workflow-generation.json",
   "anti_patterns": [
