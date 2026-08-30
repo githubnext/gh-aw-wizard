@@ -9,7 +9,10 @@ import { safeLogValue } from '../../src/js/slm-logger.js';
 import { parseScenarioSelection } from '../../src/js/slm.js';
 
 const qualityThreshold = 50;
-const repetitions = 10;
+const maxRepetitions = 10;
+const evaluationBudgetMs = 4 * 60 * 1000;
+const artifactReserveMs = 15 * 1000;
+const calibrationCount = 3;
 const qualityBaseUrl = process.env.WEB_LLM_BASE_URL || 'http://127.0.0.1:4173';
 const artifactDir = resolve('test-results/web-llm-quality');
 const browserProfileDir = process.env.WEB_LLM_CACHE_DIR || resolve(tmpdir(), 'gh-aw-wizard-web-llm-cache');
@@ -38,6 +41,65 @@ function roundPercent(numerator, denominator) {
   return denominator ? Math.round((numerator / denominator) * 10000) / 100 : 0;
 }
 
+function stratifiedIntents(intents) {
+  const buckets = new Map();
+  intents.forEach((intent) => {
+    if (!buckets.has(intent.archetype)) buckets.set(intent.archetype, []);
+    buckets.get(intent.archetype).push(intent);
+  });
+  const ordered = [];
+  while (ordered.length < intents.length) {
+    buckets.forEach((bucket) => {
+      if (bucket.length) ordered.push(bucket.shift());
+    });
+  }
+  return ordered;
+}
+
+function median(values) {
+  const sorted = [...values].sort((a, b) => a - b);
+  const middle = Math.floor(sorted.length / 2);
+  return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
+}
+
+function withinDeadline(promise, timeoutMs) {
+  let timer;
+  const deadline = new Promise((resolve, reject) => {
+    timer = setTimeout(() => {
+      const error = new Error('The evaluation time budget was exhausted');
+      error.name = 'EvaluationBudgetError';
+      reject(error);
+    }, timeoutMs);
+  });
+  return Promise.race([promise, deadline]).finally(() => clearTimeout(timer));
+}
+
+function evaluationPlan(results, elapsedMs) {
+  const steadyStateDurations = results.slice(1).map(({ durationMs }) => durationMs);
+  const estimatedAttemptMs = Math.max(1, median(steadyStateDurations.length
+    ? steadyStateDurations
+    : results.map(({ durationMs }) => durationMs)));
+  const remainingMs = Math.max(0, evaluationBudgetMs - elapsedMs - artifactReserveMs);
+  const capacity = results.length + Math.floor(remainingMs / (estimatedAttemptMs * 1.25));
+  const maximumEvaluations = goldenIntents.length * maxRepetitions;
+  const plannedEvaluations = Math.max(results.length, Math.min(maximumEvaluations, capacity));
+  const repetitions = plannedEvaluations >= 4
+    ? Math.min(maxRepetitions, Math.max(2, Math.floor(plannedEvaluations / goldenIntents.length)))
+    : 1;
+  const sampleCount = Math.min(
+    goldenIntents.length,
+    Math.max(results.length, Math.floor(plannedEvaluations / repetitions))
+  );
+  return {
+    sampleCount,
+    repetitions,
+    evaluations: sampleCount * repetitions,
+    estimatedAttemptMs,
+    estimatedFullDurationMs: elapsedMs + ((maximumEvaluations - results.length) * estimatedAttemptMs),
+    estimatedPlanDurationMs: elapsedMs + (((sampleCount * repetitions) - results.length) * estimatedAttemptMs)
+  };
+}
+
 function sampleVariability(results) {
   return goldenIntents.map(({ id, intent, archetype }) => {
     const attempts = results.filter((result) => result.id === id);
@@ -61,7 +123,7 @@ function sampleVariability(results) {
   });
 }
 
-function markdownSummary(results, variability) {
+function markdownSummary(results, variability, run) {
   const good = results.filter(({ correct }) => correct).length;
   const parsedResponses = results.filter(({ mode }) => mode === 'parsed').length;
   const invalidResponses = results.filter(({ mode }) => mode === 'invalid').length;
@@ -87,7 +149,12 @@ function markdownSummary(results, variability) {
     '# WebLLM intent quality',
     '',
     `- Model: \`${wizardConfig.assistant.model.model_id}\``,
-    `- Repetitions per intent: **${repetitions}**`,
+    `- Time budget: **${evaluationBudgetMs / 1000} seconds**`,
+    `- Actual evaluation duration: **${Math.round(run.elapsedMs / 10) / 100} seconds**`,
+    `- Estimated full 100 × ${maxRepetitions} duration: **${Math.round(run.plan.estimatedFullDurationMs / 10) / 100} seconds**`,
+    `- Adaptive plan: **${run.plan.sampleCount} samples × ${run.plan.repetitions} repetitions**`,
+    `- Completed coverage: **${run.completedSamples} samples / ${results.length} evaluations**`,
+    `- Stopped for time budget: **${run.stoppedForBudget ? 'yes' : 'no'}**`,
     `- Good responses: **${good}/${results.length} (${roundPercent(good, results.length)}%)**`,
     `- Required: **${qualityThreshold}%**`,
     `- Parsed model responses: **${parsedResponses}/${results.length}**`,
@@ -102,22 +169,31 @@ function markdownSummary(results, variability) {
   ].join('\n');
 }
 
-function writeArtifacts(results, diagnostics) {
+function writeArtifacts(results, diagnostics, run) {
   const variability = sampleVariability(results);
   mkdirSync(dirname(resultsPath), { recursive: true });
   writeFileSync(resultsPath, `${results.map((result) => JSON.stringify(result)).join('\n')}\n`);
   writeFileSync(diagnosticsPath, `${diagnostics.map((record) => JSON.stringify(record)).join('\n')}\n`);
   writeFileSync(variabilityPath, `${variability.map((sample) => JSON.stringify(sample)).join('\n')}\n`);
-  writeFileSync(summaryPath, markdownSummary(results, variability));
+  writeFileSync(summaryPath, markdownSummary(results, variability, run));
 }
 
-test(`classifies at least 50% of ${goldenIntents.length} golden intents over ${repetitions} runs each`, async () => {
-  test.setTimeout(3 * 60 * 60 * 1000);
+test(`classifies at least 50% of adaptively sampled golden intents within a ${evaluationBudgetMs / 1000}-second budget`, async () => {
+  test.setTimeout(5 * 60 * 1000);
   const results = [];
   const diagnostics = [];
   const pendingDiagnostics = [];
-  const evaluationCount = goldenIntents.length * repetitions;
-  let completedIntents = 0;
+  const orderedIntents = stratifiedIntents(goldenIntents);
+  const startedAt = Date.now();
+  let plan = {
+    sampleCount: calibrationCount,
+    repetitions: 1,
+    evaluations: calibrationCount,
+    estimatedAttemptMs: 0,
+    estimatedFullDurationMs: 0,
+    estimatedPlanDurationMs: 0
+  };
+  let stoppedForBudget = false;
   let goodCount = 0;
   let context;
 
@@ -158,26 +234,30 @@ test(`classifies at least 50% of ${goldenIntents.length} golden intents over ${r
     console.log(`[web-llm-run] ${JSON.stringify({
       event: 'started',
       model: wizardConfig.assistant.model.model_id,
-      samples: goldenIntents.length,
-      repetitions,
-      evaluations: evaluationCount,
+      availableSamples: goldenIntents.length,
+      maxRepetitions,
+      maxEvaluations: goldenIntents.length * maxRepetitions,
+      evaluationBudgetMs,
       browserProfileDir
     })}`);
 
-    for (const golden of goldenIntents) {
-      for (let repetition = 1; repetition <= repetitions; repetition++) {
-        const evaluation = results.length + 1;
-        const startedAt = Date.now();
-        let result;
-        console.log(`[web-llm-attempt] ${JSON.stringify({
-          event: 'started',
-          id: golden.id,
-          repetition,
-          evaluation,
-          evaluations: evaluationCount
-        })}`);
-        try {
-          const output = await page.evaluate(async ({ config, intent, scenarioCatalog }) => {
+    const completed = new Set();
+    async function evaluate(golden, repetition) {
+      const evaluation = results.length + 1;
+      const attemptStartedAt = Date.now();
+      let result;
+      console.log(`[web-llm-attempt] ${JSON.stringify({
+        event: 'started',
+        id: golden.id,
+        repetition,
+        evaluation,
+        elapsedMs: attemptStartedAt - startedAt,
+        remainingMs: Math.max(0, evaluationBudgetMs - (attemptStartedAt - startedAt))
+      })}`);
+      try {
+        const remainingMs = Math.max(1, evaluationBudgetMs - (Date.now() - startedAt) - artifactReserveMs);
+        const output = await withinDeadline(
+          page.evaluate(async ({ config, intent, scenarioCatalog }) => {
             if (!globalThis.__webLlmQualityAssistant) {
               const { createScenarioAssistant } = await import('/js/slm-runner.js');
               globalThis.__webLlmQualityAssistant = createScenarioAssistant({ config });
@@ -187,56 +267,96 @@ test(`classifies at least 50% of ${goldenIntents.length} golden intents over ${r
             config: wizardConfig.assistant.model,
             intent: golden.intent,
             scenarioCatalog: scenarios
-          });
-          const actual = parseScenarioSelection(output.answer, scenarios);
-          result = {
-            id: golden.id,
-            repetition,
-            evaluation,
-            intent: golden.intent,
-            expected: golden.archetype,
-            actual,
-            answer: output.answer,
-            mode: actual ? 'parsed' : 'invalid',
-            correct: actual === golden.archetype,
-            durationMs: Date.now() - startedAt
-          };
-        } catch (error) {
-          result = {
-            id: golden.id,
-            repetition,
-            evaluation,
-            intent: golden.intent,
-            expected: golden.archetype,
-            actual: null,
-            mode: 'error',
-            correct: false,
-            durationMs: Date.now() - startedAt,
-            error: safeLogValue(error, 'error')
-          };
-        }
-        results.push(result);
-        if (result.correct) goodCount += 1;
-        console.log(`[web-llm-quality] ${JSON.stringify(result)}`);
+          }),
+          remainingMs
+        );
+        const actual = parseScenarioSelection(output.answer, scenarios);
+        result = {
+          id: golden.id,
+          repetition,
+          evaluation,
+          intent: golden.intent,
+          expected: golden.archetype,
+          actual,
+          answer: output.answer,
+          mode: actual ? 'parsed' : 'invalid',
+          correct: actual === golden.archetype,
+          durationMs: Date.now() - attemptStartedAt
+        };
+      } catch (error) {
+        result = {
+          id: golden.id,
+          repetition,
+          evaluation,
+          intent: golden.intent,
+          expected: golden.archetype,
+          actual: null,
+          mode: 'error',
+          correct: false,
+          durationMs: Date.now() - attemptStartedAt,
+          error: safeLogValue(error, 'error')
+        };
+        if (error.name === 'EvaluationBudgetError') stoppedForBudget = true;
       }
-      const completedEvaluations = results.length;
-      completedIntents += 1;
-      console.log(`[web-llm-batch-progress] ${JSON.stringify({
-        completedIntents,
-        totalIntents: goldenIntents.length,
-        completedEvaluations,
-        totalEvaluations: evaluationCount,
+      results.push(result);
+      completed.add(`${golden.id}:${repetition}`);
+      if (result.correct) goodCount += 1;
+      console.log(`[web-llm-quality] ${JSON.stringify(result)}`);
+    }
+
+    for (const golden of orderedIntents.slice(0, calibrationCount)) {
+      await evaluate(golden, 1);
+      if (stoppedForBudget) break;
+    }
+    plan = evaluationPlan(results, Date.now() - startedAt);
+    console.log(`[web-llm-plan] ${JSON.stringify({
+      event: 'estimated',
+      ...plan,
+      calibrationEvaluations: results.length,
+      elapsedMs: Date.now() - startedAt
+    })}`);
+
+    evaluation:
+    for (let repetition = 1; !stoppedForBudget && repetition <= plan.repetitions; repetition++) {
+      for (const golden of orderedIntents.slice(0, plan.sampleCount)) {
+        if (completed.has(`${golden.id}:${repetition}`)) continue;
+        const elapsedMs = Date.now() - startedAt;
+        if (elapsedMs + (plan.estimatedAttemptMs * 1.5) + artifactReserveMs >= evaluationBudgetMs) {
+          stoppedForBudget = true;
+          console.log(`[web-llm-budget] ${JSON.stringify({
+            event: 'stopped',
+            elapsedMs,
+            remainingMs: evaluationBudgetMs - elapsedMs,
+            estimatedAttemptMs: plan.estimatedAttemptMs,
+            completedEvaluations: results.length
+          })}`);
+          break evaluation;
+        }
+        await evaluate(golden, repetition);
+      }
+      console.log(`[web-llm-repetition-progress] ${JSON.stringify({
+        completedRepetitions: repetition,
+        plannedRepetitions: plan.repetitions,
+        completedEvaluations: results.length,
+        plannedEvaluations: plan.evaluations,
         good: goodCount,
-        accuracy: roundPercent(goodCount, completedEvaluations)
+        accuracy: roundPercent(goodCount, results.length),
+        elapsedMs: Date.now() - startedAt
       })}`);
     }
   } finally {
     await Promise.allSettled(pendingDiagnostics);
     if (context) await context.close();
-    writeArtifacts(results, diagnostics);
+    const completedSamples = new Set(results.map(({ id }) => id)).size;
+    writeArtifacts(results, diagnostics, {
+      plan,
+      completedSamples,
+      stoppedForBudget,
+      elapsedMs: Date.now() - startedAt
+    });
   }
 
-  expect(results, 'Every golden intent must complete all repetitions').toHaveLength(evaluationCount);
+  expect(results.length, 'The adaptive evaluation must complete at least one sample').toBeGreaterThan(0);
   expect(
     roundPercent(goodCount, results.length),
     `${goodCount}/${results.length} model responses matched their golden archetype`

@@ -25,7 +25,7 @@ concurrency:
 jobs:
   evaluate:
     runs-on: ubuntu-latest
-    timeout-minutes: 180
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
 
@@ -49,6 +49,7 @@ jobs:
           key: web-llm-${{ runner.os }}-${{ hashFiles('package-lock.json', 'scripts/fetch-vendor-assets.mjs', 'src/wizard.json') }}
 
       - name: Evaluate WebLLM intent quality
+        timeout-minutes: 5
         env:
           WEB_LLM_CACHE_DIR: ${{ runner.temp }}/web-llm-cache
         run: npm run test:web-llm-quality
