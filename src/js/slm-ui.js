@@ -1,7 +1,7 @@
 // DOM wiring for the in-browser scenario assistant ("wizard" button).
 
 import { keywordScenarioMatch, scenarioCatalog, scenarioLabel, slmConfig } from './slm.js';
-import { createScenarioAssistant } from './slm-runner.js';
+import { createScenarioAssistant, supportsWebGPU } from './slm-runner.js';
 
 function element(id) {
   return document.getElementById(id);
@@ -33,6 +33,7 @@ export function selectArchetypeRadio(scenarioId) {
 
 export function initScenarioAssistant(context) {
   const ctx = context || {};
+  const container = element('wizard-assist');
   const toggle = element('btn-wizard-assist');
   const panel = element('wizard-assist-panel');
   const input = element('wizard-assist-input');
@@ -43,10 +44,10 @@ export function initScenarioAssistant(context) {
   if (!toggle || !panel || !input || !run) return null;
 
   const config = slmConfig(ctx.wizardConfig);
-  if (config.enabled === false) {
-    toggle.hidden = true;
-    return null;
-  }
+  // The assistant is hidden by default and only revealed where the model can
+  // actually run: without WebGPU the wasm backend is too slow to be useful.
+  if (config.enabled === false || !supportsWebGPU(ctx.navigator)) return null;
+  if (container) container.removeAttribute('hidden');
 
   const copy = assistantCopy(ctx.wizardConfig);
   let assistant = null;

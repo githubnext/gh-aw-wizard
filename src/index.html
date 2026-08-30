@@ -131,7 +131,7 @@
             <span class="recipe-value" id="summary-purpose">choose what the agent should do</span>
           </button>
           <section class="wizard-step active" id="step-1">
-            <div class="assistant" id="wizard-assist">
+            <div class="assistant" id="wizard-assist" hidden>
               <button class="btn btn-assistant" id="btn-wizard-assist" type="button" aria-expanded="false" aria-controls="wizard-assist-panel">
                 <svg class="octicon" aria-hidden="true"><use href="#octicon-zap"></use></svg>
                 <span id="wizard-assist-button-label">Let the wizard pick for me</span>
@@ -141,7 +141,7 @@
                 <textarea class="text-area" id="wizard-assist-input" placeholder="e.g., Every morning, summarize the issues opened yesterday and post a digest…"></textarea>
                 <div class="assistant-actions">
                   <button class="btn btn-primary" id="btn-wizard-assist-run" type="button">Analyze my request</button>
-                  <p class="field-hint" id="wizard-assist-hint">A small language model runs in your browser (WebGPU when available) and picks the closest scenario. The model is downloaded once and kept in your browser storage.</p>
+                  <p class="field-hint" id="wizard-assist-hint">A small language model runs in your browser on WebGPU and picks the closest scenario. The model is downloaded once and kept in your browser storage.</p>
                 </div>
                 <div class="assistant-progress" id="wizard-assist-progress-field" hidden>
                   <progress class="assistant-progress-bar" id="wizard-assist-progress" max="100" value="0" aria-labelledby="wizard-assist-status"></progress>

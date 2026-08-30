@@ -12,9 +12,13 @@ import {
   selectScenario
 } from './slm.js';
 
-export function preferredDevice(navigatorImpl) {
+export function supportsWebGPU(navigatorImpl) {
   const nav = navigatorImpl || (typeof navigator !== 'undefined' ? navigator : null);
-  return nav && nav.gpu ? 'webgpu' : 'wasm';
+  return !!(nav && nav.gpu);
+}
+
+export function preferredDevice(navigatorImpl) {
+  return supportsWebGPU(navigatorImpl) ? 'webgpu' : 'wasm';
 }
 
 export function extractAssistantText(output) {

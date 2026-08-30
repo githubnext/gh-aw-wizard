@@ -678,6 +678,9 @@ a:hover {
 .assistant {
   margin-bottom: 1rem;
 }
+.assistant[hidden] {
+  display: none;
+}
 .btn-assistant {
   background: var(--bg-tertiary);
   color: var(--text-primary);

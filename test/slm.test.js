@@ -17,7 +17,7 @@ import {
   slmConfig
 } from '../src/js/slm.js';
 import { cacheKeyFor, serializeHeaders } from '../src/js/slm-cache.js';
-import { extractAssistantText, preferredDevice } from '../src/js/slm-runner.js';
+import { extractAssistantText, preferredDevice, supportsWebGPU } from '../src/js/slm-runner.js';
 
 const html = readFileSync(fileURLToPath(new URL('../src/index.html', import.meta.url)), 'utf8');
 const css = readFileSync(fileURLToPath(new URL('../src/styles/style.css', import.meta.url)), 'utf8');
@@ -146,6 +146,12 @@ describe('runtime helpers', () => {
     expect(preferredDevice({})).toBe('wasm');
   });
 
+  it('detects WebGPU support', () => {
+    expect(supportsWebGPU({ gpu: {} })).toBe(true);
+    expect(supportsWebGPU({})).toBe(false);
+    expect(supportsWebGPU(null)).toBe(false);
+  });
+
   it('reads the assistant message out of the generated output', () => {
     expect(extractAssistantText([{ generated_text: 'issue-triage' }])).toBe('issue-triage');
     expect(extractAssistantText([{
@@ -172,6 +178,13 @@ describe('model weight cache', () => {
 });
 
 describe('assistant markup', () => {
+  it('stays hidden until a WebGPU-capable browser reveals it', () => {
+    expect(html).toContain('id="wizard-assist" hidden');
+    const start = css.indexOf('.assistant[hidden] {');
+    expect(start).toBeGreaterThan(-1);
+    expect(css.slice(start, css.indexOf('}', start))).toMatch(/display:\s*none/);
+  });
+
   it('renders the wizard button, textbox, and progress bar', () => {
     expect(html).toContain('id="btn-wizard-assist"');
     expect(html).toContain('id="wizard-assist-input"');

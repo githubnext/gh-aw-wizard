@@ -29,7 +29,7 @@
     "label": "Describe what you want to automate",
     "field_placeholder": "e.g., Every morning, summarize the issues opened yesterday and post a digest…",
     "run_button": "Analyze my request",
-    "hint": "A small language model runs in your browser (WebGPU when available) and picks the closest scenario. The model is downloaded once and kept in your browser storage.",
+    "hint": "A small language model runs in your browser on WebGPU and picks the closest scenario. The model is downloaded once and kept in your browser storage.",
     "analyzing_status": "Loading the in-browser model…",
     "matched_status": "Selected the closest scenario:",
     "no_match_status": "No close match found. Pick a scenario below.",
