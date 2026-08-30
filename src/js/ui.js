@@ -79,7 +79,7 @@ export function initWizard(options) {
   });
   bindNavigation();
   initNavigationHistory();
-  initLanding(revealWhatPane);
+  initLanding(revealWhyPane);
   return ready;
 }
 
@@ -238,14 +238,10 @@ function renderConfiguredOptions(config) {
   });
 }
 
-function revealWhatPane() {
+function revealWhyPane() {
   resetNavigationPane();
-  focusFirstArchetype();
-}
-
-function focusFirstArchetype() {
-  const first = document.querySelector('#archetype-options input[type="radio"]');
-  if (first) first.focus();
+  const why = document.getElementById('intent-description');
+  if (why) why.focus();
 }
 
 function generateAndShow() {
@@ -347,13 +343,13 @@ function toggleCurrentStep() {
 }
 
 function advanceOneStepLikeNext() {
-  if (currentStep >= 1 && currentStep <= 4) {
-    if (currentStep + 1 > maxReachableStep(hasChecked('archetype'))) return false;
-    goToStep(currentStep + 1);
+  if (currentStep === 1) {
+    goToStep(2);
     return true;
   }
-  if (currentStep === 5) {
-    goToStep(6);
+  if (currentStep >= 2 && currentStep <= 5) {
+    if (currentStep + 1 > maxReachableStep(hasChecked('archetype'))) return false;
+    goToStep(currentStep + 1);
     return true;
   }
   if (currentStep === 6) {
@@ -384,17 +380,17 @@ function goToStep(n, options) {
 
 export function resetNavigationPane() {
   const previousStep = currentStep;
-  let whatPane = null;
+  let whyPane = null;
   document.querySelectorAll('.wizard-step').forEach((step) => {
-    if (step.id === 'step-1') whatPane = step;
+    if (step.id === 'step-1') whyPane = step;
     step.classList.toggle('active', step.id === 'step-1');
   });
   currentStep = 1;
   updateProgress(previousStep, 1);
-  if (whatPane && previousStep !== 1) {
-    whatPane.style.animation = 'none';
-    void whatPane.offsetHeight; // reflow
-    whatPane.style.animation = ACCORDION_OPEN_ANIMATION;
+  if (whyPane && previousStep !== 1) {
+    whyPane.style.animation = 'none';
+    void whyPane.offsetHeight; // reflow
+    whyPane.style.animation = ACCORDION_OPEN_ANIMATION;
   }
 }
 
@@ -451,7 +447,7 @@ function updateProgress(from, to) {
 }
 
 export function maxReachableStep(hasArchetype) {
-  return hasArchetype ? TOTAL_STEPS : 1;
+  return hasArchetype ? TOTAL_STEPS : 2;
 }
 
 function syncProgressStepAvailability() {
@@ -503,14 +499,14 @@ function bindRadioDeselect(radios, onDeselect) {
 }
 
 function bindFormEvents() {
-  // Step 1: archetype radios
+  // Step 2: archetype radios
   const archetypeRadios = document.querySelectorAll('input[name="archetype"]');
   const archetypeGroup = document.getElementById('archetype-options');
   bindRadioDeselect(archetypeRadios, clearArchetypeSelection);
 
   // Arrow keys move focus *and* selection between radios in a native
   // radiogroup, firing a `change` event just like a click does. Auto-advancing
-  // to step 2 on every `change` would eject keyboard focus from the group
+  // to step 3 on every `change` would eject keyboard focus from the group
   // while the user is still browsing options with the arrow keys (WCAG 2.1.1 /
   // 2.4.3 / 3.2.2). Track arrow-key navigation so the auto-advance below only
   // fires for a discrete selection (click, or Enter/Space), and otherwise
@@ -524,7 +520,7 @@ function bindFormEvents() {
     setTimeout(() => {
       if (archetypeGroup.contains(document.activeElement)) return;
       const checked = archetypeGroup.querySelector('input[name="archetype"]:checked');
-      if (checked && checked.value !== 'custom' && currentStep === 1) goToStep(2);
+      if (checked && checked.value !== 'custom' && currentStep === 2) goToStep(3);
     }, 0);
   });
 
@@ -539,35 +535,35 @@ function bindFormEvents() {
       prefillFromArchetype(radio.value);
       if (radio.value !== 'custom') {
         if (arrowKeyNav) {
-          // Leave focus on the radio the user just navigated to; step 2 will
+          // Leave focus on the radio the user just navigated to; step 3 will
           // be shown once focus leaves the radiogroup (see `focusout` above).
           arrowKeyNav = false;
           return;
         }
         const hadFocus = document.activeElement === radio;
-        goToStep(2);
+        goToStep(3);
         // The collapsing step would otherwise drop keyboard focus to the body.
-        const nextClause = document.querySelector('.recipe-clause[data-step="2"]');
+        const nextClause = document.querySelector('.recipe-clause[data-step="3"]');
         if (hadFocus && nextClause) nextClause.focus();
       }
     });
   });
 
-  // Step 2: trigger checkboxes
+  // Step 3: trigger checkboxes
   document.querySelectorAll('input[name="trigger"]').forEach((cb) => {
     cb.addEventListener('change', () => {
       updateCardSelection('#trigger-options', 'checkbox');
     });
   });
 
-  // Step 3: output checkboxes
+  // Step 4: output checkboxes
   document.querySelectorAll('input[name="output"]').forEach((cb) => {
     cb.addEventListener('change', () => {
       updateCardSelection('#output-options', 'checkbox');
     });
   });
 
-  // Step 4: extras (optional checkboxes, no validation needed)
+  // Step 5: extras (optional checkboxes, no validation needed)
   document.querySelectorAll('input[name="extra"]').forEach((cb) => {
     cb.addEventListener('change', () => {
       updateCardSelection('#extras-options', 'checkbox');
@@ -575,31 +571,31 @@ function bindFormEvents() {
     });
   });
 
-  // Step 5: engine radio cards
+  // Step 6: engine radio cards
   const engineOptions = document.getElementById('engine-options');
   bindRadioDeselect(engineOptions.querySelectorAll('input[name="engine"]'), clearEngineSelection);
   engineOptions.addEventListener('change', (event) => {
     if (event.target.name === 'engine') {
       updateCardSelection('#engine-options', 'radio');
-      if (currentStep === 5) goToStep(6);
+      if (currentStep === 6) generateAndShow();
       else if (currentStep === TOTAL_STEPS) refreshPreview();
     }
   });
   updateCardSelection('#engine-options', 'radio');
 
-  // Step 6: free-form intent. The prompt is re-baked on every keystroke so the
+  // Step 1: free-form why. The prompt is re-baked on every keystroke so the
   // finish step always previews what will be copied.
   const intent = document.getElementById('intent-description');
   if (intent) {
     intent.addEventListener('input', () => {
       renderWorkflowSummary();
       // Re-bake on every keystroke so the finish step (and the copy button) always
-      // reflect the current intent, even while the intent pane is still open.
+      // reflect the current why, even while the why pane is still open.
       refreshPreview();
     });
   }
   const intentContinue = document.getElementById('btn-intent-continue');
-  if (intentContinue) intentContinue.addEventListener('click', generateAndShow);
+  if (intentContinue) intentContinue.addEventListener('click', () => goToStep(2));
 
   document.addEventListener('change', (event) => {
     if (event.target.matches('input')) {
@@ -670,8 +666,6 @@ function clearArchetypeSelection() {
 
   document.querySelectorAll('input[name="extra"]').forEach((cb) => { cb.checked = false; });
   updateCardSelection('#extras-options', 'checkbox');
-  const intent = document.getElementById('intent-description');
-  if (intent) intent.value = '';
   renderWorkflowSummary();
   syncProgressStepAvailability();
 }

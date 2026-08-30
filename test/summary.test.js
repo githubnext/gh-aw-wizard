@@ -37,7 +37,7 @@ describe('buildWorkflowSummary', () => {
     expect(summary.purpose).toEqual({ value: 'choose what the agent should do', complete: false });
     expect(summary.output).toEqual({ value: 'choose what it can write', complete: false });
     expect(summary.engine).toEqual({ value: 'choose an agent', complete: false });
-    expect(summary.intent).toEqual({ value: 'add your own instructions (optional)', complete: false });
+    expect(summary.intent).toEqual({ value: 'tell us what you are trying to solve', complete: false });
   });
 
   it('summarizes a provided intent', () => {

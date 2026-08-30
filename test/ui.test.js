@@ -28,8 +28,8 @@ afterEach(() => {
 });
 
 describe('wizard navigation', () => {
-  it('keeps only the What tab required', () => {
-    expect(maxReachableStep(false)).toBe(1);
+  it('keeps the Why and What tabs reachable before an archetype is selected', () => {
+    expect(maxReachableStep(false)).toBe(2);
     expect(maxReachableStep(true)).toBe(7);
   });
 
@@ -187,7 +187,7 @@ describe('wizard navigation', () => {
     });
   });
 
-  it('resets the navigation pane to the opened What pane', () => {
+  it('resets the navigation pane to the opened Why pane', () => {
     const step1Pane = createElement({ id: 'step-1' });
     const step2Pane = createElement({ id: 'step-2', classes: ['active'] });
     const step1Item = createElement({ classes: ['completed'] });
@@ -217,7 +217,7 @@ describe('wizard navigation', () => {
     expect(step1Button.attributes.get('aria-expanded')).toBe('true');
     expect(step1Button.attributes.get('aria-current')).toBe('step');
     expect(step2Button.classList.contains('active')).toBe(false);
-    expect(step2Button.disabled).toBe(true);
+    expect(step2Button.disabled).toBe(false);
   });
 });
 
