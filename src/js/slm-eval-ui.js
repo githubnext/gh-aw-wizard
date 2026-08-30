@@ -8,34 +8,51 @@ function cell(row, value) {
   row.appendChild(node);
 }
 
-function renderResults(container, results, scenarios) {
+function createLiveResults(container) {
   container.replaceChildren();
   const summary = document.createElement('p');
   summary.className = 'eval-summary';
-  summary.textContent = `${results.successes}/${results.attempts} correct (${(results.successRate * 100).toFixed(1)}%) across ${results.queries} queries × ${results.repetitions} runs.`;
   container.appendChild(summary);
 
   const table = document.createElement('table');
   table.className = 'eval-table';
   const head = document.createElement('thead');
-  head.innerHTML = '<tr><th scope="col">Scenario</th><th scope="col">Queries</th><th scope="col">Attempts</th><th scope="col">Correct</th><th scope="col">Errors</th><th scope="col">Success rate</th></tr>';
+  head.innerHTML = '<tr><th scope="col">Query</th><th scope="col">Expected</th><th scope="col">Actual response</th><th scope="col">Result</th></tr>';
   table.appendChild(head);
   const body = document.createElement('tbody');
-  results.rows.forEach((result) => {
-    const row = document.createElement('tr');
-    cell(row, scenarioLabel(scenarios, result.scenario));
-    cell(row, String(result.queries));
-    cell(row, String(result.attempts));
-    cell(row, String(result.successes));
-    cell(row, String(result.errors));
-    cell(row, `${(result.successRate * 100).toFixed(1)}%`);
-    body.appendChild(row);
-  });
   table.appendChild(body);
   const scroller = document.createElement('div');
   scroller.className = 'eval-table-scroller';
   scroller.appendChild(table);
   container.appendChild(scroller);
+
+  const totals = { attempts: 0, successes: 0, errors: 0 };
+
+  function updateSummary() {
+    const successRate = totals.attempts ? totals.successes / totals.attempts : 0;
+    summary.textContent = `${totals.successes}/${totals.attempts} correct (${(successRate * 100).toFixed(1)}%)${totals.errors ? `, ${totals.errors} error(s)` : ''}.`;
+  }
+
+  return {
+    addRow(scenarios, entry) {
+      totals.attempts += 1;
+      if (entry.correct) totals.successes += 1;
+      if (entry.errored) totals.errors += 1;
+
+      const row = document.createElement('tr');
+      cell(row, entry.query);
+      cell(row, scenarioLabel(scenarios, entry.golden));
+      cell(row, entry.errored ? 'Error' : (entry.answer !== null ? entry.answer : scenarioLabel(scenarios, entry.scenario)));
+      cell(row, entry.errored ? 'Error' : (entry.correct ? 'Correct' : 'Incorrect'));
+      row.className = entry.errored ? 'eval-row-error' : (entry.correct ? 'eval-row-correct' : 'eval-row-incorrect');
+      body.appendChild(row);
+
+      updateSummary();
+    },
+    setStatus(text) {
+      summary.textContent = text;
+    }
+  };
 }
 
 export function initEvalMode(context) {
@@ -62,24 +79,22 @@ export function initEvalMode(context) {
   button.addEventListener('click', async () => {
     const scenarios = scenarioCatalog(ctx.patterns(), ctx.extraScenarios ? ctx.extraScenarios() : []);
     button.disabled = true;
-    results.textContent = `Running ${EVAL_SAMPLE_SIZE} queries × ${EVAL_REPETITIONS} runs…`;
     if (!assistant) {
       assistant = createScenarioAssistant({
         config: slmConfig(ctx.wizardConfig),
         navigator: ctx.navigator
       });
     }
+    const live = createLiveResults(results);
+    live.setStatus(`Running ${EVAL_SAMPLE_SIZE} queries × ${EVAL_REPETITIONS} runs…`);
     try {
-      const outcome = await runEvals({
+      await runEvals({
         sampleSize: EVAL_SAMPLE_SIZE,
         analyze: (query) => assistant.analyze(query, scenarios),
-        onProgress: ({ completed, total }) => {
-          results.textContent = `Running evals: ${completed}/${total}`;
-        }
+        onRow: (entry) => live.addRow(scenarios, entry)
       });
-      renderResults(results, outcome, scenarios);
     } catch {
-      results.textContent = 'The model evaluation could not be completed.';
+      live.setStatus('The model evaluation could not be completed.');
     } finally {
       button.disabled = false;
     }
