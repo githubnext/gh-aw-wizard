@@ -117,6 +117,7 @@ test(`classifies at least 50% of ${goldenIntents.length} golden intents over ${r
   const diagnostics = [];
   const pendingDiagnostics = [];
   const evaluationCount = goldenIntents.length * repetitions;
+  let goodCount = 0;
   let context;
 
   try {
@@ -214,15 +215,15 @@ test(`classifies at least 50% of ${goldenIntents.length} golden intents over ${r
           };
         }
         results.push(result);
+        if (result.correct) goodCount += 1;
         console.log(`[web-llm-quality] ${JSON.stringify(result)}`);
       }
       const completedEvaluations = results.length;
-      const good = results.filter(({ correct }) => correct).length;
       console.log(`[web-llm-progress] ${JSON.stringify({
         completedEvaluations,
         totalEvaluations: evaluationCount,
-        good,
-        accuracy: roundPercent(good, completedEvaluations)
+        good: goodCount,
+        accuracy: roundPercent(goodCount, completedEvaluations)
       })}`);
     }
   } finally {
@@ -231,10 +232,9 @@ test(`classifies at least 50% of ${goldenIntents.length} golden intents over ${r
     writeArtifacts(results, diagnostics);
   }
 
-  const good = results.filter(({ correct }) => correct).length;
   expect(results, 'Every golden intent must complete all repetitions').toHaveLength(evaluationCount);
   expect(
-    roundPercent(good, results.length),
-    `${good}/${results.length} model responses matched their golden archetype`
+    roundPercent(goodCount, results.length),
+    `${goodCount}/${results.length} model responses matched their golden archetype`
   ).toBeGreaterThanOrEqual(qualityThreshold);
 });
