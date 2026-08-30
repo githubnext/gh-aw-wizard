@@ -46,7 +46,7 @@ export function initEvalMode(context) {
   if (!actions) return null;
 
   const button = document.createElement('button');
-  button.className = 'btn btn-primary btn-evals';
+  button.className = 'btn btn-evals';
   button.id = 'wizard-evals';
   button.type = 'button';
   button.textContent = 'Run evals';

@@ -130,7 +130,7 @@ const QUERY_GROUPS = [
   ['community-digest', [
     'Publish a digest of community discussions',
     'Summarize recent community activity each week',
-    'Create a roundup of issues discussions and contributions',
+    'Create a roundup of issues, discussions and contributions',
     'Report highlights from the project community',
     'Compile a regular community update'
   ]],
