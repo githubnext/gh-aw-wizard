@@ -37,6 +37,12 @@
     "no_scenarios_status": "Scenarios are not available yet. Please try again.",
     "failure_status": "The in-browser model could not analyze the request. Pick a scenario below.",
     "fallback_status": "The in-browser model is unavailable. Closest keyword match:",
+    "result_eyebrow": "Scenario selected",
+    "result_fallback_eyebrow": "Closest keyword match",
+    "result_fallback_description": "The in-browser model was unavailable, so the closest keyword match was selected. Pick another scenario if this is not what you meant.",
+    "result_request_label": "Your request",
+    "result_close_label": "Close",
+    "result_action": "Continue",
     "model": {
       "enabled": true,
       "module_url": "slm/transformers.min.js",
