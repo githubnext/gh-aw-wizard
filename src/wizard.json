@@ -106,21 +106,36 @@
           "label": "On a schedule (daily/weekly)",
           "description": "Runs on a cron schedule",
           "icon": "calendar",
-          "summary": "the schedule runs"
+          "summary": "the schedule runs",
+          "detail": {
+            "label": "How often should it run, and what should each run cover?",
+            "placeholder": "e.g., every weekday morning, covering the last 24 hours of activity",
+            "requirement": "Use this schedule and per-run scope: {{detail}}"
+          }
         },
         {
           "id": "slash_command",
           "label": "Slash command (/slash-command in comments)",
           "description": "Runs when a matching slash command is posted",
           "icon": "terminal",
-          "summary": "a slash command is posted"
+          "summary": "a slash command is posted",
+          "detail": {
+            "label": "What should the slash command be called, and what should it do?",
+            "placeholder": "e.g., /triage — triage the issue it was posted on",
+            "requirement": "Configure the slash command as follows: {{detail}}"
+          }
         },
         {
           "id": "label_command",
           "label": "Label command (/label-command)",
           "description": "Runs when a matching label is added",
           "icon": "tag",
-          "summary": "a matching label is added"
+          "summary": "a matching label is added",
+          "detail": {
+            "label": "Which label should trigger the workflow?",
+            "placeholder": "e.g., needs-triage",
+            "requirement": "Trigger the workflow on this label: {{detail}}"
+          }
         },
         {
           "id": "push",
@@ -186,35 +201,60 @@
           "label": "Remember across runs",
           "description": "Track trends and context between workflow executions",
           "icon": "cache",
-          "summary": "memory between runs"
+          "summary": "memory between runs",
+          "detail": {
+            "label": "What do you want to remember between runs?",
+            "placeholder": "e.g., which issues were already triaged and how the failure count trends week over week",
+            "requirement": "Persist this context in cache-memory between runs, and read it back at the start of each run: {{detail}}"
+          }
         },
         {
           "id": "charts",
           "label": "Generate charts",
           "description": "Upload generated charts and other visual assets",
           "icon": "graph",
-          "summary": "chart generation"
+          "summary": "chart generation",
+          "detail": {
+            "label": "What should the charts show?",
+            "placeholder": "e.g., open vs closed issues per week for the last quarter",
+            "requirement": "Generate and upload charts that show: {{detail}}"
+          }
         },
         {
           "id": "browser",
           "label": "Use browser",
           "description": "Enable Playwright CLI for browser automation",
           "icon": "device-desktop",
-          "summary": "browser access"
+          "summary": "browser access",
+          "detail": {
+            "label": "Which pages should the agent visit, and what should it check?",
+            "placeholder": "e.g., the deployed docs site, checking that every navigation link resolves",
+            "requirement": "Use the browser for: {{detail}}"
+          }
         },
         {
           "id": "agentic-workflows",
           "label": "Analyze workflows",
           "description": "Create meta-workflows that analyze and optimize agentic workflows",
           "icon": "tools",
-          "summary": "agentic workflow analysis"
+          "summary": "agentic workflow analysis",
+          "detail": {
+            "label": "Which workflows should it analyze, and what should it look for?",
+            "placeholder": "e.g., every .github/workflows/*.md file, looking for missing safe-outputs",
+            "requirement": "Scope the agentic workflow analysis to: {{detail}}"
+          }
         },
         {
           "id": "lsp",
           "label": "Use language services",
           "description": "Use language service protocol tools for symbol-aware code analysis",
           "icon": "terminal",
-          "summary": "language service access"
+          "summary": "language service access",
+          "detail": {
+            "label": "Which languages or areas of the codebase should it analyze?",
+            "placeholder": "e.g., the TypeScript sources under src/",
+            "requirement": "Configure language services for: {{detail}}"
+          }
         }
       ]
     },

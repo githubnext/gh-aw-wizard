@@ -389,6 +389,22 @@ function intentRequirements(intent) {
   ];
 }
 
+// Follow-up answers typed into a selected option's detail text box (for example
+// "what do you want to remember?" for the memory extra). Each detail either
+// renders its option's `requirement` template or falls back to the question and
+// answer, so the downstream agent sees the specifics rather than just the
+// capability.
+export function detailRequirements(details) {
+  return (Array.isArray(details) ? details : []).map((detail) => {
+    const value = detail && typeof detail.value === 'string' ? detail.value.trim() : '';
+    if (!value) return null;
+    const template = typeof detail.requirement === 'string' ? detail.requirement : '';
+    if (template) return template.replace(/\{\{detail\}\}/g, value);
+    const label = typeof detail.label === 'string' && detail.label ? detail.label : 'Additional detail';
+    return /[?:]$/.test(label) ? `${label} ${value}` : `${label}: ${value}`;
+  }).filter(Boolean);
+}
+
 export function generateAgentPrompt(answers, patterns) {
   const archetype = getArchetype(patterns, answers.archetype) || {};
   const name = workflowName(answers.archetype, answers.customDescription);
@@ -437,6 +453,9 @@ export function generateAgentPrompt(answers, patterns) {
   if (answers.needsData) prompt += '- Add a pre-step to fetch external data before the agent runs\n';
   selectedExtras(answers, patterns).forEach((extra) => {
     if (extra.requirement) prompt += `- ${  extra.requirement  }\n`;
+  });
+  detailRequirements(answers.details).forEach((requirement) => {
+    prompt += `- ${  requirement  }\n`;
   });
   const constraints = doNotConstraints(workflows, patterns);
   if (constraints.length) {

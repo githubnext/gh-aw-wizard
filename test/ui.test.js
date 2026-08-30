@@ -1,6 +1,8 @@
 import { afterEach, describe, expect, it } from 'vitest';
 
 import {
+  detailFieldId,
+  detailInputId,
   maxReachableStep,
   renderArchetypeOptions,
   renderChoiceOptions,
@@ -144,6 +146,56 @@ describe('wizard navigation', () => {
         type: 'checkbox',
         value: 'release'
       });
+    });
+
+    it('renders a hidden follow-up text box for options that ask for details', () => {
+      const container = createElement();
+      globalThis.document = {
+        getElementById(id) {
+          return id === 'extras-options' ? container : null;
+        },
+        createElement() {
+          return createElement();
+        },
+        createElementNS() {
+          return createElement();
+        },
+        createTextNode(text) {
+          return { textContent: text };
+        }
+      };
+
+      renderChoiceOptions({
+        steps: {
+          extra: {
+            options: [{
+              id: 'memory',
+              label: 'Remember across runs',
+              detail: {
+                label: 'What do you want to remember?',
+                placeholder: 'e.g., which issues were triaged',
+                requirement: 'Remember: {{detail}}'
+              }
+            }]
+          }
+        }
+      }, 'extra');
+
+      expect(container.children).toHaveLength(2);
+      const field = container.children[1];
+      expect(field.id).toBe(detailFieldId('extra', 'memory'));
+      expect(field.classList.contains('visible')).toBe(false);
+      const [label, input] = field.children;
+      expect(label.textContent).toBe('What do you want to remember?');
+      expect(label.getAttribute('for')).toBe(detailInputId('extra', 'memory'));
+      expect(input).toMatchObject({ type: 'text', id: detailInputId('extra', 'memory') });
+      expect(input.dataset).toMatchObject({
+        detailStep: 'extra',
+        detailOption: 'memory',
+        detailRequirement: 'Remember: {{detail}}',
+        detailLabel: 'What do you want to remember?'
+      });
+      expect(input.getAttribute('placeholder')).toBe('e.g., which issues were triaged');
     });
   });
 

@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 import {
   buildTriggerYaml as buildTriggerYamlFromPatterns,
+  detailRequirements,
   fencedBlock,
   generateAgentPrompt,
   generateWorkflowFile,
@@ -481,6 +482,33 @@ describe('generateAgentPrompt', () => {
     expect(prompt).toContain('- Enable Playwright CLI for browser automation\n');
   });
 
+  it('folds option detail answers into the prompt requirements', () => {
+    const prompt = generateAgentPrompt(answers({
+      extras: ['memory'],
+      details: [
+        {
+          step: 'extra',
+          option: 'memory',
+          label: 'What do you want to remember between runs?',
+          requirement: 'Persist this context in cache-memory between runs: {{detail}}',
+          value: '  which issues were already triaged  '
+        },
+        {
+          step: 'trigger',
+          option: 'schedule',
+          label: 'How often should it run?',
+          requirement: '',
+          value: 'every weekday morning'
+        },
+        { step: 'extra', option: 'charts', label: 'What should the charts show?', value: '   ' }
+      ]
+    }), patterns);
+
+    expect(prompt).toContain('- Persist this context in cache-memory between runs: which issues were already triaged\n');
+    expect(prompt).toContain('- How often should it run? every weekday morning\n');
+    expect(prompt).not.toContain('What should the charts show?');
+  });
+
   it('directs LSP workflows to detect relevant languages and install matching tooling', () => {
     const prompt = generateAgentPrompt(answers({ extras: ['lsp'] }), patterns);
 
@@ -713,5 +741,18 @@ describe('fencedBlock', () => {
 
   it('trims trailing whitespace from the content', () => {
     expect(fencedBlock('hello\n\n', 'markdown')).toBe('```markdown\nhello\n```');
+  });
+});
+
+describe('detailRequirements', () => {
+  it('ignores missing, empty, and whitespace-only detail answers', () => {
+    expect(detailRequirements(undefined)).toEqual([]);
+    expect(detailRequirements([{ value: '   ', requirement: 'Use: {{detail}}' }])).toEqual([]);
+  });
+
+  it('falls back to the question when no requirement template is configured', () => {
+    expect(detailRequirements([{ value: 'daily' }])).toEqual(['Additional detail: daily']);
+    expect(detailRequirements([{ value: 'daily', label: 'How often?' }])).toEqual(['How often? daily']);
+    expect(detailRequirements([{ value: 'daily', label: 'Cadence' }])).toEqual(['Cadence: daily']);
   });
 });

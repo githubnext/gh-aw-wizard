@@ -668,6 +668,13 @@ a:hover {
   color: var(--text-secondary);
   margin-bottom: 0.4rem;
 }
+.option-detail-field {
+  margin: 0.15rem 0 0.35rem;
+  padding: 0.75rem 0.9rem;
+}
+.option-detail-field label {
+  margin-bottom: 0.35rem;
+}
 .field-hint {
   margin: 0.5rem 0 0;
   font-size: 0.8rem;

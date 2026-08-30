@@ -192,6 +192,43 @@ function engineIconElement(iconId) {
   return wrapper;
 }
 
+// Some options need more than a yes/no answer (for example "Remember across
+// runs" is only useful once we know *what* to remember). Those options declare a
+// `detail` block in wizard.json, which renders a follow-up text box revealed when
+// the option is selected. The answer is folded into the generated prompt.
+export function detailFieldId(stepId, optionId) {
+  return `detail-${stepId}-${optionId}`;
+}
+
+export function detailInputId(stepId, optionId) {
+  return `${detailFieldId(stepId, optionId)}-input`;
+}
+
+function renderDetailField(stepId, option) {
+  const detail = option.detail;
+  const field = document.createElement('div');
+  field.className = 'conditional-field option-detail-field';
+  field.id = detailFieldId(stepId, option.id);
+
+  const inputId = detailInputId(stepId, option.id);
+  const label = document.createElement('label');
+  label.setAttribute('for', inputId);
+  label.textContent = detail.label || `Add details for ${option.label || option.id}`;
+
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'text-input';
+  input.id = inputId;
+  input.dataset.detailStep = stepId;
+  input.dataset.detailOption = option.id;
+  if (typeof detail.requirement === 'string') input.dataset.detailRequirement = detail.requirement;
+  if (typeof detail.label === 'string') input.dataset.detailLabel = detail.label;
+  if (typeof detail.placeholder === 'string') input.setAttribute('placeholder', detail.placeholder);
+
+  field.append(label, input);
+  return field;
+}
+
 export function renderChoiceOptions(config, stepId) {
   const containerId = stepId === 'extra' ? 'extras-options' : `${stepId}-options`;
   const container = document.getElementById(containerId);
@@ -229,6 +266,7 @@ export function renderChoiceOptions(config, stepId) {
     }
     card.append(input, info);
     container.appendChild(card);
+    if (option.detail) container.appendChild(renderDetailField(stepId, option));
   });
 }
 
@@ -236,6 +274,50 @@ function renderConfiguredOptions(config) {
   ['trigger', 'output', 'extra', 'engine'].forEach((stepId) => {
     renderChoiceOptions(config, stepId);
   });
+}
+
+function detailInputs(stepId) {
+  const selector = stepId ? `[data-detail-step="${stepId}"]` : '[data-detail-step]';
+  return Array.from(document.querySelectorAll(selector));
+}
+
+function optionInput(stepId, optionId) {
+  return Array.from(document.querySelectorAll(`input[name="${stepId}"]`))
+    .find((input) => input.value === optionId) || null;
+}
+
+// Show a detail text box only while its option is selected, and drop any text
+// typed for an option the user has since deselected so it can't leak into the
+// generated prompt.
+function syncDetailFields(stepId) {
+  detailInputs(stepId).forEach((input) => {
+    const step = input.dataset.detailStep;
+    const option = input.dataset.detailOption;
+    const choice = optionInput(step, option);
+    const selected = Boolean(choice && choice.checked);
+    const field = document.getElementById(detailFieldId(step, option));
+    if (field) field.classList.toggle('visible', selected);
+    if (!selected) input.value = '';
+  });
+}
+
+function gatherDetails() {
+  const details = [];
+  detailInputs().forEach((input) => {
+    const step = input.dataset.detailStep;
+    const option = input.dataset.detailOption;
+    const choice = optionInput(step, option);
+    const value = input.value.trim();
+    if (!choice || !choice.checked || !value) return;
+    details.push({
+      step,
+      option,
+      value,
+      label: input.dataset.detailLabel || '',
+      requirement: input.dataset.detailRequirement || ''
+    });
+  });
+  return details;
 }
 
 function revealWhyPane() {
@@ -556,6 +638,8 @@ function bindFormEvents() {
   document.querySelectorAll('input[name="trigger"]').forEach((cb) => {
     cb.addEventListener('change', () => {
       updateCardSelection('#trigger-options', 'checkbox');
+      syncDetailFields('trigger');
+      if (currentStep === TOTAL_STEPS) refreshPreview();
     });
   });
 
@@ -563,6 +647,8 @@ function bindFormEvents() {
   document.querySelectorAll('input[name="output"]').forEach((cb) => {
     cb.addEventListener('change', () => {
       updateCardSelection('#output-options', 'checkbox');
+      syncDetailFields('output');
+      if (currentStep === TOTAL_STEPS) refreshPreview();
     });
   });
 
@@ -570,9 +656,20 @@ function bindFormEvents() {
   document.querySelectorAll('input[name="extra"]').forEach((cb) => {
     cb.addEventListener('change', () => {
       updateCardSelection('#extras-options', 'checkbox');
+      syncDetailFields('extra');
       if (currentStep === TOTAL_STEPS) refreshPreview();
     });
   });
+
+  // Follow-up detail text boxes: re-bake the prompt as the user types so the
+  // finish step always previews what will be copied.
+  detailInputs().forEach((input) => {
+    input.addEventListener('input', () => {
+      renderWorkflowSummary();
+      if (currentStep === TOTAL_STEPS) refreshPreview();
+    });
+  });
+  syncDetailFields();
 
   // Step 6: engine radio cards
   const engineOptions = document.getElementById('engine-options');
@@ -669,6 +766,7 @@ function clearArchetypeSelection() {
 
   document.querySelectorAll('input[name="extra"]').forEach((cb) => { cb.checked = false; });
   updateCardSelection('#extras-options', 'checkbox');
+  syncDetailFields();
   renderWorkflowSummary();
   syncProgressStepAvailability();
 }
@@ -718,6 +816,8 @@ function prefillFromArchetype(id) {
   // Reset extras
   document.querySelectorAll('input[name="extra"]').forEach((cb) => { cb.checked = false; });
   updateCardSelection('#extras-options', 'checkbox');
+
+  syncDetailFields();
 }
 
 // ── Gather answers ─────────────────────────────────────────────────────────
@@ -738,6 +838,7 @@ function gatherAnswers() {
     outputs,
     engine: (document.querySelector('input[name="engine"]:checked') || {}).value || null,
     extras,
+    details: gatherDetails(),
     intent: intentValue(),
     needsData: inferNeedsPreSteps(archetypeId, patterns)
   };
