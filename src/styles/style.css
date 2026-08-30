@@ -703,6 +703,13 @@ a:hover {
 .eval-table-scroller {
   overflow-x: auto;
 }
+.btn-evals-copy {
+  display: block;
+  margin: 0 0 0.75rem auto;
+}
+.btn-evals-copy[hidden] {
+  display: none;
+}
 .eval-table {
   width: 100%;
   border-collapse: collapse;
