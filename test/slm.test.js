@@ -22,6 +22,7 @@ import {
   webgpuDtypeFor
 } from '../src/js/slm.js';
 import { cacheKeyFor, serializeHeaders } from '../src/js/slm-cache.js';
+import { createWebLlmLogger, safeLogValue } from '../src/js/slm-logger.js';
 import { extractAssistantText, preferredDevice, supportsWebGPU } from '../src/js/slm-runner.js';
 import { PACKAGES, vendoredFiles } from '../scripts/fetch-vendor-assets.mjs';
 
@@ -255,6 +256,69 @@ describe('model weight cache', () => {
   it('derives a cache key from a string or request', () => {
     expect(cacheKeyFor('https://example.com/model.onnx')).toBe('https://example.com/model.onnx');
     expect(cacheKeyFor({ url: 'https://example.com/config.json' })).toBe('https://example.com/config.json');
+  });
+
+  describe('WebLLM diagnostics', () => {
+    it('redacts sensitive fields, known token formats, and URL query parameters', () => {
+      const value = safeLogValue({
+        token: 'do-not-log',
+        message: 'authorization=private https://example.com/model.onnx?signature=private#fragment',
+        github: 'ghp_123456789012345678901234567890'
+      });
+      expect(value.token).toBe('[redacted]');
+      expect(value.message).toBe('authorization=[redacted] https://example.com/model.onnx');
+      expect(value.github).toBe('[redacted]');
+    });
+
+    it('uses collapsible console groups and publishes sanitized records to extensions', () => {
+      const calls = [];
+      const records = [];
+      const consoleImpl = {
+        groupCollapsed: (...args) => calls.push(['groupCollapsed', ...args]),
+        groupEnd: (...args) => calls.push(['groupEnd', ...args]),
+        log: (...args) => calls.push(['log', ...args]),
+        table: (...args) => calls.push(['table', ...args])
+      };
+      const logger = createWebLlmLogger({
+        console: consoleImpl,
+        context: { component: 'test' },
+        timestamp: () => '2026-01-01T00:00:00.000Z',
+        onRecord: (record) => records.push(record)
+      });
+
+      logger.log('model.loaded', { modelUrl: 'https://example.com/model?token=private' });
+
+      expect(calls.map(([method]) => method)).toEqual(['groupCollapsed', 'log', 'table', 'groupEnd']);
+      expect(records).toEqual([expect.objectContaining({
+        timestamp: '2026-01-01T00:00:00.000Z',
+        level: 'log',
+        event: 'model.loaded',
+        component: 'test',
+        modelUrl: 'https://example.com/model'
+      })]);
+    });
+
+    it('falls back to console.log and records operation duration', () => {
+      const calls = [];
+      const records = [];
+      let clock = 10;
+      const logger = createWebLlmLogger({
+        console: { log: (...args) => calls.push(args) },
+        now: () => clock,
+        onRecord: (record) => records.push(record)
+      });
+
+      const operation = logger.operation('inference');
+      clock = 35;
+      operation.end('completed', { scenario: 'issue-triage' });
+
+      expect(calls).toHaveLength(2);
+      expect(records[1]).toMatchObject({
+        event: 'inference.completed',
+        durationMs: 25,
+        scenario: 'issue-triage'
+      });
+    });
   });
 
   it('serializes headers with lowercase names', () => {

@@ -5,6 +5,7 @@
 // downloaded weights in IndexedDB so later visits start instantly.
 
 import { createModelCache } from './slm-cache.js';
+import { createWebLlmLogger } from './slm-logger.js';
 import {
   buildScenarioMessages,
   modelIdFor,
@@ -51,13 +52,29 @@ export function createScenarioAssistant(options) {
   const opts = options || {};
   const config = opts.config || {};
   const importModule = opts.importModule || ((url) => import(/* @vite-ignore */ url));
-  const cache = opts.cache || createModelCache({ indexedDB: opts.indexedDB });
+  const logger = opts.logger || createWebLlmLogger({ context: { component: 'runner' } });
+  const cache = opts.cache || createModelCache({
+    indexedDB: opts.indexedDB,
+    logger: logger.child({ component: 'cache' })
+  });
   let generatorPromise = null;
 
   function loadGenerator(onProgress) {
-    if (generatorPromise) return generatorPromise;
+    if (generatorPromise) {
+      logger.debug('generator.reused');
+      return generatorPromise;
+    }
     const device = preferredDevice(opts.navigator);
     const urls = runtimeUrls(config, { navigator: opts.navigator, baseUrl: opts.baseUrl });
+    const modelId = modelIdFor(config, opts.navigator);
+    const dtype = device === 'webgpu' ? webgpuDtypeFor(config, opts.navigator) : config.wasm_dtype;
+    const load = logger.operation('generator.load', {
+      device,
+      dtype,
+      modelId,
+      moduleUrl: urls.module,
+      wasmPaths: urls.wasmPaths
+    });
     generatorPromise = importModule(urls.module).then((module) => {
       const { env, pipeline } = module;
       if (env) {
@@ -70,17 +87,26 @@ export function createScenarioAssistant(options) {
         if (urls.wasmPaths && onnx && onnx.wasm) onnx.wasm.wasmPaths = urls.wasmPaths;
       }
       const tracker = progressTracker();
-      return pipeline('text-generation', modelIdFor(config, opts.navigator), {
+      return pipeline('text-generation', modelId, {
         device,
-        dtype: device === 'webgpu' ? webgpuDtypeFor(config, opts.navigator) : config.wasm_dtype,
+        dtype,
         progress_callback: (event) => {
-          if (typeof onProgress !== 'function') return;
           const percent = tracker.update(event);
-          onProgress({ percent, label: progressLabel(event, percent), status: event && event.status });
+          const update = { percent, label: progressLabel(event, percent), status: event && event.status };
+          logger.debug('generator.progress', {
+            status: update.status,
+            percent,
+            file: event && (event.file || event.name)
+          });
+          if (typeof onProgress === 'function') onProgress(update);
         }
       });
+    }).then((generator) => {
+      load.end('completed');
+      return generator;
     }).catch((error) => {
       generatorPromise = null;
+      load.end('failed', { error });
       throw error;
     });
     return generatorPromise;
@@ -89,18 +115,29 @@ export function createScenarioAssistant(options) {
   return {
     device: () => preferredDevice(opts.navigator),
     async analyze(request, scenarios, onProgress) {
-      const generator = await loadGenerator(onProgress);
-      if (typeof onProgress === 'function') {
-        onProgress({ percent: 100, label: 'Analyzing your request', status: 'generating' });
-      }
-      const messages = buildScenarioMessages(scenarios, request);
-      const output = await generator(messages, {
-        max_new_tokens: config.max_new_tokens || 24,
-        do_sample: false,
-        return_full_text: false
+      const analysis = logger.operation('analysis', {
+        requestLength: String(request || '').length,
+        scenarioCount: Array.isArray(scenarios) ? scenarios.length : 0
       });
-      const answer = extractAssistantText(output);
-      return { scenario: selectScenario(answer, request, scenarios), answer };
+      try {
+        const generator = await loadGenerator(onProgress);
+        if (typeof onProgress === 'function') {
+          onProgress({ percent: 100, label: 'Analyzing your request', status: 'generating' });
+        }
+        const messages = buildScenarioMessages(scenarios, request);
+        const output = await generator(messages, {
+          max_new_tokens: config.max_new_tokens || 24,
+          do_sample: false,
+          return_full_text: false
+        });
+        const answer = extractAssistantText(output);
+        const scenario = selectScenario(answer, request, scenarios);
+        analysis.end('completed', { answerLength: answer.length, scenario });
+        return { scenario, answer };
+      } catch (error) {
+        analysis.end('failed', { error });
+        throw error;
+      }
     }
   };
 }
