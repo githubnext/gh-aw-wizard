@@ -62,6 +62,7 @@ describe('wizard configuration', () => {
       'copy-modal-close': { setAttribute: vi.fn() },
       'footer-source': { href: '' },
       'footer-source-label': { textContent: '' },
+      'footer-copy-logs': { textContent: '', dataset: {} },
       'footer-security': { href: '', textContent: '' }
     };
     globalThis.document = {
@@ -92,6 +93,11 @@ describe('wizard configuration', () => {
           url: './source',
           label: 'Source code'
         },
+        copy_logs: {
+          label: 'Copy support logs',
+          success: 'Support logs copied.',
+          failure: 'Support logs were not copied.'
+        },
         security: {
           url: 'javascript:alert(1)',
           label: 'Security'
@@ -120,6 +126,13 @@ describe('wizard configuration', () => {
       href: 'https://custom.example/config/source'
     });
     expect(elements['footer-source-label'].textContent).toBe('Source code');
+    expect(elements['footer-copy-logs']).toMatchObject({
+      textContent: 'Copy support logs',
+      dataset: {
+        successLabel: 'Support logs copied.',
+        failureLabel: 'Support logs were not copied.'
+      }
+    });
     expect(elements['footer-security'].href).toBe('');
     expect(elements['footer-security'].textContent).toBe('Security');
   });

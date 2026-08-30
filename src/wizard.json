@@ -78,6 +78,11 @@
       "url": "https://github.com/githubnext/gh-aw-wizard/issues",
       "label": "Report an issue"
     },
+    "copy_logs": {
+      "label": "Copy diagnostic logs",
+      "success": "Diagnostic logs copied.",
+      "failure": "Diagnostic logs could not be copied."
+    },
     "terms": {
       "url": "https://docs.github.com/en/site-policy/github-terms/github-terms-of-service",
       "label": "Terms"

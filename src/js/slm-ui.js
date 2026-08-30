@@ -1,10 +1,56 @@
 // DOM wiring for the in-browser scenario assistant ("wizard" button).
 
 import { keywordScenarioMatch, scenarioCatalog, scenarioLabel, slmConfig } from './slm.js';
+import { createWebLlmLogger, webLlmDiagnosticText } from './slm-logger.js';
 import { createScenarioAssistant, supportsWebGPU } from './slm-runner.js';
 
 function element(id) {
   return document.getElementById(id);
+}
+
+function fallbackCopy(text, documentImpl) {
+  const textarea = documentImpl.createElement('textarea');
+  textarea.value = text;
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  documentImpl.body.appendChild(textarea);
+  textarea.select();
+  try {
+    if (!documentImpl.execCommand('copy')) throw new Error('Copy command was rejected');
+  } finally {
+    documentImpl.body.removeChild(textarea);
+  }
+}
+
+export async function copyWebLlmDiagnostics(options) {
+  const opts = options || {};
+  const navigatorImpl = opts.navigator || (typeof navigator !== 'undefined' ? navigator : null);
+  const documentImpl = opts.document || document;
+  const text = webLlmDiagnosticText();
+  if (navigatorImpl && navigatorImpl.clipboard && typeof navigatorImpl.clipboard.writeText === 'function') {
+    try {
+      await navigatorImpl.clipboard.writeText(text);
+      return;
+    } catch {
+      // The legacy copy command remains useful where Clipboard API permission is denied.
+    }
+  }
+  fallbackCopy(text, documentImpl);
+}
+
+export function initDiagnosticLogCopy(options) {
+  const opts = options || {};
+  const button = element('footer-copy-logs');
+  const status = element('footer-copy-logs-status');
+  if (!button) return null;
+  button.addEventListener('click', () => {
+    copyWebLlmDiagnostics(opts).then(() => {
+      if (status) status.textContent = button.dataset.successLabel || 'Diagnostic logs copied.';
+    }).catch(() => {
+      if (status) status.textContent = button.dataset.failureLabel || 'Diagnostic logs could not be copied.';
+    });
+  });
+  return button;
 }
 
 function assistantCopy(wizardConfig) {
@@ -76,20 +122,34 @@ export function selectArchetypeRadio(scenarioId) {
 
 export function initScenarioAssistant(context) {
   const ctx = context || {};
+  const logger = ctx.logger || createWebLlmLogger({ context: { component: 'ui' } });
   const run = element('wizard-assist');
   const input = element('intent-description');
   const status = element('wizard-assist-status');
   const progressField = element('wizard-assist-progress-field');
   const progress = element('wizard-assist-progress');
-  if (!input || !run) return null;
+  if (!input || !run) {
+    logger.warn('initialization.skipped', { reason: 'required controls missing' });
+    return null;
+  }
 
   const config = slmConfig(ctx.wizardConfig);
   // The assistant is hidden by default and only revealed where the model can
   // actually run: without WebGPU the wasm backend is too slow to be useful.
   // iOS Safari is included since it reports navigator.gpu; slm.js swaps in a
   // smaller model there to fit its tighter memory limits.
-  if (config.enabled === false || !supportsWebGPU(ctx.navigator)) return null;
+  if (config.enabled === false || !supportsWebGPU(ctx.navigator)) {
+    logger.log('initialization.skipped', {
+      reason: config.enabled === false ? 'disabled by configuration' : 'WebGPU unavailable'
+    });
+    return null;
+  }
   run.removeAttribute('hidden');
+  logger.log('initialization.completed', {
+    webgpu: true,
+    modelId: config.model_id,
+    iosModelId: config.ios_model_id
+  });
 
   const copy = assistantCopy(ctx.wizardConfig);
   bindAssistantResultModal();
@@ -123,12 +183,14 @@ export function initScenarioAssistant(context) {
     if (running) return;
     const request = input.value.trim();
     if (!request) {
+      logger.warn('analysis.skipped', { reason: 'empty request' });
       setStatus(copy.empty);
       input.focus();
       return;
     }
     const scenarios = scenarioCatalog(ctx.patterns(), ctx.extraScenarios ? ctx.extraScenarios() : []);
     if (!scenarios.length) {
+      logger.warn('analysis.skipped', { reason: 'scenarios unavailable' });
       setStatus(copy.no_scenarios);
       return;
     }
@@ -137,7 +199,13 @@ export function initScenarioAssistant(context) {
     run.disabled = true;
     setProgress(0);
     setStatus(copy.analyzing);
-    if (!assistant) assistant = createScenarioAssistant({ config });
+    logger.log('analysis.requested', { requestLength: request.length, scenarioCount: scenarios.length });
+    if (!assistant) {
+      assistant = createScenarioAssistant({
+        config,
+        logger: logger.child({ component: 'runner' })
+      });
+    }
 
     assistant.analyze(request, scenarios, (update) => {
       setProgress(update.percent);
@@ -145,6 +213,7 @@ export function initScenarioAssistant(context) {
     }).then((result) => {
       setProgress(null);
       if (result.scenario && selectArchetypeRadio(result.scenario)) {
+        logger.log('analysis.selection.applied', { scenario: result.scenario });
         setStatus(`${copy.matched} ${scenarioLabel(scenarios, result.scenario)}`);
         const custom = element('custom-description');
         if (result.scenario === 'custom' && custom && !custom.value) custom.value = request;
@@ -158,13 +227,15 @@ export function initScenarioAssistant(context) {
         });
         return;
       }
+      logger.warn('analysis.selection.unavailable', { scenario: result.scenario });
       setStatus(copy.no_match);
-    }).catch(() => {
+    }).catch((error) => {
       setProgress(null);
       // The model may be unavailable (offline, blocked CDN, unsupported
       // browser); keep the button useful with the deterministic matcher.
       const fallback = keywordScenarioMatch(request, scenarios);
       if (fallback && selectArchetypeRadio(fallback)) {
+        logger.warn('analysis.fallback.applied', { error, scenario: fallback });
         setStatus(`${copy.fallback} ${scenarioLabel(scenarios, fallback)}`);
         const scenario = scenarioSummary(scenarios, fallback);
         showAssistantResult({
@@ -178,6 +249,7 @@ export function initScenarioAssistant(context) {
         });
         return;
       }
+      logger.error('analysis.failed', { error, fallbackMatched: false });
       setStatus(copy.failure);
     }).finally(() => {
       running = false;

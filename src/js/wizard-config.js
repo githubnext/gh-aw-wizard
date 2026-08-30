@@ -62,6 +62,7 @@ const COPY_SUCCESS_ELEMENTS = {
 const FOOTER_ELEMENTS = {
   source: ['footer-source', 'footer-source-label'],
   report_issue: ['footer-report-issue', 'footer-report-issue'],
+  copy_logs: ['footer-copy-logs', 'footer-copy-logs'],
   terms: ['footer-terms', 'footer-terms'],
   privacy: ['footer-privacy', 'footer-privacy'],
   security: ['footer-security', 'footer-security']
@@ -152,4 +153,9 @@ export function applyPageContent(config, configUrl) {
     if (link && url) link.href = url;
     setText(ids[1], item.label);
   });
+  const copyLogs = document.getElementById('footer-copy-logs');
+  if (copyLogs && footer.copy_logs) {
+    if (typeof footer.copy_logs.success === 'string') copyLogs.dataset.successLabel = footer.copy_logs.success;
+    if (typeof footer.copy_logs.failure === 'string') copyLogs.dataset.failureLabel = footer.copy_logs.failure;
+  }
 }

@@ -60,12 +60,15 @@ async function responseBytes(response) {
 // network fetch rather than breaking model loading.
 export function createModelCache(options) {
   const opts = options || {};
+  const logger = opts.logger || null;
   let dbPromise = null;
 
   function database() {
     if (!dbPromise) {
+      if (logger) logger.log('database.opening', { database: CACHE_DB_NAME, version: CACHE_DB_VERSION });
       dbPromise = openCacheDatabase(opts.indexedDB).catch((error) => {
         dbPromise = null;
+        if (logger) logger.error('database.open.failed', { error });
         throw error;
       });
     }
@@ -74,37 +77,52 @@ export function createModelCache(options) {
 
   return {
     async match(request) {
+      const key = cacheKeyFor(request);
       try {
         const db = await database();
-        const entry = await transactionRequest(db, 'readonly', (store) => store.get(cacheKeyFor(request)));
-        if (!entry || !entry.body) return undefined;
+        const entry = await transactionRequest(db, 'readonly', (store) => store.get(key));
+        if (!entry || !entry.body) {
+          if (logger) logger.debug('entry.missed', { key });
+          return undefined;
+        }
+        if (logger) logger.log('entry.hit', { key, byteLength: entry.body.byteLength });
         return new Response(entry.body, { headers: entry.headers || {} });
-      } catch {
+      } catch (error) {
+        if (logger) logger.warn('entry.read.failed', { key, error });
         return undefined;
       }
     },
     async put(request, response, progressCallback) {
+      const key = cacheKeyFor(request);
       try {
         const headers = serializeHeaders(response && response.headers);
         const body = await responseBytes(response);
-        if (!body) return;
+        if (!body) {
+          if (logger) logger.warn('entry.skipped', { key, reason: 'response body unavailable' });
+          return;
+        }
         if (typeof progressCallback === 'function') {
           progressCallback({ progress: 100, loaded: body.byteLength, total: body.byteLength });
         }
         const db = await database();
         await transactionRequest(db, 'readwrite', (store) => {
-          return store.put({ body, headers, stored_at: Date.now() }, cacheKeyFor(request));
+          return store.put({ body, headers, stored_at: Date.now() }, key);
         });
-      } catch {
+        if (logger) logger.log('entry.stored', { key, byteLength: body.byteLength });
+      } catch (error) {
         // Storing is best effort: a full quota must not block the model.
+        if (logger) logger.warn('entry.write.failed', { key, error });
       }
     },
     async delete(request) {
+      const key = cacheKeyFor(request);
       try {
         const db = await database();
-        await transactionRequest(db, 'readwrite', (store) => store.delete(cacheKeyFor(request)));
+        await transactionRequest(db, 'readwrite', (store) => store.delete(key));
+        if (logger) logger.log('entry.deleted', { key });
         return true;
-      } catch {
+      } catch (error) {
+        if (logger) logger.warn('entry.delete.failed', { key, error });
         return false;
       }
     }

@@ -3,7 +3,13 @@ import { fileURLToPath } from 'node:url';
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { initScenarioAssistant, showAssistantResult } from '../src/js/slm-ui.js';
+import {
+  copyWebLlmDiagnostics,
+  initDiagnosticLogCopy,
+  initScenarioAssistant,
+  showAssistantResult
+} from '../src/js/slm-ui.js';
+import { clearWebLlmDiagnostics, createWebLlmLogger } from '../src/js/slm-logger.js';
 
 const html = readFileSync(fileURLToPath(new URL('../src/index.html', import.meta.url)), 'utf8');
 const wizard = JSON.parse(
@@ -76,6 +82,59 @@ describe('showAssistantResult', () => {
     expect(nodes['assist-modal-request'].textContent).toBe('label incoming issues');
   });
 
+  describe('diagnostic log copy', () => {
+    it('copies retained sanitized records with the Clipboard API', async () => {
+      clearWebLlmDiagnostics();
+      createWebLlmLogger({ console: null, diagnosticSession: 'copy-test' })
+        .error('load.failed', { password: 'private' });
+      const writeText = vi.fn().mockResolvedValue();
+
+      await copyWebLlmDiagnostics({
+        navigator: { clipboard: { writeText } },
+        document: {}
+      });
+
+      expect(writeText).toHaveBeenCalledWith(expect.stringContaining('"event":"load.failed"'));
+      expect(writeText).toHaveBeenCalledWith(expect.stringContaining('"password":"[redacted]"'));
+      expect(writeText).not.toHaveBeenCalledWith(expect.stringContaining('private'));
+    });
+
+    it('announces successful copies from the footer control', async () => {
+      const button = fakeButton();
+      button.dataset = { successLabel: 'Logs copied.' };
+      const status = { textContent: '' };
+      globalThis.document = {
+        getElementById: (id) => ({
+          'footer-copy-logs': button,
+          'footer-copy-logs-status': status
+        })[id] || null
+      };
+      const writeText = vi.fn().mockResolvedValue();
+
+      expect(initDiagnosticLogCopy({ navigator: { clipboard: { writeText } }, document: {} })).toBe(button);
+      button.trigger('click');
+      await vi.waitFor(() => expect(status.textContent).toBe('Logs copied.'));
+    });
+
+    it('falls back to the legacy copy command when the Clipboard API is unavailable', async () => {
+      const textarea = { style: {}, select: vi.fn(), value: '' };
+      const documentImpl = {
+        body: {
+          appendChild: vi.fn(),
+          removeChild: vi.fn()
+        },
+        createElement: vi.fn(() => textarea),
+        execCommand: vi.fn(() => true)
+      };
+
+      await copyWebLlmDiagnostics({ navigator: {}, document: documentImpl });
+
+      expect(documentImpl.execCommand).toHaveBeenCalledWith('copy');
+      expect(textarea.select).toHaveBeenCalled();
+      expect(documentImpl.body.removeChild).toHaveBeenCalledWith(textarea);
+    });
+  });
+
   it('does nothing when the dialog is missing', () => {
     globalThis.document = { getElementById: () => null };
     expect(showAssistantResult({ label: 'Issue Triage' })).toBe(false);
@@ -125,7 +184,12 @@ describe('initScenarioAssistant run button', () => {
     };
     vi.stubGlobal('navigator', { gpu: {} });
 
-    const result = initScenarioAssistant({ wizardConfig: null, patterns: () => null });
+    const logger = {
+      log() {},
+      warn() {},
+      child() { return this; }
+    };
+    const result = initScenarioAssistant({ wizardConfig: null, patterns: () => null, logger });
     expect(result).not.toBeNull();
     expect(run.hasAttribute('hidden')).toBe(false);
     expect(run.disabled).toBe(true);
