@@ -145,13 +145,32 @@ const QUERY_GROUPS = [
 
 export const EVAL_REPETITIONS = 3;
 
+export const EVAL_SAMPLE_SIZE = 10;
+
 export const EVAL_CORPUS = QUERY_GROUPS.flatMap(([golden, queries]) => {
   return queries.map((query) => ({ query, golden }));
 });
 
+// Returns a random sample of `size` items from `corpus` without replacement,
+// leaving the original array untouched.
+export function pickRandomSample(corpus, size, random) {
+  const rand = typeof random === 'function' ? random : Math.random;
+  const pool = corpus.slice();
+  const sample = [];
+  const count = Math.min(size, pool.length);
+  for (let i = 0; i < count; i += 1) {
+    const index = Math.floor(rand() * pool.length);
+    sample.push(pool.splice(index, 1)[0]);
+  }
+  return sample;
+}
+
 export async function runEvals(options) {
   const opts = options || {};
-  const corpus = opts.corpus || EVAL_CORPUS;
+  const fullCorpus = opts.corpus || EVAL_CORPUS;
+  const corpus = opts.sampleSize
+    ? pickRandomSample(fullCorpus, opts.sampleSize, opts.random)
+    : fullCorpus;
   const repetitions = opts.repetitions || EVAL_REPETITIONS;
   const analyze = opts.analyze;
   if (typeof analyze !== 'function') throw new Error('An analyze function is required');

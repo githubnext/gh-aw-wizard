@@ -1,5 +1,5 @@
 import { scenarioCatalog, scenarioLabel, slmConfig } from './slm.js';
-import { EVAL_CORPUS, EVAL_REPETITIONS, runEvals } from './slm-evals.js';
+import { EVAL_SAMPLE_SIZE, EVAL_REPETITIONS, runEvals } from './slm-evals.js';
 import { createScenarioAssistant, supportsWebGPU } from './slm-runner.js';
 
 function cell(row, value) {
@@ -62,7 +62,7 @@ export function initEvalMode(context) {
   button.addEventListener('click', async () => {
     const scenarios = scenarioCatalog(ctx.patterns(), ctx.extraScenarios ? ctx.extraScenarios() : []);
     button.disabled = true;
-    results.textContent = `Running ${EVAL_CORPUS.length} queries × ${EVAL_REPETITIONS} runs…`;
+    results.textContent = `Running ${EVAL_SAMPLE_SIZE} queries × ${EVAL_REPETITIONS} runs…`;
     if (!assistant) {
       assistant = createScenarioAssistant({
         config: slmConfig(ctx.wizardConfig),
@@ -71,6 +71,7 @@ export function initEvalMode(context) {
     }
     try {
       const outcome = await runEvals({
+        sampleSize: EVAL_SAMPLE_SIZE,
         analyze: (query) => assistant.analyze(query, scenarios),
         onProgress: ({ completed, total }) => {
           results.textContent = `Running evals: ${completed}/${total}`;
