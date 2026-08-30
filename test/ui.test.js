@@ -30,7 +30,7 @@ afterEach(() => {
 });
 
 describe('wizard navigation', () => {
-  it('keeps the Why and What tabs reachable before an archetype is selected', () => {
+  it('keeps the Why and How tabs reachable before an archetype is selected', () => {
     expect(maxReachableStep(false)).toBe(2);
     expect(maxReachableStep(true)).toBe(7);
   });
