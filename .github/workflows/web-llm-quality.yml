@@ -1,0 +1,61 @@
+name: WebLLM Quality
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/web-llm-quality.yml"
+      - "patterns/archetypes/**"
+      - "patterns/manifest.json"
+      - "playwright.quality.config.js"
+      - "src/js/slm*.js"
+      - "src/wizard.json"
+      - "test/fixtures/web-llm-golden-intents.json"
+      - "test/quality/web-llm-quality.spec.js"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: web-llm-quality-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Evaluate WebLLM intent quality
+        run: npm run test:web-llm-quality
+
+      - name: Report quality summary
+        if: always()
+        run: |
+          if [ -f test-results/web-llm-quality/summary.md ]; then
+            cat test-results/web-llm-quality/summary.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "WebLLM quality evaluation did not produce a summary." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload quality diagnostics
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: web-llm-quality-${{ github.run_id }}
+          path: test-results/web-llm-quality/
+          if-no-files-found: warn
+          retention-days: 30

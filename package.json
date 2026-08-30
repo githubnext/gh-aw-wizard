@@ -17,6 +17,7 @@
     "lint:fix": "eslint . --fix",
     "test": "vitest run",
     "test:e2e": "npm run build && playwright test",
+    "test:web-llm-quality": "npm run build && playwright test --config playwright.quality.config.js",
     "test:watch": "vitest"
   },
   "devDependencies": {
