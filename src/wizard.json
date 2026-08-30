@@ -44,7 +44,7 @@
     "model": {
       "enabled": true,
       "module_url": "slm/webllm.js",
-      "model_id": "Qwen2.5-0.5B-Instruct-q4f32_1-MLC",
+      "model_id": "Qwen2.5-1.5B-Instruct-q4f16_1-MLC",
       "ios_model_id": "SmolLM2-360M-Instruct-q4f32_1-MLC",
       "cache_backend": "cache",
       "max_tokens": 24

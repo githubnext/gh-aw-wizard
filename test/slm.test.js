@@ -160,7 +160,7 @@ describe('model configuration', () => {
 
   it('uses the default WebLLM prebuilt off iOS', () => {
     const desktopNavigator = { userAgent: 'Mozilla/5.0 Chrome/120 Safari/537.36' };
-    expect(modelIdFor(DEFAULT_SLM_CONFIG, desktopNavigator)).toBe(DEFAULT_SLM_CONFIG.model_id);
+    expect(modelIdFor(DEFAULT_SLM_CONFIG, desktopNavigator)).toBe('Qwen2.5-1.5B-Instruct-q4f16_1-MLC');
   });
 });
 

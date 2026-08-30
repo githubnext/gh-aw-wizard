@@ -5,7 +5,7 @@ const webLlmRuntimeRoute = '**/slm/webllm.js';
 const inferenceRuntime = `
   export const prebuiltAppConfig = {
     model_list: [
-      { model_id: 'Qwen2.5-0.5B-Instruct-q4f32_1-MLC' },
+      { model_id: 'Qwen2.5-1.5B-Instruct-q4f16_1-MLC' },
       { model_id: 'SmolLM2-360M-Instruct-q4f32_1-MLC' }
     ]
   };
@@ -71,7 +71,7 @@ test('runs in-browser inference and applies the selected scenario', async ({ pag
 
   const inference = await page.evaluate(() => globalThis.__webLlmE2E);
   expect(inference).toMatchObject({
-    model: 'Qwen2.5-0.5B-Instruct-q4f32_1-MLC',
+    model: 'Qwen2.5-1.5B-Instruct-q4f16_1-MLC',
     cacheBackend: 'cache',
     calls: 1,
     generationOptions: {
