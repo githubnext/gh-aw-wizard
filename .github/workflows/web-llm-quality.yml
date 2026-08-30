@@ -24,7 +24,7 @@ concurrency:
 
 jobs:
   evaluate:
-    runs-on: ubuntu-latest
+    runs-on: warm
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v7
@@ -41,8 +41,24 @@ jobs:
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
 
+      - name: Restore WebLLM model weights
+        id: model-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ runner.temp }}/web-llm-cache
+          key: web-llm-${{ runner.os }}-${{ hashFiles('package-lock.json', 'scripts/fetch-vendor-assets.mjs', 'src/wizard.json') }}
+
       - name: Evaluate WebLLM intent quality
+        env:
+          WEB_LLM_CACHE_DIR: ${{ runner.temp }}/web-llm-cache
         run: npm run test:web-llm-quality
+
+      - name: Save WebLLM model weights
+        if: always() && steps.model-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ runner.temp }}/web-llm-cache
+          key: ${{ steps.model-cache.outputs.cache-primary-key }}
 
       - name: Report quality summary
         if: always()

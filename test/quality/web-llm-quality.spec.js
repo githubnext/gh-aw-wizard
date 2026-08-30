@@ -1,14 +1,17 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { expect, test } from '@playwright/test';
+import { chromium, expect, test } from '@playwright/test';
 
 import { safeLogValue } from '../../src/js/slm-logger.js';
 import { parseScenarioSelection } from '../../src/js/slm.js';
 
 const qualityThreshold = 50;
+const qualityBaseUrl = process.env.WEB_LLM_BASE_URL || 'http://127.0.0.1:4173';
 const artifactDir = resolve('test-results/web-llm-quality');
+const browserProfileDir = process.env.WEB_LLM_CACHE_DIR || resolve(tmpdir(), 'gh-aw-wizard-web-llm-cache');
 const resultsPath = resolve(artifactDir, 'results.jsonl');
 const diagnosticsPath = resolve(artifactDir, 'diagnostics.jsonl');
 const summaryPath = resolve(artifactDir, 'summary.md');
@@ -75,30 +78,38 @@ function writeArtifacts(results, diagnostics) {
   writeFileSync(summaryPath, markdownSummary(results));
 }
 
-test('classifies at least 50% of 100 golden intents', async ({ page }) => {
+test('classifies at least 50% of 100 golden intents', async () => {
   test.setTimeout(45 * 60 * 1000);
   const results = [];
   const diagnostics = [];
   const pendingDiagnostics = [];
-
-  page.on('console', (message) => {
-    pendingDiagnostics.push((async () => {
-      const values = await Promise.all(message.args().map(async (argument) => {
-        try {
-          return await argument.jsonValue();
-        } catch {
-          return null;
-        }
-      }));
-      const record = values.find((value) => value && typeof value === 'object' && value.evt);
-      if (!record) return;
-      diagnostics.push(record);
-      console.log(`[web-llm-diagnostic] ${JSON.stringify(record)}`);
-    })());
-  });
+  let context;
 
   try {
-    await page.goto('/');
+    context = await chromium.launchPersistentContext(browserProfileDir, {
+      headless: true,
+      args: [
+        '--enable-unsafe-webgpu',
+        '--ignore-gpu-blocklist'
+      ]
+    });
+    const page = context.pages()[0] || await context.newPage();
+    page.on('console', (message) => {
+      pendingDiagnostics.push((async () => {
+        const values = await Promise.all(message.args().map(async (argument) => {
+          try {
+            return await argument.jsonValue();
+          } catch {
+            return null;
+          }
+        }));
+        const record = values.find((value) => value && typeof value === 'object' && value.evt);
+        if (!record) return;
+        diagnostics.push(record);
+        console.log(`[web-llm-diagnostic] ${JSON.stringify(record)}`);
+      })());
+    });
+    await page.goto(qualityBaseUrl);
     const gpu = await page.evaluate(async () => {
       if (!navigator.gpu) return { available: false, adapter: false };
       const adapter = await navigator.gpu.requestAdapter();
@@ -152,6 +163,7 @@ test('classifies at least 50% of 100 golden intents', async ({ page }) => {
     }
   } finally {
     await Promise.allSettled(pendingDiagnostics);
+    if (context) await context.close();
     writeArtifacts(results, diagnostics);
   }
 
