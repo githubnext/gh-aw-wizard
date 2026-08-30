@@ -272,9 +272,11 @@ describe('assistant markup', () => {
     expect(css.slice(start, css.indexOf('}', start))).toMatch(/display:\s*none/);
   });
 
-  it('renders the wizard button, textbox, and progress bar', () => {
+  it('renders the wizard button and progress bar, reusing the intent textarea', () => {
     expect(html).toContain('id="btn-wizard-assist"');
-    expect(html).toContain('id="wizard-assist-input"');
+    expect(html).not.toContain('id="wizard-assist-input"');
+    expect(html).toContain('id="intent-description"');
+    expect(html).toContain('id="btn-wizard-assist-run" type="button" disabled');
     expect(html).toContain('id="wizard-assist-progress"');
     expect(html).toContain('id="wizard-assist-status"');
   });
