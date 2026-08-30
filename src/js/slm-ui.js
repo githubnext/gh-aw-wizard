@@ -77,9 +77,6 @@ function assistantCopy(wizardConfig) {
     fallback: assistant.fallback_status || 'The in-browser model is unavailable. Closest keyword match:',
     result_eyebrow: assistant.result_eyebrow || 'Scenario selected',
     result_fallback_eyebrow: assistant.result_fallback_eyebrow || 'Closest keyword match',
-    result_fallback_description: assistant.result_fallback_description
-      || 'The in-browser model was unavailable, so the closest keyword match was selected. Pick another scenario if this is not what you meant.',
-    result_request_label: assistant.result_request_label || 'Your request',
     result_copy_label: assistant.result_copy_label || 'Copy prompt',
     result_copy_success_label: assistant.result_copy_success_label || 'Copied',
     result_copy_failure_label: assistant.result_copy_failure_label || 'Copy failed'
@@ -111,8 +108,8 @@ function bindAssistPromptCopy() {
   button.dataset.assistCopyBound = 'true';
   button.dataset.defaultLabel = button.dataset.defaultLabel || button.textContent || 'Copy prompt';
   button.addEventListener('click', async () => {
-    const promptNode = element('assist-modal-request');
-    const text = promptNode ? promptNode.textContent : '';
+    const modal = element('assist-modal');
+    const prompt = modal && typeof modal.assistPrompt === 'string' ? modal.assistPrompt : '';
     const navigatorImpl = typeof navigator !== 'undefined' ? navigator : null;
     const documentImpl = typeof document !== 'undefined' ? document : null;
     const defaultLabel = button.dataset.defaultLabel || 'Copy prompt';
@@ -120,9 +117,9 @@ function bindAssistPromptCopy() {
     const failureLabel = button.dataset.failureLabel || 'Copy failed';
     try {
       if (navigatorImpl && navigatorImpl.clipboard && typeof navigatorImpl.clipboard.writeText === 'function') {
-        await navigatorImpl.clipboard.writeText(text);
+        await navigatorImpl.clipboard.writeText(prompt);
       } else if (documentImpl && documentImpl.body && typeof documentImpl.createElement === 'function') {
-        fallbackCopyText(text, documentImpl);
+        fallbackCopyText(prompt, documentImpl);
       } else {
         return;
       }
@@ -150,9 +147,7 @@ export function showAssistantResult(summary) {
   bindAssistPromptCopy();
   set('assist-modal-eyebrow', summary.eyebrow);
   set('assist-modal-title', summary.label);
-  set('assist-modal-description', summary.description);
-  set('assist-modal-request-label', summary.requestLabel);
-  set('assist-modal-request', summary.request);
+  modal.assistPrompt = summary.request || '';
   const copyButton = element('assist-modal-copy');
   if (copyButton) {
     copyButton.textContent = summary.copyLabel || summary.result_copy_label || copyButton.dataset.defaultLabel || 'Copy prompt';
@@ -179,8 +174,7 @@ function bindAssistantResultModal() {
 function scenarioSummary(scenarios, id) {
   const scenario = (scenarios || []).find((candidate) => candidate.id === id);
   return {
-    label: scenario ? scenario.label : id,
-    description: scenario && scenario.description ? scenario.description : ''
+    label: scenario ? scenario.label : id
   };
 }
 
@@ -296,8 +290,6 @@ export function initScenarioAssistant(context) {
         showAssistantResult({
           eyebrow: copy.result_eyebrow,
           label: scenario.label,
-          description: scenario.description,
-          requestLabel: copy.result_request_label,
           request,
           copyLabel: copy.result_copy_label,
           copySuccessLabel: copy.result_copy_success_label,
@@ -319,10 +311,6 @@ export function initScenarioAssistant(context) {
         showAssistantResult({
           eyebrow: copy.result_fallback_eyebrow,
           label: scenario.label,
-          description: scenario.description
-            ? `${scenario.description} ${copy.result_fallback_description}`
-            : copy.result_fallback_description,
-          requestLabel: copy.result_request_label,
           request,
           copyLabel: copy.result_copy_label,
           copySuccessLabel: copy.result_copy_success_label,
