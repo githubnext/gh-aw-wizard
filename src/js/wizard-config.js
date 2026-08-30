@@ -87,7 +87,9 @@ const ASSISTANT_ELEMENTS = {
   button: 'wizard-assist-button-label',
   label: 'wizard-assist-label',
   run_button: 'btn-wizard-assist-run',
-  hint: 'wizard-assist-hint'
+  hint: 'wizard-assist-hint',
+  result_request_label: 'assist-modal-request-label',
+  result_action: 'assist-modal-action'
 };
 
 const INTENT_ELEMENTS = {
@@ -131,6 +133,10 @@ export function applyPageContent(config, configUrl) {
   const assistantField = document.getElementById('wizard-assist-input');
   if (assistantField && typeof assistant.field_placeholder === 'string') {
     assistantField.setAttribute('placeholder', assistant.field_placeholder);
+  }
+  const assistantClose = document.getElementById('assist-modal-close');
+  if (assistantClose && typeof assistant.result_close_label === 'string') {
+    assistantClose.setAttribute('aria-label', assistant.result_close_label);
   }
 
   const copySuccess = config && config.copy_success ? config.copy_success : {};

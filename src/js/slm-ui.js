@@ -16,7 +16,50 @@ function assistantCopy(wizardConfig) {
     empty: assistant.empty_status || 'Describe what you want to automate first.',
     no_scenarios: assistant.no_scenarios_status || 'Scenarios are not available yet. Please try again.',
     failure: assistant.failure_status || 'The in-browser model could not analyze the request. Pick a scenario below.',
-    fallback: assistant.fallback_status || 'The in-browser model is unavailable. Closest keyword match:'
+    fallback: assistant.fallback_status || 'The in-browser model is unavailable. Closest keyword match:',
+    result_eyebrow: assistant.result_eyebrow || 'Scenario selected',
+    result_fallback_eyebrow: assistant.result_fallback_eyebrow || 'Closest keyword match',
+    result_fallback_description: assistant.result_fallback_description
+      || 'The in-browser model was unavailable, so the closest keyword match was selected. Pick another scenario if this is not what you meant.',
+    result_request_label: assistant.result_request_label || 'Your request'
+  };
+}
+
+// Summarizes what the assistant picked once the analysis succeeded, so the
+// selection made on the user's behalf is explicit rather than a silent radio
+// change further down the page.
+export function showAssistantResult(summary) {
+  const modal = element('assist-modal');
+  if (!modal || typeof modal.showModal !== 'function') return false;
+  const set = (id, value) => {
+    const node = element(id);
+    if (node && typeof value === 'string') node.textContent = value;
+  };
+  set('assist-modal-eyebrow', summary.eyebrow);
+  set('assist-modal-title', summary.label);
+  set('assist-modal-description', summary.description);
+  set('assist-modal-request-label', summary.requestLabel);
+  set('assist-modal-request', summary.request);
+  if (!modal.open) modal.showModal();
+  return true;
+}
+
+function bindAssistantResultModal() {
+  const modal = element('assist-modal');
+  if (!modal) return;
+  modal.querySelectorAll('[data-assist-modal-close]').forEach((button) => {
+    button.addEventListener('click', () => modal.close());
+  });
+  modal.addEventListener('click', (event) => {
+    if (event.target === modal) modal.close();
+  });
+}
+
+function scenarioSummary(scenarios, id) {
+  const scenario = (scenarios || []).find((candidate) => candidate.id === id);
+  return {
+    label: scenario ? scenario.label : id,
+    description: scenario && scenario.description ? scenario.description : ''
   };
 }
 
@@ -52,6 +95,7 @@ export function initScenarioAssistant(context) {
   if (container) container.removeAttribute('hidden');
 
   const copy = assistantCopy(ctx.wizardConfig);
+  bindAssistantResultModal();
   let assistant = null;
   let running = false;
 
@@ -106,6 +150,14 @@ export function initScenarioAssistant(context) {
         setStatus(`${copy.matched} ${scenarioLabel(scenarios, result.scenario)}`);
         const custom = element('custom-description');
         if (result.scenario === 'custom' && custom && !custom.value) custom.value = request;
+        const scenario = scenarioSummary(scenarios, result.scenario);
+        showAssistantResult({
+          eyebrow: copy.result_eyebrow,
+          label: scenario.label,
+          description: scenario.description,
+          requestLabel: copy.result_request_label,
+          request
+        });
         return;
       }
       setStatus(copy.no_match);
@@ -116,6 +168,14 @@ export function initScenarioAssistant(context) {
       const fallback = keywordScenarioMatch(request, scenarios);
       if (fallback && selectArchetypeRadio(fallback)) {
         setStatus(`${copy.fallback} ${scenarioLabel(scenarios, fallback)}`);
+        const scenario = scenarioSummary(scenarios, fallback);
+        showAssistantResult({
+          eyebrow: copy.result_fallback_eyebrow,
+          label: scenario.label,
+          description: scenario.description || copy.result_fallback_description,
+          requestLabel: copy.result_request_label,
+          request
+        });
         return;
       }
       setStatus(copy.failure);
