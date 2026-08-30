@@ -401,7 +401,7 @@ export function detailRequirements(details) {
     const template = typeof detail.requirement === 'string' ? detail.requirement : '';
     if (template) return template.replace(/\{\{detail\}\}/g, value);
     const label = typeof detail.label === 'string' && detail.label ? detail.label : 'Additional detail';
-    return `${label} ${value}`;
+    return /[?:]$/.test(label) ? `${label} ${value}` : `${label}: ${value}`;
   }).filter(Boolean);
 }
 

@@ -751,6 +751,8 @@ describe('detailRequirements', () => {
   });
 
   it('falls back to the question when no requirement template is configured', () => {
-    expect(detailRequirements([{ value: 'daily' }])).toEqual(['Additional detail daily']);
+    expect(detailRequirements([{ value: 'daily' }])).toEqual(['Additional detail: daily']);
+    expect(detailRequirements([{ value: 'daily', label: 'How often?' }])).toEqual(['How often? daily']);
+    expect(detailRequirements([{ value: 'daily', label: 'Cadence' }])).toEqual(['Cadence: daily']);
   });
 });
