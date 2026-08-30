@@ -17,6 +17,8 @@ export function supportsWebGPU(navigatorImpl) {
   return !!(nav && nav.gpu);
 }
 
+// The wizard only offers the assistant on WebGPU-capable browsers, so the wasm
+// backend is a defensive fallback for embedders that call the runner directly.
 export function preferredDevice(navigatorImpl) {
   return supportsWebGPU(navigatorImpl) ? 'webgpu' : 'wasm';
 }
