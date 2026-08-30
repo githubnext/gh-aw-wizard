@@ -37,14 +37,14 @@
     "fallback_status": "The in-browser model is unavailable. Closest keyword match:",
     "result_eyebrow": "Scenario selected",
     "result_fallback_eyebrow": "Closest keyword match",
-    "result_fallback_description": "The in-browser model was unavailable, so the closest keyword match was selected. Pick another scenario if this is not what you meant.",
-    "result_request_label": "Your request",
+    "result_copy_label": "Copy prompt",
+    "result_copy_success_label": "Copied",
+    "result_copy_failure_label": "Copy failed",
     "result_close_label": "Close",
-    "result_action": "Continue",
     "model": {
       "enabled": true,
       "module_url": "slm/webllm.js",
-      "model_id": "Qwen2.5-0.5B-Instruct-q4f32_1-MLC",
+      "model_id": "Qwen2.5-1.5B-Instruct-q4f16_1-MLC",
       "ios_model_id": "SmolLM2-360M-Instruct-q4f32_1-MLC",
       "cache_backend": "cache",
       "max_tokens": 24

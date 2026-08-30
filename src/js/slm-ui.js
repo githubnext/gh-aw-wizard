@@ -77,10 +77,61 @@ function assistantCopy(wizardConfig) {
     fallback: assistant.fallback_status || 'The in-browser model is unavailable. Closest keyword match:',
     result_eyebrow: assistant.result_eyebrow || 'Scenario selected',
     result_fallback_eyebrow: assistant.result_fallback_eyebrow || 'Closest keyword match',
-    result_fallback_description: assistant.result_fallback_description
-      || 'The in-browser model was unavailable, so the closest keyword match was selected. Pick another scenario if this is not what you meant.',
-    result_request_label: assistant.result_request_label || 'Your request'
+    result_copy_label: assistant.result_copy_label || 'Copy prompt',
+    result_copy_success_label: assistant.result_copy_success_label || 'Copied',
+    result_copy_failure_label: assistant.result_copy_failure_label || 'Copy failed'
   };
+}
+
+function fallbackCopyText(text, documentImpl) {
+  if (!documentImpl || !documentImpl.body || typeof documentImpl.createElement !== 'function') return;
+  const textarea = documentImpl.createElement('textarea');
+  textarea.value = text;
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  documentImpl.body.appendChild(textarea);
+  textarea.select();
+  try {
+    if (documentImpl.execCommand) {
+      documentImpl.execCommand('copy');
+    }
+  } finally {
+    if (documentImpl.body && typeof documentImpl.body.removeChild === 'function') {
+      documentImpl.body.removeChild(textarea);
+    }
+  }
+}
+
+function bindAssistPromptCopy() {
+  const button = element('assist-modal-copy');
+  if (!button || typeof button.addEventListener !== 'function' || button.dataset.assistCopyBound === 'true') return;
+  button.dataset.assistCopyBound = 'true';
+  button.dataset.defaultLabel = button.dataset.defaultLabel || button.textContent || 'Copy prompt';
+  button.addEventListener('click', async () => {
+    const modal = element('assist-modal');
+    const prompt = modal && typeof modal.assistPrompt === 'string' ? modal.assistPrompt : '';
+    const navigatorImpl = typeof navigator !== 'undefined' ? navigator : null;
+    const documentImpl = typeof document !== 'undefined' ? document : null;
+    const defaultLabel = button.dataset.defaultLabel || 'Copy prompt';
+    const successLabel = button.dataset.successLabel || 'Copied';
+    const failureLabel = button.dataset.failureLabel || 'Copy failed';
+    try {
+      if (navigatorImpl && navigatorImpl.clipboard && typeof navigatorImpl.clipboard.writeText === 'function') {
+        await navigatorImpl.clipboard.writeText(prompt);
+      } else if (documentImpl && documentImpl.body && typeof documentImpl.createElement === 'function') {
+        fallbackCopyText(prompt, documentImpl);
+      } else {
+        return;
+      }
+      const prior = button.textContent;
+      button.textContent = successLabel;
+      window.setTimeout(() => { button.textContent = prior || defaultLabel; }, 1500);
+    } catch {
+      const prior = button.textContent;
+      button.textContent = failureLabel;
+      window.setTimeout(() => { button.textContent = prior || defaultLabel; }, 1500);
+    }
+  });
 }
 
 // Summarizes what the assistant picked once the analysis succeeded, so the
@@ -93,11 +144,18 @@ export function showAssistantResult(summary) {
     const node = element(id);
     if (node && typeof value === 'string') node.textContent = value;
   };
+  bindAssistPromptCopy();
   set('assist-modal-eyebrow', summary.eyebrow);
   set('assist-modal-title', summary.label);
-  set('assist-modal-description', summary.description);
-  set('assist-modal-request-label', summary.requestLabel);
-  set('assist-modal-request', summary.request);
+  modal.assistPrompt = summary.request || '';
+  const copyButton = element('assist-modal-copy');
+  if (copyButton) {
+    copyButton.textContent = summary.copyLabel || summary.result_copy_label || copyButton.dataset.defaultLabel || 'Copy prompt';
+    copyButton.dataset.defaultLabel = copyButton.dataset.defaultLabel || copyButton.textContent || 'Copy prompt';
+    copyButton.dataset.successLabel = summary.copySuccessLabel || summary.result_copy_success_label || 'Copied';
+    copyButton.dataset.failureLabel = summary.copyFailureLabel || summary.result_copy_failure_label || 'Copy failed';
+    copyButton.disabled = !summary.request;
+  }
   if (!modal.open) modal.showModal();
   return true;
 }
@@ -116,8 +174,7 @@ function bindAssistantResultModal() {
 function scenarioSummary(scenarios, id) {
   const scenario = (scenarios || []).find((candidate) => candidate.id === id);
   return {
-    label: scenario ? scenario.label : id,
-    description: scenario && scenario.description ? scenario.description : ''
+    label: scenario ? scenario.label : id
   };
 }
 
@@ -233,9 +290,10 @@ export function initScenarioAssistant(context) {
         showAssistantResult({
           eyebrow: copy.result_eyebrow,
           label: scenario.label,
-          description: scenario.description,
-          requestLabel: copy.result_request_label,
-          request
+          request,
+          copyLabel: copy.result_copy_label,
+          copySuccessLabel: copy.result_copy_success_label,
+          copyFailureLabel: copy.result_copy_failure_label
         });
         return;
       }
@@ -253,11 +311,10 @@ export function initScenarioAssistant(context) {
         showAssistantResult({
           eyebrow: copy.result_fallback_eyebrow,
           label: scenario.label,
-          description: scenario.description
-            ? `${scenario.description} ${copy.result_fallback_description}`
-            : copy.result_fallback_description,
-          requestLabel: copy.result_request_label,
-          request
+          request,
+          copyLabel: copy.result_copy_label,
+          copySuccessLabel: copy.result_copy_success_label,
+          copyFailureLabel: copy.result_copy_failure_label
         });
         return;
       }

@@ -28,8 +28,7 @@ function stubModal() {
     'assist-modal-eyebrow': { textContent: '' },
     'assist-modal-title': { textContent: '' },
     'assist-modal-description': { textContent: '' },
-    'assist-modal-request-label': { textContent: '' },
-    'assist-modal-request': { textContent: '' }
+    'assist-modal-copy': { textContent: 'Copy prompt', disabled: false, dataset: {} }
   };
   const modal = {
     open: false,
@@ -57,29 +56,26 @@ describe('assistant result dialog markup', () => {
 
   it('ships configurable copy for the dialog', () => {
     expect(wizard.assistant.result_eyebrow).toBeTruthy();
-    expect(wizard.assistant.result_request_label).toBeTruthy();
-    expect(wizard.assistant.result_action).toBeTruthy();
+    expect(wizard.assistant.result_copy_label).toBeTruthy();
+    expect(html).not.toContain('id="assist-modal-request"');
+    expect(html).not.toContain('id="assist-modal-action"');
   });
 });
 
 describe('showAssistantResult', () => {
-  it('fills the summary and opens the dialog', () => {
+  it('stores the prompt and opens the dialog', () => {
     const { modal, nodes } = stubModal();
 
     expect(showAssistantResult({
       eyebrow: 'Scenario selected',
       label: 'Issue Triage',
-      description: 'Categorize and label issues',
-      requestLabel: 'Your request',
       request: 'label incoming issues'
     })).toBe(true);
 
     expect(modal.open).toBe(true);
     expect(nodes['assist-modal-eyebrow'].textContent).toBe('Scenario selected');
     expect(nodes['assist-modal-title'].textContent).toBe('Issue Triage');
-    expect(nodes['assist-modal-description'].textContent).toBe('Categorize and label issues');
-    expect(nodes['assist-modal-request-label'].textContent).toBe('Your request');
-    expect(nodes['assist-modal-request'].textContent).toBe('label incoming issues');
+    expect(nodes['assist-modal-copy'].textContent).toBe('Copy prompt');
   });
 
   describe('diagnostic log copy', () => {

@@ -25,7 +25,11 @@ import {
   safeLogValue,
   webLlmDiagnosticText
 } from '../src/js/slm-logger.js';
-import { extractAssistantText, supportsWebGPU } from '../src/js/slm-runner.js';
+import {
+  createScenarioAssistant,
+  extractAssistantText,
+  supportsWebGPU
+} from '../src/js/slm-runner.js';
 import { PACKAGES, vendoredFiles } from '../scripts/fetch-vendor-assets.mjs';
 
 const html = readFileSync(fileURLToPath(new URL('../src/index.html', import.meta.url)), 'utf8');
@@ -156,7 +160,7 @@ describe('model configuration', () => {
 
   it('uses the default WebLLM prebuilt off iOS', () => {
     const desktopNavigator = { userAgent: 'Mozilla/5.0 Chrome/120 Safari/537.36' };
-    expect(modelIdFor(DEFAULT_SLM_CONFIG, desktopNavigator)).toBe(DEFAULT_SLM_CONFIG.model_id);
+    expect(modelIdFor(DEFAULT_SLM_CONFIG, desktopNavigator)).toBe('Qwen2.5-1.5B-Instruct-q4f16_1-MLC');
   });
 });
 
@@ -210,6 +214,34 @@ describe('runtime helpers', () => {
 });
 
 describe('WebLLM diagnostics', () => {
+  it('logs the sanitized wizard prompt and response to console.log', async () => {
+      const calls = [];
+      const completion = {
+        choices: [{ message: { role: 'assistant', content: 'issue-triage' } }]
+      };
+      const assistant = createScenarioAssistant({
+        config: { module_url: 'webllm.js', model_id: 'test-model' },
+        importModule: async () => ({
+          CreateMLCEngine: async () => ({
+            chat: { completions: { create: async () => completion } }
+          }),
+          prebuiltAppConfig: {}
+        }),
+        logger: createWebLlmLogger({
+          console: { log: (...args) => calls.push(args) }
+        })
+      });
+
+      await assistant.analyze('label issues secret=private', scenarios);
+
+      const prompt = calls.find(([label]) => label === '[WebLLM] analysis.prompt');
+      const response = calls.find(([label]) => label === '[WebLLM] analysis.response');
+      expect(prompt).toBeDefined();
+      expect(response).toBeDefined();
+      expect(prompt[1].messages[1].content).toBe('label issues secret=[redacted]');
+      expect(response[1].answer).toBe('issue-triage');
+  });
+
   it('redacts sensitive fields, known token formats, and URL query parameters', () => {
       const value = safeLogValue({
         token: 'do-not-log',

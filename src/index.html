@@ -322,15 +322,10 @@
       </div>
       <p class="copy-modal-eyebrow" id="assist-modal-eyebrow">Scenario selected</p>
       <h2 id="assist-modal-title">Scenario</h2>
-      <p id="assist-modal-description">The wizard selected the scenario that best matches your request.</p>
-      <div class="copy-modal-next-step">
-        <svg class="octicon" aria-hidden="true"><use href="#octicon-zap"></use></svg>
-        <div>
-          <strong id="assist-modal-request-label">Your request</strong>
-          <span id="assist-modal-request"></span>
-        </div>
+      <p id="assist-modal-description">Copy the prompt, then run it with an agent in the repository you want to automate.</p>
+      <div class="assist-modal-actions">
+        <button class="btn copy-modal-action assist-modal-copy" id="assist-modal-copy" type="button" data-assist-modal-copy>Copy prompt</button>
       </div>
-      <button class="btn copy-modal-action" id="assist-modal-action" type="button" data-assist-modal-close>Continue</button>
     </div>
   </dialog>
   <script type="module" src="./js/main.js"></script>

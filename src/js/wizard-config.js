@@ -86,9 +86,7 @@ function safeUrl(url, configUrl) {
 
 const ASSISTANT_ELEMENTS = {
   label: 'wizard-assist-label',
-  run_button: 'wizard-assist',
-  result_request_label: 'assist-modal-request-label',
-  result_action: 'assist-modal-action'
+  run_button: 'wizard-assist'
 };
 
 const INTENT_ELEMENTS = {

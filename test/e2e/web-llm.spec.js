@@ -5,7 +5,7 @@ const webLlmRuntimeRoute = '**/slm/webllm.js';
 const inferenceRuntime = `
   export const prebuiltAppConfig = {
     model_list: [
-      { model_id: 'Qwen2.5-0.5B-Instruct-q4f32_1-MLC' },
+      { model_id: 'Qwen2.5-1.5B-Instruct-q4f16_1-MLC' },
       { model_id: 'SmolLM2-360M-Instruct-q4f32_1-MLC' }
     ]
   };
@@ -65,13 +65,20 @@ test('runs in-browser inference and applies the selected scenario', async ({ pag
   await expect(result).toBeVisible();
   await expect(result.locator('#assist-modal-eyebrow')).toHaveText('Scenario selected');
   await expect(result.locator('#assist-modal-title')).toHaveText('Documentation Updater');
-  await expect(result.locator('#assist-modal-request')).toHaveText(request);
+  await expect(result.locator('#assist-modal-description')).toHaveText(
+    'Copy the prompt, then run it with an agent in the repository you want to automate.'
+  );
+  await expect(result.getByRole('button', { name: 'Copy prompt' })).toHaveCSS(
+    'background-image',
+    /linear-gradient/
+  );
+  await expect(result.getByRole('button', { name: 'Continue' })).toHaveCount(0);
   await expect(page.locator('input[name="archetype"][value="documentation-updater"]')).toBeChecked();
   await expect(page.locator('#wizard-assist-progress-field')).toBeHidden();
 
   const inference = await page.evaluate(() => globalThis.__webLlmE2E);
   expect(inference).toMatchObject({
-    model: 'Qwen2.5-0.5B-Instruct-q4f32_1-MLC',
+    model: 'Qwen2.5-1.5B-Instruct-q4f16_1-MLC',
     cacheBackend: 'cache',
     calls: 1,
     generationOptions: {
