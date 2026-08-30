@@ -9,7 +9,7 @@ const COMPACT_KEYS = {
   moduleUrl: 'mod',
   wasmPaths: 'wasm',
   requestLength: 'req',
-  scenarioCount: 'sc',
+  scenarioCount: 'scnt',
   answerLength: 'ans',
   scenario: 'scn',
   status: 'st',
