@@ -14,7 +14,7 @@ function assistantCopy(wizardConfig) {
     matched: assistant.matched_status || 'Selected the closest scenario:',
     no_match: assistant.no_match_status || 'No close match found. Pick a scenario below.',
     empty: assistant.empty_status || 'Describe what you want to automate first.',
-    unsupported: assistant.unsupported_status || 'The in-browser model could not be loaded. Pick a scenario below.',
+    no_scenarios: assistant.no_scenarios_status || 'Scenarios are not available yet. Please try again.',
     failure: assistant.failure_status || 'The in-browser model could not analyze the request. Pick a scenario below.',
     fallback: assistant.fallback_status || 'The in-browser model is unavailable. Closest keyword match:'
   };
@@ -84,7 +84,7 @@ export function initScenarioAssistant(context) {
     }
     const scenarios = scenarioCatalog(ctx.patterns(), ctx.extraScenarios ? ctx.extraScenarios() : []);
     if (!scenarios.length) {
-      setStatus(copy.unsupported);
+      setStatus(copy.no_scenarios);
       return;
     }
 
@@ -116,7 +116,7 @@ export function initScenarioAssistant(context) {
         return;
       }
       setStatus(copy.failure);
-    }).then(() => {
+    }).finally(() => {
       running = false;
       run.disabled = false;
     });

@@ -34,7 +34,7 @@
     "matched_status": "Selected the closest scenario:",
     "no_match_status": "No close match found. Pick a scenario below.",
     "empty_status": "Describe what you want to automate first.",
-    "unsupported_status": "The in-browser model could not be loaded. Pick a scenario below.",
+    "no_scenarios_status": "Scenarios are not available yet. Please try again.",
     "failure_status": "The in-browser model could not analyze the request. Pick a scenario below.",
     "fallback_status": "The in-browser model is unavailable. Closest keyword match:",
     "model": {
