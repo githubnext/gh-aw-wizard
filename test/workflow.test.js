@@ -601,6 +601,24 @@ describe('generateAgentPrompt', () => {
     expect(reportPrompt).not.toContain('Guard sensitive files');
   });
 
+  it('surfaces PR-spam-prevention guidance for archetypes that schedule pull requests', () => {
+    // code-improvement, documentation-updater, daily-test-improver, and performance-nut
+    // all open pull requests on a recurring schedule, and their pattern tips recommend a
+    // pre-activation check that skips a run once too many open PRs already share its
+    // title prefix. This guidance must reach the generated prompt, not just live in the
+    // pattern JSON.
+    const codePrompt = generateAgentPrompt(answers({ archetype: 'code-improvement' }), patterns);
+    expect(codePrompt).toContain('Prevent PR spam on scheduled runs');
+    expect(codePrompt).toContain('pre-activation');
+
+    const docsPrompt = generateAgentPrompt(answers({ archetype: 'documentation-updater' }), patterns);
+    expect(docsPrompt).toContain('Prevent PR spam on scheduled runs');
+
+    // issue-triage has no such tip and should not fabricate one.
+    const triagePrompt = generateAgentPrompt(answers({ archetype: 'issue-triage' }), patterns);
+    expect(triagePrompt).not.toContain('Prevent PR spam on scheduled runs');
+  });
+
   it('generates all grouped linter workflows in one prompt', () => {
     const prompt = generateAgentPrompt(answers({ archetype: 'linter-workflows' }), patterns);
 

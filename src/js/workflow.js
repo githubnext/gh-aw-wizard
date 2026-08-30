@@ -370,6 +370,25 @@ function protectedFilesTips(workflows, patterns) {
   return tips;
 }
 
+// Surface each archetype's PR-spam-prevention guidance (pre-activation checks that
+// skip a scheduled run once too many open PRs already share its title prefix) as an
+// explicit requirement. Archetypes that open pull requests on a recurring schedule
+// (code-improvement, documentation-updater, daily-test-improver, performance-nut)
+// otherwise lose this tip entirely: it doesn't match doNotConstraints' /do not/i
+// filter, duplicatePreventionTips' skip-if-match filter, or protectedFilesTips'
+// protected-files filter, so it was silently dropped even though it guards against
+// scheduled runs flooding maintainers with duplicate pull requests.
+function rateLimitTips(workflows, patterns) {
+  const tips = [];
+  workflows.forEach((workflow) => {
+    const archetype = getArchetype(patterns, workflow.answers.archetype) || {};
+    (archetype.tips || []).forEach((tip) => {
+      if (/pre-activation/i.test(tip) && tips.indexOf(tip) === -1) tips.push(tip);
+    });
+  });
+  return tips;
+}
+
 // A free-form "intent" typed in the wizard is appended to the generated prompt as
 // explicit requirements: state the intent, turn it into a single measurable
 // operational value registered as the workflow's grader, and decompose it into
@@ -498,6 +517,12 @@ export function generateAgentPrompt(answers, patterns) {
   if (protectedTips.length) {
     prompt += `- Guard sensitive files, for example: ${
       protectedTips.join('; ')
+    }\n`;
+  }
+  const rateLimits = rateLimitTips(workflows, patterns);
+  if (rateLimits.length) {
+    prompt += `- Prevent PR spam on scheduled runs, for example: ${
+      rateLimits.join('; ')
     }\n`;
   }
   prompt += multiple
