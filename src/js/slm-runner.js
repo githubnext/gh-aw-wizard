@@ -7,15 +7,20 @@
 import { createModelCache } from './slm-cache.js';
 import {
   buildScenarioMessages,
+  isIOS,
   progressLabel,
   progressTracker,
   runtimeUrls,
   selectScenario
 } from './slm.js';
 
+// iOS Safari (and iPadOS Safari, which reports as desktop Safari) exposes
+// navigator.gpu but its WebGPU implementation reliably crashes the tab once a
+// model this size finishes loading, so it is treated as unsupported here even
+// though the API is technically present.
 export function supportsWebGPU(navigatorImpl) {
   const nav = navigatorImpl || (typeof navigator !== 'undefined' ? navigator : null);
-  return !!(nav && nav.gpu);
+  return !!(nav && nav.gpu) && !isIOS(navigatorImpl);
 }
 
 // The wizard only offers the assistant on WebGPU-capable browsers, so the wasm

@@ -46,6 +46,8 @@ export function initScenarioAssistant(context) {
   const config = slmConfig(ctx.wizardConfig);
   // The assistant is hidden by default and only revealed where the model can
   // actually run: without WebGPU the wasm backend is too slow to be useful.
+  // supportsWebGPU also excludes iOS Safari, whose WebGPU implementation
+  // crashes the tab once the model finishes loading.
   if (config.enabled === false || !supportsWebGPU(ctx.navigator)) return null;
   if (container) container.removeAttribute('hidden');
 

@@ -12,6 +12,7 @@ import {
   progressTracker,
   scenarioCatalog,
   scenarioCatalogText,
+  isIOS,
   isSafari,
   runtimeUrls,
   scenarioLabel,
@@ -191,6 +192,13 @@ describe('runtime assets', () => {
     const urls = runtimeUrls(DEFAULT_SLM_CONFIG, { navigator: navigatorImpl, baseUrl: 'https://example.com/' });
     expect(urls.wasmPaths.wasm).toBe('https://example.com/slm/ort/ort-wasm-simd-threaded.wasm');
   });
+
+  it('detects iOS (including iPadOS reporting as Macintosh)', () => {
+    expect(isIOS({ userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 Safari/604.1' })).toBe(true);
+    expect(isIOS({ platform: 'MacIntel', maxTouchPoints: 5, userAgent: 'Mozilla/5.0 (Macintosh)' })).toBe(true);
+    expect(isIOS({ platform: 'MacIntel', maxTouchPoints: 0, userAgent: 'Mozilla/5.0 (Macintosh)' })).toBe(false);
+    expect(isIOS(null)).toBe(false);
+  });
 });
 
 describe('runtime helpers', () => {
@@ -203,6 +211,15 @@ describe('runtime helpers', () => {
     expect(supportsWebGPU({ gpu: {} })).toBe(true);
     expect(supportsWebGPU({})).toBe(false);
     expect(supportsWebGPU(null)).toBe(false);
+  });
+
+  it('treats iOS Safari as unsupported even when navigator.gpu is present, since it crashes after loading the model', () => {
+    const iPhoneNavigator = {
+      gpu: {},
+      userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Safari/604.1'
+    };
+    expect(supportsWebGPU(iPhoneNavigator)).toBe(false);
+    expect(preferredDevice(iPhoneNavigator)).toBe('wasm');
   });
 
   it('reads the assistant message out of the generated output', () => {
