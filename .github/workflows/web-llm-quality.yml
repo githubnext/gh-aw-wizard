@@ -7,11 +7,13 @@ on:
       - ".github/workflows/web-llm-quality.yml"
       - "patterns/archetypes/**"
       - "patterns/manifest.json"
+      - "package.json"
       - "playwright.quality.config.js"
       - "src/js/slm*.js"
       - "src/wizard.json"
       - "test/fixtures/web-llm-golden-intents.json"
       - "test/quality/web-llm-quality.spec.js"
+      - "test/web-llm-golden.test.js"
 
 permissions:
   contents: read

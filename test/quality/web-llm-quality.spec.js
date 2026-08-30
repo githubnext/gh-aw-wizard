@@ -4,9 +4,13 @@ import { fileURLToPath } from 'node:url';
 
 import { expect, test } from '@playwright/test';
 
+import { safeLogValue } from '../../src/js/slm-logger.js';
+import { parseScenarioSelection } from '../../src/js/slm.js';
+
 const qualityThreshold = 50;
 const artifactDir = resolve('test-results/web-llm-quality');
 const resultsPath = resolve(artifactDir, 'results.jsonl');
+const diagnosticsPath = resolve(artifactDir, 'diagnostics.jsonl');
 const summaryPath = resolve(artifactDir, 'summary.md');
 const goldenIntents = JSON.parse(readFileSync(
   fileURLToPath(new URL('../fixtures/web-llm-golden-intents.json', import.meta.url)),
@@ -16,6 +20,14 @@ const wizardConfig = JSON.parse(readFileSync(
   fileURLToPath(new URL('../../src/wizard.json', import.meta.url)),
   'utf8'
 ));
+const manifest = JSON.parse(readFileSync(
+  fileURLToPath(new URL('../../patterns/manifest.json', import.meta.url)),
+  'utf8'
+));
+const scenarios = manifest.archetypes.map((id) => JSON.parse(readFileSync(
+  fileURLToPath(new URL(`../../patterns/archetypes/${id}.json`, import.meta.url)),
+  'utf8'
+))).map(({ id, label, description }) => ({ id, label, description }));
 
 function roundPercent(numerator, denominator) {
   return denominator ? Math.round((numerator / denominator) * 10000) / 100 : 0;
@@ -23,7 +35,9 @@ function roundPercent(numerator, denominator) {
 
 function markdownSummary(results) {
   const good = results.filter(({ correct }) => correct).length;
-  const modelResponses = results.filter(({ mode }) => mode === 'model').length;
+  const parsedResponses = results.filter(({ mode }) => mode === 'parsed').length;
+  const invalidResponses = results.filter(({ mode }) => mode === 'invalid').length;
+  const errors = results.filter(({ mode }) => mode === 'error').length;
   const grouped = new Map();
   goldenIntents.forEach(({ archetype }) => {
     if (!grouped.has(archetype)) grouped.set(archetype, { total: 0, good: 0 });
@@ -43,7 +57,9 @@ function markdownSummary(results) {
     `- Model: \`${wizardConfig.assistant.model.model_id}\``,
     `- Good responses: **${good}/${goldenIntents.length} (${roundPercent(good, goldenIntents.length)}%)**`,
     `- Required: **${qualityThreshold}%**`,
-    `- Responses produced by the model: **${modelResponses}/${results.length}**`,
+    `- Parsed model responses: **${parsedResponses}/${results.length}**`,
+    `- Invalid model responses: **${invalidResponses}**`,
+    `- Engine errors: **${errors}**`,
     '',
     '| Golden archetype | Good | Evaluated | Accuracy |',
     '| --- | ---: | ---: | ---: |',
@@ -52,15 +68,34 @@ function markdownSummary(results) {
   ].join('\n');
 }
 
-function writeArtifacts(results) {
+function writeArtifacts(results, diagnostics) {
   mkdirSync(dirname(resultsPath), { recursive: true });
   writeFileSync(resultsPath, `${results.map((result) => JSON.stringify(result)).join('\n')}\n`);
+  writeFileSync(diagnosticsPath, `${diagnostics.map((record) => JSON.stringify(record)).join('\n')}\n`);
   writeFileSync(summaryPath, markdownSummary(results));
 }
 
 test('classifies at least 50% of 100 golden intents', async ({ page }) => {
   test.setTimeout(45 * 60 * 1000);
   const results = [];
+  const diagnostics = [];
+  const pendingDiagnostics = [];
+
+  page.on('console', (message) => {
+    pendingDiagnostics.push((async () => {
+      const values = await Promise.all(message.args().map(async (argument) => {
+        try {
+          return await argument.jsonValue();
+        } catch {
+          return null;
+        }
+      }));
+      const record = values.find((value) => value && typeof value === 'object' && value.evt);
+      if (!record) return;
+      diagnostics.push(record);
+      console.log(`[web-llm-diagnostic] ${JSON.stringify(record)}`);
+    })());
+  });
 
   try {
     await page.goto('/');
@@ -74,43 +109,50 @@ test('classifies at least 50% of 100 golden intents', async ({ page }) => {
       adapter: true
     });
 
-    await page.getByRole('button', { name: 'Create Your Agentic Workflow' }).click();
-    const input = page.locator('#intent-description');
-    const analyze = page.locator('#wizard-assist');
-    const modal = page.locator('#assist-modal');
-    await expect(analyze).toBeVisible();
-
     for (const golden of goldenIntents) {
       const startedAt = Date.now();
-      await input.evaluate((element, intent) => {
-        element.value = intent;
-        element.dispatchEvent(new Event('input', { bubbles: true }));
-      }, golden.intent);
-      await expect(analyze).toBeEnabled();
-      await analyze.evaluate((element) => element.click());
-      await expect(modal).toHaveAttribute('open', '', { timeout: 5 * 60 * 1000 });
-      await expect(page.locator('#assist-modal-request')).toHaveText(golden.intent);
-
-      const eyebrow = await page.locator('#assist-modal-eyebrow').textContent();
-      const actual = await page.locator('input[name="archetype"]:checked').getAttribute('value');
-      const mode = eyebrow === wizardConfig.assistant.result_eyebrow ? 'model' : 'fallback';
-      const result = {
-        id: golden.id,
-        intent: golden.intent,
-        expected: golden.archetype,
-        actual,
-        mode,
-        correct: mode === 'model' && actual === golden.archetype,
-        durationMs: Date.now() - startedAt
-      };
+      let result;
+      try {
+        const output = await page.evaluate(async ({ config, intent, scenarioCatalog }) => {
+          if (!globalThis.__webLlmQualityAssistant) {
+            const { createScenarioAssistant } = await import('/js/slm-runner.js');
+            globalThis.__webLlmQualityAssistant = createScenarioAssistant({ config });
+          }
+          return globalThis.__webLlmQualityAssistant.analyze(intent, scenarioCatalog);
+        }, {
+          config: wizardConfig.assistant.model,
+          intent: golden.intent,
+          scenarioCatalog: scenarios
+        });
+        const actual = parseScenarioSelection(output.answer, scenarios);
+        result = {
+          id: golden.id,
+          intent: golden.intent,
+          expected: golden.archetype,
+          actual,
+          answer: output.answer,
+          mode: actual ? 'parsed' : 'invalid',
+          correct: actual === golden.archetype,
+          durationMs: Date.now() - startedAt
+        };
+      } catch (error) {
+        result = {
+          id: golden.id,
+          intent: golden.intent,
+          expected: golden.archetype,
+          actual: null,
+          mode: 'error',
+          correct: false,
+          durationMs: Date.now() - startedAt,
+          error: safeLogValue(error, 'error')
+        };
+      }
       results.push(result);
       console.log(`[web-llm-quality] ${JSON.stringify(result)}`);
-
-      await page.locator('#assist-modal-close').evaluate((element) => element.click());
-      await expect(modal).not.toHaveAttribute('open', '');
     }
   } finally {
-    writeArtifacts(results);
+    await Promise.allSettled(pendingDiagnostics);
+    writeArtifacts(results, diagnostics);
   }
 
   const good = results.filter(({ correct }) => correct).length;
