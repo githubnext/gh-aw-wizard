@@ -42,7 +42,7 @@ function createLiveResults(container) {
       const row = document.createElement('tr');
       cell(row, entry.query);
       cell(row, scenarioLabel(scenarios, entry.golden));
-      cell(row, entry.errored ? 'Error' : (entry.answer || scenarioLabel(scenarios, entry.scenario)));
+      cell(row, entry.errored ? 'Error' : (entry.answer !== null ? entry.answer : scenarioLabel(scenarios, entry.scenario)));
       cell(row, entry.errored ? 'Error' : (entry.correct ? 'Correct' : 'Incorrect'));
       row.className = entry.errored ? 'eval-row-error' : (entry.correct ? 'eval-row-correct' : 'eval-row-incorrect');
       body.appendChild(row);
