@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test';
 
+const transformersRuntimeRoute = '**/slm/transformers.min.js';
+
 const inferenceRuntime = `
   export const env = {
     backends: { onnx: { wasm: {} } }
@@ -31,7 +33,7 @@ test('runs in-browser inference and applies the selected scenario', async ({ pag
       get: () => ({})
     });
   });
-  await page.route('**/slm/transformers.min.js', (route) => route.fulfill({
+  await page.route(transformersRuntimeRoute, (route) => route.fulfill({
     contentType: 'text/javascript',
     body: inferenceRuntime
   }));
@@ -39,6 +41,7 @@ test('runs in-browser inference and applies the selected scenario', async ({ pag
   await page.goto('/');
   await page.getByRole('button', { name: 'Create Your Agentic Workflow' }).click();
 
+  // This would keyword-match Issue Triage, proving the model result wins over fallback matching.
   const request = 'Label incoming bug reports and prioritize urgent issues';
   await page.locator('#intent-description').fill(request);
 
