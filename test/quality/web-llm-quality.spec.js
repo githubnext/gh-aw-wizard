@@ -218,8 +218,8 @@ test('classifies at least 50% of 100 golden intents over 10 runs each', async ()
         if (repetition === repetitions) {
           const good = results.filter(({ correct }) => correct).length;
           console.log(`[web-llm-progress] ${JSON.stringify({
-            completed: evaluation,
-            evaluations: evaluationCount,
+            completedEvaluations: evaluation,
+            totalEvaluations: evaluationCount,
             good,
             accuracy: roundPercent(good, evaluation)
           })}`);
