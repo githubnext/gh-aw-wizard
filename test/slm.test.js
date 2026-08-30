@@ -287,7 +287,6 @@ describe('model weight cache', () => {
       const logger = createWebLlmLogger({
         console: consoleImpl,
         context: { component: 'test' },
-        timestamp: () => '2026-01-01T00:00:00.000Z',
         onRecord: (record) => records.push(record)
       });
 
@@ -295,13 +294,13 @@ describe('model weight cache', () => {
 
       expect(calls.map(([method]) => method)).toEqual(['groupCollapsed', 'log', 'table', 'groupEnd']);
       expect(records).toEqual([expect.objectContaining({
-        timestamp: '2026-01-01T00:00:00.000Z',
-        level: 'log',
-        event: 'model.loaded',
+        lvl: 'log',
+        evt: 'model.loaded',
         component: 'test',
-        diagnosticSession: expect.any(String),
+        sid: expect.any(String),
         modelUrl: 'https://example.com/model'
       })]);
+      expect(records[0]).not.toHaveProperty('timestamp');
     });
 
     it('falls back to console.log and records operation duration', () => {
@@ -320,8 +319,8 @@ describe('model weight cache', () => {
 
       expect(calls).toHaveLength(2);
       expect(records[1]).toMatchObject({
-        event: 'inference.completed',
-        durationMs: 25,
+        evt: 'inference.completed',
+        ms: 25,
         scenario: 'issue-triage'
       });
     });
@@ -344,13 +343,32 @@ describe('model weight cache', () => {
 
       const records = webLlmDiagnosticText().split('\n').map((record) => JSON.parse(record));
       expect(records).toEqual([{
-        timestamp: expect.any(String),
-        level: 'error',
-        event: 'model.failed',
-        diagnosticSession: 'test-session',
+        lvl: 'error',
+        evt: 'model.failed',
+        sid: 'test-session',
         token: '[redacted]',
         reason: 'network'
       }]);
+    });
+
+    it('collapses a shared URL prefix across a record into a single base field', () => {
+      clearWebLlmDiagnostics();
+      const logger = createWebLlmLogger({ console: null, diagnosticSession: 'test-session' });
+      logger.log('generator.load.started', {
+        moduleUrl: 'https://example.com/vendor/transformers/transformers.min.js',
+        wasmPaths: {
+          mjs: 'https://example.com/vendor/transformers/ort-wasm-simd.mjs',
+          wasm: 'https://example.com/vendor/transformers/ort-wasm-simd.wasm'
+        }
+      });
+
+      const [record] = webLlmDiagnosticText().split('\n').map((entry) => JSON.parse(entry));
+      expect(record.urlBase).toBe('https://example.com/vendor/transformers/');
+      expect(record.moduleUrl).toBe('\u2026/transformers.min.js');
+      expect(record.wasmPaths).toEqual({
+        mjs: '\u2026/ort-wasm-simd.mjs',
+        wasm: '\u2026/ort-wasm-simd.wasm'
+      });
     });
   });
 

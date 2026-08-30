@@ -94,9 +94,29 @@ describe('showAssistantResult', () => {
         document: {}
       });
 
-      expect(writeText).toHaveBeenCalledWith(expect.stringContaining('"event":"load.failed"'));
+      expect(writeText).toHaveBeenCalledWith(expect.stringContaining('"evt":"load.failed"'));
       expect(writeText).toHaveBeenCalledWith(expect.stringContaining('"password":"[redacted]"'));
       expect(writeText).not.toHaveBeenCalledWith(expect.stringContaining('private'));
+    });
+
+    it('retains only the last 10kb of diagnostics, trimmed from the start', async () => {
+      clearWebLlmDiagnostics();
+      const logger = createWebLlmLogger({ console: null, diagnosticSession: 'trim-test' });
+      for (let i = 0; i < 400; i++) {
+        logger.log('padding.event', { note: 'x'.repeat(60), index: i });
+      }
+      const writeText = vi.fn().mockResolvedValue();
+
+      await copyWebLlmDiagnostics({
+        navigator: { clipboard: { writeText } },
+        document: {}
+      });
+
+      const copied = writeText.mock.calls[0][0];
+      expect(copied.length).toBeLessThanOrEqual(10 * 1024);
+      expect(copied).toContain('"index":399');
+      expect(copied).not.toContain('"index":0}');
+      expect(copied.startsWith('{')).toBe(true);
     });
 
     it('announces successful copies from the footer control', async () => {

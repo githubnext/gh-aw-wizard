@@ -71,6 +71,67 @@ export function safeLogValue(value, key, depth) {
   return redactText(value);
 }
 
+const URL_PATTERN = /^https?:\/\//i;
+const MIN_COMMON_PREFIX_LENGTH = 20;
+const PREFIX_MARKER = '\u2026/';
+
+function collectUrls(value, found) {
+  if (typeof value === 'string') {
+    if (URL_PATTERN.test(value)) found.push(value);
+    return;
+  }
+  if (Array.isArray(value)) {
+    value.forEach((item) => collectUrls(item, found));
+    return;
+  }
+  if (value && typeof value === 'object') {
+    Object.keys(value).forEach((key) => collectUrls(value[key], found));
+  }
+}
+
+function longestCommonPrefix(strings) {
+  let prefix = strings[0];
+  for (let i = 1; i < strings.length && prefix; i++) {
+    const other = strings[i];
+    let end = 0;
+    while (end < prefix.length && end < other.length && prefix[end] === other[end]) end++;
+    prefix = prefix.slice(0, end);
+  }
+  return prefix;
+}
+
+function replacePrefix(value, prefix) {
+  if (typeof value === 'string') {
+    return value.startsWith(prefix) ? PREFIX_MARKER + value.slice(prefix.length) : value;
+  }
+  if (Array.isArray(value)) return value.map((item) => replacePrefix(item, prefix));
+  if (value && typeof value === 'object') {
+    const result = {};
+    Object.keys(value).forEach((key) => {
+      result[key] = replacePrefix(value[key], prefix);
+    });
+    return result;
+  }
+  return value;
+}
+
+// URLs commonly repeat a long base path (CDN/vendor directories, model shard
+// hosts), which wastes space without helping the LLM. When a record contains
+// two or more URLs sharing a long prefix, collapse the shared portion once.
+function compactUrlPrefixes(record) {
+  const urls = [];
+  collectUrls(record, urls);
+  const unique = [...new Set(urls)];
+  if (unique.length < 2) return record;
+  let prefix = longestCommonPrefix(unique);
+  const lastSlash = prefix.lastIndexOf('/');
+  if (lastSlash < 8) return record;
+  prefix = prefix.slice(0, lastSlash + 1);
+  if (prefix.length < MIN_COMMON_PREFIX_LENGTH) return record;
+  const compacted = replacePrefix(record, prefix);
+  return 'urlBase' in compacted ? compacted : { ...compacted, urlBase: prefix };
+}
+
 function callConsole(consoleImpl, method, args) {
   const fn = consoleImpl && typeof consoleImpl[method] === 'function'
     ? consoleImpl[method]
@@ -94,25 +155,22 @@ function monotonicNow(now) {
 export function createWebLlmLogger(options) {
   const opts = options || {};
   const consoleImpl = opts.console === undefined ? globalThis.console : opts.console;
-  const suppliedContext = safeLogValue(opts.context || {}, '');
-  const context = {
-    diagnosticSession: suppliedContext.diagnosticSession
-      || opts.diagnosticSession
-      || `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`,
-    ...suppliedContext
-  };
+  const context = safeLogValue(opts.context || {}, '');
+  const sid = context.sid
+    || opts.diagnosticSession
+    || `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
   const now = opts.now;
-  const timestamp = opts.timestamp || (() => new Date().toISOString());
   const onRecord = typeof opts.onRecord === 'function' ? opts.onRecord : null;
 
   function emit(level, event, details) {
-    const record = {
-      timestamp: safeLogValue(timestamp(), 'timestamp'),
-      level,
-      event: redactText(event),
+    let record = {
       ...context,
-      ...safeLogValue(details || {}, 'details')
+      ...safeLogValue(details || {}, 'details'),
+      lvl: level,
+      evt: redactText(event),
+      sid
     };
+    record = compactUrlPrefixes(record);
     diagnosticRecords.push(safeLogValue(record, ''));
     if (diagnosticRecords.length > MAX_RECORDS) diagnosticRecords.shift();
     if (onRecord) {
@@ -124,7 +182,7 @@ export function createWebLlmLogger(options) {
     }
     if (!consoleImpl) return record;
 
-    const label = `[WebLLM] ${record.event}`;
+    const label = `[WebLLM] ${record.evt}`;
     const canCloseGroup = typeof consoleImpl.groupEnd === 'function';
     const groupMethod = canCloseGroup && typeof consoleImpl.groupCollapsed === 'function'
       ? 'groupCollapsed'
@@ -155,6 +213,7 @@ export function createWebLlmLogger(options) {
     child(additionalContext) {
       return createWebLlmLogger({
         ...opts,
+        diagnosticSession: sid,
         context: { ...context, ...safeLogValue(additionalContext || {}, '') }
       });
     },
@@ -163,9 +222,9 @@ export function createWebLlmLogger(options) {
       emit('log', `${event}.started`, details);
       return {
         end(outcome, finalDetails) {
-          const durationMs = Math.max(0, Math.round(monotonicNow(now) - startedAt));
+          const ms = Math.max(0, Math.round(monotonicNow(now) - startedAt));
           const level = outcome === 'failed' ? 'error' : 'log';
-          return emit(level, `${event}.${outcome || 'completed'}`, { ...finalDetails, durationMs });
+          return emit(level, `${event}.${outcome || 'completed'}`, { ...finalDetails, ms });
         }
       };
     }
