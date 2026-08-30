@@ -55,7 +55,8 @@
   "tips": [
     "Focus on specific review criteria (security, performance, style)",
     "Use pull_request triggers focused on ready-to-review activity",
-    "Include DO NOT constraints to avoid false positive comments"
+    "Include DO NOT constraints to avoid false positive comments",
+    "For slash_command-triggered reviews, set tools.github.lockdown: true and min-integrity so only content from users with push access (or an explicit min-integrity level) is acted on"
   ],
   "anti_patterns": [
     "pr-review",
