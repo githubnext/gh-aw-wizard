@@ -717,6 +717,15 @@ a:hover {
 .eval-table th {
   background: var(--bg-tertiary);
 }
+.eval-row-correct td {
+  background: var(--color-success-subtle, rgba(46, 160, 67, 0.1));
+}
+.eval-row-incorrect td {
+  background: var(--color-attention-subtle, rgba(219, 171, 9, 0.1));
+}
+.eval-row-error td {
+  background: var(--color-danger-subtle, rgba(248, 81, 73, 0.1));
+}
 .assistant-progress[hidden] {
   display: none;
 }

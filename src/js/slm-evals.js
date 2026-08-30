@@ -188,14 +188,34 @@ export async function runEvals(options) {
       };
       if (repetition === 0) stats.queries += 1;
       stats.attempts += 1;
+      let answer = null;
+      let scenario = null;
+      let correct = false;
+      let errored = false;
       try {
         const result = await analyze(item.query);
-        if (result && result.scenario === item.golden) stats.successes += 1;
+        answer = result && typeof result.answer === 'string' ? result.answer : null;
+        scenario = result ? result.scenario : null;
+        correct = Boolean(result && result.scenario === item.golden);
+        if (correct) stats.successes += 1;
       } catch {
+        errored = true;
         stats.errors += 1;
       }
       byScenario.set(item.golden, stats);
       completed += 1;
+      if (typeof opts.onRow === 'function') {
+        opts.onRow({
+          index: completed - 1,
+          total: corpus.length * repetitions,
+          query: item.query,
+          golden: item.golden,
+          scenario,
+          answer,
+          correct,
+          errored
+        });
+      }
       if (typeof opts.onProgress === 'function') {
         opts.onProgress({ completed, total: corpus.length * repetitions });
       }
