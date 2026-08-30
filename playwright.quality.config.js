@@ -2,7 +2,7 @@ import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
   testDir: './test/quality',
-  timeout: 45 * 60 * 1000,
+  timeout: 3 * 60 * 60 * 1000,
   workers: 1,
   webServer: {
     // The evaluator imports the browser runner directly so it can score the

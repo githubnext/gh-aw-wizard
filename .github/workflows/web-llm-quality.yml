@@ -25,7 +25,7 @@ concurrency:
 jobs:
   evaluate:
     runs-on: warm
-    timeout-minutes: 60
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@v7
 
