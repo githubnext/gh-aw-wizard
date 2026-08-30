@@ -76,12 +76,16 @@ export function initWizard(options) {
     registerDefinitionEngines(engines);
     addDefinitionEngineOptions(engines);
     bindFormEvents();
-    initScenarioAssistant({
+    const assistantContext = {
       wizardConfig,
       patterns: () => patterns,
       extraScenarios: () => customScenario(wizardConfig)
-    });
+    };
+    initScenarioAssistant(assistantContext);
     renderWorkflowSummary();
+    if (evalModeEnabled()) {
+      return import('./slm-eval-ui.js').then(({ initEvalMode }) => initEvalMode(assistantContext));
+    }
   });
   bindNavigation();
   initDiagnosticLogCopy();
@@ -95,6 +99,11 @@ export function initWizard(options) {
 function customScenario(config) {
   const custom = config && config.archetypes ? config.archetypes.custom : null;
   return custom ? [custom] : [];
+}
+
+function evalModeEnabled() {
+  const params = new URLSearchParams(globalThis.location ? globalThis.location.search : '');
+  return params.get('evals') === '1';
 }
 
 function archetypeIconId(archetypeId, data) {

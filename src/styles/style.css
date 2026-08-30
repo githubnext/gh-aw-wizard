@@ -694,6 +694,29 @@ a:hover {
 .assistant-progress {
   margin-top: 0.75rem;
 }
+.eval-results {
+  margin-top: 1rem;
+}
+.eval-summary {
+  font-weight: 600;
+}
+.eval-table-scroller {
+  overflow-x: auto;
+}
+.eval-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+.eval-table th,
+.eval-table td {
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  text-align: left;
+}
+.eval-table th {
+  background: var(--bg-tertiary);
+}
 .assistant-progress[hidden] {
   display: none;
 }
@@ -765,6 +788,15 @@ a:hover {
 .btn-assistant:disabled {
   background: linear-gradient(135deg, var(--agent-purple), var(--agent-purple-dark));
   border-color: var(--agent-purple-dark);
+}
+.btn-evals {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+  color: var(--fg-default);
+}
+.btn-evals:hover:not(:disabled) {
+  background: var(--bg-card);
+  border-color: var(--border-hover);
 }
 .btn-sm {
   padding: 0.4rem 0.85rem;

@@ -68,6 +68,10 @@
       "url": "https://github.com/githubnext/gh-aw-wizard/issues",
       "label": "Report an issue"
     },
+    "evals": {
+      "url": "./?evals=1",
+      "label": "Run evals"
+    },
     "copy_logs": {
       "label": "Copy diagnostic logs",
       "success": "Diagnostic logs copied.",

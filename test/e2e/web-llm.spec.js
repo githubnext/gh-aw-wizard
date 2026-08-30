@@ -89,3 +89,23 @@ test('runs in-browser inference and applies the selected scenario', async ({ pag
   });
   expect(inference.generationOptions.messages.at(-1)).toEqual({ role: 'user', content: request });
 });
+
+test('loads the secret eval control only with evals=1', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(Navigator.prototype, 'gpu', {
+      configurable: true,
+      get: () => ({})
+    });
+  });
+
+  await page.goto('/');
+  await expect(page.locator('#wizard-evals')).toHaveCount(0);
+  await page.getByRole('link', { name: 'Run evals' }).click();
+  await expect(page).toHaveURL(/\?evals=1$/);
+  await page.getByRole('button', { name: 'Create Your Agentic Workflow' }).click();
+  const evals = page.getByRole('button', { name: 'Run evals' });
+  await expect(evals).toBeVisible();
+  await expect(evals).toBeEnabled();
+  await expect(page.locator('.intent-actions')).toContainText('Analyze');
+  await expect(page.locator('.intent-actions')).toContainText('Run evals');
+});
