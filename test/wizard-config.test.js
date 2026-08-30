@@ -96,7 +96,7 @@ describe('wizard configuration', () => {
         },
         evals: {
           url: './?evals=1',
-          label: 'Evaluate model'
+          label: 'Run evals'
         },
         copy_logs: {
           label: 'Copy support logs',
@@ -133,7 +133,7 @@ describe('wizard configuration', () => {
     expect(elements['footer-source-label'].textContent).toBe('Source code');
     expect(elements['footer-evals']).toMatchObject({
       href: 'https://custom.example/config/?evals=1',
-      textContent: 'Evaluate model'
+      textContent: 'Run evals'
     });
     expect(elements['footer-copy-logs']).toMatchObject({
       textContent: 'Copy support logs',
