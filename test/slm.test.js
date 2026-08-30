@@ -243,10 +243,12 @@ describe('runtime helpers', () => {
     };
     expect(supportsWebGPU(iPhoneNavigator)).toBe(true);
     expect(preferredDevice(iPhoneNavigator)).toBe('wasm');
-    expect(preferredDevice({
+    const iPadNavigator = {
       gpu: {},
       userAgent: 'Mozilla/5.0 (iPad; CPU OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Safari/604.1'
-    })).toBe('wasm');
+    };
+    expect(supportsWebGPU(iPadNavigator)).toBe(true);
+    expect(preferredDevice(iPadNavigator)).toBe('wasm');
   });
 
   it('reads the assistant message out of the generated output', () => {
