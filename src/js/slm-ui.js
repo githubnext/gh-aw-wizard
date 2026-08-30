@@ -22,11 +22,23 @@ function fallbackCopy(text, documentImpl) {
   }
 }
 
+const MAX_COPY_LENGTH = 10 * 1024;
+
+// Keeps the most recent diagnostics (the ones relevant to what just went
+// wrong) and drops the older, less useful prefix rather than truncating the
+// end of the log.
+function trimToTail(text, maxLength) {
+  if (text.length <= maxLength) return text;
+  const tail = text.slice(text.length - maxLength);
+  const firstNewline = tail.indexOf('\n');
+  return firstNewline === -1 ? tail : tail.slice(firstNewline + 1);
+}
+
 export async function copyWebLlmDiagnostics(options) {
   const opts = options || {};
   const navigatorImpl = opts.navigator || (typeof navigator !== 'undefined' ? navigator : null);
   const documentImpl = opts.document || document;
-  const text = webLlmDiagnosticText();
+  const text = trimToTail(webLlmDiagnosticText(), MAX_COPY_LENGTH);
   if (navigatorImpl && navigatorImpl.clipboard && typeof navigatorImpl.clipboard.writeText === 'function') {
     try {
       await navigatorImpl.clipboard.writeText(text);

@@ -10,6 +10,7 @@ export function webLlmDiagnosticText() {
 
 export function clearWebLlmDiagnostics() {
   diagnosticRecords.length = 0;
+  resetUrlRefs();
 }
 
 function redactText(value) {
@@ -71,6 +72,71 @@ export function safeLogValue(value, key, depth) {
   return redactText(value);
 }
 
+const URL_PATTERN = /^https?:\/\//i;
+const MIN_PREFIX_LENGTH = 20;
+const REF_MARKER = '#';
+const urlRefRegistry = new Map();
+const seenUrlPrefixes = new Set();
+let urlRefCounter = 0;
+
+function resetUrlRefs() {
+  urlRefRegistry.clear();
+  seenUrlPrefixes.clear();
+  urlRefCounter = 0;
+}
+
+// Directory portion of a URL (everything up to and including the last '/'),
+// used as the key for interning repeated hosts/paths across the whole
+// diagnostic session (CDN/vendor directories, model shard hosts, cache keys).
+function urlDirname(url) {
+  const lastSlash = url.lastIndexOf('/');
+  return lastSlash > 8 ? url.slice(0, lastSlash + 1) : null;
+}
+
+// The first time a URL directory is seen it is left untouched (a single
+// occurrence gains nothing from a reference). From the second occurrence
+// onward it is assigned a short, session-stable id so later records reuse it
+// via "#<id>" instead of repeating the full host/path; the mapping itself is
+// only emitted once, on the record that introduces the reference.
+function compactUrl(url, newRefs) {
+  const prefix = urlDirname(url);
+  if (!prefix || prefix.length < MIN_PREFIX_LENGTH) return url;
+  const existingId = urlRefRegistry.get(prefix);
+  if (existingId !== undefined) return `${REF_MARKER}${existingId}${url.slice(prefix.length)}`;
+  if (!seenUrlPrefixes.has(prefix)) {
+    seenUrlPrefixes.add(prefix);
+    return url;
+  }
+  const id = urlRefCounter++;
+  urlRefRegistry.set(prefix, id);
+  newRefs[id] = prefix;
+  return `${REF_MARKER}${id}${url.slice(prefix.length)}`;
+}
+
+function compactUrlsInValue(value, newRefs) {
+  if (typeof value === 'string') return URL_PATTERN.test(value) ? compactUrl(value, newRefs) : value;
+  if (Array.isArray(value)) return value.map((item) => compactUrlsInValue(item, newRefs));
+  if (value && typeof value === 'object') {
+    const result = {};
+    Object.keys(value).forEach((key) => {
+      result[key] = compactUrlsInValue(value[key], newRefs);
+    });
+    return result;
+  }
+  return value;
+}
+
+// Replaces repeated URLs with a short "#<id>" reference into a session-wide
+// registry instead of repeating the same host/path across many records. The
+// mapping for a given id is only included the first time it is used (in
+// `refs`), so later records citing the same id stay compact.
+function compactUrls(record) {
+  const newRefs = {};
+  const compacted = compactUrlsInValue(record, newRefs);
+  if (Object.keys(newRefs).length === 0) return compacted;
+  return { ...compacted, refs: newRefs };
+}
+
 function callConsole(consoleImpl, method, args) {
   const fn = consoleImpl && typeof consoleImpl[method] === 'function'
     ? consoleImpl[method]
@@ -94,25 +160,22 @@ function monotonicNow(now) {
 export function createWebLlmLogger(options) {
   const opts = options || {};
   const consoleImpl = opts.console === undefined ? globalThis.console : opts.console;
-  const suppliedContext = safeLogValue(opts.context || {}, '');
-  const context = {
-    diagnosticSession: suppliedContext.diagnosticSession
-      || opts.diagnosticSession
-      || `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`,
-    ...suppliedContext
-  };
+  const context = safeLogValue(opts.context || {}, '');
+  const sid = context.sid
+    || opts.diagnosticSession
+    || `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
   const now = opts.now;
-  const timestamp = opts.timestamp || (() => new Date().toISOString());
   const onRecord = typeof opts.onRecord === 'function' ? opts.onRecord : null;
 
   function emit(level, event, details) {
-    const record = {
-      timestamp: safeLogValue(timestamp(), 'timestamp'),
-      level,
-      event: redactText(event),
+    let record = {
       ...context,
-      ...safeLogValue(details || {}, 'details')
+      ...safeLogValue(details || {}, 'details'),
+      lvl: level,
+      evt: redactText(event),
+      sid
     };
+    record = compactUrls(record);
     diagnosticRecords.push(safeLogValue(record, ''));
     if (diagnosticRecords.length > MAX_RECORDS) diagnosticRecords.shift();
     if (onRecord) {
@@ -124,7 +187,7 @@ export function createWebLlmLogger(options) {
     }
     if (!consoleImpl) return record;
 
-    const label = `[WebLLM] ${record.event}`;
+    const label = `[WebLLM] ${record.evt}`;
     const canCloseGroup = typeof consoleImpl.groupEnd === 'function';
     const groupMethod = canCloseGroup && typeof consoleImpl.groupCollapsed === 'function'
       ? 'groupCollapsed'
@@ -155,6 +218,7 @@ export function createWebLlmLogger(options) {
     child(additionalContext) {
       return createWebLlmLogger({
         ...opts,
+        diagnosticSession: sid,
         context: { ...context, ...safeLogValue(additionalContext || {}, '') }
       });
     },
@@ -163,9 +227,9 @@ export function createWebLlmLogger(options) {
       emit('log', `${event}.started`, details);
       return {
         end(outcome, finalDetails) {
-          const durationMs = Math.max(0, Math.round(monotonicNow(now) - startedAt));
+          const ms = Math.max(0, Math.round(monotonicNow(now) - startedAt));
           const level = outcome === 'failed' ? 'error' : 'log';
-          return emit(level, `${event}.${outcome || 'completed'}`, { ...finalDetails, durationMs });
+          return emit(level, `${event}.${outcome || 'completed'}`, { ...finalDetails, ms });
         }
       };
     }
