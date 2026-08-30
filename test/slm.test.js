@@ -236,6 +236,8 @@ describe('WebLLM diagnostics', () => {
 
       const prompt = calls.find(([label]) => label === '[WebLLM] analysis.prompt');
       const response = calls.find(([label]) => label === '[WebLLM] analysis.response');
+      expect(prompt).toBeDefined();
+      expect(response).toBeDefined();
       expect(prompt[1].messages[1].content).toBe('label issues secret=[redacted]');
       expect(response[1].answer).toBe('issue-triage');
   });
