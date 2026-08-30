@@ -4,9 +4,21 @@
 // the wizard scenario that best matches a free-form request. Everything in this
 // module is side-effect free so it can be unit tested without a browser.
 
+// The runtime is served from the site itself (see `scripts/fetch-slm-runtime.mjs`
+// and the `slmRuntimePlugin` in `vite.config.js`) rather than from a CDN, so it
+// stays reachable on networks that block third-party script hosts.
 export const DEFAULT_SLM_CONFIG = {
   enabled: true,
-  module_url: 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.2.0/dist/transformers.web.js',
+  module_url: 'slm/transformers.min.js',
+  wasm_paths: {
+    mjs: 'slm/ort/ort-wasm-simd-threaded.asyncify.mjs',
+    wasm: 'slm/ort/ort-wasm-simd-threaded.asyncify.wasm'
+  },
+  // Safari runs the non-asyncify build of onnxruntime-web.
+  safari_wasm_paths: {
+    mjs: 'slm/ort/ort-wasm-simd-threaded.mjs',
+    wasm: 'slm/ort/ort-wasm-simd-threaded.wasm'
+  },
   model_id: 'onnx-community/Qwen2.5-0.5B-Instruct',
   webgpu_dtype: 'q4f16',
   wasm_dtype: 'q4',
@@ -25,6 +37,40 @@ export function slmConfig(wizardConfig) {
     ? wizardConfig.assistant.model
     : {};
   return { ...DEFAULT_SLM_CONFIG, ...configured };
+}
+
+export function isSafari(navigatorImpl) {
+  const nav = navigatorImpl || (typeof navigator !== 'undefined' ? navigator : null);
+  const userAgent = nav && typeof nav.userAgent === 'string' ? nav.userAgent : '';
+  return /safari/i.test(userAgent) && !/chrome|chromium|android/i.test(userAgent);
+}
+
+// Runtime assets are configured as site-relative paths so a wizard hosted under
+// a sub-path (such as GitHub Pages project sites) resolves them correctly.
+export function resolveRuntimeUrl(url, baseUrl) {
+  if (!url) return url;
+  const base = baseUrl
+    || (globalThis.document && globalThis.document.baseURI)
+    || (globalThis.location && globalThis.location.href);
+  if (!base) return url;
+  try {
+    return new URL(url, base).href;
+  } catch {
+    return url;
+  }
+}
+
+export function runtimeUrls(config, options) {
+  const opts = options || {};
+  const settings = config || {};
+  const paths = (isSafari(opts.navigator) ? settings.safari_wasm_paths : settings.wasm_paths) || {};
+  const wasmPaths = paths.mjs && paths.wasm
+    ? {
+      mjs: resolveRuntimeUrl(paths.mjs, opts.baseUrl),
+      wasm: resolveRuntimeUrl(paths.wasm, opts.baseUrl)
+    }
+    : null;
+  return { module: resolveRuntimeUrl(settings.module_url, opts.baseUrl), wasmPaths };
 }
 
 // The scenarios the model may choose from, derived from what the wizard shows

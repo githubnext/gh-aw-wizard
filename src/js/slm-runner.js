@@ -9,6 +9,7 @@ import {
   buildScenarioMessages,
   progressLabel,
   progressTracker,
+  runtimeUrls,
   selectScenario
 } from './slm.js';
 
@@ -50,13 +51,17 @@ export function createScenarioAssistant(options) {
   function loadGenerator(onProgress) {
     if (generatorPromise) return generatorPromise;
     const device = preferredDevice(opts.navigator);
-    generatorPromise = importModule(config.module_url).then((module) => {
+    const urls = runtimeUrls(config, { navigator: opts.navigator, baseUrl: opts.baseUrl });
+    generatorPromise = importModule(urls.module).then((module) => {
       const { env, pipeline } = module;
       if (env) {
         env.allowLocalModels = false;
         env.useBrowserCache = false;
         env.useCustomCache = true;
         env.customCache = cache;
+        // transformers.js otherwise points onnxruntime-web at a CDN.
+        const onnx = env.backends && env.backends.onnx;
+        if (urls.wasmPaths && onnx && onnx.wasm) onnx.wasm.wasmPaths = urls.wasmPaths;
       }
       const tracker = progressTracker();
       return pipeline('text-generation', config.model_id, {

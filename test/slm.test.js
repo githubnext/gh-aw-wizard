@@ -12,12 +12,15 @@ import {
   progressTracker,
   scenarioCatalog,
   scenarioCatalogText,
+  isSafari,
+  runtimeUrls,
   scenarioLabel,
   selectScenario,
   slmConfig
 } from '../src/js/slm.js';
 import { cacheKeyFor, serializeHeaders } from '../src/js/slm-cache.js';
 import { extractAssistantText, preferredDevice, supportsWebGPU } from '../src/js/slm-runner.js';
+import { PACKAGES, vendoredFiles } from '../scripts/fetch-vendor-assets.mjs';
 
 const html = readFileSync(fileURLToPath(new URL('../src/index.html', import.meta.url)), 'utf8');
 const css = readFileSync(fileURLToPath(new URL('../src/styles/style.css', import.meta.url)), 'utf8');
@@ -135,8 +138,58 @@ describe('model configuration', () => {
 
   it('ships assistant copy and model settings in the wizard configuration', () => {
     expect(wizardConfig.assistant.button).toBeTruthy();
-    expect(wizardConfig.assistant.model.module_url).toContain('@huggingface/transformers');
+    expect(wizardConfig.assistant.model.module_url).toBe(DEFAULT_SLM_CONFIG.module_url);
     expect(wizardConfig.assistant.model.model_id).toBeTruthy();
+  });
+});
+
+describe('runtime assets', () => {
+  it('serves the runtime from the site instead of a CDN', () => {
+    const configured = [
+      wizardConfig.assistant.model.module_url,
+      wizardConfig.assistant.model.wasm_paths.mjs,
+      wizardConfig.assistant.model.wasm_paths.wasm,
+      wizardConfig.assistant.model.safari_wasm_paths.mjs,
+      wizardConfig.assistant.model.safari_wasm_paths.wasm
+    ];
+    configured.forEach((url) => {
+      expect(url).not.toMatch(/^https?:/);
+      expect(url.startsWith('slm/')).toBe(true);
+    });
+  });
+
+  it('vendors every runtime file the wizard configuration points at', () => {
+    const vendored = vendoredFiles();
+    [
+      wizardConfig.assistant.model.module_url,
+      wizardConfig.assistant.model.wasm_paths.mjs,
+      wizardConfig.assistant.model.wasm_paths.wasm,
+      wizardConfig.assistant.model.safari_wasm_paths.mjs,
+      wizardConfig.assistant.model.safari_wasm_paths.wasm
+    ].forEach((url) => {
+      expect(vendored).toContain(url);
+    });
+    expect(PACKAGES.map((pkg) => pkg.name)).toContain('@huggingface/transformers');
+    expect(PACKAGES.map((pkg) => pkg.name)).toContain('onnxruntime-web');
+  });
+
+  it('resolves runtime urls against the page so sub-path deployments work', () => {
+    const urls = runtimeUrls(DEFAULT_SLM_CONFIG, { baseUrl: 'https://example.github.io/gh-aw-wizard/' });
+    expect(urls.module).toBe('https://example.github.io/gh-aw-wizard/slm/transformers.min.js');
+    expect(urls.wasmPaths).toEqual({
+      mjs: 'https://example.github.io/gh-aw-wizard/slm/ort/ort-wasm-simd-threaded.asyncify.mjs',
+      wasm: 'https://example.github.io/gh-aw-wizard/slm/ort/ort-wasm-simd-threaded.asyncify.wasm'
+    });
+  });
+
+  it('uses the non-asyncify runtime on Safari', () => {
+    const navigatorImpl = {
+      userAgent: 'Mozilla/5.0 (Macintosh) AppleWebKit/605.1.15 Version/17.0 Safari/605.1.15'
+    };
+    expect(isSafari(navigatorImpl)).toBe(true);
+    expect(isSafari({ userAgent: 'Mozilla/5.0 Chrome/120 Safari/537.36' })).toBe(false);
+    const urls = runtimeUrls(DEFAULT_SLM_CONFIG, { navigator: navigatorImpl, baseUrl: 'https://example.com/' });
+    expect(urls.wasmPaths.wasm).toBe('https://example.com/slm/ort/ort-wasm-simd-threaded.wasm');
   });
 });
 

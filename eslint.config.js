@@ -3,11 +3,11 @@ import globals from 'globals';
 
 export default [
   {
-    ignores: ['dist/**', 'patterns/**']
+    ignores: ['dist/**', 'patterns/**', 'vendor/**']
   },
   js.configs.recommended,
   {
-    files: ['**/*.js'],
+    files: ['**/*.js', '**/*.mjs'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module'
@@ -29,7 +29,7 @@ export default [
     }
   },
   {
-    files: ['src/js/cli.js', 'src/js/patterns-node.js', 'vite.config.js', 'vitest.config.js'],
+    files: ['src/js/cli.js', 'src/js/patterns-node.js', 'scripts/**/*.mjs', 'vite.config.js', 'vitest.config.js'],
     languageOptions: {
       globals: {
         ...globals.node
