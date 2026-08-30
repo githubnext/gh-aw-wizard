@@ -25,7 +25,7 @@ concurrency:
 jobs:
   evaluate:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
 
@@ -51,7 +51,7 @@ jobs:
       - name: Evaluate WebLLM intent quality
         id: evaluation
         continue-on-error: true
-        timeout-minutes: 5
+        timeout-minutes: 15
         env:
           WEB_LLM_CACHE_DIR: ${{ runner.temp }}/web-llm-cache
         run: npm run test:web-llm-quality

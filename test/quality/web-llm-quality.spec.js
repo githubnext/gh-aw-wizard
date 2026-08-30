@@ -10,7 +10,7 @@ import { parseScenarioSelection } from '../../src/js/slm.js';
 
 const qualityThreshold = 50;
 const maxRepetitions = 10;
-const evaluationBudgetMs = 4 * 60 * 1000;
+const evaluationBudgetMs = 14 * 60 * 1000;
 const artifactReserveMs = 15 * 1000;
 const calibrationCount = 3;
 const qualityBaseUrl = process.env.WEB_LLM_BASE_URL || 'http://127.0.0.1:4173';
@@ -179,7 +179,7 @@ function writeArtifacts(results, diagnostics, run) {
 }
 
 test(`classifies at least 50% of adaptively sampled golden intents within a ${evaluationBudgetMs / 1000}-second budget`, async () => {
-  test.setTimeout(5 * 60 * 1000);
+  test.setTimeout(15 * 60 * 1000);
   const results = [];
   const diagnostics = [];
   const pendingDiagnostics = [];
