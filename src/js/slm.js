@@ -10,7 +10,7 @@
 export const DEFAULT_SLM_CONFIG = {
   enabled: true,
   module_url: 'slm/webllm.js',
-  model_id: 'Qwen2.5-0.5B-Instruct-q4f32_1-MLC',
+  model_id: 'Qwen2.5-1.5B-Instruct-q4f16_1-MLC',
   // This WebLLM prebuilt is explicitly marked for low-resource devices and
   // avoids the shader-f16 feature that is not available on every iPhone.
   ios_model_id: 'SmolLM2-360M-Instruct-q4f32_1-MLC',
