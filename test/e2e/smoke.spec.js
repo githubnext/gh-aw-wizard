@@ -9,7 +9,7 @@ test('website loads and opens the wizard', async ({ page }) => {
   await page.getByRole('button', { name: 'Create Your Agentic Workflow' }).click();
 
   await expect(page.locator('#step-1')).toHaveClass(/active/);
-  await expect(page.getByLabel('Tell us what you are trying to solve so that we can generate graders and evals')).toBeVisible();
+  await expect(page.getByLabel('Tell us your intent so that we can generate graders and evals')).toBeVisible();
   await page.getByRole('button', { name: 'Continue' }).click();
   await expect(page.locator('#step-2')).toHaveClass(/active/);
   await expect

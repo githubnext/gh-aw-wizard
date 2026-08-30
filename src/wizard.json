@@ -257,8 +257,8 @@
       "placeholder": "choose what the agent should do"
     },
     "intent": {
-      "placeholder": "tell us what you are trying to solve",
-      "label": "Tell us what you are trying to solve so that we can generate graders and evals",
+      "placeholder": "tell us your intent",
+      "label": "Tell us your intent so that we can generate graders and evals",
       "hint": "We will add your goal to the prompt and generate graders and BinEval evaluations for it.",
       "field_placeholder": "e.g., Keep our release notes accurate so on-call engineers can triage incidents faster…"
     }

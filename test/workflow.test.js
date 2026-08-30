@@ -454,12 +454,12 @@ describe('generateAgentPrompt', () => {
 
   it('turns a provided intent into an operational value grader and BinEval evaluations', () => {
     const prompt = generateAgentPrompt(answers({ intent: '  Keep release notes accurate  ' }), patterns);
-    expect(prompt).toContain('- Problem this workflow should solve, provided by the user: Keep release notes accurate\n');
+    expect(prompt).toContain('- Additional intent for this workflow, provided by the user: Keep release notes accurate\n');
     expect(prompt).toContain('operational value');
     expect(prompt).toContain('id: operational_value');
-    expect(prompt).toContain('- Add BinEval evaluations for the goal');
+    expect(prompt).toContain('- Add BinEval evaluations for the intent');
     expect(prompt).toContain('`evals:`');
-    expect(prompt.indexOf('## Why')).toBeLessThan(prompt.indexOf('Requirements:'));
+    expect(prompt.indexOf('## Intent')).toBeLessThan(prompt.indexOf('Requirements:'));
   });
 
   it('asks the agent to analyze the repository first', () => {
@@ -640,7 +640,7 @@ describe('generateAgentPrompt', () => {
     );
 
     expect(prompt).toContain(
-      '## Why\nKeep release notes accurate for on-call engineers.\n\n'
+      '## Intent\nKeep release notes accurate for on-call engineers.\n\n'
     );
   });
 

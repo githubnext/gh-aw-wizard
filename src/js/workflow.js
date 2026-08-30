@@ -370,21 +370,21 @@ function protectedFilesTips(workflows, patterns) {
   return tips;
 }
 
-// A free-form "why" typed in the wizard is appended to the generated prompt as
-// explicit requirements: state the goal, turn it into a single measurable
+// A free-form "intent" typed in the wizard is appended to the generated prompt as
+// explicit requirements: state the intent, turn it into a single measurable
 // operational value registered as the workflow's grader, and decompose it into
 // BinEval binary questions under the `evals:` frontmatter block.
 function intentRequirements(intent) {
   return [
-    `- Problem this workflow should solve, provided by the user: ${intent}`,
-    '- Derive a single measurable "operational value" statement from that goal — one sentence describing ' +
+    `- Additional intent for this workflow, provided by the user: ${intent}`,
+    '- Derive a single measurable "operational value" statement from that intent — one sentence describing ' +
       'the concrete outcome a successful run must deliver — and register it as the workflow grader: add it ' +
       'as the first entry of an `evals:` frontmatter block with `id: operational_value` and a question that ' +
       'asks whether the agent output demonstrates that value was delivered',
-    '- Add BinEval evaluations for the goal: 2-4 further `evals:` questions that each verify one ' +
-      'observable property of the goal, phrased as falsifiable YES/NO questions answerable from the agent ' +
+    '- Add BinEval evaluations for the intent: 2-4 further `evals:` questions that each verify one ' +
+      'observable property of the intent, phrased as falsifiable YES/NO questions answerable from the agent ' +
       'output alone (no compound questions, unique ids, YES means success)',
-    '- Reflect the goal in the workflow prompt itself so the agent optimizes for it at run time',
+    '- Reflect the intent in the workflow prompt itself so the agent optimizes for it at run time',
     '- Keep a `safe-outputs:` block in the workflow so the evals judge can read `agent_output.json`'
   ];
 }
@@ -415,7 +415,7 @@ export function generateAgentPrompt(answers, patterns) {
   prompt += '- Note repository conventions such as labels, issue/PR templates and branch naming\n';
   prompt += '- Use those findings to tailor the workflow prompt, tools, and instructions to this repository\n\n';
   if (intent) {
-    prompt += `## Why\n${  intent  }\n\n`;
+    prompt += `## Intent\n${  intent  }\n\n`;
   }
   prompt += 'Requirements:\n';
   if (multiple) {
