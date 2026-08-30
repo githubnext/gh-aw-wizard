@@ -130,7 +130,12 @@ describe('initScenarioAssistant run button', () => {
     };
     vi.stubGlobal('navigator', { gpu: {} });
 
-    const result = initScenarioAssistant({ wizardConfig: null, patterns: () => null });
+    const logger = {
+      log() {},
+      warn() {},
+      child() { return this; }
+    };
+    const result = initScenarioAssistant({ wizardConfig: null, patterns: () => null, logger });
     expect(result).not.toBeNull();
     expect(run.disabled).toBe(true);
 

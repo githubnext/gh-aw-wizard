@@ -48,7 +48,11 @@ export function safeLogValue(value, key, depth) {
   if (typeof value === 'object') {
     const result = {};
     Object.keys(value).slice(0, 50).forEach((property) => {
-      result[property] = safeLogValue(value[property], property, level + 1);
+      try {
+        result[property] = safeLogValue(value[property], property, level + 1);
+      } catch {
+        result[property] = '[unavailable]';
+      }
     });
     return result;
   }
@@ -59,7 +63,12 @@ function callConsole(consoleImpl, method, args) {
   const fn = consoleImpl && typeof consoleImpl[method] === 'function'
     ? consoleImpl[method]
     : consoleImpl && consoleImpl.log;
-  if (typeof fn === 'function') fn.apply(consoleImpl, args);
+  if (typeof fn !== 'function') return;
+  try {
+    fn.apply(consoleImpl, args);
+  } catch {
+    // Diagnostics must never interrupt model execution.
+  }
 }
 
 function monotonicNow(now) {
@@ -72,21 +81,33 @@ function monotonicNow(now) {
 
 export function createWebLlmLogger(options) {
   const opts = options || {};
-  const consoleImpl = opts.console || globalThis.console;
-  const context = safeLogValue(opts.context || {}, 'context');
+  const consoleImpl = opts.console === undefined ? globalThis.console : opts.console;
+  const suppliedContext = safeLogValue(opts.context || {}, 'context');
+  const context = {
+    diagnosticSession: suppliedContext.diagnosticSession
+      || opts.diagnosticSession
+      || `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`,
+    ...suppliedContext
+  };
   const now = opts.now;
   const timestamp = opts.timestamp || (() => new Date().toISOString());
   const onRecord = typeof opts.onRecord === 'function' ? opts.onRecord : null;
 
   function emit(level, event, details) {
     const record = {
-      timestamp: timestamp(),
+      timestamp: safeLogValue(timestamp(), 'timestamp'),
       level,
       event: redactText(event),
       ...context,
       ...safeLogValue(details || {}, 'details')
     };
-    if (onRecord) onRecord(record);
+    if (onRecord) {
+      try {
+        onRecord(record);
+      } catch {
+        // Diagnostics extensions must not interrupt model execution.
+      }
+    }
     if (!consoleImpl) return record;
 
     const label = `[WebLLM] ${record.event}`;

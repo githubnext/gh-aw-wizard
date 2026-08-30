@@ -294,6 +294,7 @@ describe('model weight cache', () => {
         level: 'log',
         event: 'model.loaded',
         component: 'test',
+        diagnosticSession: expect.any(String),
         modelUrl: 'https://example.com/model'
       })]);
     });
@@ -318,6 +319,17 @@ describe('model weight cache', () => {
         durationMs: 25,
         scenario: 'issue-triage'
       });
+    });
+
+    it('does not interrupt execution when a console or extension fails', () => {
+      const logger = createWebLlmLogger({
+        console: {
+          log() { throw new Error('console unavailable'); }
+        },
+        onRecord() { throw new Error('extension unavailable'); }
+      });
+
+      expect(() => logger.log('diagnostic.test')).not.toThrow();
     });
   });
 
