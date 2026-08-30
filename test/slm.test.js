@@ -140,7 +140,7 @@ describe('model configuration', () => {
   });
 
   it('ships assistant copy and model settings in the wizard configuration', () => {
-    expect(wizardConfig.assistant.button).toBeTruthy();
+    expect(wizardConfig.assistant.run_button).toBe('Analyze');
     expect(wizardConfig.assistant.model.module_url).toBe(DEFAULT_SLM_CONFIG.module_url);
     expect(wizardConfig.assistant.model.model_id).toBeTruthy();
   });
@@ -266,7 +266,7 @@ describe('model weight cache', () => {
 
 describe('assistant markup', () => {
   it('stays hidden until a WebGPU-capable browser reveals it', () => {
-    expect(html).toContain('id="wizard-assist" hidden');
+    expect(html).toMatch(/id="wizard-assist"[^>]*hidden/);
     const start = css.indexOf('.assistant[hidden] {');
     expect(start).toBeGreaterThan(-1);
     expect(css.slice(start, css.indexOf('}', start))).toMatch(/display:\s*none/);
