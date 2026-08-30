@@ -111,7 +111,7 @@ function writeArtifacts(results, diagnostics) {
   writeFileSync(summaryPath, markdownSummary(results, variability));
 }
 
-test('classifies at least 50% of 100 golden intents over 10 runs each', async () => {
+test(`classifies at least 50% of ${goldenIntents.length} golden intents over ${repetitions} runs each`, async () => {
   test.setTimeout(3 * 60 * 60 * 1000);
   const results = [];
   const diagnostics = [];
@@ -215,16 +215,15 @@ test('classifies at least 50% of 100 golden intents over 10 runs each', async ()
         }
         results.push(result);
         console.log(`[web-llm-quality] ${JSON.stringify(result)}`);
-        if (repetition === repetitions) {
-          const good = results.filter(({ correct }) => correct).length;
-          console.log(`[web-llm-progress] ${JSON.stringify({
-            completedEvaluations: evaluation,
-            totalEvaluations: evaluationCount,
-            good,
-            accuracy: roundPercent(good, evaluation)
-          })}`);
-        }
       }
+      const completedEvaluations = results.length;
+      const good = results.filter(({ correct }) => correct).length;
+      console.log(`[web-llm-progress] ${JSON.stringify({
+        completedEvaluations,
+        totalEvaluations: evaluationCount,
+        good,
+        accuracy: roundPercent(good, completedEvaluations)
+      })}`);
     }
   } finally {
     await Promise.allSettled(pendingDiagnostics);
