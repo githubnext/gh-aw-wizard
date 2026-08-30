@@ -24,6 +24,28 @@
     "preview_hint": "Review before copying",
     "preview_aria_label": "Generated prompt preview"
   },
+  "assistant": {
+    "button": "Let the wizard pick for me",
+    "label": "Describe what you want to automate",
+    "field_placeholder": "e.g., Every morning, summarize the issues opened yesterday and post a digest…",
+    "run_button": "Analyze my request",
+    "hint": "A small language model runs in your browser (WebGPU when available) and picks the closest scenario. The model is downloaded once and kept in your browser storage.",
+    "analyzing_status": "Loading the in-browser model…",
+    "matched_status": "Selected the closest scenario:",
+    "no_match_status": "No close match found. Pick a scenario below.",
+    "empty_status": "Describe what you want to automate first.",
+    "unsupported_status": "The in-browser model could not be loaded. Pick a scenario below.",
+    "failure_status": "The in-browser model could not analyze the request. Pick a scenario below.",
+    "fallback_status": "The in-browser model is unavailable. Closest keyword match:",
+    "model": {
+      "enabled": true,
+      "module_url": "https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.2.0/dist/transformers.web.js",
+      "model_id": "onnx-community/Qwen2.5-0.5B-Instruct",
+      "webgpu_dtype": "q4f16",
+      "wasm_dtype": "q4",
+      "max_new_tokens": 24
+    }
+  },
   "copy_success": {
     "close_label": "Close",
     "eyebrow": "Prompt copied",
