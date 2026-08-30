@@ -29,7 +29,6 @@ import { extractAssistantText, supportsWebGPU } from '../src/js/slm-runner.js';
 import { PACKAGES, vendoredFiles } from '../scripts/fetch-vendor-assets.mjs';
 
 const html = readFileSync(fileURLToPath(new URL('../src/index.html', import.meta.url)), 'utf8');
-const css = readFileSync(fileURLToPath(new URL('../src/styles/style.css', import.meta.url)), 'utf8');
 const wizardConfig = JSON.parse(
   readFileSync(fileURLToPath(new URL('../src/wizard.json', import.meta.url)), 'utf8')
 );
