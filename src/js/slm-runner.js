@@ -99,8 +99,8 @@ export function createScenarioAssistant(options) {
           temperature: 0,
           stream: false
         });
-        logger.log('analysis.response', { output });
         const answer = extractAssistantText(output);
+        logger.log('analysis.response', { answer });
         const scenario = selectScenario(answer, request, scenarios);
         analysis.end('completed', { answerLength: answer.length, scenario });
         return { scenario, answer };

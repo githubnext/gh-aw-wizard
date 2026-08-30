@@ -221,7 +221,6 @@ describe('WebLLM diagnostics', () => {
       };
       const assistant = createScenarioAssistant({
         config: { module_url: 'webllm.js', model_id: 'test-model' },
-        baseUrl: 'https://example.com/',
         importModule: async () => ({
           CreateMLCEngine: async () => ({
             chat: { completions: { create: async () => completion } }
@@ -238,7 +237,7 @@ describe('WebLLM diagnostics', () => {
       const prompt = calls.find(([label]) => label === '[WebLLM] analysis.prompt');
       const response = calls.find(([label]) => label === '[WebLLM] analysis.response');
       expect(prompt[1].messages[1].content).toBe('label issues secret=[redacted]');
-      expect(response[1].output).toEqual(completion);
+      expect(response[1].answer).toBe('issue-triage');
   });
 
   it('redacts sensitive fields, known token formats, and URL query parameters', () => {
