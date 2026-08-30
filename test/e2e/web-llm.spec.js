@@ -43,6 +43,25 @@ test('runs in-browser inference and applies the selected scenario', async ({ pag
       configurable: true,
       get: () => ({})
     });
+
+    test('loads the secret eval control only with evals=1', async ({ page }) => {
+      await page.addInitScript(() => {
+        Object.defineProperty(Navigator.prototype, 'gpu', {
+          configurable: true,
+          get: () => ({})
+        });
+      });
+
+      await page.goto('/');
+      await expect(page.locator('#wizard-evals')).toHaveCount(0);
+
+      await page.goto('/?evals=1');
+      const evals = page.getByRole('button', { name: 'Run evals' });
+      await expect(evals).toBeVisible();
+      await expect(evals).toBeEnabled();
+      await expect(page.locator('.intent-actions')).toContainText('Analyze');
+      await expect(page.locator('.intent-actions')).toContainText('Run evals');
+    });
   });
   await page.route(webLlmRuntimeRoute, (route) => route.fulfill({
     contentType: 'text/javascript',
