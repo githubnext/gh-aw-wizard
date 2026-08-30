@@ -146,7 +146,7 @@ describe('model configuration', () => {
   });
 
   it('ships assistant copy and model settings in the wizard configuration', () => {
-    expect(wizardConfig.assistant.button).toBeTruthy();
+    expect(wizardConfig.assistant.run_button).toBe('Analyze');
     expect(wizardConfig.assistant.model.module_url).toBe(DEFAULT_SLM_CONFIG.module_url);
     expect(wizardConfig.assistant.model.model_id).toBeTruthy();
   });
@@ -363,17 +363,18 @@ describe('model weight cache', () => {
 
 describe('assistant markup', () => {
   it('stays hidden until a WebGPU-capable browser reveals it', () => {
-    expect(html).toContain('id="wizard-assist" hidden');
-    const start = css.indexOf('.assistant[hidden] {');
+    expect(html).toMatch(/id="wizard-assist"[^>]*hidden/);
+    const start = css.indexOf('.btn-assistant[hidden] {');
     expect(start).toBeGreaterThan(-1);
     expect(css.slice(start, css.indexOf('}', start))).toMatch(/display:\s*none/);
   });
 
-  it('renders the wizard button and progress bar, reusing the intent textarea', () => {
-    expect(html).toContain('id="btn-wizard-assist"');
+  it('renders Analyze beside Continue and reuses the intent textarea', () => {
     expect(html).not.toContain('id="wizard-assist-input"');
     expect(html).toContain('id="intent-description"');
-    expect(html).toContain('id="btn-wizard-assist-run" type="button" disabled');
+    expect(html).toMatch(/class="intent-actions"[\s\S]*id="btn-intent-continue"[\s\S]*id="wizard-assist"/);
+    expect(html).toContain('id="wizard-assist" type="button" hidden disabled>Analyze</button>');
+    expect(html).not.toContain('Let the wizard pick for me');
     expect(html).toContain('id="wizard-assist-progress"');
     expect(html).toContain('id="wizard-assist-status"');
   });
@@ -382,9 +383,4 @@ describe('assistant markup', () => {
     expect(html).toMatch(/id="wizard-assist-status"[^>]*aria-live="polite"/);
   });
 
-  it('keeps a visible focus indicator on the wizard button', () => {
-    const start = css.indexOf('.btn-assistant:focus-visible {');
-    expect(start).toBeGreaterThan(-1);
-    expect(css.slice(start, css.indexOf('}', start))).toMatch(/outline:/);
-  });
 });

@@ -167,17 +167,12 @@ function fakeTextarea() {
 
 describe('initScenarioAssistant run button', () => {
   it('reuses the intent textarea and stays disabled until it has text', () => {
-    const toggle = fakeButton();
-    const panel = fakeButton();
-    panel.setAttribute('hidden', '');
     const intent = fakeTextarea();
     const run = fakeButton();
+    run.setAttribute('hidden', '');
     const nodes = {
-      'wizard-assist': fakeButton(),
-      'btn-wizard-assist': toggle,
-      'wizard-assist-panel': panel,
+      'wizard-assist': run,
       'intent-description': intent,
-      'btn-wizard-assist-run': run,
       'wizard-assist-status': null,
       'wizard-assist-progress-field': null,
       'wizard-assist-progress': null,
@@ -196,6 +191,7 @@ describe('initScenarioAssistant run button', () => {
     };
     const result = initScenarioAssistant({ wizardConfig: null, patterns: () => null, logger });
     expect(result).not.toBeNull();
+    expect(run.hasAttribute('hidden')).toBe(false);
     expect(run.disabled).toBe(true);
 
     intent.value = 'summarize issues every morning';

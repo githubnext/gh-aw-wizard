@@ -123,15 +123,12 @@ export function selectArchetypeRadio(scenarioId) {
 export function initScenarioAssistant(context) {
   const ctx = context || {};
   const logger = ctx.logger || createWebLlmLogger({ context: { component: 'ui' } });
-  const container = element('wizard-assist');
-  const toggle = element('btn-wizard-assist');
-  const panel = element('wizard-assist-panel');
+  const run = element('wizard-assist');
   const input = element('intent-description');
-  const run = element('btn-wizard-assist-run');
   const status = element('wizard-assist-status');
   const progressField = element('wizard-assist-progress-field');
   const progress = element('wizard-assist-progress');
-  if (!toggle || !panel || !input || !run) {
+  if (!input || !run) {
     logger.warn('initialization.skipped', { reason: 'required controls missing' });
     return null;
   }
@@ -147,7 +144,7 @@ export function initScenarioAssistant(context) {
     });
     return null;
   }
-  if (container) container.removeAttribute('hidden');
+  run.removeAttribute('hidden');
   logger.log('initialization.completed', {
     webgpu: true,
     modelId: config.model_id,
@@ -158,14 +155,6 @@ export function initScenarioAssistant(context) {
   bindAssistantResultModal();
   let assistant = null;
   let running = false;
-
-  toggle.addEventListener('click', () => {
-    const open = panel.hasAttribute('hidden');
-    if (open) panel.removeAttribute('hidden');
-    else panel.setAttribute('hidden', '');
-    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-    if (open) input.focus();
-  });
 
   // The run button stays disabled until the intent textarea (shared with the
   // rest of the wizard) actually has text, because there is nothing to analyze
@@ -268,5 +257,5 @@ export function initScenarioAssistant(context) {
     });
   });
 
-  return { toggle, panel };
+  return { run };
 }
