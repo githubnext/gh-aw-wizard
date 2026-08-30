@@ -22,7 +22,7 @@ function fallbackCopy(text, documentImpl) {
   }
 }
 
-const MAX_COPY_LENGTH = 10 * 1024;
+const MAX_COPY_LENGTH = 64 * 1024;
 
 // Keeps the most recent diagnostics (the ones relevant to what just went
 // wrong) and drops the older, less useful prefix rather than truncating the

@@ -99,7 +99,7 @@ describe('showAssistantResult', () => {
       expect(writeText).not.toHaveBeenCalledWith(expect.stringContaining('private'));
     });
 
-    it('retains only the last 10kb of diagnostics, trimmed from the start', async () => {
+    it('retains the full compact diagnostic history when it fits within 64kb', async () => {
       clearWebLlmDiagnostics();
       const logger = createWebLlmLogger({ console: null, diagnosticSession: 'trim-test' });
       for (let i = 0; i < 400; i++) {
@@ -113,9 +113,9 @@ describe('showAssistantResult', () => {
       });
 
       const copied = writeText.mock.calls[0][0];
-      expect(copied.length).toBeLessThanOrEqual(10 * 1024);
+      expect(copied.length).toBeLessThanOrEqual(64 * 1024);
       expect(copied).toContain('"index":399');
-      expect(copied).not.toContain('"index":0}');
+      expect(copied).toContain('"index":0');
       expect(copied.startsWith('{')).toBe(true);
     });
 
