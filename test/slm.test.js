@@ -321,7 +321,7 @@ describe('model weight cache', () => {
       expect(records[1]).toMatchObject({
         evt: 'inference.completed',
         ms: 25,
-        scenario: 'issue-triage'
+        scn: 'issue-triage'
       });
     });
 
