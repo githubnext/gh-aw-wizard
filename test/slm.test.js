@@ -7,6 +7,7 @@ import {
   DEFAULT_SLM_CONFIG,
   buildScenarioMessages,
   keywordScenarioMatch,
+  modelIdFor,
   parseScenarioSelection,
   progressLabel,
   progressTracker,
@@ -17,7 +18,8 @@ import {
   runtimeUrls,
   scenarioLabel,
   selectScenario,
-  slmConfig
+  slmConfig,
+  webgpuDtypeFor
 } from '../src/js/slm.js';
 import { cacheKeyFor, serializeHeaders } from '../src/js/slm-cache.js';
 import { extractAssistantText, preferredDevice, supportsWebGPU } from '../src/js/slm-runner.js';
@@ -142,6 +144,21 @@ describe('model configuration', () => {
     expect(wizardConfig.assistant.model.module_url).toBe(DEFAULT_SLM_CONFIG.module_url);
     expect(wizardConfig.assistant.model.model_id).toBeTruthy();
   });
+
+  it('picks the smaller model and dtype on iOS to fit its tighter WebGPU memory limits', () => {
+    const iPhoneNavigator = {
+      userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Safari/604.1'
+    };
+    expect(modelIdFor(DEFAULT_SLM_CONFIG, iPhoneNavigator)).toBe(DEFAULT_SLM_CONFIG.ios_model_id);
+    expect(webgpuDtypeFor(DEFAULT_SLM_CONFIG, iPhoneNavigator)).toBe(DEFAULT_SLM_CONFIG.ios_webgpu_dtype);
+    expect(modelIdFor(DEFAULT_SLM_CONFIG, iPhoneNavigator)).not.toBe(DEFAULT_SLM_CONFIG.model_id);
+  });
+
+  it('uses the default model and dtype off iOS', () => {
+    const desktopNavigator = { userAgent: 'Mozilla/5.0 Chrome/120 Safari/537.36' };
+    expect(modelIdFor(DEFAULT_SLM_CONFIG, desktopNavigator)).toBe(DEFAULT_SLM_CONFIG.model_id);
+    expect(webgpuDtypeFor(DEFAULT_SLM_CONFIG, desktopNavigator)).toBe(DEFAULT_SLM_CONFIG.webgpu_dtype);
+  });
 });
 
 describe('runtime assets', () => {
@@ -213,13 +230,13 @@ describe('runtime helpers', () => {
     expect(supportsWebGPU(null)).toBe(false);
   });
 
-  it('treats iOS Safari as unsupported even when navigator.gpu is present, since it crashes after loading the model', () => {
+  it('supports iOS Safari when navigator.gpu is present, since a smaller model is used there', () => {
     const iPhoneNavigator = {
       gpu: {},
       userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Safari/604.1'
     };
-    expect(supportsWebGPU(iPhoneNavigator)).toBe(false);
-    expect(preferredDevice(iPhoneNavigator)).toBe('wasm');
+    expect(supportsWebGPU(iPhoneNavigator)).toBe(true);
+    expect(preferredDevice(iPhoneNavigator)).toBe('webgpu');
   });
 
   it('reads the assistant message out of the generated output', () => {
