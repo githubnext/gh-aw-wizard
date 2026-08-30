@@ -62,6 +62,7 @@ const COPY_SUCCESS_ELEMENTS = {
 const FOOTER_ELEMENTS = {
   source: ['footer-source', 'footer-source-label'],
   report_issue: ['footer-report-issue', 'footer-report-issue'],
+  evals: ['footer-evals', 'footer-evals'],
   copy_logs: ['footer-copy-logs', 'footer-copy-logs'],
   terms: ['footer-terms', 'footer-terms'],
   privacy: ['footer-privacy', 'footer-privacy'],

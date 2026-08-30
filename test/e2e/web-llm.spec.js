@@ -100,8 +100,8 @@ test('loads the secret eval control only with evals=1', async ({ page }) => {
 
   await page.goto('/');
   await expect(page.locator('#wizard-evals')).toHaveCount(0);
-
-  await page.goto('/?evals=1');
+  await page.getByRole('link', { name: 'Run evals' }).click();
+  await expect(page).toHaveURL(/\?evals=1$/);
   await page.getByRole('button', { name: 'Create Your Agentic Workflow' }).click();
   const evals = page.getByRole('button', { name: 'Run evals' });
   await expect(evals).toBeVisible();

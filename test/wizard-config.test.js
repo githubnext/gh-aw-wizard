@@ -62,6 +62,7 @@ describe('wizard configuration', () => {
       'copy-modal-close': { setAttribute: vi.fn() },
       'footer-source': { href: '' },
       'footer-source-label': { textContent: '' },
+      'footer-evals': { href: '', textContent: '' },
       'footer-copy-logs': { textContent: '', dataset: {} },
       'footer-security': { href: '', textContent: '' }
     };
@@ -92,6 +93,10 @@ describe('wizard configuration', () => {
         source: {
           url: './source',
           label: 'Source code'
+        },
+        evals: {
+          url: './?evals=1',
+          label: 'Evaluate model'
         },
         copy_logs: {
           label: 'Copy support logs',
@@ -126,6 +131,10 @@ describe('wizard configuration', () => {
       href: 'https://custom.example/config/source'
     });
     expect(elements['footer-source-label'].textContent).toBe('Source code');
+    expect(elements['footer-evals']).toMatchObject({
+      href: 'https://custom.example/config/?evals=1',
+      textContent: 'Evaluate model'
+    });
     expect(elements['footer-copy-logs']).toMatchObject({
       textContent: 'Copy support logs',
       dataset: {
