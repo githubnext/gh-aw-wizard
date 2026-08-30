@@ -29,9 +29,10 @@ An embedding application can instead call `initWizard({ configUrl })`. Cross-ori
 pattern, and engine endpoints must allow the embedding origin with CORS headers. Option IDs should
 match definitions in the configured pattern library's `workflow-generation.json`.
 
-The site loads its third-party browser assets — Primer CSS and the scenario assistant runtime
-(transformers.js plus the onnxruntime-web wasm files) — from the published site rather than a CDN, so
-a customized deployment must publish `dist/primer/` and `dist/slm/` alongside the rest of the site.
+The site loads its third-party browser assets — Primer CSS and the WebLLM scenario assistant
+runtime — from the published site rather than a CDN, so a customized deployment must publish
+`dist/primer/` and `dist/slm/` alongside the rest of the site. WebLLM downloads and caches the
+selected model from its prebuilt model catalog on first use.
 
 ## Development
 

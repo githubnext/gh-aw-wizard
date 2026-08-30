@@ -14,21 +14,18 @@ import {
   scenarioCatalog,
   scenarioCatalogText,
   isIOS,
-  isSafari,
   runtimeUrls,
   scenarioLabel,
   selectScenario,
-  slmConfig,
-  webgpuDtypeFor
+  slmConfig
 } from '../src/js/slm.js';
-import { cacheKeyFor, serializeHeaders } from '../src/js/slm-cache.js';
 import {
   clearWebLlmDiagnostics,
   createWebLlmLogger,
   safeLogValue,
   webLlmDiagnosticText
 } from '../src/js/slm-logger.js';
-import { extractAssistantText, preferredDevice, supportsWebGPU } from '../src/js/slm-runner.js';
+import { extractAssistantText, supportsWebGPU } from '../src/js/slm-runner.js';
 import { PACKAGES, vendoredFiles } from '../scripts/fetch-vendor-assets.mjs';
 
 const html = readFileSync(fileURLToPath(new URL('../src/index.html', import.meta.url)), 'utf8');
@@ -116,19 +113,17 @@ describe('keyword fallback', () => {
 });
 
 describe('loading progress', () => {
-  it('averages per-file download ratios', () => {
+  it('converts WebLLM loading ratios to percentages', () => {
     const tracker = progressTracker();
-    expect(tracker.update({ status: 'initiate', file: 'a.onnx' })).toBe(0);
-    tracker.update({ status: 'progress', file: 'b.json', progress: 50 });
-    expect(tracker.percent()).toBe(25);
-    tracker.update({ status: 'done', file: 'a.onnx' });
-    tracker.update({ status: 'done', file: 'b.json' });
+    expect(tracker.update({ progress: 0 })).toBe(0);
+    expect(tracker.update({ progress: 0.42 })).toBe(42);
+    tracker.update({ progress: 1 });
     expect(tracker.percent()).toBe(100);
   });
 
   it('labels the current loading phase', () => {
-    expect(progressLabel({ status: 'progress', file: 'model.onnx' }, 42)).toBe('Downloading model model.onnx — 42%');
-    expect(progressLabel({ status: 'ready' }, 100)).toBe('Model ready');
+    expect(progressLabel({ progress: 0.42, text: 'Fetching model parameters' }, 42)).toBe('Fetching model parameters');
+    expect(progressLabel({ progress: 1, text: 'Finished' }, 100)).toBe('Model ready');
   });
 });
 
@@ -141,7 +136,7 @@ describe('model configuration', () => {
     expect(slmConfig({ assistant: { model: { model_id: 'x', enabled: false } } })).toMatchObject({
       model_id: 'x',
       enabled: false,
-      max_new_tokens: DEFAULT_SLM_CONFIG.max_new_tokens
+      max_tokens: DEFAULT_SLM_CONFIG.max_tokens
     });
   });
 
@@ -151,30 +146,24 @@ describe('model configuration', () => {
     expect(wizardConfig.assistant.model.model_id).toBeTruthy();
   });
 
-  it('picks the smaller model and dtype on iOS to fit its tighter WebGPU memory limits', () => {
+  it('picks the smaller WebLLM prebuilt on iOS to fit its tighter WebGPU memory limits', () => {
     const iPhoneNavigator = {
       userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Safari/604.1'
     };
     expect(modelIdFor(DEFAULT_SLM_CONFIG, iPhoneNavigator)).toBe(DEFAULT_SLM_CONFIG.ios_model_id);
-    expect(webgpuDtypeFor(DEFAULT_SLM_CONFIG, iPhoneNavigator)).toBe(DEFAULT_SLM_CONFIG.ios_webgpu_dtype);
     expect(modelIdFor(DEFAULT_SLM_CONFIG, iPhoneNavigator)).not.toBe(DEFAULT_SLM_CONFIG.model_id);
   });
 
-  it('uses the default model and dtype off iOS', () => {
+  it('uses the default WebLLM prebuilt off iOS', () => {
     const desktopNavigator = { userAgent: 'Mozilla/5.0 Chrome/120 Safari/537.36' };
     expect(modelIdFor(DEFAULT_SLM_CONFIG, desktopNavigator)).toBe(DEFAULT_SLM_CONFIG.model_id);
-    expect(webgpuDtypeFor(DEFAULT_SLM_CONFIG, desktopNavigator)).toBe(DEFAULT_SLM_CONFIG.webgpu_dtype);
   });
 });
 
 describe('runtime assets', () => {
   it('serves the runtime from the site instead of a CDN', () => {
     const configured = [
-      wizardConfig.assistant.model.module_url,
-      wizardConfig.assistant.model.wasm_paths.mjs,
-      wizardConfig.assistant.model.wasm_paths.wasm,
-      wizardConfig.assistant.model.safari_wasm_paths.mjs,
-      wizardConfig.assistant.model.safari_wasm_paths.wasm
+      wizardConfig.assistant.model.module_url
     ];
     configured.forEach((url) => {
       expect(url).not.toMatch(/^https?:/);
@@ -184,36 +173,17 @@ describe('runtime assets', () => {
 
   it('vendors every runtime file the wizard configuration points at', () => {
     const vendored = vendoredFiles();
-    [
-      wizardConfig.assistant.model.module_url,
-      wizardConfig.assistant.model.wasm_paths.mjs,
-      wizardConfig.assistant.model.wasm_paths.wasm,
-      wizardConfig.assistant.model.safari_wasm_paths.mjs,
-      wizardConfig.assistant.model.safari_wasm_paths.wasm
-    ].forEach((url) => {
+    [wizardConfig.assistant.model.module_url].forEach((url) => {
       expect(vendored).toContain(url);
     });
-    expect(PACKAGES.map((pkg) => pkg.name)).toContain('@huggingface/transformers');
-    expect(PACKAGES.map((pkg) => pkg.name)).toContain('onnxruntime-web');
+    expect(PACKAGES.map((pkg) => pkg.name)).toContain('@mlc-ai/web-llm');
+    expect(PACKAGES.map((pkg) => pkg.name)).not.toContain('@huggingface/transformers');
+    expect(PACKAGES.map((pkg) => pkg.name)).not.toContain('onnxruntime-web');
   });
 
   it('resolves runtime urls against the page so sub-path deployments work', () => {
     const urls = runtimeUrls(DEFAULT_SLM_CONFIG, { baseUrl: 'https://example.github.io/gh-aw-wizard/' });
-    expect(urls.module).toBe('https://example.github.io/gh-aw-wizard/slm/transformers.min.js');
-    expect(urls.wasmPaths).toEqual({
-      mjs: 'https://example.github.io/gh-aw-wizard/slm/ort/ort-wasm-simd-threaded.asyncify.mjs',
-      wasm: 'https://example.github.io/gh-aw-wizard/slm/ort/ort-wasm-simd-threaded.asyncify.wasm'
-    });
-  });
-
-  it('uses the non-asyncify runtime on Safari', () => {
-    const navigatorImpl = {
-      userAgent: 'Mozilla/5.0 (Macintosh) AppleWebKit/605.1.15 Version/17.0 Safari/605.1.15'
-    };
-    expect(isSafari(navigatorImpl)).toBe(true);
-    expect(isSafari({ userAgent: 'Mozilla/5.0 Chrome/120 Safari/537.36' })).toBe(false);
-    const urls = runtimeUrls(DEFAULT_SLM_CONFIG, { navigator: navigatorImpl, baseUrl: 'https://example.com/' });
-    expect(urls.wasmPaths.wasm).toBe('https://example.com/slm/ort/ort-wasm-simd-threaded.wasm');
+    expect(urls.module).toBe('https://example.github.io/gh-aw-wizard/slm/webllm.js');
   });
 
   it('detects iOS (including iPadOS reporting as Macintosh)', () => {
@@ -225,63 +195,33 @@ describe('runtime assets', () => {
 });
 
 describe('runtime helpers', () => {
-  it('prefers WebGPU when the browser exposes it', () => {
-    expect(preferredDevice({ gpu: {} })).toBe('webgpu');
-    expect(preferredDevice({})).toBe('wasm');
-  });
-
   it('detects WebGPU support', () => {
     expect(supportsWebGPU({ gpu: {} })).toBe(true);
     expect(supportsWebGPU({})).toBe(false);
     expect(supportsWebGPU(null)).toBe(false);
   });
 
-  it('uses the compatible WASM backend on iOS despite navigator.gpu', () => {
-    const iPhoneNavigator = {
-      gpu: {},
-      userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Safari/604.1'
-    };
-    expect(supportsWebGPU(iPhoneNavigator)).toBe(true);
-    expect(preferredDevice(iPhoneNavigator)).toBe('wasm');
-    const iPadNavigator = {
-      gpu: {},
-      userAgent: 'Mozilla/5.0 (iPad; CPU OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Safari/604.1'
-    };
-    expect(supportsWebGPU(iPadNavigator)).toBe(true);
-    expect(preferredDevice(iPadNavigator)).toBe('wasm');
-  });
-
-  it('reads the assistant message out of the generated output', () => {
-    expect(extractAssistantText([{ generated_text: 'issue-triage' }])).toBe('issue-triage');
-    expect(extractAssistantText([{
-      generated_text: [
-        { role: 'user', content: 'label issues' },
-        { role: 'assistant', content: 'issue-triage' }
-      ]
-    }])).toBe('issue-triage');
+  it('reads the assistant message out of a WebLLM chat completion', () => {
+    expect(extractAssistantText({
+      choices: [{ message: { role: 'assistant', content: 'issue-triage' } }]
+    })).toBe('issue-triage');
     expect(extractAssistantText(null)).toBe('');
   });
 });
 
-describe('model weight cache', () => {
-  it('derives a cache key from a string or request', () => {
-    expect(cacheKeyFor('https://example.com/model.onnx')).toBe('https://example.com/model.onnx');
-    expect(cacheKeyFor({ url: 'https://example.com/config.json' })).toBe('https://example.com/config.json');
-  });
-
-  describe('WebLLM diagnostics', () => {
-    it('redacts sensitive fields, known token formats, and URL query parameters', () => {
+describe('WebLLM diagnostics', () => {
+  it('redacts sensitive fields, known token formats, and URL query parameters', () => {
       const value = safeLogValue({
         token: 'do-not-log',
-        message: 'authorization=private https://example.com/model.onnx?signature=private#fragment',
+        message: 'authorization=private https://example.com/model?signature=private#fragment',
         github: 'ghp_123456789012345678901234567890'
       });
       expect(value.token).toBe('[redacted]');
-      expect(value.message).toBe('authorization=[redacted] https://example.com/model.onnx');
+      expect(value.message).toBe('authorization=[redacted] https://example.com/model');
       expect(value.github).toBe('[redacted]');
-    });
+  });
 
-    it('uses collapsible console groups and publishes sanitized records to extensions', () => {
+  it('uses collapsible console groups and publishes sanitized records to extensions', () => {
       const calls = [];
       const records = [];
       const consoleImpl = {
@@ -307,9 +247,9 @@ describe('model weight cache', () => {
       })]);
       expect(records[0]).not.toHaveProperty('timestamp');
       expect(records[0]).not.toHaveProperty('sid');
-    });
+  });
 
-    it('falls back to console.log and records operation duration', () => {
+  it('falls back to console.log and records operation duration', () => {
       const calls = [];
       const records = [];
       let clock = 10;
@@ -329,9 +269,9 @@ describe('model weight cache', () => {
         ms: 25,
         scn: 'issue-triage'
       });
-    });
+  });
 
-    it('does not interrupt execution when a console or extension fails', () => {
+  it('does not interrupt execution when a console or extension fails', () => {
       const logger = createWebLlmLogger({
         console: {
           log() { throw new Error('console unavailable'); }
@@ -340,9 +280,9 @@ describe('model weight cache', () => {
       });
 
       expect(() => logger.log('diagnostic.test')).not.toThrow();
-    });
+  });
 
-    it('retains sanitized records as newline-delimited JSON for copying', () => {
+  it('retains sanitized records as newline-delimited JSON for copying', () => {
       clearWebLlmDiagnostics();
       const logger = createWebLlmLogger({ console: null, diagnosticSession: 'test-session' });
       logger.error('model.failed', { token: 'private', reason: 'network' });
@@ -354,49 +294,38 @@ describe('model weight cache', () => {
         token: '[redacted]',
         reason: 'network'
       }]);
-    });
+  });
 
-    it('replaces a repeated URL directory with a compact reference into a session-wide registry', () => {
+  it('replaces a repeated URL directory with a compact reference into a session-wide registry', () => {
       clearWebLlmDiagnostics();
       const logger = createWebLlmLogger({ console: null, diagnosticSession: 'test-session' });
-      logger.log('generator.load.started', {
-        moduleUrl: 'https://example.com/vendor/transformers/transformers.min.js',
-        wasmPaths: {
-          mjs: 'https://example.com/vendor/transformers/ort-wasm-simd.mjs',
-          wasm: 'https://example.com/vendor/transformers/ort-wasm-simd.wasm'
-        }
+      logger.log('engine.load.started', {
+        moduleUrl: 'https://example.com/slm/webllm.js',
+        modelUrl: 'https://example.com/slm/model.bin',
+        modelLibUrl: 'https://example.com/slm/model.wasm'
       });
 
       const [record] = webLlmDiagnosticText().split('\n').map((entry) => JSON.parse(entry));
-      expect(record.mod).toBe('https://example.com/vendor/transformers/transformers.min.js');
-      expect(record.refs).toEqual({ 0: 'https://example.com/vendor/transformers/' });
-      expect(record.wasm).toEqual({
-        mjs: '#0ort-wasm-simd.mjs',
-        wasm: '#0ort-wasm-simd.wasm'
-      });
-    });
-
-    it('reuses a previously registered URL reference across records without repeating the mapping', () => {
-      clearWebLlmDiagnostics();
-      const logger = createWebLlmLogger({ console: null, diagnosticSession: 'test-session' });
-      logger.log('entry.hit', { key: 'https://example.com/vendor/transformers/shard-1.onnx' });
-      logger.log('entry.hit', { key: 'https://example.com/vendor/transformers/shard-2.onnx' });
-      logger.log('entry.hit', { key: 'https://example.com/vendor/transformers/shard-3.onnx' });
-
-      const [first, second, third] = webLlmDiagnosticText().split('\n').map((entry) => JSON.parse(entry));
-      expect(first.key).toBe('https://example.com/vendor/transformers/shard-1.onnx');
-      expect(first.refs).toBeUndefined();
-      expect(second.refs).toEqual({ 0: 'https://example.com/vendor/transformers/' });
-      expect(second.key).toBe('#0shard-2.onnx');
-      expect(third.refs).toBeUndefined();
-      expect(third.key).toBe('#0shard-3.onnx');
-    });
+      expect(record.mod).toBe('https://example.com/slm/webllm.js');
+      expect(record.refs).toEqual({ 0: 'https://example.com/slm/' });
+      expect(record.modelUrl).toBe('#0model.bin');
+      expect(record.modelLibUrl).toBe('#0model.wasm');
   });
 
-  it('serializes headers with lowercase names', () => {
-    const headers = { forEach: (fn) => { fn('application/json', 'Content-Type'); } };
-    expect(serializeHeaders(headers)).toEqual({ 'content-type': 'application/json' });
-    expect(serializeHeaders(null)).toEqual({});
+  it('reuses a previously registered URL reference across records without repeating the mapping', () => {
+      clearWebLlmDiagnostics();
+      const logger = createWebLlmLogger({ console: null, diagnosticSession: 'test-session' });
+      logger.log('entry.hit', { key: 'https://example.com/models/shard-1.bin' });
+      logger.log('entry.hit', { key: 'https://example.com/models/shard-2.bin' });
+      logger.log('entry.hit', { key: 'https://example.com/models/shard-3.bin' });
+
+      const [first, second, third] = webLlmDiagnosticText().split('\n').map((entry) => JSON.parse(entry));
+      expect(first.key).toBe('https://example.com/models/shard-1.bin');
+      expect(first.refs).toBeUndefined();
+      expect(second.refs).toEqual({ 0: 'https://example.com/models/' });
+      expect(second.key).toBe('#0shard-2.bin');
+      expect(third.refs).toBeUndefined();
+      expect(third.key).toBe('#0shard-3.bin');
   });
 });
 

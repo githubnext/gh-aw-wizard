@@ -243,7 +243,7 @@ export function initScenarioAssistant(context) {
       setStatus(copy.no_match);
     }).catch((error) => {
       setProgress(null);
-      // The model may be unavailable (offline, blocked CDN, unsupported
+      // The model may be unavailable (offline, blocked model host, unsupported
       // browser); keep the button useful with the deterministic matcher.
       const fallback = keywordScenarioMatch(request, scenarios);
       if (fallback && selectArchetypeRadio(fallback)) {
