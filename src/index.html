@@ -123,36 +123,36 @@
     <section class="workflow-recipe" aria-labelledby="workflow-recipe-title">
       <h2 class="visually-hidden" id="workflow-recipe-title">Agentic workflow wizard</h2>
       <div class="recipe-clauses" id="progress-bar" aria-live="polite">
-        <!-- Step 1: Why -->
+        <!-- Step 1: Archetype -->
         <div class="recipe-item active is-placeholder">
           <button class="recipe-clause progress-step active is-placeholder" type="button" data-step="1" aria-expanded="true" aria-controls="step-1" aria-current="step">
             <span class="step-indicator" aria-hidden="true">1</span>
+            <span class="recipe-key recipe-key-what">What</span>
+            <span class="recipe-value" id="summary-purpose">choose what the agent should do</span>
+          </button>
+          <section class="wizard-step active" id="step-1">
+            <div class="option-group archetype-grid" id="archetype-options" role="radiogroup" aria-label="What the agent should do"></div>
+            <div class="conditional-field" id="custom-description-field">
+              <label for="custom-description">Describe what you want the workflow to do:</label>
+              <textarea class="text-area" id="custom-description" placeholder="e.g., Review pull requests for security vulnerabilities and leave comments on risky patterns…"></textarea>
+            </div>
+          </section>
+        </div>
+
+        <!-- Step 2: Why -->
+        <div class="recipe-item is-placeholder">
+          <button class="recipe-clause progress-step is-placeholder" type="button" data-step="2" aria-expanded="false" aria-controls="step-2">
+            <span class="step-indicator" aria-hidden="true">2</span>
             <span class="recipe-key recipe-key-intent" id="intent-step-label">Why</span>
             <span class="recipe-value" id="summary-intent">tell us your intent</span>
           </button>
-          <section class="wizard-step active" id="step-1">
+          <section class="wizard-step" id="step-2">
             <div class="conditional-field visible" id="intent-field">
               <label for="intent-description" id="intent-label">Tell us your intent so that we can generate graders and evals</label>
               <textarea class="text-area" id="intent-description" placeholder="e.g., Keep our release notes accurate so on-call engineers can triage incidents faster…"></textarea>
               <p class="field-hint" id="intent-hint">We will add your intent to the prompt and generate graders and BinEval evaluations for it.</p>
             </div>
             <button class="btn btn-primary" id="btn-intent-continue" type="button">Continue</button>
-          </section>
-        </div>
-
-        <!-- Step 2: Archetype -->
-        <div class="recipe-item is-placeholder">
-          <button class="recipe-clause progress-step is-placeholder" type="button" data-step="2" aria-expanded="false" aria-controls="step-2">
-            <span class="step-indicator" aria-hidden="true">2</span>
-            <span class="recipe-key recipe-key-what">What</span>
-            <span class="recipe-value" id="summary-purpose">choose what the agent should do</span>
-          </button>
-          <section class="wizard-step" id="step-2">
-            <div class="option-group archetype-grid" id="archetype-options" role="radiogroup" aria-label="What the agent should do"></div>
-            <div class="conditional-field" id="custom-description-field">
-              <label for="custom-description">Describe what you want the workflow to do:</label>
-              <textarea class="text-area" id="custom-description" placeholder="e.g., Review pull requests for security vulnerabilities and leave comments on risky patterns…"></textarea>
-            </div>
           </section>
         </div>
 
