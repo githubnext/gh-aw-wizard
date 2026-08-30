@@ -342,14 +342,15 @@ describe('model weight cache', () => {
       const logger = createWebLlmLogger({ console: null, diagnosticSession: 'test-session' });
       logger.error('model.failed', { token: 'private', reason: 'network' });
 
-      expect(JSON.parse(webLlmDiagnosticText())).toEqual({
+      const records = webLlmDiagnosticText().split('\n').map((record) => JSON.parse(record));
+      expect(records).toEqual([{
         timestamp: expect.any(String),
         level: 'error',
         event: 'model.failed',
         diagnosticSession: 'test-session',
         token: '[redacted]',
         reason: 'network'
-      });
+      }]);
     });
   });
 
