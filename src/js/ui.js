@@ -20,6 +20,7 @@ import {
   registerBuiltInEngines,
   registerDefinitionEngines
 } from './engines.js';
+import { initScenarioAssistant } from './slm-ui.js';
 import {
   WIZARD_CONFIG_URL,
   applyPageContent,
@@ -75,12 +76,24 @@ export function initWizard(options) {
     registerDefinitionEngines(engines);
     addDefinitionEngineOptions(engines);
     bindFormEvents();
+    initScenarioAssistant({
+      wizardConfig,
+      patterns: () => patterns,
+      extraScenarios: () => customScenario(wizardConfig)
+    });
     renderWorkflowSummary();
   });
   bindNavigation();
   initNavigationHistory();
   initLanding(revealWhyPane);
   return ready;
+}
+
+// The custom card is defined by the wizard config rather than the pattern
+// library, so surface it to the assistant as a selectable scenario too.
+function customScenario(config) {
+  const custom = config && config.archetypes ? config.archetypes.custom : null;
+  return custom ? [custom] : [];
 }
 
 function archetypeIconId(archetypeId, data) {

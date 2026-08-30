@@ -3,3 +3,4 @@ data/scan-results.json
 node_modules/
 dist/
 test-results/
+vendor/

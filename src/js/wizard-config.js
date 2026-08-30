@@ -83,6 +83,13 @@ function safeUrl(url, configUrl) {
   }
 }
 
+const ASSISTANT_ELEMENTS = {
+  button: 'wizard-assist-button-label',
+  label: 'wizard-assist-label',
+  run_button: 'btn-wizard-assist-run',
+  hint: 'wizard-assist-hint'
+};
+
 const INTENT_ELEMENTS = {
   label: 'intent-label',
   hint: 'intent-hint'
@@ -117,6 +124,13 @@ export function applyPageContent(config, configUrl) {
   const intentField = document.getElementById('intent-description');
   if (intentField && typeof intent.field_placeholder === 'string') {
     intentField.setAttribute('placeholder', intent.field_placeholder);
+  }
+
+  const assistant = config && config.assistant ? config.assistant : {};
+  Object.entries(ASSISTANT_ELEMENTS).forEach(([key, id]) => setText(id, assistant[key]));
+  const assistantField = document.getElementById('wizard-assist-input');
+  if (assistantField && typeof assistant.field_placeholder === 'string') {
+    assistantField.setAttribute('placeholder', assistant.field_placeholder);
   }
 
   const copySuccess = config && config.copy_success ? config.copy_success : {};

@@ -7,7 +7,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "predev": "node scripts/fetch-vendor-assets.mjs",
+    "prebuild": "node scripts/fetch-vendor-assets.mjs",
     "build": "vite build",
+    "vendor": "node scripts/fetch-vendor-assets.mjs --force",
     "preview": "vite preview",
     "generate": "node src/js/cli.js",
     "lint": "eslint .",
