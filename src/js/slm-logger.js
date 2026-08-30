@@ -10,6 +10,7 @@ export function webLlmDiagnosticText() {
 
 export function clearWebLlmDiagnostics() {
   diagnosticRecords.length = 0;
+  resetUrlRefs();
 }
 
 function redactText(value) {
@@ -72,64 +73,68 @@ export function safeLogValue(value, key, depth) {
 }
 
 const URL_PATTERN = /^https?:\/\//i;
-const MIN_COMMON_PREFIX_LENGTH = 20;
-const PREFIX_MARKER = '\u2026/';
+const MIN_PREFIX_LENGTH = 20;
+const REF_MARKER = '#';
+const urlRefRegistry = new Map();
+const seenUrlPrefixes = new Set();
+let urlRefCounter = 0;
 
-function collectUrls(value, found) {
-  if (typeof value === 'string') {
-    if (URL_PATTERN.test(value)) found.push(value);
-    return;
-  }
-  if (Array.isArray(value)) {
-    value.forEach((item) => collectUrls(item, found));
-    return;
-  }
-  if (value && typeof value === 'object') {
-    Object.keys(value).forEach((key) => collectUrls(value[key], found));
-  }
+function resetUrlRefs() {
+  urlRefRegistry.clear();
+  seenUrlPrefixes.clear();
+  urlRefCounter = 0;
 }
 
-function longestCommonPrefix(strings) {
-  let prefix = strings[0];
-  for (let i = 1; i < strings.length && prefix; i++) {
-    const other = strings[i];
-    let end = 0;
-    while (end < prefix.length && end < other.length && prefix[end] === other[end]) end++;
-    prefix = prefix.slice(0, end);
-  }
-  return prefix;
+// Directory portion of a URL (everything up to and including the last '/'),
+// used as the key for interning repeated hosts/paths across the whole
+// diagnostic session (CDN/vendor directories, model shard hosts, cache keys).
+function urlDirname(url) {
+  const lastSlash = url.lastIndexOf('/');
+  return lastSlash > 8 ? url.slice(0, lastSlash + 1) : null;
 }
 
-function replacePrefix(value, prefix) {
-  if (typeof value === 'string') {
-    return value.startsWith(prefix) ? PREFIX_MARKER + value.slice(prefix.length) : value;
+// The first time a URL directory is seen it is left untouched (a single
+// occurrence gains nothing from a reference). From the second occurrence
+// onward it is assigned a short, session-stable id so later records reuse it
+// via "#<id>" instead of repeating the full host/path; the mapping itself is
+// only emitted once, on the record that introduces the reference.
+function compactUrl(url, newRefs) {
+  const prefix = urlDirname(url);
+  if (!prefix || prefix.length < MIN_PREFIX_LENGTH) return url;
+  const existingId = urlRefRegistry.get(prefix);
+  if (existingId !== undefined) return `${REF_MARKER}${existingId}${url.slice(prefix.length)}`;
+  if (!seenUrlPrefixes.has(prefix)) {
+    seenUrlPrefixes.add(prefix);
+    return url;
   }
-  if (Array.isArray(value)) return value.map((item) => replacePrefix(item, prefix));
+  const id = urlRefCounter++;
+  urlRefRegistry.set(prefix, id);
+  newRefs[id] = prefix;
+  return `${REF_MARKER}${id}${url.slice(prefix.length)}`;
+}
+
+function compactUrlsInValue(value, newRefs) {
+  if (typeof value === 'string') return URL_PATTERN.test(value) ? compactUrl(value, newRefs) : value;
+  if (Array.isArray(value)) return value.map((item) => compactUrlsInValue(item, newRefs));
   if (value && typeof value === 'object') {
     const result = {};
     Object.keys(value).forEach((key) => {
-      result[key] = replacePrefix(value[key], prefix);
+      result[key] = compactUrlsInValue(value[key], newRefs);
     });
     return result;
   }
   return value;
 }
 
-// URLs commonly repeat a long base path (CDN/vendor directories, model shard
-// hosts), which wastes space without helping the LLM. When a record contains
-// two or more URLs sharing a long prefix, collapse the shared portion once.
-function compactUrlPrefixes(record) {
-  const urls = [];
-  collectUrls(record, urls);
-  const unique = [...new Set(urls)];
-  if (unique.length < 2) return record;
-  let prefix = longestCommonPrefix(unique);
-  const lastSlash = prefix.lastIndexOf('/');
-  if (lastSlash < 8) return record;
-  prefix = prefix.slice(0, lastSlash + 1);
-  if (prefix.length < MIN_COMMON_PREFIX_LENGTH) return record;
-  const compacted = replacePrefix(record, prefix);
-  return 'urlBase' in compacted ? compacted : { ...compacted, urlBase: prefix };
+// Replaces repeated URLs with a short "#<id>" reference into a session-wide
+// registry instead of repeating the same host/path across many records. The
+// mapping for a given id is only included the first time it is used (in
+// `refs`), so later records citing the same id stay compact.
+function compactUrls(record) {
+  const newRefs = {};
+  const compacted = compactUrlsInValue(record, newRefs);
+  if (Object.keys(newRefs).length === 0) return compacted;
+  return { ...compacted, refs: newRefs };
 }
 
 function callConsole(consoleImpl, method, args) {
@@ -170,7 +175,7 @@ export function createWebLlmLogger(options) {
       evt: redactText(event),
       sid
     };
-    record = compactUrlPrefixes(record);
+    record = compactUrls(record);
     diagnosticRecords.push(safeLogValue(record, ''));
     if (diagnosticRecords.length > MAX_RECORDS) diagnosticRecords.shift();
     if (onRecord) {

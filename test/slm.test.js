@@ -351,7 +351,7 @@ describe('model weight cache', () => {
       }]);
     });
 
-    it('collapses a shared URL prefix across a record into a single base field', () => {
+    it('replaces a repeated URL directory with a compact reference into a session-wide registry', () => {
       clearWebLlmDiagnostics();
       const logger = createWebLlmLogger({ console: null, diagnosticSession: 'test-session' });
       logger.log('generator.load.started', {
@@ -363,12 +363,28 @@ describe('model weight cache', () => {
       });
 
       const [record] = webLlmDiagnosticText().split('\n').map((entry) => JSON.parse(entry));
-      expect(record.urlBase).toBe('https://example.com/vendor/transformers/');
-      expect(record.moduleUrl).toBe('\u2026/transformers.min.js');
+      expect(record.moduleUrl).toBe('https://example.com/vendor/transformers/transformers.min.js');
+      expect(record.refs).toEqual({ 0: 'https://example.com/vendor/transformers/' });
       expect(record.wasmPaths).toEqual({
-        mjs: '\u2026/ort-wasm-simd.mjs',
-        wasm: '\u2026/ort-wasm-simd.wasm'
+        mjs: '#0ort-wasm-simd.mjs',
+        wasm: '#0ort-wasm-simd.wasm'
       });
+    });
+
+    it('reuses a previously registered URL reference across records without repeating the mapping', () => {
+      clearWebLlmDiagnostics();
+      const logger = createWebLlmLogger({ console: null, diagnosticSession: 'test-session' });
+      logger.log('entry.hit', { key: 'https://example.com/vendor/transformers/shard-1.onnx' });
+      logger.log('entry.hit', { key: 'https://example.com/vendor/transformers/shard-2.onnx' });
+      logger.log('entry.hit', { key: 'https://example.com/vendor/transformers/shard-3.onnx' });
+
+      const [first, second, third] = webLlmDiagnosticText().split('\n').map((entry) => JSON.parse(entry));
+      expect(first.key).toBe('https://example.com/vendor/transformers/shard-1.onnx');
+      expect(first.refs).toBeUndefined();
+      expect(second.refs).toEqual({ 0: 'https://example.com/vendor/transformers/' });
+      expect(second.key).toBe('#0shard-2.onnx');
+      expect(third.refs).toBeUndefined();
+      expect(third.key).toBe('#0shard-3.onnx');
     });
   });
 
