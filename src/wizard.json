@@ -259,7 +259,7 @@
     "intent": {
       "placeholder": "tell us your intent",
       "label": "Tell us your intent so that we can generate graders and evals",
-      "hint": "We will add your goal to the prompt and generate graders and BinEval evaluations for it.",
+      "hint": "We will add your intent to the prompt and generate graders and BinEval evaluations for it.",
       "field_placeholder": "e.g., Keep our release notes accurate so on-call engineers can triage incidents faster…"
     }
   },
