@@ -23,6 +23,7 @@ function fallbackCopy(text, documentImpl) {
 }
 
 const MAX_COPY_LENGTH = 64 * 1024;
+let assistPrompt = '';
 
 // Keeps the most recent diagnostics (the ones relevant to what just went
 // wrong) and drops the older, less useful prefix rather than truncating the
@@ -111,8 +112,6 @@ function bindAssistPromptCopy() {
   button.dataset.assistCopyBound = 'true';
   button.dataset.defaultLabel = button.dataset.defaultLabel || button.textContent || 'Copy prompt';
   button.addEventListener('click', async () => {
-    const promptNode = element('assist-modal-request');
-    const text = promptNode ? promptNode.textContent : '';
     const navigatorImpl = typeof navigator !== 'undefined' ? navigator : null;
     const documentImpl = typeof document !== 'undefined' ? document : null;
     const defaultLabel = button.dataset.defaultLabel || 'Copy prompt';
@@ -120,9 +119,9 @@ function bindAssistPromptCopy() {
     const failureLabel = button.dataset.failureLabel || 'Copy failed';
     try {
       if (navigatorImpl && navigatorImpl.clipboard && typeof navigatorImpl.clipboard.writeText === 'function') {
-        await navigatorImpl.clipboard.writeText(text);
+        await navigatorImpl.clipboard.writeText(assistPrompt);
       } else if (documentImpl && documentImpl.body && typeof documentImpl.createElement === 'function') {
-        fallbackCopyText(text, documentImpl);
+        fallbackCopyText(assistPrompt, documentImpl);
       } else {
         return;
       }
@@ -150,9 +149,7 @@ export function showAssistantResult(summary) {
   bindAssistPromptCopy();
   set('assist-modal-eyebrow', summary.eyebrow);
   set('assist-modal-title', summary.label);
-  set('assist-modal-description', summary.description);
-  set('assist-modal-request-label', summary.requestLabel);
-  set('assist-modal-request', summary.request);
+  assistPrompt = summary.request || '';
   const copyButton = element('assist-modal-copy');
   if (copyButton) {
     copyButton.textContent = summary.copyLabel || summary.result_copy_label || copyButton.dataset.defaultLabel || 'Copy prompt';
