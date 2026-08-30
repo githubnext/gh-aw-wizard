@@ -18,7 +18,7 @@
 // --eval-url / --optimizer-url at it.
 
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { dirname } from 'node:path';
 
 import { loadPatternsFromDir } from '../src/js/patterns-node.js';
@@ -149,7 +149,7 @@ async function evaluatePrompt(options, scenarios, instructions, corpus) {
       return { answer, scenario: selectScenario(answer, request, scenarios) };
     }
   });
-  return { ...result, rows: result.rows, traces: rows, instructions };
+  return { ...result, traces: rows, instructions };
 }
 
 async function proposeInstructions(options, instructions, catalogText, evaluation) {
@@ -320,7 +320,7 @@ export async function main(argv) {
   log(`best prompt saved to ${options.state}`);
 }
 
-if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   main(process.argv.slice(2)).catch((error) => {
     process.stderr.write(`${error.message}\n`);
     process.exitCode = 1;
