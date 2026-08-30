@@ -159,7 +159,7 @@ export function pickRandomSample(corpus, size, random) {
   const sample = [];
   const count = Math.min(size, pool.length);
   for (let i = 0; i < count; i += 1) {
-    const index = Math.floor(rand() * pool.length);
+    const index = Math.min(Math.floor(rand() * pool.length), pool.length - 1);
     sample.push(pool.splice(index, 1)[0]);
   }
   return sample;
