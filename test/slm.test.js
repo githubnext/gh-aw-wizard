@@ -28,7 +28,12 @@ import {
   safeLogValue,
   webLlmDiagnosticText
 } from '../src/js/slm-logger.js';
-import { extractAssistantText, preferredDevice, supportsWebGPU } from '../src/js/slm-runner.js';
+import {
+  createScenarioAssistant,
+  extractAssistantText,
+  preferredDevice,
+  supportsWebGPU
+} from '../src/js/slm-runner.js';
 import { PACKAGES, vendoredFiles } from '../scripts/fetch-vendor-assets.mjs';
 
 const html = readFileSync(fileURLToPath(new URL('../src/index.html', import.meta.url)), 'utf8');
@@ -236,7 +241,7 @@ describe('runtime helpers', () => {
     expect(supportsWebGPU(null)).toBe(false);
   });
 
-  it('uses the compatible WASM backend on iOS despite navigator.gpu', () => {
+  it('uses the compatible WASM backend on Safari despite navigator.gpu', () => {
     const iPhoneNavigator = {
       gpu: {},
       userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Safari/604.1'
@@ -249,6 +254,35 @@ describe('runtime helpers', () => {
     };
     expect(supportsWebGPU(iPadNavigator)).toBe(true);
     expect(preferredDevice(iPadNavigator)).toBe('wasm');
+
+    const desktopSafariNavigator = {
+      gpu: {},
+      userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/605.1.15 Version/17.0 Safari/605.1.15'
+    };
+    expect(supportsWebGPU(desktopSafariNavigator)).toBe(true);
+    expect(preferredDevice(desktopSafariNavigator)).toBe('wasm');
+  });
+
+  it('disables the incompatible WebGPU backend on Safari', async () => {
+    const env = { backends: { onnx: { wasm: {} }, webgpu: {} } };
+    const pipeline = async (_task, _model, options) => {
+      expect(options.device).toBe('wasm');
+      return async () => [{ generated_text: 'issue-triage' }];
+    };
+    const assistant = createScenarioAssistant({
+      config: DEFAULT_SLM_CONFIG,
+      navigator: {
+        gpu: {},
+        userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/605.1.15 Version/17.0 Safari/605.1.15'
+      },
+      importModule: async () => ({ env, pipeline }),
+      cache: {},
+      logger: { debug() {}, operation: () => ({ end() {} }) }
+    });
+
+    await assistant.analyze('label issues', scenarios);
+
+    expect(env.backends.webgpu.disabled).toBe(true);
   });
 
   it('reads the assistant message out of the generated output', () => {
