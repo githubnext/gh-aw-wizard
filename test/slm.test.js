@@ -296,11 +296,11 @@ describe('model weight cache', () => {
       expect(records).toEqual([expect.objectContaining({
         lvl: 'log',
         evt: 'model.loaded',
-        component: 'test',
-        sid: expect.any(String),
+        cmp: 'test',
         modelUrl: 'https://example.com/model'
       })]);
       expect(records[0]).not.toHaveProperty('timestamp');
+      expect(records[0]).not.toHaveProperty('sid');
     });
 
     it('falls back to console.log and records operation duration', () => {
@@ -345,7 +345,6 @@ describe('model weight cache', () => {
       expect(records).toEqual([{
         lvl: 'error',
         evt: 'model.failed',
-        sid: 'test-session',
         token: '[redacted]',
         reason: 'network'
       }]);
@@ -363,9 +362,9 @@ describe('model weight cache', () => {
       });
 
       const [record] = webLlmDiagnosticText().split('\n').map((entry) => JSON.parse(entry));
-      expect(record.moduleUrl).toBe('https://example.com/vendor/transformers/transformers.min.js');
+      expect(record.mod).toBe('https://example.com/vendor/transformers/transformers.min.js');
       expect(record.refs).toEqual({ 0: 'https://example.com/vendor/transformers/' });
-      expect(record.wasmPaths).toEqual({
+      expect(record.wasm).toEqual({
         mjs: '#0ort-wasm-simd.mjs',
         wasm: '#0ort-wasm-simd.wasm'
       });

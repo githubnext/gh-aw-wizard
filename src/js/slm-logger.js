@@ -3,6 +3,19 @@ const MAX_STRING_LENGTH = 2000;
 const MAX_DEPTH = 4;
 const MAX_RECORDS = 500;
 const diagnosticRecords = [];
+const COMPACT_KEYS = {
+  component: 'cmp',
+  modelId: 'mid',
+  moduleUrl: 'mod',
+  wasmPaths: 'wasm',
+  requestLength: 'req',
+  scenarioCount: 'sc',
+  answerLength: 'ans',
+  scenario: 'scn',
+  status: 'st',
+  percent: 'pct',
+  file: 'f'
+};
 
 export function webLlmDiagnosticText() {
   return diagnosticRecords.map((record) => JSON.stringify(record)).join('\n');
@@ -137,6 +150,14 @@ function compactUrls(record) {
   return { ...compacted, refs: newRefs };
 }
 
+function compactRecordKeys(value) {
+  if (Array.isArray(value)) return value.map(compactRecordKeys);
+  if (!value || typeof value !== 'object') return value;
+  return Object.fromEntries(
+    Object.entries(value).map(([key, entry]) => [COMPACT_KEYS[key] || key, compactRecordKeys(entry)])
+  );
+}
+
 function callConsole(consoleImpl, method, args) {
   const fn = consoleImpl && typeof consoleImpl[method] === 'function'
     ? consoleImpl[method]
@@ -172,10 +193,9 @@ export function createWebLlmLogger(options) {
       ...context,
       ...safeLogValue(details || {}, 'details'),
       lvl: level,
-      evt: redactText(event),
-      sid
+      evt: redactText(event)
     };
-    record = compactUrls(record);
+    record = compactRecordKeys(compactUrls(record));
     diagnosticRecords.push(safeLogValue(record, ''));
     if (diagnosticRecords.length > MAX_RECORDS) diagnosticRecords.shift();
     if (onRecord) {
