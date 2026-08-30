@@ -688,9 +688,6 @@ a:hover {
   gap: 0.75rem;
   margin-top: 1rem;
 }
-.btn-assistant[hidden] {
-  display: none;
-}
 .assistant-progress {
   margin-top: 0.75rem;
 }
@@ -752,15 +749,6 @@ a:hover {
   opacity: 0.4;
   cursor: not-allowed;
   box-shadow: none;
-}
-.btn-assistant {
-  background: linear-gradient(135deg, var(--agent-purple), var(--agent-purple-dark));
-  border-color: var(--agent-purple-dark);
-  box-shadow: 0 2px 8px rgba(var(--agent-purple-rgb), 0.35);
-}
-.btn-assistant:hover:not(:disabled) {
-  background: var(--agent-purple-dark);
-  box-shadow: 0 4px 12px rgba(var(--agent-purple-rgb), 0.5);
 }
 .btn-sm {
   padding: 0.4rem 0.85rem;

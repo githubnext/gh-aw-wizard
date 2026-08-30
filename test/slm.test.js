@@ -332,9 +332,6 @@ describe('WebLLM diagnostics', () => {
 describe('assistant markup', () => {
   it('stays hidden until a WebGPU-capable browser reveals it', () => {
     expect(html).toMatch(/id="wizard-assist"[^>]*hidden/);
-    const start = css.indexOf('.btn-assistant[hidden] {');
-    expect(start).toBeGreaterThan(-1);
-    expect(css.slice(start, css.indexOf('}', start))).toMatch(/display:\s*none/);
   });
 
   it('renders Analyze beside Continue and reuses the intent textarea', () => {
@@ -347,17 +344,9 @@ describe('assistant markup', () => {
     expect(html).toContain('id="wizard-assist-status"');
   });
 
-  it('styles Analyze with the AI-purple theme', () => {
-    const start = css.indexOf('.btn-assistant {');
-    expect(start).toBeGreaterThan(-1);
-    const rule = css.slice(start, css.indexOf('}', start));
-    expect(rule).toContain('var(--agent-purple)');
-    expect(rule).toContain('var(--agent-purple-dark)');
-
-    const hoverStart = css.indexOf('.btn-assistant:hover:not(:disabled) {');
-    expect(hoverStart).toBeGreaterThan(-1);
-    const hoverRule = css.slice(hoverStart, css.indexOf('}', hoverStart));
-    expect(hoverRule).toContain('var(--agent-purple-dark)');
+  it('uses the primary green button styling', () => {
+    expect(html).toContain('class="btn btn-primary" id="wizard-assist"');
+    expect(html).not.toContain('btn-assistant');
   });
 
   it('announces status updates to assistive technology', () => {
