@@ -1,17 +1,19 @@
 const SENSITIVE_KEY = /authorization|cookie|credential|password|secret|token/i;
-const SECRET_ASSIGNMENT = /(\b(?:api[_-]?key|authorization|credential|password|secret|token)\b\s*[:=]\s*)([^\s,;]+)/gi;
-const BEARER_TOKEN = /(\bbearer\s+)[^\s,;]+/gi;
-const KNOWN_TOKEN = /\b(?:gh[pousr]_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,}|AKIA[A-Z0-9]{16}|eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,})\b/g;
-const URL_WITH_PRIVATE_PARTS = /\bhttps?:\/\/[^\s"'<>]+/gi;
 const MAX_STRING_LENGTH = 2000;
 const MAX_DEPTH = 4;
 
 function redactText(value) {
   let text = String(value);
-  text = text.replace(BEARER_TOKEN, '$1[redacted]');
-  text = text.replace(SECRET_ASSIGNMENT, '$1[redacted]');
-  text = text.replace(KNOWN_TOKEN, '[redacted]');
-  text = text.replace(URL_WITH_PRIVATE_PARTS, (url) => {
+  text = text.replace(/(\bbearer\s+)[^\s,;]+/gi, '$1[redacted]');
+  text = text.replace(
+    /(\b(?:api[_-]?key|authorization|credential|password|secret|token)\b\s*[:=]\s*)([^\s,;]+)/gi,
+    '$1[redacted]'
+  );
+  text = text.replace(
+    /\b(?:gh[pousr]_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,}|AKIA[A-Z0-9]{16}|eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,})\b/g,
+    '[redacted]'
+  );
+  text = text.replace(/\bhttps?:\/\/[^\s"'<>]+/gi, (url) => {
     try {
       const parsed = new URL(url);
       parsed.search = '';
@@ -82,7 +84,7 @@ function monotonicNow(now) {
 export function createWebLlmLogger(options) {
   const opts = options || {};
   const consoleImpl = opts.console === undefined ? globalThis.console : opts.console;
-  const suppliedContext = safeLogValue(opts.context || {}, 'context');
+  const suppliedContext = safeLogValue(opts.context || {}, '');
   const context = {
     diagnosticSession: suppliedContext.diagnosticSession
       || opts.diagnosticSession
@@ -118,7 +120,14 @@ export function createWebLlmLogger(options) {
     if (groupMethod) {
       callConsole(consoleImpl, groupMethod, [label]);
       callConsole(consoleImpl, level, [record]);
-      if (typeof consoleImpl.table === 'function') callConsole(consoleImpl, 'table', [record]);
+      if (typeof consoleImpl.table === 'function') {
+        const summary = {};
+        Object.keys(record).forEach((key) => {
+          const value = record[key];
+          if (value === null || ['string', 'number', 'boolean'].includes(typeof value)) summary[key] = value;
+        });
+        callConsole(consoleImpl, 'table', [[summary]]);
+      }
       callConsole(consoleImpl, 'groupEnd', []);
     } else {
       callConsole(consoleImpl, level, [label, record]);
@@ -134,7 +143,7 @@ export function createWebLlmLogger(options) {
     child(additionalContext) {
       return createWebLlmLogger({
         ...opts,
-        context: { ...context, ...safeLogValue(additionalContext || {}, 'context') }
+        context: { ...context, ...safeLogValue(additionalContext || {}, '') }
       });
     },
     operation(event, details) {
