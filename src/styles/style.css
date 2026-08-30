@@ -762,6 +762,10 @@ a:hover {
   background: var(--agent-purple-dark);
   box-shadow: 0 4px 12px rgba(var(--agent-purple-rgb), 0.5);
 }
+.btn-assistant:disabled {
+  background: linear-gradient(135deg, var(--agent-purple), var(--agent-purple-dark));
+  border-color: var(--agent-purple-dark);
+}
 .btn-sm {
   padding: 0.4rem 0.85rem;
   font-size: 0.82rem;
