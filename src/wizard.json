@@ -257,9 +257,9 @@
       "placeholder": "choose what the agent should do"
     },
     "intent": {
-      "placeholder": "add your own instructions (optional)",
-      "label": "Anything else the agent should know? (optional)",
-      "hint": "Added to the prompt as you type, together with a grader and BinEval evaluations for it.",
+      "placeholder": "tell us your intent",
+      "label": "Tell us your intent so that we can generate graders and evals",
+      "hint": "We will add your intent to the prompt and generate graders and BinEval evaluations for it.",
       "field_placeholder": "e.g., Keep our release notes accurate so on-call engineers can triage incidents faster…"
     }
   },

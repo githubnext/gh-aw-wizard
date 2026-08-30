@@ -123,14 +123,31 @@
     <section class="workflow-recipe" aria-labelledby="workflow-recipe-title">
       <h2 class="visually-hidden" id="workflow-recipe-title">Agentic workflow wizard</h2>
       <div class="recipe-clauses" id="progress-bar" aria-live="polite">
-        <!-- Step 1: Archetype -->
+        <!-- Step 1: Why -->
         <div class="recipe-item active is-placeholder">
           <button class="recipe-clause progress-step active is-placeholder" type="button" data-step="1" aria-expanded="true" aria-controls="step-1" aria-current="step">
             <span class="step-indicator" aria-hidden="true">1</span>
+            <span class="recipe-key recipe-key-intent" id="intent-step-label">Why</span>
+            <span class="recipe-value" id="summary-intent">tell us your intent</span>
+          </button>
+          <section class="wizard-step active" id="step-1">
+            <div class="conditional-field visible" id="intent-field">
+              <label for="intent-description" id="intent-label">Tell us your intent so that we can generate graders and evals</label>
+              <textarea class="text-area" id="intent-description" placeholder="e.g., Keep our release notes accurate so on-call engineers can triage incidents faster…"></textarea>
+              <p class="field-hint" id="intent-hint">We will add your intent to the prompt and generate graders and BinEval evaluations for it.</p>
+            </div>
+            <button class="btn btn-primary" id="btn-intent-continue" type="button">Continue</button>
+          </section>
+        </div>
+
+        <!-- Step 2: Archetype -->
+        <div class="recipe-item is-placeholder">
+          <button class="recipe-clause progress-step is-placeholder" type="button" data-step="2" aria-expanded="false" aria-controls="step-2">
+            <span class="step-indicator" aria-hidden="true">2</span>
             <span class="recipe-key recipe-key-what">What</span>
             <span class="recipe-value" id="summary-purpose">choose what the agent should do</span>
           </button>
-          <section class="wizard-step active" id="step-1">
+          <section class="wizard-step" id="step-2">
             <div class="option-group archetype-grid" id="archetype-options" role="radiogroup" aria-label="What the agent should do"></div>
             <div class="conditional-field" id="custom-description-field">
               <label for="custom-description">Describe what you want the workflow to do:</label>
@@ -139,70 +156,53 @@
           </section>
         </div>
 
-        <!-- Step 2: Triggers -->
+        <!-- Step 3: Triggers -->
         <div class="recipe-item is-placeholder">
-          <button class="recipe-clause progress-step is-placeholder" type="button" data-step="2" aria-expanded="false" aria-controls="step-2" disabled>
-            <span class="step-indicator" aria-hidden="true">2</span>
+          <button class="recipe-clause progress-step is-placeholder" type="button" data-step="3" aria-expanded="false" aria-controls="step-3" disabled>
+            <span class="step-indicator" aria-hidden="true">3</span>
             <span class="recipe-key recipe-key-when">When</span>
             <span class="recipe-value" id="summary-trigger">choose when it runs</span>
           </button>
-          <section class="wizard-step" id="step-2">
+          <section class="wizard-step" id="step-3">
             <div class="option-group" id="trigger-options"></div>
           </section>
         </div>
 
-        <!-- Step 3: Outputs -->
+        <!-- Step 4: Outputs -->
         <div class="recipe-item is-placeholder">
-          <button class="recipe-clause progress-step is-placeholder" type="button" data-step="3" aria-expanded="false" aria-controls="step-3" disabled>
-            <span class="step-indicator" aria-hidden="true">3</span>
+          <button class="recipe-clause progress-step is-placeholder" type="button" data-step="4" aria-expanded="false" aria-controls="step-4" disabled>
+            <span class="step-indicator" aria-hidden="true">4</span>
             <span class="recipe-key recipe-key-where">Where</span>
             <span class="recipe-value" id="summary-output">choose what it can write</span>
           </button>
-          <section class="wizard-step" id="step-3">
+          <section class="wizard-step" id="step-4">
             <div class="option-group" id="output-options"></div>
           </section>
         </div>
 
-        <!-- Step 4: Extras -->
+        <!-- Step 5: Extras -->
         <div class="recipe-item is-placeholder">
-          <button class="recipe-clause progress-step is-placeholder" type="button" data-step="4" aria-expanded="false" aria-controls="step-4" disabled>
-            <span class="step-indicator" aria-hidden="true">4</span>
+          <button class="recipe-clause progress-step is-placeholder" type="button" data-step="5" aria-expanded="false" aria-controls="step-5" disabled>
+            <span class="step-indicator" aria-hidden="true">5</span>
             <span class="recipe-key recipe-key-extras">Extras</span>
             <span class="recipe-value" id="summary-extras">choose optional capabilities</span>
           </button>
-          <section class="wizard-step" id="step-4">
+          <section class="wizard-step" id="step-5">
             <div class="option-group" id="extras-options"></div>
           </section>
         </div>
 
-        <!-- Step 5: Agent -->
+        <!-- Step 6: Agent -->
         <div class="recipe-item is-placeholder">
-          <button class="recipe-clause progress-step" type="button" data-step="5" aria-expanded="false" aria-controls="step-5" disabled>
-            <span class="step-indicator" aria-hidden="true">5</span>
+          <button class="recipe-clause progress-step" type="button" data-step="6" aria-expanded="false" aria-controls="step-6" disabled>
+            <span class="step-indicator" aria-hidden="true">6</span>
             <span class="recipe-key recipe-key-agent">Agent</span>
             <span class="recipe-value" id="summary-engine">choose an agent</span>
           </button>
-          <section class="wizard-step" id="step-5">
+          <section class="wizard-step" id="step-6">
             <div class="engine-selector">
               <div class="option-group" id="engine-options"></div>
             </div>
-          </section>
-        </div>
-
-        <!-- Step 6: Intent -->
-        <div class="recipe-item is-placeholder">
-          <button class="recipe-clause progress-step is-placeholder" type="button" data-step="6" aria-expanded="false" aria-controls="step-6" disabled>
-            <span class="step-indicator" aria-hidden="true">6</span>
-            <span class="recipe-key recipe-key-intent" id="intent-step-label">Intent</span>
-            <span class="recipe-value" id="summary-intent">add your own instructions (optional)</span>
-          </button>
-          <section class="wizard-step" id="step-6">
-            <div class="conditional-field visible" id="intent-field">
-              <label for="intent-description" id="intent-label">Anything else the agent should know? (optional)</label>
-              <textarea class="text-area" id="intent-description" placeholder="e.g., Keep our release notes accurate so on-call engineers can triage incidents faster…"></textarea>
-              <p class="field-hint" id="intent-hint">Added to the prompt as you type, together with a grader and BinEval evaluations for it.</p>
-            </div>
-            <button class="btn btn-primary" id="btn-intent-continue" type="button">Continue</button>
           </section>
         </div>
 
