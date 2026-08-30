@@ -172,7 +172,9 @@ export function initScenarioAssistant(context) {
         showAssistantResult({
           eyebrow: copy.result_fallback_eyebrow,
           label: scenario.label,
-          description: scenario.description || copy.result_fallback_description,
+          description: scenario.description
+            ? `${scenario.description} ${copy.result_fallback_description}`
+            : copy.result_fallback_description,
           requestLabel: copy.result_request_label,
           request
         });

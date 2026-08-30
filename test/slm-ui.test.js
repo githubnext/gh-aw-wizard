@@ -71,6 +71,7 @@ describe('showAssistantResult', () => {
     expect(nodes['assist-modal-eyebrow'].textContent).toBe('Scenario selected');
     expect(nodes['assist-modal-title'].textContent).toBe('Issue Triage');
     expect(nodes['assist-modal-description'].textContent).toBe('Categorize and label issues');
+    expect(nodes['assist-modal-request-label'].textContent).toBe('Your request');
     expect(nodes['assist-modal-request'].textContent).toBe('label incoming issues');
   });
 
