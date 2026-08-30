@@ -317,6 +317,30 @@
       <button class="btn copy-modal-action" id="copy-modal-action" type="button" data-copy-modal-close>Got it</button>
     </div>
   </dialog>
+
+  <dialog class="copy-modal assist-modal" id="assist-modal" aria-labelledby="assist-modal-title" aria-describedby="assist-modal-description">
+    <div class="copy-modal-card">
+      <button class="copy-modal-close" id="assist-modal-close" type="button" data-assist-modal-close aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <div class="copy-modal-celebration" aria-hidden="true">
+        <div class="copy-modal-icon">
+          <svg class="octicon" aria-hidden="true"><use href="#octicon-zap"></use></svg>
+        </div>
+      </div>
+      <p class="copy-modal-eyebrow" id="assist-modal-eyebrow">Scenario selected</p>
+      <h2 id="assist-modal-title">Scenario</h2>
+      <p id="assist-modal-description">The wizard selected the scenario that best matches your request.</p>
+      <div class="copy-modal-next-step">
+        <svg class="octicon" aria-hidden="true"><use href="#octicon-zap"></use></svg>
+        <div>
+          <strong id="assist-modal-request-label">Your request</strong>
+          <span id="assist-modal-request"></span>
+        </div>
+      </div>
+      <button class="btn copy-modal-action" id="assist-modal-action" type="button" data-assist-modal-close>Continue</button>
+    </div>
+  </dialog>
   <script type="module" src="./js/main.js"></script>
 </body>
 </html>

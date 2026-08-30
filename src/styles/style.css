@@ -1079,7 +1079,8 @@ a:hover {
   line-height: 1.2;
   letter-spacing: -0.025em;
 }
-.copy-modal #copy-modal-description {
+.copy-modal #copy-modal-description,
+.copy-modal #assist-modal-description {
   max-width: 25rem;
   margin: 0 auto;
   color: var(--text-secondary);
