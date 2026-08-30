@@ -683,7 +683,7 @@ a:hover {
 
 /* Scenario assistant (in-browser small language model) */
 .assistant {
-  margin-bottom: 1rem;
+  display: contents;
 }
 .assistant[hidden] {
   display: none;
@@ -947,8 +947,19 @@ a:hover {
   padding: 0.75rem 1.25rem;
   font-size: 0.9rem;
 }
-#btn-intent-continue {
+.intent-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.75rem;
   margin-top: 1rem;
+}
+.intent-actions .assistant-panel {
+  flex-basis: 100%;
+  order: 3;
+}
+#btn-intent-continue {
+  order: 2;
 }
 .btn-copy-prompt.copy-error,
 .btn-copy-prompt.copy-error:hover {
