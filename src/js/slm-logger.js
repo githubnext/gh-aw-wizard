@@ -1,6 +1,16 @@
 const SENSITIVE_KEY = /authorization|cookie|credential|password|secret|token/i;
 const MAX_STRING_LENGTH = 2000;
 const MAX_DEPTH = 4;
+const MAX_RECORDS = 500;
+const diagnosticRecords = [];
+
+export function webLlmDiagnosticText() {
+  return diagnosticRecords.map((record) => JSON.stringify(record)).join('\n');
+}
+
+export function clearWebLlmDiagnostics() {
+  diagnosticRecords.length = 0;
+}
 
 function redactText(value) {
   let text = String(value);
@@ -103,6 +113,8 @@ export function createWebLlmLogger(options) {
       ...context,
       ...safeLogValue(details || {}, 'details')
     };
+    diagnosticRecords.push(safeLogValue(record, ''));
+    if (diagnosticRecords.length > MAX_RECORDS) diagnosticRecords.shift();
     if (onRecord) {
       try {
         onRecord(record);

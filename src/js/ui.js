@@ -20,7 +20,7 @@ import {
   registerBuiltInEngines,
   registerDefinitionEngines
 } from './engines.js';
-import { initScenarioAssistant } from './slm-ui.js';
+import { initDiagnosticLogCopy, initScenarioAssistant } from './slm-ui.js';
 import {
   WIZARD_CONFIG_URL,
   applyPageContent,
@@ -84,6 +84,7 @@ export function initWizard(options) {
     renderWorkflowSummary();
   });
   bindNavigation();
+  initDiagnosticLogCopy();
   initNavigationHistory();
   initLanding(revealWhyPane);
   return ready;

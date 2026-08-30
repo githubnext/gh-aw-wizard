@@ -22,7 +22,12 @@ import {
   webgpuDtypeFor
 } from '../src/js/slm.js';
 import { cacheKeyFor, serializeHeaders } from '../src/js/slm-cache.js';
-import { createWebLlmLogger, safeLogValue } from '../src/js/slm-logger.js';
+import {
+  clearWebLlmDiagnostics,
+  createWebLlmLogger,
+  safeLogValue,
+  webLlmDiagnosticText
+} from '../src/js/slm-logger.js';
 import { extractAssistantText, preferredDevice, supportsWebGPU } from '../src/js/slm-runner.js';
 import { PACKAGES, vendoredFiles } from '../scripts/fetch-vendor-assets.mjs';
 
@@ -330,6 +335,21 @@ describe('model weight cache', () => {
       });
 
       expect(() => logger.log('diagnostic.test')).not.toThrow();
+    });
+
+    it('retains sanitized records as newline-delimited JSON for copying', () => {
+      clearWebLlmDiagnostics();
+      const logger = createWebLlmLogger({ console: null, diagnosticSession: 'test-session' });
+      logger.error('model.failed', { token: 'private', reason: 'network' });
+
+      expect(JSON.parse(webLlmDiagnosticText())).toEqual({
+        timestamp: expect.any(String),
+        level: 'error',
+        event: 'model.failed',
+        diagnosticSession: 'test-session',
+        token: '[redacted]',
+        reason: 'network'
+      });
     });
   });
 

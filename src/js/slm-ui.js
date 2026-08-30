@@ -1,11 +1,56 @@
 // DOM wiring for the in-browser scenario assistant ("wizard" button).
 
 import { keywordScenarioMatch, scenarioCatalog, scenarioLabel, slmConfig } from './slm.js';
-import { createWebLlmLogger } from './slm-logger.js';
+import { createWebLlmLogger, webLlmDiagnosticText } from './slm-logger.js';
 import { createScenarioAssistant, supportsWebGPU } from './slm-runner.js';
 
 function element(id) {
   return document.getElementById(id);
+}
+
+function fallbackCopy(text, documentImpl) {
+  const textarea = documentImpl.createElement('textarea');
+  textarea.value = text;
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  documentImpl.body.appendChild(textarea);
+  textarea.select();
+  try {
+    if (!documentImpl.execCommand('copy')) throw new Error('Copy command was rejected');
+  } finally {
+    documentImpl.body.removeChild(textarea);
+  }
+}
+
+export async function copyWebLlmDiagnostics(options) {
+  const opts = options || {};
+  const navigatorImpl = opts.navigator || (typeof navigator !== 'undefined' ? navigator : null);
+  const documentImpl = opts.document || document;
+  const text = webLlmDiagnosticText();
+  if (navigatorImpl && navigatorImpl.clipboard && typeof navigatorImpl.clipboard.writeText === 'function') {
+    try {
+      await navigatorImpl.clipboard.writeText(text);
+      return;
+    } catch {
+      // The legacy copy command remains useful where Clipboard API permission is denied.
+    }
+  }
+  fallbackCopy(text, documentImpl);
+}
+
+export function initDiagnosticLogCopy(options) {
+  const opts = options || {};
+  const button = element('footer-copy-logs');
+  const status = element('footer-copy-logs-status');
+  if (!button) return null;
+  button.addEventListener('click', () => {
+    copyWebLlmDiagnostics(opts).then(() => {
+      if (status) status.textContent = button.dataset.successLabel || 'Diagnostic logs copied.';
+    }).catch(() => {
+      if (status) status.textContent = button.dataset.failureLabel || 'Diagnostic logs could not be copied.';
+    });
+  });
+  return button;
 }
 
 function assistantCopy(wizardConfig) {

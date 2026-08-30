@@ -1151,11 +1151,26 @@ a:hover {
   font-size: 0.8rem;
   line-height: 1.7;
 }
-.site-footer a {
+.site-footer a,
+.footer-link {
   color: var(--text-secondary);
 }
-.site-footer a:hover {
+.site-footer a:hover,
+.footer-link:hover {
   color: var(--accent-blue);
+}
+.footer-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.footer-link:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 .footer-source {
   display: inline-flex;
@@ -1470,14 +1485,16 @@ a:hover {
   color: var(--text-muted);
   opacity: 0.6;
 }
-.is-landing .site-footer a {
+.is-landing .site-footer a,
+.is-landing .site-footer .footer-link {
   color: var(--text-muted);
 }
 .is-landing .site-footer:hover,
 .is-landing .site-footer:focus-within {
   opacity: 1;
 }
-.is-landing .site-footer a:hover {
+.is-landing .site-footer a:hover,
+.is-landing .site-footer .footer-link:hover {
   color: var(--accent-blue);
 }
 .landing-glow {
