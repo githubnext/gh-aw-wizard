@@ -413,6 +413,19 @@ describe('assistant markup', () => {
     expect(html).toContain('id="wizard-assist-status"');
   });
 
+  it('styles Analyze with the AI-purple theme', () => {
+    const start = css.indexOf('.btn-assistant {');
+    expect(start).toBeGreaterThan(-1);
+    const rule = css.slice(start, css.indexOf('}', start));
+    expect(rule).toContain('var(--agent-purple)');
+    expect(rule).toContain('var(--agent-purple-dark)');
+
+    const hoverStart = css.indexOf('.btn-assistant:hover:not(:disabled) {');
+    expect(hoverStart).toBeGreaterThan(-1);
+    const hoverRule = css.slice(hoverStart, css.indexOf('}', hoverStart));
+    expect(hoverRule).toContain('var(--agent-purple-dark)');
+  });
+
   it('announces status updates to assistive technology', () => {
     expect(html).toMatch(/id="wizard-assist-status"[^>]*aria-live="polite"/);
   });
