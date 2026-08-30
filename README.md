@@ -46,6 +46,40 @@ npm run build
 `npm run dev` and `npm run build` download the vendored browser assets into the gitignored
 `vendor/` directory; `npm run vendor` refreshes them.
 
+## Prompt optimization (local, Apple Silicon)
+
+`scripts/prompt-optimizer.mjs` tunes the system prompt behind the in-browser scenario assistant on a
+MacBook Pro, without changing anything the site ships until a better prompt is proven.
+
+* **Inner loop** — scores the current instructions on a random sample of the eval corpus using the
+  exact same JavaScript prompt building and answer parsing the browser runs (`src/js/slm.js`,
+  `src/js/slm-evals.js`), so a score measured locally transfers to the wizard.
+* **Outer loop** — every hour, a much larger model reads the failing traces, diagnoses why the small
+  model got them wrong, and proposes new instructions (reflective prompt evolution, as in GEPA).
+  Proposals are re-scored on the same batch, then confirmed on a held-out sample, and only adopted
+  when they beat the incumbent by more than the sampling noise.
+
+Both models are served by [MLC-LLM](https://llm.mlc.ai/), the same stack the browser uses through
+WebLLM, so the evaluation model is the identical compiled artifact visitors download. A MacBook Pro
+with 64 GB of unified memory holds a 27B optimizer and the 1.5B browser model resident at once:
+
+```bash
+# inner loop: the model the wizard loads in the browser (~1.5B)
+mlc_llm serve HF://mlc-ai/Qwen2.5-1.5B-Instruct-q4f16_1-MLC --port 8000
+
+# outer loop: prompt optimizer (~27B, fits in 64 GB alongside the small model)
+mlc_llm serve HF://mlc-ai/gemma-2-27b-it-q4f16_1-MLC --port 8001
+
+npm run optimize            # hourly rounds until interrupted
+npm run optimize -- --once  # a single round
+```
+
+The best instructions and the round history are written to `.optimizer/scenario-prompt.json`, which
+is resumed on the next start. Copy the winning `preamble` and `rules` into
+`DEFAULT_SCENARIO_INSTRUCTIONS` in `src/js/slm.js` to ship them. Any OpenAI-compatible server works
+(including MLX's `mlx_lm.server`) via `--eval-url` / `--optimizer-url`; run
+`node scripts/prompt-optimizer.mjs --help` for all options.
+
 ## License
 
 MIT
