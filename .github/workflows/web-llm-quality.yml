@@ -49,6 +49,8 @@ jobs:
           key: web-llm-${{ runner.os }}-${{ hashFiles('package-lock.json', 'scripts/fetch-vendor-assets.mjs', 'src/wizard.json') }}
 
       - name: Evaluate WebLLM intent quality
+        id: evaluation
+        continue-on-error: true
         timeout-minutes: 5
         env:
           WEB_LLM_CACHE_DIR: ${{ runner.temp }}/web-llm-cache
@@ -78,3 +80,7 @@ jobs:
           path: test-results/web-llm-quality/
           if-no-files-found: warn
           retention-days: 30
+
+      - name: Propagate evaluation failure
+        if: always() && steps.evaluation.outcome == 'failure'
+        run: exit 1
