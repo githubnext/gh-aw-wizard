@@ -236,13 +236,17 @@ describe('runtime helpers', () => {
     expect(supportsWebGPU(null)).toBe(false);
   });
 
-  it('uses the compatible WASM backend on iOS Safari despite navigator.gpu', () => {
+  it('uses the compatible WASM backend on iOS despite navigator.gpu', () => {
     const iPhoneNavigator = {
       gpu: {},
       userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Safari/604.1'
     };
     expect(supportsWebGPU(iPhoneNavigator)).toBe(true);
     expect(preferredDevice(iPhoneNavigator)).toBe('wasm');
+    expect(preferredDevice({
+      gpu: {},
+      userAgent: 'Mozilla/5.0 (iPad; CPU OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Safari/604.1'
+    })).toBe('wasm');
   });
 
   it('reads the assistant message out of the generated output', () => {
