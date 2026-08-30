@@ -26,6 +26,8 @@ jobs:
   evaluate:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      WEB_LLM_MODEL_ID: Qwen2.5-1.5B-Instruct-q4f32_1-MLC
     steps:
       - uses: actions/checkout@v7
 
@@ -46,7 +48,7 @@ jobs:
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ runner.temp }}/web-llm-cache
-          key: web-llm-${{ runner.os }}-${{ hashFiles('package-lock.json', 'scripts/fetch-vendor-assets.mjs', 'src/wizard.json') }}
+          key: web-llm-${{ runner.os }}-${{ env.WEB_LLM_MODEL_ID }}-${{ hashFiles('package-lock.json', 'scripts/fetch-vendor-assets.mjs', 'src/wizard.json') }}
 
       - name: Evaluate WebLLM intent quality
         id: evaluation

@@ -28,6 +28,10 @@ const wizardConfig = JSON.parse(readFileSync(
   fileURLToPath(new URL('../../src/wizard.json', import.meta.url)),
   'utf8'
 ));
+const modelConfig = {
+  ...wizardConfig.assistant.model,
+  model_id: process.env.WEB_LLM_MODEL_ID || wizardConfig.assistant.model.model_id
+};
 const manifest = JSON.parse(readFileSync(
   fileURLToPath(new URL('../../patterns/manifest.json', import.meta.url)),
   'utf8'
@@ -148,7 +152,7 @@ function markdownSummary(results, variability, run) {
   return [
     '# WebLLM intent quality',
     '',
-    `- Model: \`${wizardConfig.assistant.model.model_id}\``,
+    `- Model: \`${modelConfig.model_id}\``,
     `- Time budget: **${evaluationBudgetMs / 1000} seconds**`,
     `- Actual evaluation duration: **${Math.round(run.elapsedMs / 10) / 100} seconds**`,
     `- Estimated full 100 × ${maxRepetitions} duration: **${Math.round(run.plan.estimatedFullDurationMs / 10) / 100} seconds**`,
@@ -223,17 +227,22 @@ test(`classifies at least 50% of adaptively sampled golden intents within a ${ev
     });
     await page.goto(qualityBaseUrl);
     const gpu = await page.evaluate(async () => {
-      if (!navigator.gpu) return { available: false, adapter: false };
+      if (!navigator.gpu) return { available: false, adapter: false, features: [] };
       const adapter = await navigator.gpu.requestAdapter();
-      return { available: true, adapter: Boolean(adapter) };
+      return {
+        available: true,
+        adapter: Boolean(adapter),
+        features: adapter ? [...adapter.features] : []
+      };
     });
-    expect(gpu, 'A real WebGPU adapter is required for the WebLLM quality evaluation').toEqual({
+    expect(gpu, 'A real WebGPU adapter is required for the WebLLM quality evaluation').toMatchObject({
       available: true,
       adapter: true
     });
+    console.log(`[web-llm-gpu] ${JSON.stringify(gpu)}`);
     console.log(`[web-llm-run] ${JSON.stringify({
       event: 'started',
-      model: wizardConfig.assistant.model.model_id,
+      model: modelConfig.model_id,
       availableSamples: goldenIntents.length,
       maxRepetitions,
       maxEvaluations: goldenIntents.length * maxRepetitions,
@@ -264,7 +273,7 @@ test(`classifies at least 50% of adaptively sampled golden intents within a ${ev
             }
             return globalThis.__webLlmQualityAssistant.analyze(intent, scenarioCatalog);
           }, {
-            config: wizardConfig.assistant.model,
+            config: modelConfig,
             intent: golden.intent,
             scenarioCatalog: scenarios
           }),
@@ -302,6 +311,9 @@ test(`classifies at least 50% of adaptively sampled golden intents within a ${ev
       completed.add(`${golden.id}:${repetition}`);
       if (result.correct) goodCount += 1;
       console.log(`[web-llm-quality] ${JSON.stringify(result)}`);
+      if (result.mode === 'error' && /GPUPipelineError|ShaderModule/.test(result.error?.message || '')) {
+        throw new Error(`WebLLM model ${modelConfig.model_id} is incompatible with the WebGPU adapter`);
+      }
     }
 
     for (const golden of orderedIntents.slice(0, calibrationCount)) {
