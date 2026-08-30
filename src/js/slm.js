@@ -9,27 +9,13 @@
 // stays reachable on networks that block third-party asset hosts.
 export const DEFAULT_SLM_CONFIG = {
   enabled: true,
-  module_url: 'slm/transformers.min.js',
-  wasm_paths: {
-    mjs: 'slm/ort/ort-wasm-simd-threaded.asyncify.mjs',
-    wasm: 'slm/ort/ort-wasm-simd-threaded.asyncify.wasm'
-  },
-  // Safari runs the non-asyncify build of onnxruntime-web.
-  safari_wasm_paths: {
-    mjs: 'slm/ort/ort-wasm-simd-threaded.mjs',
-    wasm: 'slm/ort/ort-wasm-simd-threaded.wasm'
-  },
-  model_id: 'onnx-community/Qwen2.5-0.5B-Instruct',
-  webgpu_dtype: 'q4f16',
-  wasm_dtype: 'q4',
-  // iOS Safari's WebGPU implementation has far less memory headroom than
-  // desktop browsers, so a smaller model is used there instead of the
-  // default one to avoid crashing the tab. ios_webgpu_dtype is kept separate
-  // from webgpu_dtype (even though it currently matches) since a future
-  // smaller model may need its own quantization to run well on iOS.
-  ios_model_id: 'onnx-community/SmolLM2-360M-Instruct-ONNX',
-  ios_webgpu_dtype: 'q4f16',
-  max_new_tokens: 24
+  module_url: 'slm/webllm.js',
+  model_id: 'Qwen2.5-0.5B-Instruct-q4f32_1-MLC',
+  // This WebLLM prebuilt is explicitly marked for low-resource devices and
+  // avoids the shader-f16 feature that is not available on every iPhone.
+  ios_model_id: 'SmolLM2-360M-Instruct-q4f32_1-MLC',
+  cache_backend: 'cache',
+  max_tokens: 24
 };
 
 const STOP_WORDS = [
@@ -46,26 +32,12 @@ export function slmConfig(wizardConfig) {
   return { ...DEFAULT_SLM_CONFIG, ...configured };
 }
 
-// iOS Safari can run the assistant, but only the smaller model fits within its
-// WebGPU memory limits, so it is swapped in based on the runtime platform.
+// iOS can run the assistant, but only the smaller model fits comfortably within
+// its WebGPU memory limits, so it is swapped in based on the runtime platform.
 export function modelIdFor(config, navigatorImpl) {
   const settings = config || {};
   if (isIOS(navigatorImpl) && settings.ios_model_id) return settings.ios_model_id;
   return settings.model_id;
-}
-
-// Mirrors modelIdFor for the WebGPU quantization to use, since the smaller
-// iOS model may ship its own recommended dtype.
-export function webgpuDtypeFor(config, navigatorImpl) {
-  const settings = config || {};
-  if (isIOS(navigatorImpl) && settings.ios_webgpu_dtype) return settings.ios_webgpu_dtype;
-  return settings.webgpu_dtype;
-}
-
-export function isSafari(navigatorImpl) {
-  const nav = navigatorImpl || (typeof navigator !== 'undefined' ? navigator : null);
-  const userAgent = nav && typeof nav.userAgent === 'string' ? nav.userAgent : '';
-  return /safari/i.test(userAgent) && !/chrome|chromium|android/i.test(userAgent);
 }
 
 // iPadOS reports as "Macintosh" in the user agent, so touch support on an
@@ -97,14 +69,7 @@ export function resolveRuntimeUrl(url, baseUrl) {
 export function runtimeUrls(config, options) {
   const opts = options || {};
   const settings = config || {};
-  const paths = (isSafari(opts.navigator) ? settings.safari_wasm_paths : settings.wasm_paths) || {};
-  const wasmPaths = paths.mjs && paths.wasm
-    ? {
-      mjs: resolveRuntimeUrl(paths.mjs, opts.baseUrl),
-      wasm: resolveRuntimeUrl(paths.wasm, opts.baseUrl)
-    }
-    : null;
-  return { module: resolveRuntimeUrl(settings.module_url, opts.baseUrl), wasmPaths };
+  return { module: resolveRuntimeUrl(settings.module_url, opts.baseUrl) };
 }
 
 // The scenarios the model may choose from, derived from what the wizard shows
@@ -213,37 +178,26 @@ export function scenarioLabel(scenarios, id) {
 
 // ── Loading progress ───────────────────────────────────────────────────────
 
-// transformers.js reports one event per model file. Keep a per-file ratio so the
-// overall percentage is stable while several files download in parallel.
+// WebLLM reports a normalized overall ratio while it downloads and prepares the
+// selected prebuilt model.
 export function progressTracker() {
-  const files = new Map();
+  let current = 0;
   return {
     update(event) {
-      const status = event && event.status;
-      const file = event && (event.file || event.name) ? String(event.file || event.name) : 'model';
-      if (status === 'progress' || status === 'download' || status === 'initiate') {
-        const ratio = typeof event.progress === 'number'
-          ? Math.min(Math.max(event.progress / 100, 0), 1)
-          : 0;
-        files.set(file, ratio);
-      } else if (status === 'done') {
-        files.set(file, 1);
+      if (event && typeof event.progress === 'number') {
+        const ratio = Math.min(Math.max(event.progress, 0), 1);
+        current = Math.round(ratio * 100);
       }
       return this.percent();
     },
     percent() {
-      if (!files.size) return 0;
-      let total = 0;
-      files.forEach((ratio) => { total += ratio; });
-      return Math.round((total / files.size) * 100);
+      return current;
     }
   };
 }
 
 export function progressLabel(event, percent) {
-  const status = event && event.status ? event.status : '';
-  if (status === 'ready') return 'Model ready';
-  if (status === 'done') return 'Preparing model';
-  const file = event && event.file ? ` ${event.file}` : '';
-  return `Downloading model${file} — ${percent}%`;
+  if (percent >= 100) return 'Model ready';
+  if (event && typeof event.text === 'string' && event.text.trim()) return event.text.trim();
+  return `Downloading model — ${percent}%`;
 }

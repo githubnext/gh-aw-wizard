@@ -43,21 +43,11 @@
     "result_action": "Continue",
     "model": {
       "enabled": true,
-      "module_url": "slm/transformers.min.js",
-      "wasm_paths": {
-        "mjs": "slm/ort/ort-wasm-simd-threaded.asyncify.mjs",
-        "wasm": "slm/ort/ort-wasm-simd-threaded.asyncify.wasm"
-      },
-      "safari_wasm_paths": {
-        "mjs": "slm/ort/ort-wasm-simd-threaded.mjs",
-        "wasm": "slm/ort/ort-wasm-simd-threaded.wasm"
-      },
-      "model_id": "onnx-community/Qwen2.5-0.5B-Instruct",
-      "webgpu_dtype": "q4f16",
-      "wasm_dtype": "q4",
-      "ios_model_id": "onnx-community/SmolLM2-360M-Instruct-ONNX",
-      "ios_webgpu_dtype": "q4f16",
-      "max_new_tokens": 24
+      "module_url": "slm/webllm.js",
+      "model_id": "Qwen2.5-0.5B-Instruct-q4f32_1-MLC",
+      "ios_model_id": "SmolLM2-360M-Instruct-q4f32_1-MLC",
+      "cache_backend": "cache",
+      "max_tokens": 24
     }
   },
   "copy_success": {

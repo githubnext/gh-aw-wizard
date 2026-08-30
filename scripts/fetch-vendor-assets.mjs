@@ -14,9 +14,7 @@ import { fileURLToPath } from 'node:url';
 
 const VENDOR_DIR = fileURLToPath(new URL('../vendor', import.meta.url));
 
-// `onnxruntime-web` must match the version transformers.js depends on,
-// otherwise the wasm binary and its loader disagree. The paths the site points
-// at live in `assistant.model` in `src/wizard.json`.
+// The paths the site points at live in `assistant.model` in `src/wizard.json`.
 export const PACKAGES = [
   {
     name: '@primer/css',
@@ -24,23 +22,9 @@ export const PACKAGES = [
     files: [{ from: 'dist/primer.css', to: 'primer/primer.css' }]
   },
   {
-    name: '@huggingface/transformers',
-    version: '4.2.0',
-    // The bundled browser build; `transformers.web.min.js` expects a bundler to
-    // resolve its bare `onnxruntime-web` imports.
-    files: [{ from: 'dist/transformers.min.js', to: 'slm/transformers.min.js' }]
-  },
-  {
-    name: 'onnxruntime-web',
-    version: '1.26.0-dev.20260416-b7804b056c',
-    files: [
-      // Default backend for every browser except Safari.
-      { from: 'dist/ort-wasm-simd-threaded.asyncify.mjs', to: 'slm/ort/ort-wasm-simd-threaded.asyncify.mjs' },
-      { from: 'dist/ort-wasm-simd-threaded.asyncify.wasm', to: 'slm/ort/ort-wasm-simd-threaded.asyncify.wasm' },
-      // Safari uses the non-asyncify build.
-      { from: 'dist/ort-wasm-simd-threaded.mjs', to: 'slm/ort/ort-wasm-simd-threaded.mjs' },
-      { from: 'dist/ort-wasm-simd-threaded.wasm', to: 'slm/ort/ort-wasm-simd-threaded.wasm' }
-    ]
+    name: '@mlc-ai/web-llm',
+    version: '0.2.84',
+    files: [{ from: 'lib/index.js', to: 'slm/webllm.js' }]
   }
 ];
 

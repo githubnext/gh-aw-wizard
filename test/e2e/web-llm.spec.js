@@ -1,27 +1,38 @@
 import { expect, test } from '@playwright/test';
 
-const transformersRuntimeRoute = '**/slm/transformers.min.js';
+const webLlmRuntimeRoute = '**/slm/webllm.js';
 
 const inferenceRuntime = `
-  export const env = {
-    backends: { onnx: { wasm: {} } }
+  export const prebuiltAppConfig = {
+    model_list: [
+      { model_id: 'Qwen2.5-0.5B-Instruct-q4f32_1-MLC' },
+      { model_id: 'SmolLM2-360M-Instruct-q4f32_1-MLC' }
+    ]
   };
 
-  export async function pipeline(task, model, options) {
-    globalThis.__webLlmE2E = { task, model, calls: 0 };
-    options.progress_callback({ status: 'progress', file: 'model.onnx', progress: 50 });
-    options.progress_callback({ status: 'ready' });
+  export async function CreateMLCEngine(model, options) {
+    globalThis.__webLlmE2E = {
+      model,
+      cacheBackend: options.appConfig.cacheBackend,
+      calls: 0
+    };
+    options.initProgressCallback({ progress: 0.5, text: 'Fetching model parameters' });
+    options.initProgressCallback({ progress: 1, text: 'Finished loading model' });
 
-    return async function generate(messages, generationOptions) {
-      globalThis.__webLlmE2E.calls += 1;
-      globalThis.__webLlmE2E.messages = messages;
-      globalThis.__webLlmE2E.generationOptions = generationOptions;
-      return [{
-        generated_text: [
-          ...messages,
-          { role: 'assistant', content: 'documentation-updater' }
-        ]
-      }];
+    return {
+      chat: {
+        completions: {
+          async create(generationOptions) {
+            globalThis.__webLlmE2E.calls += 1;
+            globalThis.__webLlmE2E.generationOptions = generationOptions;
+            return {
+              choices: [{
+                message: { role: 'assistant', content: 'documentation-updater' }
+              }]
+            };
+          }
+        }
+      }
     };
   }
 `;
@@ -33,7 +44,7 @@ test('runs in-browser inference and applies the selected scenario', async ({ pag
       get: () => ({})
     });
   });
-  await page.route(transformersRuntimeRoute, (route) => route.fulfill({
+  await page.route(webLlmRuntimeRoute, (route) => route.fulfill({
     contentType: 'text/javascript',
     body: inferenceRuntime
   }));
@@ -60,14 +71,14 @@ test('runs in-browser inference and applies the selected scenario', async ({ pag
 
   const inference = await page.evaluate(() => globalThis.__webLlmE2E);
   expect(inference).toMatchObject({
-    task: 'text-generation',
-    model: 'onnx-community/Qwen2.5-0.5B-Instruct',
+    model: 'Qwen2.5-0.5B-Instruct-q4f32_1-MLC',
+    cacheBackend: 'cache',
     calls: 1,
     generationOptions: {
-      max_new_tokens: 24,
-      do_sample: false,
-      return_full_text: false
+      max_tokens: 24,
+      temperature: 0,
+      stream: false
     }
   });
-  expect(inference.messages.at(-1)).toEqual({ role: 'user', content: request });
+  expect(inference.generationOptions.messages.at(-1)).toEqual({ role: 'user', content: request });
 });
