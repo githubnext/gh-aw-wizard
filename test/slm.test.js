@@ -267,7 +267,7 @@ describe('model weight cache', () => {
 describe('assistant markup', () => {
   it('stays hidden until a WebGPU-capable browser reveals it', () => {
     expect(html).toMatch(/id="wizard-assist"[^>]*hidden/);
-    const start = css.indexOf('.assistant[hidden] {');
+    const start = css.indexOf('.btn-assistant[hidden] {');
     expect(start).toBeGreaterThan(-1);
     expect(css.slice(start, css.indexOf('}', start))).toMatch(/display:\s*none/);
   });

@@ -688,7 +688,7 @@ a:hover {
   gap: 0.75rem;
   margin-top: 1rem;
 }
-.assistant[hidden] {
+.btn-assistant[hidden] {
   display: none;
 }
 .assistant-progress {
