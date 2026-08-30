@@ -76,15 +76,12 @@ export function selectArchetypeRadio(scenarioId) {
 
 export function initScenarioAssistant(context) {
   const ctx = context || {};
-  const container = element('wizard-assist');
-  const toggle = element('btn-wizard-assist');
-  const panel = element('wizard-assist-panel');
+  const run = element('wizard-assist');
   const input = element('intent-description');
-  const run = element('btn-wizard-assist-run');
   const status = element('wizard-assist-status');
   const progressField = element('wizard-assist-progress-field');
   const progress = element('wizard-assist-progress');
-  if (!toggle || !panel || !input || !run) return null;
+  if (!input || !run) return null;
 
   const config = slmConfig(ctx.wizardConfig);
   // The assistant is hidden by default and only revealed where the model can
@@ -92,20 +89,12 @@ export function initScenarioAssistant(context) {
   // iOS Safari is included since it reports navigator.gpu; slm.js swaps in a
   // smaller model there to fit its tighter memory limits.
   if (config.enabled === false || !supportsWebGPU(ctx.navigator)) return null;
-  if (container) container.removeAttribute('hidden');
+  run.removeAttribute('hidden');
 
   const copy = assistantCopy(ctx.wizardConfig);
   bindAssistantResultModal();
   let assistant = null;
   let running = false;
-
-  toggle.addEventListener('click', () => {
-    const open = panel.hasAttribute('hidden');
-    if (open) panel.removeAttribute('hidden');
-    else panel.setAttribute('hidden', '');
-    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-    if (open) input.focus();
-  });
 
   // The run button stays disabled until the intent textarea (shared with the
   // rest of the wizard) actually has text, because there is nothing to analyze
@@ -196,5 +185,5 @@ export function initScenarioAssistant(context) {
     });
   });
 
-  return { toggle, panel };
+  return { run };
 }
