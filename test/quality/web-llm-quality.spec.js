@@ -219,7 +219,9 @@ test(`classifies at least 50% of ${goldenIntents.length} golden intents over ${r
         console.log(`[web-llm-quality] ${JSON.stringify(result)}`);
       }
       const completedEvaluations = results.length;
-      console.log(`[web-llm-progress] ${JSON.stringify({
+      console.log(`[web-llm-batch-progress] ${JSON.stringify({
+        completedSamples: completedEvaluations / repetitions,
+        totalSamples: goldenIntents.length,
         completedEvaluations,
         totalEvaluations: evaluationCount,
         good: goodCount,
