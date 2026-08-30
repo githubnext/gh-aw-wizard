@@ -31,6 +31,11 @@ describe('tableToMarkdown', () => {
     expect(markdown).toContain('| a \\| b | line1 line2 |');
   });
 
+  it('escapes backslashes before escaping pipes', () => {
+    const markdown = tableToMarkdown(['Query'], [['back\\slash | pipe']]);
+    expect(markdown).toContain('| back\\\\slash \\| pipe |');
+  });
+
   it('handles an empty result set', () => {
     const markdown = tableToMarkdown(['Query'], []);
     expect(markdown).toBe('| Query |\n| --- |');

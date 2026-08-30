@@ -2,8 +2,8 @@ import { scenarioCatalog, scenarioLabel, slmConfig } from './slm.js';
 import { EVAL_SAMPLE_SIZE, EVAL_REPETITIONS, runEvals } from './slm-evals.js';
 import { createScenarioAssistant, supportsWebGPU } from './slm-runner.js';
 
-function cell(row, value) {
-  const node = document.createElement('td');
+function cell(row, value, documentImpl) {
+  const node = documentImpl.createElement('td');
   node.textContent = value;
   row.appendChild(node);
 }
@@ -13,7 +13,7 @@ const EVAL_TABLE_HEADERS = ['Query', 'Expected', 'Actual response', 'Result'];
 // Escapes a cell value so it survives round-tripping through a markdown
 // table (pipes delimit columns, newlines would break the row).
 function escapeMarkdownCell(value) {
-  return String(value).replace(/\|/g, '\\|').replace(/\r?\n/g, ' ');
+  return String(value).replace(/\\/g, '\\\\').replace(/\|/g, '\\|').replace(/\r?\n/g, ' ');
 }
 
 export function tableToMarkdown(headers, rows) {
@@ -53,24 +53,26 @@ async function copyText(text, options) {
 }
 
 export function createLiveResults(container, options) {
+  const opts = options || {};
+  const documentImpl = opts.document || document;
   container.replaceChildren();
-  const summary = document.createElement('p');
+  const summary = documentImpl.createElement('p');
   summary.className = 'eval-summary';
   container.appendChild(summary);
 
-  const table = document.createElement('table');
+  const table = documentImpl.createElement('table');
   table.className = 'eval-table';
-  const head = document.createElement('thead');
+  const head = documentImpl.createElement('thead');
   head.innerHTML = `<tr>${EVAL_TABLE_HEADERS.map((h) => `<th scope="col">${h}</th>`).join('')}</tr>`;
   table.appendChild(head);
-  const body = document.createElement('tbody');
+  const body = documentImpl.createElement('tbody');
   table.appendChild(body);
-  const scroller = document.createElement('div');
+  const scroller = documentImpl.createElement('div');
   scroller.className = 'eval-table-scroller';
   scroller.appendChild(table);
   container.appendChild(scroller);
 
-  const copyButton = document.createElement('button');
+  const copyButton = documentImpl.createElement('button');
   copyButton.className = 'btn btn-sm btn-evals-copy';
   copyButton.type = 'button';
   copyButton.textContent = 'Copy results';
@@ -109,11 +111,11 @@ export function createLiveResults(container, options) {
       const actual = entry.errored ? 'Error' : (entry.answer !== null ? entry.answer : scenarioLabel(scenarios, entry.scenario));
       const result = entry.errored ? 'Error' : (entry.correct ? 'Correct' : 'Incorrect');
 
-      const row = document.createElement('tr');
-      cell(row, entry.query);
-      cell(row, expected);
-      cell(row, actual);
-      cell(row, result);
+      const row = documentImpl.createElement('tr');
+      cell(row, entry.query, documentImpl);
+      cell(row, expected, documentImpl);
+      cell(row, actual, documentImpl);
+      cell(row, result, documentImpl);
       row.className = entry.errored ? 'eval-row-error' : (entry.correct ? 'eval-row-correct' : 'eval-row-incorrect');
       body.appendChild(row);
       rows.push([entry.query, expected, actual, result]);
