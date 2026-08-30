@@ -79,7 +79,7 @@ export function initScenarioAssistant(context) {
   const container = element('wizard-assist');
   const toggle = element('btn-wizard-assist');
   const panel = element('wizard-assist-panel');
-  const input = element('wizard-assist-input');
+  const input = element('intent-description');
   const run = element('btn-wizard-assist-run');
   const status = element('wizard-assist-status');
   const progressField = element('wizard-assist-progress-field');
@@ -106,6 +106,14 @@ export function initScenarioAssistant(context) {
     toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
     if (open) input.focus();
   });
+
+  // The run button stays disabled until the intent textarea (shared with the
+  // rest of the wizard) actually has text, so there is nothing to analyze.
+  function syncRunEnabled() {
+    run.disabled = !input.value.trim();
+  }
+  syncRunEnabled();
+  input.addEventListener('input', syncRunEnabled);
 
   function setStatus(message) {
     if (status) status.textContent = message;
@@ -183,7 +191,7 @@ export function initScenarioAssistant(context) {
       setStatus(copy.failure);
     }).finally(() => {
       running = false;
-      run.disabled = false;
+      syncRunEnabled();
     });
   });
 

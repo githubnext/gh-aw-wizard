@@ -709,12 +709,6 @@ a:hover {
 .assistant-panel[hidden] {
   display: none;
 }
-.assistant-panel label {
-  display: block;
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  margin-bottom: 0.4rem;
-}
 .assistant-actions {
   display: flex;
   flex-wrap: wrap;

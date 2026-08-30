@@ -1,9 +1,9 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { showAssistantResult } from '../src/js/slm-ui.js';
+import { initScenarioAssistant, showAssistantResult } from '../src/js/slm-ui.js';
 
 const html = readFileSync(fileURLToPath(new URL('../src/index.html', import.meta.url)), 'utf8');
 const wizard = JSON.parse(
@@ -14,6 +14,7 @@ const originalDocument = globalThis.document;
 
 afterEach(() => {
   globalThis.document = originalDocument;
+  vi.unstubAllGlobals();
 });
 
 function stubModal() {
@@ -78,5 +79,67 @@ describe('showAssistantResult', () => {
   it('does nothing when the dialog is missing', () => {
     globalThis.document = { getElementById: () => null };
     expect(showAssistantResult({ label: 'Issue Triage' })).toBe(false);
+  });
+});
+
+function fakeButton() {
+  const listeners = {};
+  return {
+    disabled: false,
+    attrs: {},
+    addEventListener(type, handler) { listeners[type] = handler; },
+    trigger(type) { if (listeners[type]) listeners[type](); },
+    setAttribute(name, value) { this.attrs[name] = value; },
+    removeAttribute(name) { delete this.attrs[name]; },
+    hasAttribute(name) { return name in this.attrs; },
+    focus() {}
+  };
+}
+
+function fakeTextarea() {
+  const listeners = {};
+  return {
+    value: '',
+    addEventListener(type, handler) { listeners[type] = handler; },
+    trigger(type) { if (listeners[type]) listeners[type](); },
+    focus() {}
+  };
+}
+
+describe('initScenarioAssistant run button', () => {
+  it('reuses the intent textarea and stays disabled until it has text', () => {
+    const toggle = fakeButton();
+    const panel = fakeButton();
+    panel.setAttribute('hidden', '');
+    const intent = fakeTextarea();
+    const run = fakeButton();
+    const nodes = {
+      'wizard-assist': fakeButton(),
+      'btn-wizard-assist': toggle,
+      'wizard-assist-panel': panel,
+      'intent-description': intent,
+      'btn-wizard-assist-run': run,
+      'wizard-assist-status': null,
+      'wizard-assist-progress-field': null,
+      'wizard-assist-progress': null,
+      'assist-modal': null
+    };
+    globalThis.document = {
+      getElementById: (id) => (id in nodes ? nodes[id] : null),
+      querySelectorAll: () => []
+    };
+    vi.stubGlobal('navigator', { gpu: {} });
+
+    const result = initScenarioAssistant({ wizardConfig: null, patterns: () => null });
+    expect(result).not.toBeNull();
+    expect(run.disabled).toBe(true);
+
+    intent.value = 'summarize issues every morning';
+    intent.trigger('input');
+    expect(run.disabled).toBe(false);
+
+    intent.value = '   ';
+    intent.trigger('input');
+    expect(run.disabled).toBe(true);
   });
 });

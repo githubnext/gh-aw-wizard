@@ -131,28 +131,26 @@
             <span class="recipe-value" id="summary-intent">tell us your intent</span>
           </button>
           <section class="wizard-step active" id="step-1">
+            <div class="conditional-field visible" id="intent-field">
+              <label for="intent-description" id="intent-label">Tell us your intent so that we can generate graders and evals</label>
+              <textarea class="text-area" id="intent-description" placeholder="e.g., Keep our release notes accurate so on-call engineers can triage incidents faster…"></textarea>
+              <p class="field-hint" id="intent-hint">We will add your intent to the prompt and generate graders and BinEval evaluations for it.</p>
+            </div>
             <div class="assistant" id="wizard-assist" hidden>
               <button class="btn btn-assistant" id="btn-wizard-assist" type="button" aria-expanded="false" aria-controls="wizard-assist-panel">
                 <svg class="octicon" aria-hidden="true"><use href="#octicon-zap"></use></svg>
                 <span id="wizard-assist-button-label">Let the wizard pick for me</span>
               </button>
               <div class="assistant-panel" id="wizard-assist-panel" hidden>
-                <label for="wizard-assist-input" id="wizard-assist-label">Describe what you want to automate</label>
-                <textarea class="text-area" id="wizard-assist-input" placeholder="e.g., Every morning, summarize the issues opened yesterday and post a digest…"></textarea>
                 <div class="assistant-actions">
-                  <button class="btn btn-primary" id="btn-wizard-assist-run" type="button">Analyze my request</button>
-                  <p class="field-hint" id="wizard-assist-hint">A small language model runs in your browser on WebGPU and picks the closest scenario. The model is downloaded once and kept in your browser storage.</p>
+                  <button class="btn btn-primary" id="btn-wizard-assist-run" type="button" disabled>Analyze my request</button>
+                  <p class="field-hint" id="wizard-assist-hint">A small language model runs in your browser on WebGPU and picks the closest scenario from the intent you described above. The model is downloaded once and kept in your browser storage.</p>
                 </div>
                 <div class="assistant-progress" id="wizard-assist-progress-field" hidden>
                   <progress class="assistant-progress-bar" id="wizard-assist-progress" max="100" value="0" aria-labelledby="wizard-assist-status"></progress>
                 </div>
                 <p class="assistant-status" id="wizard-assist-status" role="status" aria-live="polite"></p>
               </div>
-            </div>
-            <div class="conditional-field visible" id="intent-field">
-              <label for="intent-description" id="intent-label">Tell us your intent so that we can generate graders and evals</label>
-              <textarea class="text-area" id="intent-description" placeholder="e.g., Keep our release notes accurate so on-call engineers can triage incidents faster…"></textarea>
-              <p class="field-hint" id="intent-hint">We will add your intent to the prompt and generate graders and BinEval evaluations for it.</p>
             </div>
             <button class="btn btn-primary" id="btn-intent-continue" type="button">Continue</button>
           </section>
