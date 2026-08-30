@@ -240,8 +240,11 @@ function renderConfiguredOptions(config) {
 
 function revealWhyPane() {
   resetNavigationPane();
-  const why = document.getElementById('intent-description');
-  if (why) why.focus();
+  const archetypeOptions = document.getElementById('archetype-options');
+  if (archetypeOptions) {
+    const firstRadio = archetypeOptions.querySelector('input[name="archetype"]');
+    if (firstRadio) firstRadio.focus();
+  }
 }
 
 function generateAndShow() {
@@ -380,17 +383,17 @@ function goToStep(n, options) {
 
 export function resetNavigationPane() {
   const previousStep = currentStep;
-  let whyPane = null;
+  let initialPane = null;
   document.querySelectorAll('.wizard-step').forEach((step) => {
-    if (step.id === 'step-1') whyPane = step;
+    if (step.id === 'step-1') initialPane = step;
     step.classList.toggle('active', step.id === 'step-1');
   });
   currentStep = 1;
   updateProgress(previousStep, 1);
-  if (whyPane && previousStep !== 1) {
-    whyPane.style.animation = 'none';
-    void whyPane.offsetHeight; // reflow
-    whyPane.style.animation = ACCORDION_OPEN_ANIMATION;
+  if (initialPane && previousStep !== 1) {
+    initialPane.style.animation = 'none';
+    void initialPane.offsetHeight; // reflow
+    initialPane.style.animation = ACCORDION_OPEN_ANIMATION;
   }
 }
 
@@ -499,14 +502,14 @@ function bindRadioDeselect(radios, onDeselect) {
 }
 
 function bindFormEvents() {
-  // Step 2: archetype radios
+  // Step 1: archetype radios
   const archetypeRadios = document.querySelectorAll('input[name="archetype"]');
   const archetypeGroup = document.getElementById('archetype-options');
   bindRadioDeselect(archetypeRadios, clearArchetypeSelection);
 
   // Arrow keys move focus *and* selection between radios in a native
   // radiogroup, firing a `change` event just like a click does. Auto-advancing
-  // to step 3 on every `change` would eject keyboard focus from the group
+  // to step 2 on every `change` would eject keyboard focus from the group
   // while the user is still browsing options with the arrow keys (WCAG 2.1.1 /
   // 2.4.3 / 3.2.2). Track arrow-key navigation so the auto-advance below only
   // fires for a discrete selection (click, or Enter/Space), and otherwise
@@ -520,7 +523,7 @@ function bindFormEvents() {
     setTimeout(() => {
       if (archetypeGroup.contains(document.activeElement)) return;
       const checked = archetypeGroup.querySelector('input[name="archetype"]:checked');
-      if (checked && checked.value !== 'custom' && currentStep === 2) goToStep(3);
+      if (checked && checked.value !== 'custom' && currentStep === 1) goToStep(2);
     }, 0);
   });
 
@@ -535,15 +538,15 @@ function bindFormEvents() {
       prefillFromArchetype(radio.value);
       if (radio.value !== 'custom') {
         if (arrowKeyNav) {
-          // Leave focus on the radio the user just navigated to; step 3 will
+          // Leave focus on the radio the user just navigated to; step 2 will
           // be shown once focus leaves the radiogroup (see `focusout` above).
           arrowKeyNav = false;
           return;
         }
         const hadFocus = document.activeElement === radio;
-        goToStep(3);
+        goToStep(2);
         // The collapsing step would otherwise drop keyboard focus to the body.
-        const nextClause = document.querySelector('.recipe-clause[data-step="3"]');
+        const nextClause = document.querySelector('.recipe-clause[data-step="2"]');
         if (hadFocus && nextClause) nextClause.focus();
       }
     });
@@ -583,7 +586,7 @@ function bindFormEvents() {
   });
   updateCardSelection('#engine-options', 'radio');
 
-  // Step 1: free-form why. The prompt is re-baked on every keystroke so the
+  // Step 2: free-form why. The prompt is re-baked on every keystroke so the
   // finish step always previews what will be copied.
   const intent = document.getElementById('intent-description');
   if (intent) {
@@ -595,7 +598,7 @@ function bindFormEvents() {
     });
   }
   const intentContinue = document.getElementById('btn-intent-continue');
-  if (intentContinue) intentContinue.addEventListener('click', () => goToStep(2));
+  if (intentContinue) intentContinue.addEventListener('click', () => goToStep(3));
 
   document.addEventListener('change', (event) => {
     if (event.target.matches('input')) {
