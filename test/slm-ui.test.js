@@ -29,7 +29,8 @@ function stubModal() {
     'assist-modal-title': { textContent: '' },
     'assist-modal-description': { textContent: '' },
     'assist-modal-request-label': { textContent: '' },
-    'assist-modal-request': { textContent: '' }
+    'assist-modal-request': { textContent: '' },
+    'assist-modal-copy': { textContent: 'Copy prompt', disabled: false, dataset: {} }
   };
   const modal = {
     open: false,
@@ -80,6 +81,7 @@ describe('showAssistantResult', () => {
     expect(nodes['assist-modal-description'].textContent).toBe('Categorize and label issues');
     expect(nodes['assist-modal-request-label'].textContent).toBe('Your request');
     expect(nodes['assist-modal-request'].textContent).toBe('label incoming issues');
+    expect(nodes['assist-modal-copy'].textContent).toBe('Copy prompt');
   });
 
   describe('diagnostic log copy', () => {

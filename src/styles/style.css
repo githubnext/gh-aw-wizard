@@ -1088,6 +1088,42 @@ a:hover {
   color: var(--text-secondary);
   font-size: 0.8rem;
 }
+.assist-modal-request {
+  align-items: flex-start;
+}
+.assist-modal-request-copy {
+  min-width: 0;
+  text-align: left;
+}
+.assist-modal-request-copy pre {
+  margin: 0.35rem 0 0;
+  max-height: 12rem;
+  overflow: auto;
+  padding: 0.75rem 0.9rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border-color);
+  background: var(--code-bg);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.assist-modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-top: 1.25rem;
+}
+.assist-modal-copy {
+  min-width: 8rem;
+}
+.assist-modal-actions .copy-modal-action {
+  width: auto;
+  flex: 1;
+  max-width: 12rem;
+}
 .copy-modal-action {
   width: 100%;
   justify-content: center;
