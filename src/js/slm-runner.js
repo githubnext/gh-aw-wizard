@@ -8,7 +8,7 @@ import { createModelCache } from './slm-cache.js';
 import { createWebLlmLogger } from './slm-logger.js';
 import {
   buildScenarioMessages,
-  isIOS,
+  isSafari,
   modelIdFor,
   progressLabel,
   progressTracker,
@@ -26,11 +26,11 @@ export function supportsWebGPU(navigatorImpl) {
   return !!(nav && nav.gpu);
 }
 
-// iOS Safari exposes navigator.gpu but its implementation cannot initialize
-// the WebGPU backend bundled with the current ONNX Runtime release. Use its
+// Safari exposes navigator.gpu but its implementation cannot initialize the
+// WebGPU backend bundled with the current ONNX Runtime release. Use its
 // compatible WASM runtime instead.
 export function preferredDevice(navigatorImpl) {
-  if (isIOS(navigatorImpl)) return 'wasm';
+  if (isSafari(navigatorImpl)) return 'wasm';
   return supportsWebGPU(navigatorImpl) ? 'webgpu' : 'wasm';
 }
 
