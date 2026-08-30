@@ -4,9 +4,9 @@
 // the wizard scenario that best matches a free-form request. Everything in this
 // module is side-effect free so it can be unit tested without a browser.
 
-// The runtime is served from the site itself (see `scripts/fetch-slm-runtime.mjs`
-// and the `slmRuntimePlugin` in `vite.config.js`) rather than from a CDN, so it
-// stays reachable on networks that block third-party script hosts.
+// The runtime is served from the site itself (see `scripts/fetch-vendor-assets.mjs`
+// and the `vendorPlugin` in `vite.config.js`) rather than from a CDN, so it
+// stays reachable on networks that block third-party asset hosts.
 export const DEFAULT_SLM_CONFIG = {
   enabled: true,
   module_url: 'slm/transformers.min.js',
