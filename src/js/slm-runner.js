@@ -92,12 +92,14 @@ export function createScenarioAssistant(options) {
           onProgress({ percent: 100, label: 'Analyzing your request', status: 'generating' });
         }
         const messages = buildScenarioMessages(scenarios, request);
+        logger.log('analysis.prompt', { messages });
         const output = await engine.chat.completions.create({
           messages,
           max_tokens: config.max_tokens || 24,
           temperature: 0,
           stream: false
         });
+        logger.log('analysis.response', { output });
         const answer = extractAssistantText(output);
         const scenario = selectScenario(answer, request, scenarios);
         analysis.end('completed', { answerLength: answer.length, scenario });
