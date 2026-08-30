@@ -84,10 +84,8 @@ function safeUrl(url, configUrl) {
 }
 
 const ASSISTANT_ELEMENTS = {
-  button: 'wizard-assist-button-label',
   label: 'wizard-assist-label',
-  run_button: 'btn-wizard-assist-run',
-  hint: 'wizard-assist-hint',
+  run_button: 'wizard-assist',
   result_request_label: 'assist-modal-request-label',
   result_action: 'assist-modal-action'
 };
