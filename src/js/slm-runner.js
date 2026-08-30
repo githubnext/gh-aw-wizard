@@ -7,20 +7,21 @@
 import { createModelCache } from './slm-cache.js';
 import {
   buildScenarioMessages,
-  isIOS,
+  modelIdFor,
   progressLabel,
   progressTracker,
   runtimeUrls,
-  selectScenario
+  selectScenario,
+  webgpuDtypeFor
 } from './slm.js';
 
-// iOS Safari (and iPadOS Safari, which reports as desktop Safari) exposes
-// navigator.gpu but its WebGPU implementation reliably crashes the tab once a
-// model this size finishes loading, so it is treated as unsupported here even
-// though the API is technically present.
+// WebGPU support is all that is required to run the assistant. iOS Safari
+// (and iPadOS Safari, which reports as desktop Safari) exposes navigator.gpu
+// but has much less memory headroom than desktop browsers, so it is served a
+// smaller model (see modelIdFor/webgpuDtypeFor) instead of being excluded.
 export function supportsWebGPU(navigatorImpl) {
   const nav = navigatorImpl || (typeof navigator !== 'undefined' ? navigator : null);
-  return !!(nav && nav.gpu) && !isIOS(navigatorImpl);
+  return !!(nav && nav.gpu);
 }
 
 // The wizard only offers the assistant on WebGPU-capable browsers, so the wasm
@@ -69,9 +70,9 @@ export function createScenarioAssistant(options) {
         if (urls.wasmPaths && onnx && onnx.wasm) onnx.wasm.wasmPaths = urls.wasmPaths;
       }
       const tracker = progressTracker();
-      return pipeline('text-generation', config.model_id, {
+      return pipeline('text-generation', modelIdFor(config, opts.navigator), {
         device,
-        dtype: device === 'webgpu' ? config.webgpu_dtype : config.wasm_dtype,
+        dtype: device === 'webgpu' ? webgpuDtypeFor(config, opts.navigator) : config.wasm_dtype,
         progress_callback: (event) => {
           if (typeof onProgress !== 'function') return;
           const percent = tracker.update(event);

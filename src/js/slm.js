@@ -22,6 +22,13 @@ export const DEFAULT_SLM_CONFIG = {
   model_id: 'onnx-community/Qwen2.5-0.5B-Instruct',
   webgpu_dtype: 'q4f16',
   wasm_dtype: 'q4',
+  // iOS Safari's WebGPU implementation has far less memory headroom than
+  // desktop browsers, so a smaller model is used there instead of the
+  // default one to avoid crashing the tab. ios_webgpu_dtype is kept separate
+  // from webgpu_dtype (even though it currently matches) since a future
+  // smaller model may need its own quantization to run well on iOS.
+  ios_model_id: 'onnx-community/SmolLM2-360M-Instruct-ONNX',
+  ios_webgpu_dtype: 'q4f16',
   max_new_tokens: 24
 };
 
@@ -37,6 +44,22 @@ export function slmConfig(wizardConfig) {
     ? wizardConfig.assistant.model
     : {};
   return { ...DEFAULT_SLM_CONFIG, ...configured };
+}
+
+// iOS Safari can run the assistant, but only the smaller model fits within its
+// WebGPU memory limits, so it is swapped in based on the runtime platform.
+export function modelIdFor(config, navigatorImpl) {
+  const settings = config || {};
+  if (isIOS(navigatorImpl) && settings.ios_model_id) return settings.ios_model_id;
+  return settings.model_id;
+}
+
+// Mirrors modelIdFor for the WebGPU quantization to use, since the smaller
+// iOS model may ship its own recommended dtype.
+export function webgpuDtypeFor(config, navigatorImpl) {
+  const settings = config || {};
+  if (isIOS(navigatorImpl) && settings.ios_webgpu_dtype) return settings.ios_webgpu_dtype;
+  return settings.webgpu_dtype;
 }
 
 export function isSafari(navigatorImpl) {
