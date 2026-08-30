@@ -45,6 +45,17 @@ export function isSafari(navigatorImpl) {
   return /safari/i.test(userAgent) && !/chrome|chromium|android/i.test(userAgent);
 }
 
+// iPadOS reports as "Macintosh" in the user agent, so touch support on an
+// otherwise Mac-looking platform is the only reliable signal.
+export function isIOS(navigatorImpl) {
+  const nav = navigatorImpl || (typeof navigator !== 'undefined' ? navigator : null);
+  if (!nav) return false;
+  const userAgent = typeof nav.userAgent === 'string' ? nav.userAgent : '';
+  if (/iphone|ipad|ipod/i.test(userAgent)) return true;
+  const platform = typeof nav.platform === 'string' ? nav.platform : '';
+  return platform === 'MacIntel' && typeof nav.maxTouchPoints === 'number' && nav.maxTouchPoints > 1;
+}
+
 // Runtime assets are configured as site-relative paths so a wizard hosted under
 // a sub-path (such as GitHub Pages project sites) resolves them correctly.
 export function resolveRuntimeUrl(url, baseUrl) {
