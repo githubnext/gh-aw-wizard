@@ -88,6 +88,9 @@ export function createScenarioAssistant(options) {
         // transformers.js otherwise points onnxruntime-web at a CDN.
         const onnx = env.backends && env.backends.onnx;
         if (urls.wasmPaths && onnx && onnx.wasm) onnx.wasm.wasmPaths = urls.wasmPaths;
+        if (isSafari(opts.navigator) && env.backends && env.backends.webgpu) {
+          env.backends.webgpu.disabled = true;
+        }
       }
       const tracker = progressTracker();
       return pipeline('text-generation', modelId, {
