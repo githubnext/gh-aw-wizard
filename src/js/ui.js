@@ -335,11 +335,8 @@ function gatherDetails() {
 
 function revealWhyPane() {
   resetNavigationPane();
-  const archetypeOptions = document.getElementById('archetype-options');
-  if (archetypeOptions) {
-    const firstRadio = archetypeOptions.querySelector('input[name="archetype"]');
-    if (firstRadio) firstRadio.focus();
-  }
+  const intentField = document.getElementById('intent-description');
+  if (intentField) intentField.focus();
 }
 
 function generateAndShow() {
@@ -597,14 +594,14 @@ function bindRadioDeselect(radios, onDeselect) {
 }
 
 function bindFormEvents() {
-  // Step 1: archetype radios
+  // Step 2: archetype radios (How)
   const archetypeRadios = document.querySelectorAll('input[name="archetype"]');
   const archetypeGroup = document.getElementById('archetype-options');
   bindRadioDeselect(archetypeRadios, clearArchetypeSelection);
 
   // Arrow keys move focus *and* selection between radios in a native
   // radiogroup, firing a `change` event just like a click does. Auto-advancing
-  // to step 2 on every `change` would eject keyboard focus from the group
+  // to step 3 on every `change` would eject keyboard focus from the group
   // while the user is still browsing options with the arrow keys (WCAG 2.1.1 /
   // 2.4.3 / 3.2.2). Track arrow-key navigation so the auto-advance below only
   // fires for a discrete selection (click, or Enter/Space), and otherwise
@@ -618,7 +615,7 @@ function bindFormEvents() {
     setTimeout(() => {
       if (archetypeGroup.contains(document.activeElement)) return;
       const checked = archetypeGroup.querySelector('input[name="archetype"]:checked');
-      if (checked && checked.value !== 'custom' && currentStep === 1) goToStep(2);
+      if (checked && checked.value !== 'custom' && currentStep === 2) goToStep(3);
     }, 0);
   });
 
@@ -627,21 +624,21 @@ function bindFormEvents() {
       updateCardSelection('#archetype-options', 'radio');
       const customField = document.getElementById('custom-description-field');
       customField.classList.toggle('visible', radio.value === 'custom');
-      // Selecting a new "what" scenario invalidates any downstream choices made for the previous one.
+      // Selecting a new "how" scenario invalidates any downstream choices made for the previous one.
       clearDownstreamSelections(radio.value);
       // Auto-fill triggers/outputs from archetype data
       prefillFromArchetype(radio.value);
       if (radio.value !== 'custom') {
         if (arrowKeyNav) {
-          // Leave focus on the radio the user just navigated to; step 2 will
+          // Leave focus on the radio the user just navigated to; step 3 will
           // be shown once focus leaves the radiogroup (see `focusout` above).
           arrowKeyNav = false;
           return;
         }
         const hadFocus = document.activeElement === radio;
-        goToStep(2);
+        goToStep(3);
         // The collapsing step would otherwise drop keyboard focus to the body.
-        const nextClause = document.querySelector('.recipe-clause[data-step="2"]');
+        const nextClause = document.querySelector('.recipe-clause[data-step="3"]');
         if (hadFocus && nextClause) nextClause.focus();
       }
     });
@@ -696,7 +693,7 @@ function bindFormEvents() {
   });
   updateCardSelection('#engine-options', 'radio');
 
-  // Step 2: free-form why. The prompt is re-baked on every keystroke so the
+  // Step 1: free-form why. The prompt is re-baked on every keystroke so the
   // finish step always previews what will be copied.
   const intent = document.getElementById('intent-description');
   if (intent) {
@@ -708,7 +705,7 @@ function bindFormEvents() {
     });
   }
   const intentContinue = document.getElementById('btn-intent-continue');
-  if (intentContinue) intentContinue.addEventListener('click', () => goToStep(3));
+  if (intentContinue) intentContinue.addEventListener('click', () => goToStep(2));
 
   document.addEventListener('change', (event) => {
     if (event.target.matches('input')) {
