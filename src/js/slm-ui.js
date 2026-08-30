@@ -108,7 +108,8 @@ export function initScenarioAssistant(context) {
   });
 
   // The run button stays disabled until the intent textarea (shared with the
-  // rest of the wizard) actually has text, so there is nothing to analyze.
+  // rest of the wizard) actually has text, because there is nothing to analyze
+  // otherwise.
   function syncRunEnabled() {
     run.disabled = !input.value.trim();
   }
