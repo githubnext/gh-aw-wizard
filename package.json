@@ -13,6 +13,7 @@
     "vendor": "node scripts/fetch-vendor-assets.mjs --force",
     "preview": "vite preview",
     "generate": "node src/js/cli.js",
+    "optimize": "node scripts/prompt-optimizer.mjs",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "vitest run",

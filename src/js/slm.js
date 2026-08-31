@@ -97,16 +97,29 @@ export function scenarioCatalogText(scenarios) {
   }).join('\n');
 }
 
+// The instruction lines wrapped around the scenario catalog. Exported so the
+// offline prompt optimizer (scripts/prompt-optimizer.mjs) can evaluate
+// alternative wordings against the exact prompt the wizard ships.
+export const DEFAULT_SCENARIO_INSTRUCTIONS = {
+  preamble: 'You match a user request to one automation scenario for GitHub Agentic Workflows.',
+  catalogHeader: 'Available scenarios (id: name — description):',
+  rules: [
+    'Answer with exactly one scenario id from the list above and nothing else.',
+    'If nothing fits, answer with: custom'
+  ]
+};
+
 // Chat messages handed to the SLM. The system message carries the UI
 // information (the scenario cards the wizard renders) and constrains the model
 // to answering with a single scenario id.
-export function buildScenarioMessages(scenarios, request) {
+export function buildScenarioMessages(scenarios, request, instructions) {
+  const settings = { ...DEFAULT_SCENARIO_INSTRUCTIONS, ...(instructions || {}) };
+  const rules = Array.isArray(settings.rules) ? settings.rules : DEFAULT_SCENARIO_INSTRUCTIONS.rules;
   const system = [
-    'You match a user request to one automation scenario for GitHub Agentic Workflows.',
-    'Available scenarios (id: name — description):',
+    settings.preamble,
+    settings.catalogHeader,
     scenarioCatalogText(scenarios),
-    'Answer with exactly one scenario id from the list above and nothing else.',
-    'If nothing fits, answer with: custom'
+    ...rules
   ].join('\n');
   return [
     { role: 'system', content: system },
