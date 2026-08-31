@@ -347,7 +347,25 @@ function duplicatePreventionTips(workflows, patterns) {
   workflows.forEach((workflow) => {
     const archetype = getArchetype(patterns, workflow.answers.archetype) || {};
     (archetype.tips || []).forEach((tip) => {
-      if (/skip-if-match|tracker-id|\bexpires\b/i.test(tip) && tips.indexOf(tip) === -1) tips.push(tip);
+      if (/skip-if-match|tracker-id|\bexpires\b|deduplicat|capped|\bmax\b/i.test(tip) && tips.indexOf(tip) === -1) tips.push(tip);
+    });
+  });
+  return tips;
+}
+
+// Surface additional archetype guidance that is action-oriented but doesn't fit the
+// existing DO NOT / dedupe / protected-file / PR-spam filters. This keeps newer
+// pattern tips such as scope-limiting workflow_run filters or artifact parsing steps
+// from being lost when the pattern library adds a new workflow shape.
+function actionableWorkflowTips(workflows, patterns) {
+  const tips = [];
+  workflows.forEach((workflow) => {
+    const archetype = getArchetype(patterns, workflow.answers.archetype) || {};
+    (archetype.tips || []).forEach((tip) => {
+      const value = typeof tip === 'string' ? tip.trim() : '';
+      if (!value || tips.indexOf(value) !== -1) return;
+      if (/do not|skip-if-match|tracker-id|\bexpires\b|pre-activation|protected-files/i.test(value)) return;
+      tips.push(value);
     });
   });
   return tips;
@@ -523,6 +541,12 @@ export function generateAgentPrompt(answers, patterns) {
   if (rateLimits.length) {
     prompt += `- Prevent PR spam on scheduled runs, for example: ${
       rateLimits.join('; ')
+    }\n`;
+  }
+  const workflowTips = actionableWorkflowTips(workflows, patterns);
+  if (workflowTips.length) {
+    prompt += `- Follow the workflow-specific guidance, for example: ${
+      workflowTips.join('; ')
     }\n`;
   }
   prompt += multiple
