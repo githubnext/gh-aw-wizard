@@ -2,19 +2,19 @@
   "id": "pr-review",
   "label": "PR Review",
   "description": "Review pull requests for quality and issues",
-  "success_rate": 0.46,
-  "count": 71,
+  "success_rate": 0.42,
+  "count": 63,
   "recommended_triggers": [
     {
       "type": "pull_request",
       "config": {}
     },
     {
-      "type": "slash_command",
+      "type": "roles",
       "config": {}
     },
     {
-      "type": "schedule",
+      "type": "pull_request_target",
       "config": {}
     }
   ],
@@ -33,36 +33,35 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5016
+      "stars": 5063
     },
     {
       "repo": "githubnext/agentics",
-      "stars": 922
+      "stars": 925
     },
     {
-      "repo": "elastic/kibana",
-      "stars": 21262
+      "repo": "clash-verge-rev/clash-verge-rev",
+      "stars": 141262
     },
     {
-      "repo": "pydantic/pydantic-ai",
-      "stars": 19518
+      "repo": "OtterMind/Chat2DB",
+      "stars": 28056
     },
     {
-      "repo": "Azure/azure-sdk-for-net",
-      "stars": 6042
+      "repo": "dotnet/maui",
+      "stars": 23317
     }
   ],
   "tips": [
     "Focus on specific review criteria (security, performance, style)",
     "Use pull_request triggers focused on ready-to-review activity",
-    "Include DO NOT constraints to avoid false positive comments",
-    "For slash_command-triggered reviews, set tools.github.lockdown: true and min-integrity so only content from users with push access (or an explicit min-integrity level) is acted on"
+    "Include DO NOT constraints to avoid false positive comments"
   ],
   "anti_patterns": [
-    "pr-review",
-    "macios-reviewer",
-    "pr-security-reviewer",
-    "pr-docs-reviewer",
-    "reviewer-codex"
+    "supply-chain-review",
+    "supply-chain-review",
+    "arm-api-review",
+    "data-plane-api-review",
+    "ai-pr-reviewer"
   ]
 }

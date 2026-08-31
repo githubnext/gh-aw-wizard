@@ -3,12 +3,8 @@
   "label": "Daily Test Improver",
   "description": "Add high-value tests and improve test quality",
   "success_rate": 1.0,
-  "count": 4,
+  "count": 3,
   "recommended_triggers": [
-    {
-      "type": "schedule",
-      "config": {}
-    },
     {
       "type": "permissions",
       "config": {}
@@ -16,39 +12,27 @@
     {
       "type": "reaction",
       "config": {}
+    },
+    {
+      "type": "schedule",
+      "config": {}
     }
   ],
-  "recommended_safe_outputs": [
-    "pull-requests"
-  ],
-  "recommended_tools": [
-    "create-pull-request"
-  ],
+  "recommended_safe_outputs": [],
+  "recommended_tools": [],
   "timeout_minutes": 30,
-  "prompt_style": "phase-based",
-  "size_range_bytes": [
-    5000,
-    12000
-  ],
+  "prompt_style": null,
+  "size_range_bytes": null,
   "top_repos": [
     {
       "repo": "githubnext/agentics",
-      "stars": 922
+      "stars": 925
     },
     {
       "repo": "rancher/dashboard",
       "stars": 621
-    },
-    {
-      "repo": "tastybamboo/panda-cms",
-      "stars": 4
     }
   ],
-  "tips": [
-    "Establish a passing baseline before changing tests",
-    "Prefer regression-prone and critical paths over coverage inflation",
-    "Create one focused draft pull request per run",
-    "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers"
-  ],
+  "tips": [],
   "anti_patterns": []
 }

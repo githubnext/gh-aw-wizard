@@ -2,19 +2,19 @@
   "id": "documentation-updater",
   "label": "Documentation Updater",
   "description": "Keep docs accurate and up-to-date",
-  "success_rate": 0.58,
-  "count": 30,
+  "success_rate": 0.68,
+  "count": 9,
   "recommended_triggers": [
     {
       "type": "schedule",
       "config": {}
     },
     {
-      "type": "push",
+      "type": "skip-if-match",
       "config": {}
     },
     {
-      "type": "skip-if-match",
+      "type": "permissions",
       "config": {}
     }
   ],
@@ -33,37 +33,29 @@
   "top_repos": [
     {
       "repo": "githubnext/agentics",
-      "stars": 922
+      "stars": 925
+    },
+    {
+      "repo": "microsoft/apm",
+      "stars": 3671
     },
     {
       "repo": "microsoft/hve-core",
-      "stars": 1367
+      "stars": 1408
     },
     {
-      "repo": "OP5dev/TF-via-PR",
-      "stars": 338
+      "repo": "github/gh-aw-firewall",
+      "stars": 138
     },
     {
-      "repo": "YousefHadder/markdown-plus.nvim",
-      "stars": 287
-    },
-    {
-      "repo": "pikax/verter",
-      "stars": 105
+      "repo": "baizhiheizi/mixin_bot",
+      "stars": 16
     }
   ],
   "tips": [
     "80% success rate \u2014 reliable when scoped to specific doc areas",
     "Add pre-steps to validate docs build before the agent starts",
-    "Use DO NOT constraints to prevent deleting existing content",
-    "Use protected-files: fallback-to-issue for manifests, CI configuration, and agent instructions",
-    "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers"
+    "Use DO NOT constraints to prevent deleting existing content"
   ],
-  "anti_patterns": [
-    "update-docs",
-    "daily-doc-updater",
-    "daily-doc-updater",
-    "daily-doc-updater",
-    "update-docs"
-  ]
+  "anti_patterns": []
 }
