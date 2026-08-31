@@ -15,6 +15,8 @@ import {
   scenarioCatalogText,
   isIOS,
   runtimeUrls,
+  scenarioAttemptTemperature,
+  scenarioAttemptWinner,
   scenarioLabel,
   selectScenario,
   slmConfig
@@ -77,7 +79,7 @@ describe('scenario prompt', () => {
     expect(messages).toHaveLength(2);
     expect(messages[0].role).toBe('system');
     expect(messages[0].content).toContain('- status-report: Status Report');
-    expect(messages[0].content).toContain('Answer with exactly one scenario id');
+    expect(messages[0].content).toContain('Output exactly its id');
     expect(messages[1]).toEqual({ role: 'user', content: 'label my issues' });
   });
 });
@@ -97,7 +99,44 @@ describe('answer parsing', () => {
 
   it('returns null when no scenario is named', () => {
     expect(parseScenarioSelection('I am not sure', scenarios)).toBeNull();
+    expect(parseScenarioSelection('Build a customized workflow', scenarios)).toBeNull();
     expect(parseScenarioSelection('', scenarios)).toBeNull();
+  });
+});
+
+describe('multi-attempt selection', () => {
+  it('uses varied low temperatures for three attempts', () => {
+    expect([0, 1, 2].map(scenarioAttemptTemperature)).toEqual([0, 0.2, 0.4]);
+    expect([3, 4].map(scenarioAttemptTemperature)).toEqual([0.6, 0.8]);
+  });
+
+  it('returns a two-of-three winner', () => {
+    const winner = scenarioAttemptWinner([
+      { scenario: 'issue-triage', answer: 'issue-triage' },
+      { scenario: 'status-report', answer: 'status-report' },
+      { scenario: 'issue-triage', answer: 'Issue Triage' }
+    ]);
+    expect(winner).toEqual({ scenario: 'issue-triage', answer: 'issue-triage' });
+  });
+
+  it('gives up when three attempts have no majority', () => {
+    expect(scenarioAttemptWinner([
+      { scenario: 'issue-triage', answer: 'issue-triage' },
+      { scenario: 'status-report', answer: 'status-report' },
+      { scenario: 'custom', answer: 'custom' }
+    ])).toBeNull();
+  });
+
+  it('supports stricter consensus thresholds', () => {
+    const attempts = [
+      { scenario: 'issue-triage', answer: 'issue-triage' },
+      { scenario: 'issue-triage', answer: 'Issue Triage' },
+      { scenario: 'issue-triage', answer: 'issue-triage' },
+      { scenario: 'status-report', answer: 'status-report' },
+      { scenario: 'status-report', answer: 'Status Report' }
+    ];
+    expect(scenarioAttemptWinner(attempts, 3)?.scenario).toBe('issue-triage');
+    expect(scenarioAttemptWinner(attempts, 4)).toBeNull();
   });
 });
 
@@ -113,6 +152,34 @@ describe('keyword fallback', () => {
   it('is used when the model answer names no scenario', () => {
     expect(selectScenario('no idea', 'post periodic summaries', scenarios)).toBe('status-report');
     expect(selectScenario('no idea', 'zzz', scenarios)).toBeNull();
+  });
+
+  it('corrects a chatty custom answer when request keywords strongly match', () => {
+    expect(selectScenario('Answer: custom', 'please label our incoming issues', scenarios)).toBe('issue-triage');
+  });
+
+  it('does not overcorrect a valid bare model id', () => {
+    const expanded = scenarios.concat([
+      { id: 'pr-review', label: 'PR Review', description: 'Review pull requests for quality' },
+      { id: 'skill-pr-reviewer', label: 'Skill PR Reviewer', description: 'Review pull requests with expert skills' }
+    ]);
+    expect(selectScenario(
+      'pr-review',
+      'Act as an automated reviewer when a PR is opened',
+      expanded
+    )).toBe('pr-review');
+  });
+
+  it('uses normalized domain keywords to correct a contradictory answer', () => {
+    const expanded = scenarios.concat([
+      { id: 'pr-review', label: 'PR Review', description: 'Review pull requests for quality' },
+      { id: 'documentation-updater', label: 'Documentation Updater', description: 'Keep docs accurate' }
+    ]);
+    expect(selectScenario(
+      'You can open a PR, so pr-review is suitable.',
+      'Find stale docs and open a pull request correcting them',
+      expanded
+    )).toBe('documentation-updater');
   });
 });
 
@@ -134,6 +201,10 @@ describe('loading progress', () => {
 describe('model configuration', () => {
   it('falls back to the built-in defaults', () => {
     expect(slmConfig(null).model_id).toBe(DEFAULT_SLM_CONFIG.model_id);
+    expect(slmConfig(null).analysis_attempts).toBe(1);
+    expect(slmConfig(null).analysis_consensus).toBe(1);
+    expect(slmConfig(null).ios_analysis_attempts).toBe(3);
+    expect(slmConfig(null).ios_analysis_consensus).toBe(2);
   });
 
   it('is overridable from the wizard configuration', () => {

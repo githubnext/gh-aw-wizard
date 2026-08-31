@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_SCENARIO_INSTRUCTIONS, buildScenarioMessages } from '../src/js/slm.js';
-import { chatCompletion } from '../scripts/prompt-optimizer.mjs';
+import { aggregateTargetEvaluations, chatCompletion } from '../scripts/prompt-optimizer.mjs';
 import {
   DEFAULT_OPTIMIZER_CONFIG,
   MAX_PROPOSED_RULES,
@@ -12,6 +12,7 @@ import {
   instructionsText,
   nextRunDelay,
   parseInstructionProposal,
+  preservesTargetScores,
   scoreOf,
   summarizeRound
 } from '../src/js/prompt-optimizer.js';
@@ -51,6 +52,41 @@ describe('chatCompletion', () => {
 
     await chatCompletion('http://localhost/v1', { model: 'small' });
     expect(fetch.mock.calls[0][1].headers).toEqual({ 'content-type': 'application/json' });
+  });
+});
+
+describe('aggregateTargetEvaluations', () => {
+  it('combines model scores while preserving per-target results and traces', () => {
+    const instructions = { preamble: 'P', rules: ['R'] };
+    const combined = aggregateTargetEvaluations([
+      {
+        name: 'desktop',
+        model: 'qwen',
+        queries: 2,
+        attempts: 2,
+        successes: 2,
+        errors: 0,
+        successRate: 1,
+        rows: [{ scenario: 'issue-triage', queries: 2, attempts: 2, successes: 2, errors: 0 }],
+        traces: [{ query: 'desktop request', evalTarget: 'desktop' }]
+      },
+      {
+        name: 'ios',
+        model: 'smollm',
+        queries: 2,
+        attempts: 2,
+        successes: 1,
+        errors: 0,
+        successRate: 0.5,
+        rows: [{ scenario: 'issue-triage', queries: 2, attempts: 2, successes: 1, errors: 0 }],
+        traces: [{ query: 'ios request', evalTarget: 'ios' }]
+      }
+    ], instructions);
+    expect(combined.successRate).toBe(0.75);
+    expect(combined.rows[0]).toMatchObject({ attempts: 4, successes: 3, successRate: 0.75 });
+    expect(combined.targets).toHaveLength(2);
+    expect(combined.traces.map((trace) => trace.evalTarget)).toEqual(['desktop', 'ios']);
+    expect(combined.instructions).toBe(instructions);
   });
 });
 
@@ -120,11 +156,26 @@ describe('formatEvalReport', () => {
       evaluation,
       evalModel: 'small-model'
     });
+
     expect(report).toContain('- eval model: small-model');
     expect(report).toContain('- success rate: 50% (1/2)');
     expect(report).toContain('"preamble": "P"');
     expect(report.indexOf('| issue-triage |')).toBeLessThan(report.indexOf('| status-report |'));
     expect(report).toContain('request: label new issues');
+  });
+
+  it('reports each model target separately', () => {
+    const report = formatEvalReport({
+      evaluation: {
+        ...evaluation,
+        targets: [
+          { name: 'desktop', model: 'qwen', successes: 2, attempts: 2, successRate: 1 },
+          { name: 'ios', model: 'smollm', successes: 1, attempts: 2, successRate: 0.5 }
+        ]
+      }
+    });
+    expect(report).toContain('| desktop | qwen | 2/2 | 100% |');
+    expect(report).toContain('| ios | smollm | 1/2 | 50% |');
   });
 
   it('says so when nothing failed', () => {
@@ -221,6 +272,27 @@ describe('chooseCandidate', () => {
   it('keeps the incumbent when there are no candidates', () => {
     const decision = chooseCandidate(current, []);
     expect(decision).toEqual({ accepted: false, winner: current, improvement: 0 });
+  });
+
+  it('rejects an aggregate gain that regresses one model target', () => {
+    const dualCurrent = {
+      successRate: 0.6,
+      targets: [
+        { name: 'desktop', successRate: 0.8 },
+        { name: 'ios', successRate: 0.4 }
+      ],
+      instructions: { preamble: 'current', rules: ['a'] }
+    };
+    const regressed = {
+      successRate: 0.7,
+      targets: [
+        { name: 'desktop', successRate: 0.7 },
+        { name: 'ios', successRate: 0.7 }
+      ],
+      instructions: { preamble: 'candidate', rules: ['b'] }
+    };
+    expect(preservesTargetScores(dualCurrent, regressed)).toBe(false);
+    expect(chooseCandidate(dualCurrent, [regressed]).accepted).toBe(false);
   });
 });
 

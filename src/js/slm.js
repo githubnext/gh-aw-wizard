@@ -15,7 +15,11 @@ export const DEFAULT_SLM_CONFIG = {
   // avoids the shader-f16 feature that is not available on every iPhone.
   ios_model_id: 'SmolLM2-360M-Instruct-q4f32_1-MLC',
   cache_backend: 'cache',
-  max_tokens: 24
+  max_tokens: 24,
+  analysis_attempts: 1,
+  analysis_consensus: 1,
+  ios_analysis_attempts: 3,
+  ios_analysis_consensus: 2
 };
 
 const STOP_WORDS = [
@@ -24,6 +28,62 @@ const STOP_WORDS = [
   'the', 'their', 'them', 'then', 'they', 'this', 'to', 'we', 'want', 'with',
   'when', 'workflow', 'would', 'you', 'your'
 ];
+
+const KEYWORD_ALIASES = {
+  actions: 'ci',
+  child: 'hierarchy',
+  children: 'hierarchy',
+  ci: 'ci',
+  communities: 'community',
+  complexity: 'codehealth',
+  contributions: 'community',
+  coverage: 'test',
+  debt: 'codehealth',
+  dependencies: 'dependency',
+  discussions: 'community',
+  docs: 'documentation',
+  failures: 'failure',
+  flaky: 'test',
+  guides: 'documentation',
+  harassment: 'moderation',
+  insecure: 'security',
+  issues: 'issue',
+  keyboard: 'accessibility',
+  labels: 'label',
+  libraries: 'dependency',
+  linter: 'lint',
+  malicious: 'security',
+  maintainability: 'codehealth',
+  memory: 'performance',
+  moderation: 'moderation',
+  onboarding: 'user',
+  outdated: 'dependency',
+  packages: 'dependency',
+  parent: 'hierarchy',
+  parents: 'hierarchy',
+  policy: 'moderation',
+  pr: 'pullrequest',
+  prs: 'pullrequest',
+  readme: 'documentation',
+  screenreader: 'accessibility',
+  reviewer: 'review',
+  skills: 'skill',
+  slow: 'performance',
+  spam: 'moderation',
+  suspicious: 'security',
+  tests: 'test',
+  tracking: 'hierarchy',
+  upstream: 'dependency',
+  users: 'user',
+  vulnerabilities: 'security',
+  wcag: 'accessibility',
+  workflows: 'agenticworkflow'
+};
+
+const STRONG_KEYWORDS = new Set([
+  'accessibility', 'agenticworkflow', 'ci', 'codehealth', 'community', 'dependency', 'documentation',
+  'hierarchy', 'lint', 'moderation', 'performance', 'security', 'skill', 'test', 'user'
+]);
 
 export function slmConfig(wizardConfig) {
   const configured = wizardConfig && wizardConfig.assistant && wizardConfig.assistant.model
@@ -101,12 +161,11 @@ export function scenarioCatalogText(scenarios) {
 // offline prompt optimizer (scripts/prompt-optimizer.mjs) can evaluate
 // alternative wordings against the exact prompt the wizard ships.
 export const DEFAULT_SCENARIO_INSTRUCTIONS = {
-  preamble: 'Choose the automation scenario whose description matches the request\'s literal topic; do not infer an unmentioned topic.',
+  preamble: 'Classification task: choose the single catalog entry that best matches the user\'s request.',
   catalogHeader: 'Available scenarios (id: name — description):',
   rules: [
-    'Match the explicit subject first: pull requests, documentation, accessibility, agentic workflows, issues, skills, tests, dependencies, performance, security, or CI.',
-    'Answer with exactly one scenario id from the list above and nothing else.',
-    'If nothing fits, answer with: custom'
+    'Output exactly its id: no sentence, bullet, label, punctuation, or explanation.',
+    'Choose custom only when every other entry is unrelated.'
   ]
 };
 
@@ -133,7 +192,16 @@ function normalize(value) {
 }
 
 function words(value) {
-  return normalize(value).split(' ').filter((word) => word && STOP_WORDS.indexOf(word) === -1);
+  const canonical = normalize(value)
+    .replace(/\bpull requests?\b/g, 'pullrequest')
+    .replace(/\bgithub actions?\b|\bcontinuous integration\b/g, 'ci')
+    .replace(/\bcode health\b|\btechnical debt\b/g, 'codehealth')
+    .replace(/\bscreen readers?\b/g, 'screenreader')
+    .replace(/\bsub issues?\b/g, 'hierarchy')
+    .replace(/\bagentic workflows?\b|\bworkflow markdown\b/g, 'agenticworkflow');
+  return canonical.split(' ')
+    .map((word) => KEYWORD_ALIASES[word] || word)
+    .filter((word) => word && STOP_WORDS.indexOf(word) === -1);
 }
 
 // Pull a known scenario id out of whatever the model produced. Small models are
@@ -151,8 +219,9 @@ export function parseScenarioSelection(text, scenarios) {
     .map((scenario) => {
       const id = normalize(scenario.id);
       const label = normalize(scenario.label);
-      const index = answer.indexOf(id);
-      const labelIndex = label ? answer.indexOf(label) : -1;
+      const paddedAnswer = ` ${answer} `;
+      const index = paddedAnswer.indexOf(` ${id} `);
+      const labelIndex = label ? paddedAnswer.indexOf(` ${label} `) : -1;
       const position = index === -1 ? labelIndex : index;
       const length = index === -1 ? label.length : id.length;
       return { id: scenario.id, position, length };
@@ -164,25 +233,58 @@ export function parseScenarioSelection(text, scenarios) {
 
 // Deterministic fallback used when the model is unavailable or its answer does
 // not name a known scenario.
-export function keywordScenarioMatch(request, scenarios) {
+function keywordScenarioRanks(request, scenarios) {
   const requestWords = words(request);
-  if (!requestWords.length || !Array.isArray(scenarios) || !scenarios.length) return null;
-  let best = null;
-  scenarios.forEach((scenario) => {
-    if (scenario.id === 'custom') return;
-    const scenarioWords = words(`${scenario.label} ${scenario.description}`);
-    const score = scenarioWords.reduce((total, word) => {
-      return total + (requestWords.indexOf(word) === -1 ? 0 : 1);
-    }, 0);
-    if (score > 0 && (!best || score > best.score)) best = { id: scenario.id, score };
-  });
+  if (!requestWords.length || !Array.isArray(scenarios)) return [];
+  return scenarios
+    .filter((scenario) => scenario.id !== 'custom')
+    .map((scenario) => {
+      const coreWords = new Set(words(`${scenario.id} ${scenario.label}`));
+      const descriptionWords = new Set(words(scenario.description));
+      const score = requestWords.reduce((total, word) => {
+        if (coreWords.has(word)) return total + (STRONG_KEYWORDS.has(word) ? 4 : 2);
+        if (descriptionWords.has(word)) return total + (STRONG_KEYWORDS.has(word) ? 2 : 1);
+        return total;
+      }, 0);
+      return { id: scenario.id, score };
+    })
+    .filter((match) => match.score > 0)
+    .sort((a, b) => b.score - a.score);
+}
+
+export function keywordScenarioMatch(request, scenarios) {
+  const [best] = keywordScenarioRanks(request, scenarios);
   return best ? best.id : null;
 }
 
 export function selectScenario(modelAnswer, request, scenarios) {
-  return parseScenarioSelection(modelAnswer, scenarios)
-    || keywordScenarioMatch(request, scenarios)
-    || null;
+  const parsed = parseScenarioSelection(modelAnswer, scenarios);
+  const ranks = keywordScenarioRanks(request, scenarios);
+  const best = ranks[0];
+  if (!parsed) return best ? best.id : null;
+  if (!best || best.id === parsed) return parsed;
+
+  const parsedRank = ranks.find((rank) => rank.id === parsed);
+  const parsedScore = parsedRank ? parsedRank.score : 0;
+  const confidentCorrection = best.score >= 4 && best.score >= parsedScore + 2;
+  return (parsed === 'custom' || confidentCorrection) && best.score >= 4 ? best.id : parsed;
+}
+
+export function scenarioAttemptTemperature(index) {
+  return Math.round(Math.min(Math.max(Number(index) || 0, 0) * 0.2, 0.8) * 10) / 10;
+}
+
+export function scenarioAttemptWinner(attempts, requiredVotes) {
+  const results = Array.isArray(attempts) ? attempts : [];
+  const majority = Math.floor(results.length / 2) + 1;
+  const required = Math.min(Math.max(Math.floor(requiredVotes || majority), 1), results.length || 1);
+  const counts = new Map();
+  results.forEach((result) => {
+    if (!result || !result.scenario) return;
+    counts.set(result.scenario, (counts.get(result.scenario) || 0) + 1);
+  });
+  const winner = [...counts].find(([, count]) => count >= required);
+  return winner ? results.find((result) => result && result.scenario === winner[0]) : null;
 }
 
 export function scenarioLabel(scenarios, id) {

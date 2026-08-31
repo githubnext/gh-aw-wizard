@@ -47,7 +47,11 @@
       "model_id": "Qwen2.5-1.5B-Instruct-q4f16_1-MLC",
       "ios_model_id": "SmolLM2-360M-Instruct-q4f32_1-MLC",
       "cache_backend": "cache",
-      "max_tokens": 24
+      "max_tokens": 24,
+      "analysis_attempts": 1,
+      "analysis_consensus": 1,
+      "ios_analysis_attempts": 3,
+      "ios_analysis_consensus": 2
     }
   },
   "copy_success": {
