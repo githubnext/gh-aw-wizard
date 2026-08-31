@@ -101,7 +101,7 @@ export function scenarioCatalogText(scenarios) {
 // offline prompt optimizer (scripts/prompt-optimizer.mjs) can evaluate
 // alternative wordings against the exact prompt the wizard ships.
 export const DEFAULT_SCENARIO_INSTRUCTIONS = {
-  preamble: 'You match a user request to one automation scenario for GitHub Agentic Workflows.',
+  preamble: 'Choose the automation scenario whose description matches the request\'s literal topic; do not infer an unmentioned topic.',
   catalogHeader: 'Available scenarios (id: name — description):',
   rules: [
     'Match the explicit subject first: pull requests, documentation, accessibility, agentic workflows, issues, skills, tests, dependencies, performance, security, or CI.',
