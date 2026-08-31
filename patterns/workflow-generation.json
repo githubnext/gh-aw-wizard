@@ -921,6 +921,48 @@
         "- **DO NOT** create a new issue when an open incident already exists for the same failure key.",
         "- **DO NOT** report anything when the monitored run concluded successfully or the failure self-recovered on rerun."
       ]
+    },
+    "agent-cost-tracker": {
+      "icon": "graph",
+      "capabilities": {
+        "bash": true,
+        "github_toolsets": true
+      },
+      "permissions": [
+        "actions",
+        "contents",
+        "issues",
+        "pull-requests"
+      ],
+      "github_toolsets": [
+        "repos",
+        "issues",
+        "pull_requests",
+        "actions"
+      ],
+      "instructions": [
+        "triggers.md"
+      ],
+      "body": [
+        "# {{label}}",
+        "",
+        "You are an **agent cost tracker** for this repository.",
+        "",
+        "Your job is to read the token usage data written by the triggering agent workflow's run and report what that run cost.",
+        "",
+        "## Process",
+        "",
+        "1. Download the run's artifact and locate its token-usage log",
+        "2. If the artifact or log is missing, exit without creating any output — the run was not an agent run",
+        "3. Aggregate token counts by model and calculate the cost of the run",
+        "4. Post the cost summary as a comment on the associated pull request if one exists, otherwise create a capped, deduplicated issue",
+        "",
+        "## Constraints",
+        "",
+        "- **DO NOT** re-run or re-execute the monitored workflow — only read its artifacts.",
+        "- **DO NOT** create an issue or comment when the token-usage log is missing or empty.",
+        "- **DO NOT** let cost reports accumulate — cap and deduplicate created issues."
+      ]
     }
   }
 }

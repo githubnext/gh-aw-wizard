@@ -100,7 +100,8 @@ describe('getArchetype', () => {
       'linter-applier',
       'skill-pr-reviewer',
       'security-scanner',
-      'ci-failure-triage'
+      'ci-failure-triage',
+      'agent-cost-tracker'
     ])('includes %s with triggers and safe outputs', (id) => {
       const archetype = getArchetype(generatedPatterns, id);
       expect(archetype).not.toBeNull();
