@@ -104,6 +104,7 @@ export const DEFAULT_SCENARIO_INSTRUCTIONS = {
   preamble: 'You match a user request to one automation scenario for GitHub Agentic Workflows.',
   catalogHeader: 'Available scenarios (id: name — description):',
   rules: [
+    'Match the explicit subject first: pull requests, documentation, accessibility, agentic workflows, issues, skills, tests, dependencies, performance, security, or CI.',
     'Answer with exactly one scenario id from the list above and nothing else.',
     'If nothing fits, answer with: custom'
   ]

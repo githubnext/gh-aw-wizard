@@ -66,8 +66,10 @@ function usage() {
     '',
     'Options:',
     `      --eval-url <url>         Eval server base URL (default: ${DEFAULT_OPTIMIZER_CONFIG.evalBaseUrl})`,
+    '      --eval-api-key <key>     Eval server bearer token (default: EVAL_API_KEY)',
     '      --eval-model <id>        Eval model id (default: the model the wizard loads in the browser)',
     `      --optimizer-url <url>    Optimizer server base URL (default: ${DEFAULT_OPTIMIZER_CONFIG.optimizerBaseUrl})`,
+    '      --optimizer-api-key <key> Optimizer server bearer token (default: OPTIMIZER_API_KEY)',
     `      --optimizer-model <id>   Optimizer model id (default: ${DEFAULT_OPTIMIZER_CONFIG.optimizerModel})`,
     `      --interval <minutes>     Outer loop cadence (default: ${DEFAULT_OPTIMIZER_CONFIG.intervalMs / 60000})`,
     `      --sample-size <n>        Requests per reflection batch (default: ${DEFAULT_OPTIMIZER_CONFIG.sampleSize})`,
@@ -96,6 +98,8 @@ function parseArgs(args) {
     patterns: defaultPatternsPath,
     wizardConfig: defaultWizardConfigPath,
     evalModel: null,
+    evalApiKey: process.env.EVAL_API_KEY || '',
+    optimizerApiKey: process.env.OPTIMIZER_API_KEY || '',
     report: defaultReportPath,
     mode: 'loop'
   };
@@ -109,8 +113,10 @@ function parseArgs(args) {
     const arg = args[index];
     if (arg === '-h' || arg === '--help') return { help: true };
     else if (arg === '--eval-url') options.evalBaseUrl = args[++index];
+    else if (arg === '--eval-api-key') options.evalApiKey = args[++index];
     else if (arg === '--eval-model') options.evalModel = args[++index];
     else if (arg === '--optimizer-url') options.optimizerBaseUrl = args[++index];
+    else if (arg === '--optimizer-api-key') options.optimizerApiKey = args[++index];
     else if (arg === '--optimizer-model') options.optimizerModel = args[++index];
     else if (arg === '--interval') options.intervalMs = number(args[++index], '--interval') * 60000;
     else if (arg === '--sample-size') options.sampleSize = number(args[++index], '--sample-size');
@@ -140,10 +146,12 @@ function log(message) {
   process.stdout.write(`[${new Date().toISOString()}] ${message}\n`);
 }
 
-async function chatCompletion(baseUrl, body) {
+export async function chatCompletion(baseUrl, body, apiKey = '') {
+  const headers = { 'content-type': 'application/json' };
+  if (apiKey) headers.authorization = `Bearer ${apiKey}`;
   const response = await fetch(`${baseUrl.replace(/\/$/, '')}/chat/completions`, {
     method: 'POST',
-    headers: { 'content-type': 'application/json' },
+    headers,
     body: JSON.stringify({ stream: false, ...body })
   });
   if (!response.ok) {
@@ -169,7 +177,7 @@ async function evaluatePrompt(options, scenarios, instructions, corpus) {
         messages: buildScenarioMessages(scenarios, request, instructions),
         max_tokens: options.evalMaxTokens,
         temperature: 0
-      });
+      }, options.evalApiKey);
       return { answer, scenario: selectScenario(answer, request, scenarios) };
     }
   });
@@ -189,7 +197,7 @@ async function proposeInstructions(options, instructions, catalogText, evaluatio
     messages,
     max_tokens: options.optimizerMaxTokens,
     temperature: options.optimizerTemperature
-  });
+  }, options.optimizerApiKey);
   return parseInstructionProposal(answer, instructions);
 }
 

@@ -94,7 +94,24 @@ The best instructions and the round history are written to `.optimizer/scenario-
 is resumed on the next start. Copy the winning `preamble` and `rules` into
 `DEFAULT_SCENARIO_INSTRUCTIONS` in `src/js/slm.js` to ship them. Any OpenAI-compatible server works
 (including MLX's `mlx_lm.server`) via `--eval-url` / `--optimizer-url`; run
-`node scripts/prompt-optimizer.mjs --help` for all options.
+`node scripts/prompt-optimizer.mjs --help` for all options. For authenticated endpoints, set
+`EVAL_API_KEY` and/or `OPTIMIZER_API_KEY`; matching `--eval-api-key` and
+`--optimizer-api-key` flags are also available.
+
+For an oMLX-backed Apple Silicon machine, preload the equivalent 4-bit MLX eval model through the
+authenticated oMLX APIs:
+
+```bash
+export OMLX_API_KEY='...'
+./scripts/setup-omlx-models.sh
+export EVAL_API_KEY="$OMLX_API_KEY"
+node scripts/prompt-optimizer.mjs --evaluate --sample-size 20 \
+  --eval-model Qwen2.5-1.5B-Instruct-4bit
+```
+
+This MLX conversion is a close proxy for local iteration, not the exact MLC artifact used by
+WebLLM. Pass additional Hugging Face repository IDs to `setup-omlx-models.sh` to download and load
+more models.
 
 ## License
 
