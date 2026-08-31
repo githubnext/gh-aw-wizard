@@ -65,6 +65,9 @@ Repeat until the score stops improving or the user stops you. One iteration:
    It scores the instructions currently saved in `.optimizer/scenario-prompt.json` (the shipped
    `DEFAULT_SCENARIO_INSTRUCTIONS` on the first run) and writes `.optimizer/eval-report.md` with the
    aggregate and per-model success rates, per-scenario rates, and target-labelled failing traces.
+   To compare voting policies, set `--attempts` with `--consensus` for the desktop target or
+   `--ios-attempts` with `--ios-consensus` for the iOS target. The harness supports up to five
+   attempts; compare policies over repeated full-corpus runs before changing browser defaults.
 
 2. **Diagnose.** For each failure, state why the small model chose the wrong id: overlapping
    scenario descriptions, an instruction that invites prose instead of a bare id, a missing

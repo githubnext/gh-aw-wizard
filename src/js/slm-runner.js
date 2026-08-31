@@ -99,7 +99,14 @@ export function createScenarioAssistant(options) {
         const configuredAttempts = isIOS(opts.navigator)
           ? config.ios_analysis_attempts || config.analysis_attempts
           : config.analysis_attempts;
-        const attemptCount = Math.min(Math.max(Math.floor(configuredAttempts || 1), 1), 3);
+        const configuredConsensus = isIOS(opts.navigator)
+          ? config.ios_analysis_consensus || config.analysis_consensus
+          : config.analysis_consensus;
+        const attemptCount = Math.min(Math.max(Math.floor(configuredAttempts || 1), 1), 5);
+        const consensus = Math.min(
+          Math.max(Math.floor(configuredConsensus || Math.floor(attemptCount / 2) + 1), 1),
+          attemptCount
+        );
         const attempts = [];
         for (let index = 0; index < attemptCount; index += 1) {
           const output = await engine.chat.completions.create({
@@ -113,7 +120,7 @@ export function createScenarioAssistant(options) {
           logger.log('analysis.response', { answer, attempt: index + 1, scenario });
           attempts.push({ answer, scenario });
         }
-        const winner = scenarioAttemptWinner(attempts);
+        const winner = scenarioAttemptWinner(attempts, consensus);
         const answer = winner ? winner.answer : attempts.map((attempt) => attempt.answer).join('\n');
         const scenario = winner ? winner.scenario : null;
         analysis.end('completed', { answerLength: answer.length, scenario });

@@ -100,7 +100,8 @@ is resumed on the next start. Copy the winning `preamble` and `rules` into
 (including MLX's `mlx_lm.server`) via `--eval-url` / `--ios-eval-url` / `--optimizer-url`; run
 `node scripts/prompt-optimizer.mjs --help` for all options. For authenticated endpoints, set
 `EVAL_API_KEY`, `IOS_EVAL_API_KEY`, and/or `OPTIMIZER_API_KEY`; matching CLI flags are also
-available.
+available. Voting experiments support up to five generations via `--attempts` / `--consensus` and
+the corresponding `--ios-attempts` / `--ios-consensus` options.
 
 For an oMLX-backed Apple Silicon machine, preload the equivalent 4-bit MLX eval model through the
 authenticated oMLX APIs:

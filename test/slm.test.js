@@ -107,6 +107,7 @@ describe('answer parsing', () => {
 describe('multi-attempt selection', () => {
   it('uses varied low temperatures for three attempts', () => {
     expect([0, 1, 2].map(scenarioAttemptTemperature)).toEqual([0, 0.2, 0.4]);
+    expect([3, 4].map(scenarioAttemptTemperature)).toEqual([0.6, 0.8]);
   });
 
   it('returns a two-of-three winner', () => {
@@ -124,6 +125,18 @@ describe('multi-attempt selection', () => {
       { scenario: 'status-report', answer: 'status-report' },
       { scenario: 'custom', answer: 'custom' }
     ])).toBeNull();
+  });
+
+  it('supports stricter consensus thresholds', () => {
+    const attempts = [
+      { scenario: 'issue-triage', answer: 'issue-triage' },
+      { scenario: 'issue-triage', answer: 'Issue Triage' },
+      { scenario: 'issue-triage', answer: 'issue-triage' },
+      { scenario: 'status-report', answer: 'status-report' },
+      { scenario: 'status-report', answer: 'Status Report' }
+    ];
+    expect(scenarioAttemptWinner(attempts, 3)?.scenario).toBe('issue-triage');
+    expect(scenarioAttemptWinner(attempts, 4)).toBeNull();
   });
 });
 
@@ -189,7 +202,9 @@ describe('model configuration', () => {
   it('falls back to the built-in defaults', () => {
     expect(slmConfig(null).model_id).toBe(DEFAULT_SLM_CONFIG.model_id);
     expect(slmConfig(null).analysis_attempts).toBe(1);
+    expect(slmConfig(null).analysis_consensus).toBe(1);
     expect(slmConfig(null).ios_analysis_attempts).toBe(3);
+    expect(slmConfig(null).ios_analysis_consensus).toBe(2);
   });
 
   it('is overridable from the wizard configuration', () => {

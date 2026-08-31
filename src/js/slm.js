@@ -17,7 +17,9 @@ export const DEFAULT_SLM_CONFIG = {
   cache_backend: 'cache',
   max_tokens: 24,
   analysis_attempts: 1,
-  ios_analysis_attempts: 3
+  analysis_consensus: 1,
+  ios_analysis_attempts: 3,
+  ios_analysis_consensus: 2
 };
 
 const STOP_WORDS = [
@@ -269,12 +271,13 @@ export function selectScenario(modelAnswer, request, scenarios) {
 }
 
 export function scenarioAttemptTemperature(index) {
-  return Math.min(Math.max(Number(index) || 0, 0) * 0.2, 0.4);
+  return Math.round(Math.min(Math.max(Number(index) || 0, 0) * 0.2, 0.8) * 10) / 10;
 }
 
-export function scenarioAttemptWinner(attempts) {
+export function scenarioAttemptWinner(attempts, requiredVotes) {
   const results = Array.isArray(attempts) ? attempts : [];
-  const required = Math.floor(results.length / 2) + 1;
+  const majority = Math.floor(results.length / 2) + 1;
+  const required = Math.min(Math.max(Math.floor(requiredVotes || majority), 1), results.length || 1);
   const counts = new Map();
   results.forEach((result) => {
     if (!result || !result.scenario) return;

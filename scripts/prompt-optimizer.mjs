@@ -75,6 +75,7 @@ function usage() {
     '      --ios-eval-api-key <key> iOS bearer token (default: IOS_EVAL_API_KEY or EVAL_API_KEY)',
     '      --ios-eval-model <id>    iOS model id (default: ios_model_id from wizard configuration)',
     '      --ios-attempts <n>       iOS attempts per request (default: ios_analysis_attempts)',
+    '      --ios-consensus <n>      Votes required for an iOS winner (default: ios_analysis_consensus)',
     `      --optimizer-url <url>    Optimizer server base URL (default: ${DEFAULT_OPTIMIZER_CONFIG.optimizerBaseUrl})`,
     '      --optimizer-api-key <key> Optimizer server bearer token (default: OPTIMIZER_API_KEY)',
     `      --optimizer-model <id>   Optimizer model id (default: ${DEFAULT_OPTIMIZER_CONFIG.optimizerModel})`,
@@ -83,6 +84,7 @@ function usage() {
     `      --validation-size <n>    Requests used to confirm a candidate (default: ${DEFAULT_OPTIMIZER_CONFIG.validationSize})`,
     `      --repetitions <n>        Repeats per request (default: ${DEFAULT_OPTIMIZER_CONFIG.repetitions})`,
     '      --attempts <n>           Model attempts per request (default: wizard configuration)',
+    '      --consensus <n>          Votes required for a winner (default: strict majority)',
     `      --candidates <n>         Proposals per round (default: ${DEFAULT_OPTIMIZER_CONFIG.candidates})`,
     `      --min-gain <ratio>       Required improvement to adopt (default: ${DEFAULT_OPTIMIZER_CONFIG.minGain})`,
     '      --rounds <n>             Stop after n rounds (default: run forever)',
@@ -107,10 +109,12 @@ function parseArgs(args) {
     wizardConfig: defaultWizardConfigPath,
     evalModel: null,
     evalAttempts: null,
+    evalConsensus: null,
     evalApiKey: process.env.EVAL_API_KEY || '',
     iosEvalBaseUrl: null,
     iosEvalModel: null,
     iosEvalAttempts: null,
+    iosEvalConsensus: null,
     iosEvalApiKey: process.env.IOS_EVAL_API_KEY || '',
     optimizerApiKey: process.env.OPTIMIZER_API_KEY || '',
     report: defaultReportPath,
@@ -133,6 +137,7 @@ function parseArgs(args) {
     else if (arg === '--ios-eval-api-key') options.iosEvalApiKey = args[++index];
     else if (arg === '--ios-eval-model') options.iosEvalModel = args[++index];
     else if (arg === '--ios-attempts') options.iosEvalAttempts = number(args[++index], '--ios-attempts');
+    else if (arg === '--ios-consensus') options.iosEvalConsensus = number(args[++index], '--ios-consensus');
     else if (arg === '--optimizer-url') options.optimizerBaseUrl = args[++index];
     else if (arg === '--optimizer-api-key') options.optimizerApiKey = args[++index];
     else if (arg === '--optimizer-model') options.optimizerModel = args[++index];
@@ -141,6 +146,7 @@ function parseArgs(args) {
     else if (arg === '--validation-size') options.validationSize = number(args[++index], '--validation-size');
     else if (arg === '--repetitions') options.repetitions = number(args[++index], '--repetitions');
     else if (arg === '--attempts') options.evalAttempts = number(args[++index], '--attempts');
+    else if (arg === '--consensus') options.evalConsensus = number(args[++index], '--consensus');
     else if (arg === '--candidates') options.candidates = number(args[++index], '--candidates');
     else if (arg === '--min-gain') options.minGain = number(args[++index], '--min-gain');
     else if (arg === '--rounds') options.rounds = number(args[++index], '--rounds');
@@ -199,7 +205,7 @@ async function evaluateTarget(options, target, scenarios, instructions, corpus) 
         }, target.apiKey);
         attempts.push({ answer, scenario: selectScenario(answer, request, scenarios) });
       }
-      const winner = scenarioAttemptWinner(attempts);
+      const winner = scenarioAttemptWinner(attempts, target.consensus);
       return winner || { answer: attempts.map((attempt) => attempt.answer).join('\n'), scenario: null };
     }
   });
@@ -476,13 +482,18 @@ export async function main(argv) {
   options.evalAttempts = Math.min(Math.max(
     Math.floor(options.evalAttempts || modelConfig.analysis_attempts || 1),
     1
-  ), 3);
+  ), 5);
+  options.evalConsensus = Math.min(Math.max(
+    Math.floor(options.evalConsensus || modelConfig.analysis_consensus || Math.floor(options.evalAttempts / 2) + 1),
+    1
+  ), options.evalAttempts);
   options.evalTargets = [{
     name: 'desktop',
     model: options.evalModel,
     baseUrl: options.evalBaseUrl,
     apiKey: options.evalApiKey,
-    attempts: options.evalAttempts
+    attempts: options.evalAttempts,
+    consensus: options.evalConsensus
   }];
   if (options.allModels) {
     if (!modelConfig.ios_model_id && !options.iosEvalModel) {
@@ -496,8 +507,16 @@ export async function main(argv) {
       attempts: Math.min(Math.max(
         Math.floor(options.iosEvalAttempts || modelConfig.ios_analysis_attempts || 1),
         1
-      ), 3)
+      ), 5),
+      consensus: 1
     });
+    const iosTarget = options.evalTargets[options.evalTargets.length - 1];
+    iosTarget.consensus = Math.min(Math.max(
+      Math.floor(options.iosEvalConsensus
+        || modelConfig.ios_analysis_consensus
+        || Math.floor(iosTarget.attempts / 2) + 1),
+      1
+    ), iosTarget.attempts);
   }
   const scenarios = scenarioCatalog(patterns, custom);
   if (!scenarios.length) throw new Error('No scenarios were found in the pattern library');
@@ -512,7 +531,7 @@ export async function main(argv) {
   };
   log(restored ? `resumed from ${options.state}` : 'starting from the shipped instructions');
   options.evalTargets.forEach((target) => {
-    log(`eval target ${target.name}: ${target.model} at ${target.baseUrl} (${target.attempts} attempt${target.attempts === 1 ? '' : 's'})`);
+    log(`eval target ${target.name}: ${target.model} at ${target.baseUrl} (${target.consensus}/${target.attempts} consensus)`);
   });
 
   if (options.mode === 'evaluate') return runEvaluate(options, scenarios, state);
