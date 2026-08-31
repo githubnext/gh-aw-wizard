@@ -1513,6 +1513,7 @@ a:hover {
 .is-landing .landing {
   display: flex;
   position: relative;
+  isolation: isolate;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -1559,7 +1560,11 @@ a:hover {
   filter: blur(28px);
   animation: thermoDrift 42s ease-in-out infinite alternate;
 }
-.landing > :not(.landing-glow) {
+.landing-title,
+.landing-message,
+.btn-get-started,
+.landing-hint,
+.landing-diagram {
   position: relative;
   z-index: 1;
 }
