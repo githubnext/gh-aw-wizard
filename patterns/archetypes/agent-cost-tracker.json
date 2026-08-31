@@ -1,0 +1,35 @@
+{
+  "id": "agent-cost-tracker",
+  "label": "Agent Cost Tracker",
+  "description": "Report the token/AI-credit spend of another agentic workflow after it completes",
+  "success_rate": null,
+  "count": 0,
+  "recommended_triggers": [
+    {
+      "type": "workflow_run",
+      "config": {}
+    }
+  ],
+  "recommended_safe_outputs": [
+    "pull-requests",
+    "issues"
+  ],
+  "recommended_tools": [
+    "add-comment",
+    "create-issue"
+  ],
+  "timeout_minutes": 10,
+  "prompt_style": "role-steps",
+  "size_range_bytes": [
+    3000,
+    8000
+  ],
+  "top_repos": [],
+  "tips": [
+    "Scope `workflows:` to the named agent workflow(s) being tracked so cost reports aren't generated for unrelated runs",
+    "Download the run's artifact and parse its token-usage log rather than re-running the agent — this keeps the tracker cheap",
+    "Exit without creating any output when the artifact or token-usage log is missing, so non-agent or firewall-disabled runs stay silent",
+    "Post the cost summary as a comment on the associated pull request when one exists; fall back to a capped, deduplicated issue otherwise"
+  ],
+  "anti_patterns": []
+}

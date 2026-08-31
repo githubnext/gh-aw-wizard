@@ -559,6 +559,14 @@ describe('generateAgentPrompt', () => {
     expect(reportPrompt).toContain('skip-if-match');
   });
 
+  it('surfaces newer workflow-specific tips that do not match older prompt filters', () => {
+    const prompt = generateAgentPrompt(answers({ archetype: 'agent-cost-tracker' }), patterns);
+    expect(prompt).toContain('Follow the workflow-specific guidance');
+    expect(prompt).toContain('Scope `workflows:`');
+    expect(prompt).toContain('Download the run\'s artifact');
+    expect(prompt).toContain('capped, deduplicated issue');
+  });
+
   it('shows the correct YAML schema for skip-if-match and expires so they land in the right place', () => {
     // The prose tip alone ("Use skip-if-match and expires on create-issue") does not say
     // skip-if-match is a sibling of `schedule:` under `on:`, while expires/max nest under the

@@ -28,7 +28,8 @@
     "security-scanner",
     "code-health-auditor",
     "ci-failure-triage",
-    "community-digest"
+    "community-digest",
+    "agent-cost-tracker"
   ],
   "workflow_generation": "workflow-generation.json",
   "anti_patterns": [
