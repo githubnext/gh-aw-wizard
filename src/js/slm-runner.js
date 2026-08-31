@@ -92,7 +92,7 @@ export function createScenarioAssistant(options) {
       try {
         const engine = await loadEngine(onProgress);
         if (typeof onProgress === 'function') {
-          onProgress({ percent: 100, label: 'Analyzing your request', status: 'generating' });
+          onProgress({ label: 'Analyzing your request', status: 'generating' });
         }
         const messages = buildScenarioMessages(scenarios, request);
         logger.log('analysis.prompt', { messages });

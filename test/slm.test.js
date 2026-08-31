@@ -282,6 +282,38 @@ describe('runtime helpers', () => {
     })).toBe('issue-triage');
     expect(extractAssistantText(null)).toBe('');
   });
+
+  it('reports indeterminate generation progress when reusing the loaded engine', async () => {
+    const completion = {
+      choices: [{ message: { role: 'assistant', content: 'issue-triage' } }]
+    };
+    let engineLoads = 0;
+    const assistant = createScenarioAssistant({
+      config: { module_url: 'webllm.js', model_id: 'test-model' },
+      importModule: async () => ({
+        CreateMLCEngine: async (_modelId, options) => {
+          engineLoads += 1;
+          options.initProgressCallback({ progress: 1, text: 'Finished' });
+          return {
+            chat: { completions: { create: async () => completion } }
+          };
+        },
+        prebuiltAppConfig: {}
+      }),
+      logger: createWebLlmLogger({ console: null })
+    });
+    const firstProgress = [];
+    const secondProgress = [];
+
+    await assistant.analyze('label issues', scenarios, (update) => firstProgress.push(update));
+    await assistant.analyze('label issues again', scenarios, (update) => secondProgress.push(update));
+
+    expect(engineLoads).toBe(1);
+    expect(firstProgress.map((update) => update.status)).toContain('loading');
+    expect(secondProgress).toEqual([
+      { label: 'Analyzing your request', status: 'generating' }
+    ]);
+  });
 });
 
 describe('WebLLM diagnostics', () => {
