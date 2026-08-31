@@ -1,6 +1,7 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_SCENARIO_INSTRUCTIONS, buildScenarioMessages } from '../src/js/slm.js';
+import { chatCompletion } from '../scripts/prompt-optimizer.mjs';
 import {
   DEFAULT_OPTIMIZER_CONFIG,
   MAX_PROPOSED_RULES,
@@ -19,6 +20,39 @@ const scenarios = [
   { id: 'issue-triage', label: 'Issue Triage', description: 'Label incoming issues' },
   { id: 'status-report', label: 'Status Report', description: 'Post periodic summaries' }
 ];
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
+
+describe('chatCompletion', () => {
+  it('sends a bearer token when an API key is configured', async () => {
+    const fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ choices: [{ message: { content: 'issue-triage' } }] })
+    });
+    vi.stubGlobal('fetch', fetch);
+
+    await expect(chatCompletion('http://localhost/v1', { model: 'small' }, 'secret')).resolves.toBe('issue-triage');
+    expect(fetch).toHaveBeenCalledWith('http://localhost/v1/chat/completions', expect.objectContaining({
+      headers: {
+        'content-type': 'application/json',
+        authorization: 'Bearer secret'
+      }
+    }));
+  });
+
+  it('omits authorization when no API key is configured', async () => {
+    const fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ choices: [{ message: { content: 'custom' } }] })
+    });
+    vi.stubGlobal('fetch', fetch);
+
+    await chatCompletion('http://localhost/v1', { model: 'small' });
+    expect(fetch.mock.calls[0][1].headers).toEqual({ 'content-type': 'application/json' });
+  });
+});
 
 describe('buildScenarioMessages instruction override', () => {
   it('keeps the shipped instructions by default', () => {

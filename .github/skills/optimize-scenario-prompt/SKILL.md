@@ -15,15 +15,35 @@ not measured.
 
 ## Prerequisites
 
-The eval server must be running with the same model the wizard loads in the browser
+For the most transferable score, run the same MLC artifact the browser loads
 (`assistant.model.model_id` in `src/wizard.json`):
 
 ```bash
 mlc_llm serve HF://mlc-ai/Qwen2.5-1.5B-Instruct-q4f16_1-MLC --port 8000
 ```
 
-Any OpenAI-compatible endpoint works; pass it with `--eval-url`. The optimizer server is not needed
-in this mode — you replace it.
+Any OpenAI-compatible endpoint works; pass it with `--eval-url`. Authenticated endpoints accept
+`EVAL_API_KEY` or `--eval-api-key`. Prefer the environment variable so the key is not exposed in the
+process list or shell history. The optimizer server is not needed in this mode — you replace it.
+
+### oMLX on Apple Silicon
+
+When MLC-LLM is unavailable, oMLX can run the equivalent 4-bit MLX conversion as a close local
+proxy. It is not the exact browser artifact, so label measured results as oMLX/MLX proxy scores and
+do not claim bit-for-bit transfer to WebLLM.
+
+```bash
+export OMLX_API_KEY='...'
+./scripts/setup-omlx-models.sh
+export EVAL_API_KEY="$OMLX_API_KEY"
+node scripts/prompt-optimizer.mjs --evaluate --sample-size 20 \
+  --eval-model Qwen2.5-1.5B-Instruct-4bit
+```
+
+The setup script starts oMLX when its CLI is available, downloads
+`mlx-community/Qwen2.5-1.5B-Instruct-4bit` through the admin API, waits for completion, reloads model
+discovery, and loads the model. Pass additional Hugging Face repository IDs as arguments to preload
+more models. Use the `omlx` skill for API details and troubleshooting.
 
 ## Loop
 
@@ -32,7 +52,7 @@ Repeat until the score stops improving or the user stops you. One iteration:
 1. **Measure.** Run the harness and read the report it prints:
 
    ```bash
-   node scripts/prompt-optimizer.mjs --evaluate --sample-size 20
+   node scripts/prompt-optimizer.mjs --evaluate --sample-size 20 [--eval-model <served-id>]
    ```
 
    It scores the instructions currently saved in `.optimizer/scenario-prompt.json` (the shipped
@@ -59,7 +79,8 @@ Repeat until the score stops improving or the user stops you. One iteration:
 4. **Verify.** Score the candidate against the incumbent on a held-out sample:
 
    ```bash
-   node scripts/prompt-optimizer.mjs --score .optimizer/candidate.json --validation-size 30
+   node scripts/prompt-optimizer.mjs --score .optimizer/candidate.json --validation-size 30 \
+     [--eval-model <served-id>]
    ```
 
    The harness adopts the candidate into `.optimizer/scenario-prompt.json` only when it beats the
