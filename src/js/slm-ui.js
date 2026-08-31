@@ -247,7 +247,6 @@ export function initScenarioAssistant(context) {
     progressField.removeAttribute('hidden');
     if (typeof percent === 'number') {
       progress.value = percent;
-      progress.setAttribute('value', String(percent));
       return;
     }
     progress.removeAttribute('value');
