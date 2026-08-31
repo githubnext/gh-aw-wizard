@@ -245,7 +245,12 @@ export function initScenarioAssistant(context) {
       return;
     }
     progressField.removeAttribute('hidden');
-    progress.value = percent;
+    if (typeof percent === 'number') {
+      progress.value = percent;
+      progress.setAttribute('value', String(percent));
+      return;
+    }
+    progress.removeAttribute('value');
   }
 
   run.addEventListener('click', () => {
