@@ -6,6 +6,7 @@ import {
   MAX_PROPOSED_RULES,
   buildReflectionMessages,
   chooseCandidate,
+  formatEvalReport,
   formatFailures,
   instructionsText,
   nextRunDelay,
@@ -61,6 +62,40 @@ describe('formatFailures', () => {
 
   it('caps the number of examples', () => {
     expect(formatFailures(traces, 1).split('\n\n')).toHaveLength(1);
+  });
+});
+
+describe('formatEvalReport', () => {
+  const evaluation = {
+    successRate: 0.5,
+    successes: 1,
+    attempts: 2,
+    errors: 0,
+    rows: [
+      { scenario: 'status-report', successes: 1, attempts: 1, successRate: 1 },
+      { scenario: 'issue-triage', successes: 0, attempts: 1, successRate: 0 }
+    ],
+    traces: [
+      { query: 'label new issues', golden: 'issue-triage', answer: 'status-report', scenario: 'status-report', correct: false }
+    ]
+  };
+
+  it('reports the score, the instructions, the weakest scenarios first and the traces', () => {
+    const report = formatEvalReport({
+      instructions: { preamble: 'P', rules: ['R'] },
+      evaluation,
+      evalModel: 'small-model'
+    });
+    expect(report).toContain('- eval model: small-model');
+    expect(report).toContain('- success rate: 50% (1/2)');
+    expect(report).toContain('"preamble": "P"');
+    expect(report.indexOf('| issue-triage |')).toBeLessThan(report.indexOf('| status-report |'));
+    expect(report).toContain('request: label new issues');
+  });
+
+  it('says so when nothing failed', () => {
+    const report = formatEvalReport({ evaluation: { ...evaluation, traces: [] } });
+    expect(report).toContain('None — every sampled request was answered correctly.');
   });
 });
 

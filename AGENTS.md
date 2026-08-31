@@ -17,6 +17,7 @@ A wizard interface to create GitHub Agentic Workflows. Create ready-to-use [GitH
 | `scripts/generate-patterns.py` | Deterministically generates `patterns/` from scan results |
 | `scripts/prompt-optimizer.mjs` | Local hourly prompt-optimization loop for the scenario assistant, driving MLC-LLM servers (small eval model, large optimizer model) |
 | `scripts/fetch-vendor-assets.mjs` | Vendors third-party browser assets (Primer CSS, transformers.js, the onnxruntime-web wasm files) into `vendor/` so the site serves them from its own origin instead of a CDN |
+| `.github/skills/optimize-scenario-prompt/SKILL.md` | Skill for driving the prompt-optimizer harness from an agent CLI acting as the outer loop |
 | `.github/workflows/update-patterns.yml` | Weekly scan and stable pattern-library PR automation |
 | `.github/workflows/deep-research.md` | Read-only, manually dispatched analysis of committed pattern data |
 | `.github/workflows/pattern-miner.md` | Daily mining of upstream `github/gh-aw` and `githubnext/agentics` workflow sources for new curated pattern entries |

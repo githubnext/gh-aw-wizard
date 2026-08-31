@@ -16,6 +16,13 @@
 //
 // Any OpenAI-compatible server works (MLX's `mlx_lm.server` included); point
 // --eval-url / --optimizer-url at it.
+//
+// An agent CLI (Copilot CLI, Codex, …) can play the outer loop instead of a
+// locally served optimizer model — see .github/skills/optimize-scenario-prompt.
+// It only needs the eval server plus two single-shot modes:
+//
+//   node scripts/prompt-optimizer.mjs --evaluate            # score + failure report
+//   node scripts/prompt-optimizer.mjs --score candidate.json # accept or reject a rewrite
 
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -35,6 +42,7 @@ import {
   DEFAULT_OPTIMIZER_CONFIG,
   buildReflectionMessages,
   chooseCandidate,
+  formatEvalReport,
   formatFailures,
   instructionsText,
   nextRunDelay,
@@ -46,6 +54,7 @@ import {
 const defaultPatternsPath = fileURLToPath(new URL('../patterns', import.meta.url));
 const defaultWizardConfigPath = fileURLToPath(new URL('../src/wizard.json', import.meta.url));
 const defaultStatePath = fileURLToPath(new URL('../.optimizer/scenario-prompt.json', import.meta.url));
+const defaultReportPath = fileURLToPath(new URL('../.optimizer/eval-report.md', import.meta.url));
 
 function usage() {
   return [
@@ -68,6 +77,11 @@ function usage() {
     `      --min-gain <ratio>       Required improvement to adopt (default: ${DEFAULT_OPTIMIZER_CONFIG.minGain})`,
     '      --rounds <n>             Stop after n rounds (default: run forever)',
     '      --once                   Run a single round and exit',
+    '      --evaluate               Score the current instructions, write a failure report, exit',
+    '      --score <path>           Score a candidate instructions JSON file and adopt it if better',
+    '      --instructions <path>    Instructions JSON to evaluate instead of the saved state',
+    `      --report <path>          Where --evaluate writes its markdown report (default: ${'.optimizer/eval-report.md'})`,
+    '      --dry-run                With --score, report the decision without writing the state',
     '      --state <path>           Where to persist the best prompt (default: .optimizer/scenario-prompt.json)',
     '      --patterns <path>        Pattern library directory (default: patterns/)',
     '      --wizard-config <path>   Wizard configuration file (default: src/wizard.json)',
@@ -81,7 +95,9 @@ function parseArgs(args) {
     state: defaultStatePath,
     patterns: defaultPatternsPath,
     wizardConfig: defaultWizardConfigPath,
-    evalModel: null
+    evalModel: null,
+    report: defaultReportPath,
+    mode: 'loop'
   };
   const number = (value, name) => {
     const parsed = Number(value);
@@ -104,10 +120,18 @@ function parseArgs(args) {
     else if (arg === '--min-gain') options.minGain = number(args[++index], '--min-gain');
     else if (arg === '--rounds') options.rounds = number(args[++index], '--rounds');
     else if (arg === '--once') options.rounds = 1;
+    else if (arg === '--evaluate') options.mode = 'evaluate';
+    else if (arg === '--score') { options.mode = 'score'; options.candidate = args[++index]; }
+    else if (arg === '--instructions') options.instructions = args[++index];
+    else if (arg === '--report') options.report = args[++index];
+    else if (arg === '--dry-run') options.dryRun = true;
     else if (arg === '--state') options.state = args[++index];
     else if (arg === '--patterns') options.patterns = args[++index];
     else if (arg === '--wizard-config') options.wizardConfig = args[++index];
     else throw new Error(`Unknown option: ${arg}`);
+  }
+  if (options.mode === 'score' && !options.candidate) {
+    throw new Error('--score requires the path of a candidate instructions JSON file');
   }
   return options;
 }
@@ -189,6 +213,86 @@ function sleep(ms, signal) {
     const timer = setTimeout(resolve, ms);
     if (signal) signal.addEventListener('abort', () => { clearTimeout(timer); resolve(); }, { once: true });
   });
+}
+
+// Read a `{ preamble, rules }` document written by an agent CLI (or by hand)
+// and normalize it into the instructions shape the prompt builder expects.
+async function readInstructions(path) {
+  const document = JSON.parse(await readFile(path, 'utf8'));
+  const source = document && document.instructions ? document.instructions : document;
+  const preamble = source && typeof source.preamble === 'string' ? source.preamble.trim() : '';
+  const rules = source && Array.isArray(source.rules)
+    ? source.rules.filter((rule) => typeof rule === 'string' && rule.trim()).map((rule) => rule.trim())
+    : [];
+  if (!preamble || !rules.length) {
+    throw new Error(`${path} must contain a non-empty "preamble" string and a "rules" array of strings`);
+  }
+  return {
+    preamble,
+    catalogHeader: DEFAULT_SCENARIO_INSTRUCTIONS.catalogHeader,
+    rules
+  };
+}
+
+// Outer loop delegated to an agent CLI, step 1: score the instructions in play
+// and hand the agent a report of exactly what the small model got wrong.
+async function runEvaluate(options, scenarios, state) {
+  const instructions = options.instructions
+    ? await readInstructions(options.instructions)
+    : state.instructions;
+  const sample = pickRandomSample(EVAL_CORPUS, options.sampleSize);
+  const evaluation = await evaluatePrompt(options, scenarios, instructions, sample);
+  const report = formatEvalReport({
+    instructions,
+    evaluation,
+    evalModel: options.evalModel,
+    failureExamples: options.failureExamples
+  });
+  await mkdir(dirname(options.report), { recursive: true });
+  await writeFile(options.report, report, 'utf8');
+  process.stdout.write(`${report}\n`);
+  log(`report written to ${options.report}`);
+}
+
+// Outer loop delegated to an agent CLI, step 2: judge the rewrite the agent
+// produced on a held-out sample, using the same acceptance rule as the
+// self-contained loop so both paths agree on what counts as an improvement.
+async function runScore(options, scenarios, state) {
+  const candidate = await readInstructions(options.candidate);
+  const validation = pickRandomSample(EVAL_CORPUS, options.validationSize);
+  const currentValidation = await evaluatePrompt(options, scenarios, state.instructions, validation);
+  const candidateValidation = await evaluatePrompt(options, scenarios, candidate, validation);
+  const decision = chooseCandidate(currentValidation, [candidateValidation], options.minGain);
+  log(summarizeRound({
+    round: (state.history || []).length + 1,
+    baselineScore: currentValidation.successRate,
+    bestScore: candidateValidation.successRate,
+    accepted: decision.accepted
+  }));
+  if (!decision.accepted || options.dryRun) {
+    if (decision.accepted) log('dry run — the candidate was not saved');
+    return;
+  }
+  const next = {
+    ...state,
+    updatedAt: new Date().toISOString(),
+    evalModel: options.evalModel,
+    optimizerModel: `agent-cli:${options.candidate}`,
+    instructions: candidate,
+    score: scoreOf(candidateValidation),
+    validationSize: validation.length,
+    history: (state.history || []).concat([{
+      round: (state.history || []).length + 1,
+      at: new Date().toISOString(),
+      baselineScore: currentValidation.successRate,
+      bestScore: candidateValidation.successRate,
+      accepted: true,
+      improvement: decision.improvement,
+      diagnosis: ''
+    }]).slice(-100)
+  };
+  await saveState(options.state, next);
+  log(`adopted the candidate\n${instructionsText(candidate)}`);
 }
 
 async function runRound(options, scenarios, catalogText, state, roundNumber) {
@@ -289,6 +393,10 @@ export async function main(argv) {
   };
   log(restored ? `resumed from ${options.state}` : 'starting from the shipped instructions');
   log(`eval model ${options.evalModel} at ${options.evalBaseUrl}`);
+
+  if (options.mode === 'evaluate') return runEvaluate(options, scenarios, state);
+  if (options.mode === 'score') return runScore(options, scenarios, state);
+
   log(`optimizer model ${options.optimizerModel} at ${options.optimizerBaseUrl}`);
 
   const controller = new AbortController();

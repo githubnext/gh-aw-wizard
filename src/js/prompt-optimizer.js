@@ -62,6 +62,46 @@ export function formatFailures(rows, limit) {
   }).join('\n\n');
 }
 
+// Markdown report of one inner-loop evaluation. This is what an external agent
+// CLI (Copilot CLI, Codex, …) reads when it plays the role of the outer loop
+// instead of a locally served optimizer model.
+export function formatEvalReport(options) {
+  const opts = options || {};
+  const instructions = { ...DEFAULT_SCENARIO_INSTRUCTIONS, ...(opts.instructions || {}) };
+  const rules = Array.isArray(instructions.rules) ? instructions.rules : [];
+  const evaluation = opts.evaluation || {};
+  const perScenario = (evaluation.rows || [])
+    .slice()
+    .sort((a, b) => a.successRate - b.successRate || a.scenario.localeCompare(b.scenario))
+    .map((row) => `| ${row.scenario} | ${row.successes}/${row.attempts} | ${formatPercent(row.successRate)} |`);
+  const failures = formatFailures(evaluation.traces, opts.failureExamples);
+
+  return [
+    '# Scenario prompt evaluation',
+    '',
+    `- eval model: ${opts.evalModel || 'unknown'}`,
+    `- success rate: ${formatPercent(evaluation.successRate)} (${evaluation.successes || 0}/${evaluation.attempts || 0})`,
+    `- errored requests: ${evaluation.errors || 0}`,
+    '',
+    '## Current instructions',
+    '',
+    '```json',
+    JSON.stringify({ preamble: instructions.preamble, rules }, null, 2),
+    '```',
+    '',
+    '## Success rate by expected scenario',
+    '',
+    '| scenario | correct | rate |',
+    '| --- | --- | --- |',
+    ...(perScenario.length ? perScenario : ['| (none) | 0/0 | 0% |']),
+    '',
+    '## Failures',
+    '',
+    failures ? `\`\`\`\n${failures}\n\`\`\`` : 'None — every sampled request was answered correctly.',
+    ''
+  ].join('\n');
+}
+
 export function buildReflectionMessages(options) {
   const opts = options || {};
   const instructions = { ...DEFAULT_SCENARIO_INSTRUCTIONS, ...(opts.instructions || {}) };

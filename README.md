@@ -74,6 +74,22 @@ npm run optimize            # hourly rounds until interrupted
 npm run optimize -- --once  # a single round
 ```
 
+### Using an agent CLI as the outer loop
+
+An agent CLI (Copilot CLI, Codex, …) can replace the local optimizer model. Only the eval server is
+needed, and the harness exposes the two single-shot modes the agent drives:
+
+```bash
+node scripts/prompt-optimizer.mjs --evaluate --sample-size 20         # score + failure report
+node scripts/prompt-optimizer.mjs --score .optimizer/candidate.json   # accept only if it wins
+```
+
+`--evaluate` writes `.optimizer/eval-report.md` with per-scenario success rates and failing traces;
+the agent diagnoses them, writes a `{ "preamble", "rules" }` candidate, and `--score` confirms it on
+a held-out sample using the same acceptance rule as the unattended loop. The
+[`optimize-scenario-prompt` skill](.github/skills/optimize-scenario-prompt/SKILL.md) contains the
+instructions for that agent.
+
 The best instructions and the round history are written to `.optimizer/scenario-prompt.json`, which
 is resumed on the next start. Copy the winning `preamble` and `rules` into
 `DEFAULT_SCENARIO_INSTRUCTIONS` in `src/js/slm.js` to ship them. Any OpenAI-compatible server works
