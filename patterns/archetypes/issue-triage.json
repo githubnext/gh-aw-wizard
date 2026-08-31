@@ -2,8 +2,8 @@
   "id": "issue-triage",
   "label": "Issue Triage",
   "description": "Classify and label new issues",
-  "success_rate": 0.58,
-  "count": 111,
+  "success_rate": 0.52,
+  "count": 72,
   "recommended_triggers": [
     {
       "type": "issues",
@@ -34,23 +34,23 @@
   "top_repos": [
     {
       "repo": "githubnext/agentics",
-      "stars": 922
+      "stars": 925
+    },
+    {
+      "repo": "microsoft/PowerToys",
+      "stars": 138246
     },
     {
       "repo": "appwrite/appwrite",
-      "stars": 57130
+      "stars": 57186
     },
     {
       "repo": "moeru-ai/airi",
-      "stars": 48449
+      "stars": 48625
     },
     {
-      "repo": "taosdata/TDengine",
-      "stars": 25090
-    },
-    {
-      "repo": "czlonkowski/n8n-mcp",
-      "stars": 22787
+      "repo": "cli/cli",
+      "stars": 46082
     }
   ],
   "tips": [
@@ -61,8 +61,8 @@
   "anti_patterns": [
     "issue-triage",
     "issue-triage",
-    "issue-triage",
-    "marketplace-harness-gap-triage",
-    "issue-triage"
+    "test-copilot-remove-labels",
+    "test-copilot-add-labels",
+    "pr-triage"
   ]
 }

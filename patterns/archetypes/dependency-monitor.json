@@ -3,18 +3,18 @@
   "label": "Dependency Monitor",
   "description": "Track and update dependencies",
   "success_rate": 0.5,
-  "count": 59,
+  "count": 48,
   "recommended_triggers": [
     {
       "type": "schedule",
       "config": {}
     },
     {
-      "type": "issues",
+      "type": "permissions",
       "config": {}
     },
     {
-      "type": "skip-if-match",
+      "type": "reaction",
       "config": {}
     }
   ],
@@ -35,37 +35,35 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5016
+      "stars": 5063
     },
     {
-      "repo": "mono/SkiaSharp",
-      "stars": 5558
+      "repo": "github/awesome-copilot",
+      "stars": 38469
     },
     {
-      "repo": "dotnet/Open-XML-SDK",
-      "stars": 4589
+      "repo": "dotnet/aspnetcore",
+      "stars": 38406
     },
     {
-      "repo": "microsoft/testfx",
-      "stars": 1040
+      "repo": "langfuse/langfuse",
+      "stars": 33968
     },
     {
-      "repo": "dotnet/arcade",
-      "stars": 728
+      "repo": "dotnet/maui",
+      "stars": 23317
     }
   ],
   "tips": [
     "Use schedule triggers for reliable periodic checks",
     "Include a checklist of specific dependencies to monitor \u2014 don't leave it open-ended",
-    "Enable network access for fetching upstream release data",
-    "Use DO NOT constraints to prevent unrelated dependency or source changes",
-    "Use skip-if-match to prevent duplicate scheduled findings"
+    "Enable network access for fetching upstream release data"
   ],
   "anti_patterns": [
-    "skills-updater",
-    "doc-sync",
+    "wiki-sync",
+    "course-updater",
     "update-github-info",
-    "dependency-api-monitor",
-    "doc-sync"
+    "update-github-info",
+    "dependabot-pr-bundler"
   ]
 }

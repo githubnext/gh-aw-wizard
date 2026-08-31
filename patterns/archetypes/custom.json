@@ -2,15 +2,15 @@
   "id": "custom",
   "label": "Custom",
   "description": "Custom or uncategorized workflow",
-  "success_rate": 0.46,
-  "count": 438,
+  "success_rate": 0.5,
+  "count": 356,
   "recommended_triggers": [
     {
       "type": "schedule",
       "config": {}
     },
     {
-      "type": "pull_request",
+      "type": "roles",
       "config": {}
     },
     {
@@ -29,23 +29,23 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5016
+      "stars": 5063
     },
     {
       "repo": "githubnext/agentics",
-      "stars": 922
+      "stars": 925
+    },
+    {
+      "repo": "f/prompts.chat",
+      "stars": 168280
     },
     {
       "repo": "github/spec-kit",
-      "stars": 131684
+      "stars": 132415
     },
     {
       "repo": "home-assistant/core",
-      "stars": 90119
-    },
-    {
-      "repo": "dotnet/aspnetcore",
-      "stars": 38394
+      "stars": 90197
     }
   ],
   "tips": [
@@ -54,10 +54,10 @@
     "Use DO NOT constraints to bound agent behavior \u2014 61% more likely to be healthy"
   ],
   "anti_patterns": [
-    "documentation-audit",
-    "breaking-change-checker",
-    "agent-planner-staiot",
-    "validate-pr",
-    "planner"
+    "issue-go-yes",
+    "hero-scenarios",
+    "dash",
+    "tester",
+    "scribe"
   ]
 }
