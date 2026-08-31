@@ -54,6 +54,7 @@ export function formatFailures(rows, limit) {
   return failures.slice(0, max).map((row) => {
     const answer = row.errored ? '<request failed>' : JSON.stringify(row.answer || '');
     return [
+      ...(row.evalTarget ? [`target: ${row.evalTarget}`] : []),
       `request: ${row.query}`,
       `expected: ${row.golden}`,
       `model answered: ${answer}`,
@@ -75,6 +76,9 @@ export function formatEvalReport(options) {
     .sort((a, b) => a.successRate - b.successRate || a.scenario.localeCompare(b.scenario))
     .map((row) => `| ${row.scenario} | ${row.successes}/${row.attempts} | ${formatPercent(row.successRate)} |`);
   const failures = formatFailures(evaluation.traces, opts.failureExamples);
+  const targetScores = (evaluation.targets || []).map((target) => {
+    return `| ${target.name} | ${target.model} | ${target.successes}/${target.attempts} | ${formatPercent(target.successRate)} |`;
+  });
 
   return [
     '# Scenario prompt evaluation',
@@ -82,6 +86,14 @@ export function formatEvalReport(options) {
     `- eval model: ${opts.evalModel || 'unknown'}`,
     `- success rate: ${formatPercent(evaluation.successRate)} (${evaluation.successes || 0}/${evaluation.attempts || 0})`,
     `- errored requests: ${evaluation.errors || 0}`,
+    ...(targetScores.length ? [
+      '',
+      '## Score by model target',
+      '',
+      '| target | model | correct | rate |',
+      '| --- | --- | --- | --- |',
+      ...targetScores
+    ] : []),
     '',
     '## Current instructions',
     '',
@@ -206,13 +218,24 @@ export function scoreOf(result) {
   return result && typeof result.successRate === 'number' ? result.successRate : 0;
 }
 
+export function preservesTargetScores(current, candidate) {
+  const baselines = current && Array.isArray(current.targets) ? current.targets : [];
+  if (!baselines.length) return true;
+  const candidates = candidate && Array.isArray(candidate.targets) ? candidate.targets : [];
+  return baselines.every((baseline) => {
+    const match = candidates.find((target) => target.name === baseline.name);
+    return match && scoreOf(match) >= scoreOf(baseline);
+  });
+}
+
 // Greedy acceptance with a minimum gain: a candidate has to beat the incumbent
-// by more than the sampling noise before it replaces the shipped instructions.
+// by more than the sampling noise without regressing any configured model target.
 export function chooseCandidate(current, candidates, minGain) {
   const threshold = typeof minGain === 'number' ? minGain : DEFAULT_OPTIMIZER_CONFIG.minGain;
   const currentScore = scoreOf(current);
   const ranked = (candidates || [])
     .filter(Boolean)
+    .filter((candidate) => preservesTargetScores(current, candidate))
     .slice()
     .sort((a, b) => {
       const delta = scoreOf(b) - scoreOf(a);
