@@ -25,7 +25,7 @@ describe('landing page', () => {
   });
 
   it('animates the landing page and the wizard reveal', () => {
-    for (const name of ['landingRise', 'landingLeave', 'landingPulse', 'landingGlow']) {
+    for (const name of ['landingRise', 'landingLeave', 'landingPulse']) {
       expect(css).toContain(`@keyframes ${name}`);
     }
   });

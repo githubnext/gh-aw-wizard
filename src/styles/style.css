@@ -34,9 +34,7 @@
   --danger: var(--color-danger-fg, #cf222e);
   --control-fg-on-emphasis: var(--color-fg-on-emphasis, #ffffff);
   --header-gradient-start: rgba(246, 248, 250, 0.85);
-  --title-gradient-start: var(--color-accent-fg, #0969da);
-  --title-gradient-mid: var(--color-done-emphasis, #8250df);
-  --title-gradient-end: var(--color-sponsors-emphasis, #bf3989);
+
   --label-blue: var(--color-accent-emphasis, #0969da);
   --label-purple: var(--color-done-emphasis, #8250df);
   --label-green: var(--color-success-emphasis, #1a7f37);
@@ -192,16 +190,6 @@ a:hover {
   line-height: 1.15;
   letter-spacing: -0.04em;
   color: var(--heading-color);
-}
-
-@supports ((-webkit-background-clip: text) or (background-clip: text)) {
-  .site-header h1 {
-    background: linear-gradient(90deg, var(--title-gradient-start), var(--title-gradient-mid), var(--title-gradient-end));
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-  }
 }
 .site-header .subtitle {
   font-size: 0.95rem;
@@ -1006,7 +994,7 @@ a:hover {
     radial-gradient(circle at 50% 0, rgba(var(--agent-purple-rgb), 0.17), transparent 46%),
     var(--bg-card);
   border: 1px solid rgba(var(--agent-purple-rgb), 0.5);
-  border-radius: 1rem;
+  border-radius: var(--radius-lg);
   box-shadow: 0 24px 80px rgba(var(--agent-purple-rgb), 0.35);
 }
 .copy-modal-close {
@@ -1535,17 +1523,9 @@ a:hover {
   color: var(--accent-blue);
 }
 .landing-glow {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: min(560px, 90vw);
-  aspect-ratio: 1;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--accent-blue-rgb), 0.18) 0%, rgba(var(--accent-green-rgb), 0.12) 45%, transparent 70%);
-  filter: blur(10px);
-  pointer-events: none;
-  animation: landingGlow 8s ease-in-out infinite;
+  /* Primer brand guidance calls out decorative glows as off-brand; this
+     element is kept in the markup (aria-hidden) but renders nothing. */
+  display: none;
 }
 .landing-title {
   font-size: clamp(1.75rem, 5.5vw, 2.75rem);
@@ -1575,7 +1555,7 @@ a:hover {
   padding: 0.8rem 2rem;
   font-size: 1.05rem;
   font-weight: 600;
-  border-radius: 999px;
+  border-radius: var(--radius-lg);
   position: relative;
   animation: landingRise 0.6s ease 0.24s both;
 }
@@ -1771,9 +1751,6 @@ a:hover {
     min-height: calc(100svh - 7rem);
     padding: 2rem 0 2.5rem;
   }
-  .landing-glow {
-    width: min(880px, 70vw);
-  }
   .landing-title {
     font-size: clamp(2.75rem, 4.5vw, 4rem);
     max-width: 20ch;
@@ -1845,9 +1822,6 @@ a:hover {
   .landing-message {
     font-size: 1.35rem;
   }
-  .landing-glow {
-    width: min(1000px, 60vw);
-  }
 }
 .wizard-revealed .site-header,
 .wizard-revealed .workflow-recipe,
@@ -1867,8 +1841,4 @@ a:hover {
 @keyframes landingPulse {
   0%, 100% { box-shadow: 0 0 0 0 rgba(var(--accent-green-rgb), 0.45); }
   50%      { box-shadow: 0 0 0 14px rgba(var(--accent-green-rgb), 0); }
-}
-@keyframes landingGlow {
-  0%, 100% { opacity: 0.75; transform: translate(-50%, -50%) scale(1); }
-  50%      { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
 }
