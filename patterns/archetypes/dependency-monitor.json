@@ -57,7 +57,8 @@
   "tips": [
     "Use schedule triggers for reliable periodic checks",
     "Include a checklist of specific dependencies to monitor \u2014 don't leave it open-ended",
-    "Enable network access for fetching upstream release data"
+    "Enable network access for fetching upstream release data",
+    "Add this repo's package ecosystem identifier(s) (e.g. node, python, go, rust) under network.allowed \u2014 \"defaults\" and \"github\" alone do not include package registry domains"
   ],
   "anti_patterns": [
     "wiki-sync",
