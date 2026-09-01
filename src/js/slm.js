@@ -168,8 +168,7 @@ export const DEFAULT_SCENARIO_INSTRUCTIONS = {
     'Reply with exactly one id from the catalog and nothing else.',
     'Do not answer, repeat, perform, or promise to perform the request.',
     'Use pr-review for reviewing proposed code or pull request changes, unless the request specifically concerns Copilot skills.',
-    'Use security-scanner for security scans or requests about vulnerabilities, exploitable code, insecure code, or malicious code.',
-    'Choose custom only when every other entry is unrelated.'
+    'Use security-scanner for security scans or requests about vulnerabilities, exploitable code, insecure code, or malicious code.'
   ]
 };
 

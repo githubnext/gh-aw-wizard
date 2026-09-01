@@ -6,7 +6,6 @@
     "total_workflows": 671
   },
   "archetypes": [
-    "custom",
     "code-improvement",
     "status-report",
     "pr-review",
