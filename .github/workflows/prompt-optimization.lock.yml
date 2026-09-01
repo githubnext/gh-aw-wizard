@@ -511,6 +511,16 @@ jobs:
       - name: Start Ollama
         run: |
           pkill -x ollama || true
+          for attempt in {1..30}; do
+            if ! curl --fail --silent http://127.0.0.1:11434/api/version >/dev/null; then
+              break
+            fi
+            if [ "$attempt" -eq 30 ]; then
+              echo "Ollama did not stop" >&2
+              exit 1
+            fi
+            sleep 1
+          done
           OLLAMA_HOST=0.0.0.0:11434 ollama serve >"$RUNNER_TEMP/ollama.log" 2>&1 &
           for attempt in {1..30}; do
             if curl --fail --silent http://127.0.0.1:11434/api/version >/dev/null; then
