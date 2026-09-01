@@ -2,7 +2,6 @@ import { describe, expect, it, vi } from 'vitest';
 
 import {
   ENGINES_URL,
-  FEATURED_ENGINE_IDS,
   engineIconMarkup,
   formatEngineLabel,
   formatEngineOptionLabel,
@@ -11,10 +10,6 @@ import {
 } from '../src/js/engines.js';
 
 describe('definition-based engines', () => {
-  it('features the requested agents before the remaining options', () => {
-    expect(FEATURED_ENGINE_IDS).toEqual(['codex', 'claude', 'copilot', 'pi']);
-  });
-
   it('loads engines.json from gh-aw', async () => {
     const fetchImpl = vi.fn().mockResolvedValue({
       ok: true,

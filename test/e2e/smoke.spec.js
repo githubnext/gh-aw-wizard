@@ -34,6 +34,8 @@ test('shows featured agents before revealing the remaining options', async ({ pa
   expect(await visibleAgents.evaluateAll((inputs) => inputs.map((input) => input.value)))
     .toEqual(['codex', 'claude', 'copilot', 'pi']);
   await expect(page.locator('#engine-options input[value="gemini"]')).toBeHidden();
+  await expect(page.getByRole('button', { name: 'More' }))
+    .toHaveAttribute('aria-controls', /engine-option-gemini/);
 
   await page.getByRole('button', { name: 'More' }).click();
 

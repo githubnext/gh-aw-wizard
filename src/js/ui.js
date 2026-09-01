@@ -780,6 +780,7 @@ export function setupEngineDisclosure() {
   const extraCards = orderedCards.slice(FEATURED_ENGINE_IDS.length);
 
   orderedCards.forEach((card, index) => {
+    card.id = `engine-option-${card.querySelector('input[name="engine"]').value}`;
     card.hidden = index >= FEATURED_ENGINE_IDS.length;
     container.appendChild(card);
   });
@@ -790,6 +791,7 @@ export function setupEngineDisclosure() {
   moreButton.className = 'engine-more-button';
   moreButton.textContent = 'More';
   moreButton.setAttribute('aria-expanded', 'false');
+  moreButton.setAttribute('aria-controls', extraCards.map((card) => card.id).join(' '));
   moreButton.addEventListener('click', () => {
     extraCards.forEach((card) => { card.hidden = false; });
     moreButton.setAttribute('aria-expanded', 'true');
