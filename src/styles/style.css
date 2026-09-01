@@ -457,8 +457,10 @@ a:hover {
 
 .option-card {
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   gap: 0.75rem;
+  min-height: 44px;
   padding: 0.85rem 1rem;
   background: var(--bg-card);
   border: 1px solid var(--border-color);

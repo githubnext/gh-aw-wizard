@@ -32,3 +32,16 @@ test('landing phase labels do not wrap on iPhone', async ({ page }) => {
     await expect(label).toHaveCSS('white-space', 'nowrap');
   }
 });
+
+test('option list items keep their minimum height on iPhone', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 667 });
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Create Your Agentic Workflow' }).click();
+  await page.getByRole('button', { name: 'Continue' }).click();
+
+  const options = page.locator('#archetype-options .option-card');
+  await expect.poll(async () => options.count()).toBeGreaterThan(0);
+  for (const option of await options.all()) {
+    expect((await option.boundingBox())?.height).toBeGreaterThanOrEqual(44);
+  }
+});
