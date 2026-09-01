@@ -27,7 +27,8 @@
     "Measure a representative baseline before optimizing",
     "Make one focused change and compare before-and-after results",
     "Do not trade correctness or maintainability for speculative speedups",
-    "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers"
+    "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers",
+    "Constrain create-pull-request with allowed-files scoped to the changed source files, and set protected-files: fallback-to-issue for manifests, CI config, or agent instruction files"
   ],
   "anti_patterns": []
 }

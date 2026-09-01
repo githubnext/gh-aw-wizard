@@ -26,7 +26,8 @@
   "tips": [
     "Group fixes by one rule and subsystem",
     "Never disable rules or add blanket suppressions",
-    "Validate semantics with relevant tests after applying fixes"
+    "Validate semantics with relevant tests after applying fixes",
+    "Constrain create-pull-request with allowed-files scoped to the fix's file types, and set protected-files: fallback-to-issue for manifests, CI config, or agent instruction files"
   ],
   "anti_patterns": []
 }
