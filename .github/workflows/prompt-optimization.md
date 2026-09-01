@@ -66,7 +66,7 @@ steps:
 
   - name: Start Ollama
     run: |
-      ollama serve >"$RUNNER_TEMP/ollama.log" 2>&1 &
+      OLLAMA_HOST=0.0.0.0:11434 ollama serve >"$RUNNER_TEMP/ollama.log" 2>&1 &
       for attempt in {1..30}; do
         if curl --fail --silent http://127.0.0.1:11434/api/version >/dev/null; then
           exit 0
@@ -95,16 +95,16 @@ steps:
 Improve the wizard's shipped scenario-assistant instructions with measured hill climbing. The
 workflow has already restored the Ollama cache, downloaded GGUF proxies for both browser models
 from Hugging Face, and started an OpenAI-compatible Ollama server on
-`http://127.0.0.1:11434/v1`.
+`http://host.docker.internal:11434/v1`.
 
 Use the installed `optimize-scenario-prompt` skill and
 `scripts/prompt-optimizer.mjs`. Use these options for every evaluation or score command:
 
 ```text
 --all-models
---eval-url http://127.0.0.1:11434/v1
+--eval-url http://host.docker.internal:11434/v1
 --eval-model hf.co/bartowski/Qwen2.5-1.5B-Instruct-GGUF:Q4_K_M
---ios-eval-url http://127.0.0.1:11434/v1
+--ios-eval-url http://host.docker.internal:11434/v1
 --ios-eval-model hf.co/unsloth/SmolLM2-360M-Instruct-GGUF:Q4_K_M
 ```
 
