@@ -42,6 +42,7 @@ test('option list items keep their minimum height on iPhone', async ({ page }) =
   const options = page.locator('#archetype-options .option-card');
   await expect.poll(async () => options.count()).toBeGreaterThan(0);
   for (const option of await options.all()) {
-    expect((await option.boundingBox())?.height).toBeGreaterThanOrEqual(44);
+    await expect(option).toBeVisible();
+    expect((await option.boundingBox()).height).toBeGreaterThanOrEqual(44);
   }
 });
