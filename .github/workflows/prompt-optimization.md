@@ -64,21 +64,30 @@ steps:
     with:
       version: 0.33.2
 
-  - name: Download Hugging Face evaluation models
+  - name: Start Ollama
     run: |
+      ollama serve >"$RUNNER_TEMP/ollama.log" 2>&1 &
       for attempt in {1..30}; do
         if curl --fail --silent http://127.0.0.1:11434/api/version >/dev/null; then
-          break
+          exit 0
         fi
         if [ "$attempt" -eq 30 ]; then
+          cat "$RUNNER_TEMP/ollama.log" >&2
           echo "Ollama did not become ready" >&2
           exit 1
         fi
         sleep 2
       done
-      ollama pull hf.co/bartowski/Qwen2.5-1.5B-Instruct-GGUF:Q4_K_M
-      ollama pull hf.co/unsloth/SmolLM2-360M-Instruct-GGUF:Q4_K_M
-      ollama list
+
+  - name: Load and verify evaluation models
+    run: |
+      for model in \
+        hf.co/bartowski/Qwen2.5-1.5B-Instruct-GGUF:Q4_K_M \
+        hf.co/unsloth/SmolLM2-360M-Instruct-GGUF:Q4_K_M; do
+        ollama pull "$model"
+        ollama run --keepalive 4h "$model" "Reply with exactly: ready" >/dev/null
+      done
+      ollama ps
 ---
 
 # Scenario Prompt Optimization
