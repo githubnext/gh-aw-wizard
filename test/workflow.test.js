@@ -410,6 +410,22 @@ describe('generateWorkflowFile', () => {
     expect(md).not.toContain('commit-files');
   });
 
+  it('generates pull request branch, merge, and review comment safe outputs', () => {
+    const md = generateWorkflowFile(answers({
+      outputs: [
+        'push-to-pull-request-branch',
+        'merge-pull-request',
+        'create-pull-request-review-comment'
+      ]
+    }), patterns);
+    expect(md).toContain(
+      'safe-outputs:\n' +
+      '  push-to-pull-request-branch:\n' +
+      '  merge-pull-request:\n' +
+      '  create-pull-request-review-comment:\n'
+    );
+  });
+
   it.each([
     ['accessibility-expert', 'web accessibility expert'],
     ['performance-nut', 'performance optimization expert'],

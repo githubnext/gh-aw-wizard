@@ -124,12 +124,14 @@ describe('buildWorkflowSummary', () => {
         'add-comment',
         'add-labels',
         'create-pull-request',
+        'push-to-pull-request-branch',
+        'merge-pull-request',
         'create-pull-request-review-comment'
       ]
     }), patterns, wizardConfig);
 
     expect(summary.output.value).toBe(
-      'create issue, add comment, add label, create pull request, and add review comment'
+      'create issue, add comment, add label, create pull request, push to pull request branch, merge pull request, and create pull request review comment'
     );
   });
 });
