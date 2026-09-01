@@ -106,13 +106,6 @@
       "daily code improver": "code-improvement",
       "daily test generator": "daily-test-improver",
       "documentation updater": "documentation-updater"
-    },
-    "custom": {
-      "id": "custom",
-      "label": "Custom",
-      "description": "Describe your own workflow — start from scratch",
-      "icon": "tools",
-      "full_width": true
     }
   },
   "steps": {

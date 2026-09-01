@@ -133,13 +133,6 @@ const QUERY_GROUPS = [
     'Create a roundup of issues, discussions and contributions',
     'Report highlights from the project community',
     'Compile a regular community update'
-  ]],
-  ['custom', [
-    'Invent a workflow that composes music from weather data',
-    'Automate a repository task that does not match any listed category',
-    'Build a bespoke workflow for my unusual internal process',
-    'Create an agent for a unique task I will describe later',
-    'I need something completely different from the available scenarios'
   ]]
 ];
 

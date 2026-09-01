@@ -18,6 +18,10 @@ export function workflowName(archetype, customDesc) {
   return archetype;
 }
 
+function customDescription(answers) {
+  return answers.customDescription || answers.intent || '';
+}
+
 function generationModel(patterns) {
   const generation = getWorkflowGeneration(patterns);
   if (!generation) throw new Error('Workflow generation pattern data is unavailable.');
@@ -146,8 +150,9 @@ function renderWorkflowBody(answers, patterns, archetype) {
   const generation = generationModel(patterns);
   const definition = workflowDefinition(patterns, answers.archetype);
   const template = definition.body || generation.default_body || [];
-  const purpose = answers.archetype === 'custom' && answers.customDescription
-    ? answers.customDescription
+  const customDesc = customDescription(answers);
+  const purpose = answers.archetype === 'custom' && customDesc
+    ? customDesc
     : archetype.description || answers.customDescription || 'Perform the specified task on this repository.';
   return `${renderTemplate(template.join('\n'), {
     label: definition.title || archetype.label || 'Custom Workflow',
@@ -195,9 +200,10 @@ export function generateWorkflowFile(answers, patterns) {
   if (definition.file_generation_error) throw new Error(definition.file_generation_error);
 
   const archetype = getArchetype(patterns, answers.archetype) || {};
-  const name = workflowName(answers.archetype, answers.customDescription);
-  const description = answers.archetype === 'custom' && answers.customDescription
-    ? answers.customDescription
+  const customDesc = customDescription(answers);
+  const name = workflowName(answers.archetype, customDesc);
+  const description = answers.archetype === 'custom' && customDesc
+    ? customDesc
     : archetype.description || answers.customDescription || 'Custom agentic workflow';
   const safeOutputs = safeOutputsFor(answers, patterns);
   const inferred = inferCapabilities(answers.archetype, patterns);
@@ -312,7 +318,7 @@ function requestedWorkflows(answers, patterns) {
           : inferNeedsPreSteps(archetypeId, patterns)
       }),
       label: archetype.label || 'Custom Workflow',
-      description: archetype.description || answers.customDescription || 'Custom agentic workflow'
+      description: archetype.description || customDescription(answers) || 'Custom agentic workflow'
     };
   });
 }
@@ -454,9 +460,10 @@ export function detailRequirements(details) {
 
 export function generateAgentPrompt(answers, patterns) {
   const archetype = getArchetype(patterns, answers.archetype) || {};
-  const name = workflowName(answers.archetype, answers.customDescription);
-  const description = answers.archetype === 'custom' && answers.customDescription
-    ? answers.customDescription
+  const customDesc = customDescription(answers);
+  const name = workflowName(answers.archetype, customDesc);
+  const description = answers.archetype === 'custom' && customDesc
+    ? customDesc
     : archetype.description || answers.customDescription || 'Custom agentic workflow';
   const workflows = requestedWorkflows(answers, patterns);
   const multiple = workflows.length > 1;

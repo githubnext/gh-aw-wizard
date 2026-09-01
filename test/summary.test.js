@@ -44,6 +44,7 @@ describe('buildWorkflowSummary', () => {
     const summary = buildWorkflowSummary(answers({ intent: 'Keep release notes accurate' }), patterns, wizardConfig);
 
     expect(summary.intent).toEqual({ value: 'Keep release notes accurate', complete: true });
+    expect(summary.purpose).toEqual({ value: 'Keep release notes accurate', complete: true });
   });
 
   it('turns selected answers into a readable recipe', () => {

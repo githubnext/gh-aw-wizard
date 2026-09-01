@@ -32,7 +32,7 @@ export function buildWorkflowSummary(answers, patterns, wizardConfig) {
     ? wizardConfig.summary_overrides[answers.archetype]
     : {};
   const purpose = answers.archetype === 'custom'
-    ? answers.customDescription
+    ? answers.customDescription || answers.intent
     : archetype && archetype.description;
   const engine = answers.engine ? (engineLabels[answers.engine] || formatEngineLabel(answers.engine)) : null;
   const capabilities = (answers.extras || []).map((extra) => { return extraLabels[extra] || extra; });
