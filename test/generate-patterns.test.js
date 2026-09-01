@@ -34,8 +34,10 @@ describe('pattern generator', () => {
           stars: 1,
           workflows: [
             { name: 'CI doctor', success_rate: '1/1', triggers: ['schedule'] },
+            { name: 'Daily test improver', success_rate: '1/1', triggers: ['schedule'] },
             { name: 'Dependency monitor', success_rate: '1/1', triggers: ['schedule'] },
             { name: 'Docs updater', success_rate: '1/1', triggers: ['schedule'] },
+            { name: 'Repo maintainer', success_rate: '1/1', triggers: ['schedule'] },
             { name: 'Weekly status', success_rate: '1/1', triggers: ['schedule'] }
           ]
         }
@@ -57,6 +59,12 @@ describe('pattern generator', () => {
     expect(readTips('dependency-monitor')).toContain('skip-if-match');
     expect(readTips('status-report')).toContain('DO NOT constraints');
     expect(readTips('documentation-updater')).toContain('protected-files');
+    expect(readTips('daily-test-improver')).toContain('passing baseline');
+    expect(readTips('repo-maintainer')).toContain('destructive actions');
+    expect(JSON.parse(readFileSync(
+      join(directory, 'patterns/archetypes/repo-maintainer.json'),
+      'utf8'
+    )).recommended_tools).toContain('create-pull-request');
   });
 
   it('loads curated archetype data from the committed pattern file', () => {

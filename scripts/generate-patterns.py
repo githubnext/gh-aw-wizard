@@ -210,6 +210,18 @@ for arch_id, ad in sorted(
                 "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers",
             ],
         },
+        "daily-test-improver": {
+            "safe_outputs": ["pull-requests"],
+            "tools": ["create-pull-request"],
+            "prompt_style": "phase-based",
+            "size_range": [5000, 12000],
+            "tips": [
+                "Establish a passing baseline before changing tests",
+                "Prefer regression-prone and critical paths over coverage inflation",
+                "Create one focused draft pull request per run",
+                "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers",
+            ],
+        },
         "status-report": {
             "safe_outputs": ["issues"],
             "tools": ["create-issue"],
@@ -259,6 +271,17 @@ for arch_id, ad in sorted(
                 "Use DO NOT constraints to prevent deleting existing content",
                 "Use protected-files: fallback-to-issue for manifests, CI configuration, and agent instructions",
                 "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers",
+            ],
+        },
+        "repo-maintainer": {
+            "safe_outputs": ["issues", "pull-requests"],
+            "tools": ["add-comment", "add-labels", "create-issue", "create-pull-request"],
+            "prompt_style": "role-steps",
+            "size_range": [5000, 12000],
+            "tips": [
+                "Use persistent memory and check for existing work before acting",
+                "Limit each run to one high-value maintenance task",
+                "Leave merges, approvals, and destructive actions to maintainers",
             ],
         },
         "pr-review": {
