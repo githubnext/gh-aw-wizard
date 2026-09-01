@@ -39,7 +39,7 @@ safe-outputs:
 sandbox:
   agent:
     id: awf
-    legacy-security: enable
+    runtime: docker-sudo-iptables
     allow-host-ports: [11434]
 strict: true
 timeout-minutes: 180
