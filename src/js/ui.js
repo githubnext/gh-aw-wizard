@@ -453,7 +453,7 @@ function advanceOneStepLikeNext() {
     return true;
   }
   if (currentStep >= 2 && currentStep <= 5) {
-    if (currentStep + 1 > maxReachableStep(hasChecked('archetype'))) return false;
+    if (currentStep + 1 > maxReachableStep(hasChecked('archetype'), Boolean(intentValue()))) return false;
     goToStep(currentStep + 1);
     return true;
   }
@@ -551,12 +551,12 @@ function updateProgress(from, to) {
   });
 }
 
-export function maxReachableStep(hasArchetype) {
-  return hasArchetype ? TOTAL_STEPS : 2;
+export function maxReachableStep(hasArchetype, hasIntent = false) {
+  return hasArchetype || hasIntent ? TOTAL_STEPS : 2;
 }
 
 function syncProgressStepAvailability() {
-  const maxStep = maxReachableStep(hasChecked('archetype'));
+  const maxStep = maxReachableStep(hasChecked('archetype'), Boolean(intentValue()));
   document.querySelectorAll('.progress-step').forEach((el) => {
     const step = parseInt(el.getAttribute('data-step'));
     el.disabled = step > maxStep;
@@ -709,6 +709,7 @@ function bindFormEvents() {
   if (intent) {
     intent.addEventListener('input', () => {
       renderWorkflowSummary();
+      syncProgressStepAvailability();
       // Re-bake on every keystroke so the finish step (and the copy button) always
       // reflect the current why, even while the why pane is still open.
       refreshPreview();
@@ -850,10 +851,12 @@ function gatherAnswers() {
   const extras = [];
   document.querySelectorAll('input[name="extra"]:checked').forEach((cb) => { extras.push(cb.value); });
   const archetypeId = arch ? arch.value : 'custom';
+  const customDescription = document.getElementById('custom-description').value.trim() ||
+    (!arch ? intentValue() : '');
 
   return {
     archetype: archetypeId,
-    customDescription: document.getElementById('custom-description').value.trim(),
+    customDescription,
     triggers,
     outputs,
     engine: (document.querySelector('input[name="engine"]:checked') || {}).value || null,

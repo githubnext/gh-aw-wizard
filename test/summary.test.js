@@ -44,6 +44,7 @@ describe('buildWorkflowSummary', () => {
     const summary = buildWorkflowSummary(answers({ intent: 'Keep release notes accurate' }), patterns, wizardConfig);
 
     expect(summary.intent).toEqual({ value: 'Keep release notes accurate', complete: true });
+    expect(summary.purpose).toEqual({ value: 'Keep release notes accurate', complete: true });
   });
 
   it('ellipsizes long intent previews to 42 characters', () => {

@@ -22,6 +22,19 @@ test('website loads and opens the wizard', async ({ page }) => {
   await expect(page.locator('#step-3')).toHaveClass(/active/);
 });
 
+test('intent provides an implicit HOW without a Custom card', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Create Your Agentic Workflow' }).click();
+  await page.getByLabel('Tell us your intent so that we can generate graders and evals')
+    .fill('Keep release notes accurate for on-call engineers');
+
+  await expect(page.locator('#archetype-options input[value="custom"]')).toHaveCount(0);
+  await page.locator('.progress-step[data-step="3"]').click();
+
+  await expect(page.locator('#step-3')).toHaveClass(/active/);
+  await expect(page.locator('#summary-purpose')).toHaveText('Keep release notes accurate for on-call engineers');
+});
+
 test('landing phase labels do not wrap on iPhone', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 667 });
   await page.goto('/');

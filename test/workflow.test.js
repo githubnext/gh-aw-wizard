@@ -730,6 +730,22 @@ describe('generateAgentPrompt', () => {
     );
   });
 
+  it('uses intent as the implicit purpose when no HOW scenario is selected', () => {
+    const prompt = generateAgentPrompt(
+      answers({
+        archetype: 'custom',
+        customDescription: '',
+        intent: 'Keep release notes accurate for on-call engineers.'
+      }),
+      patterns
+    );
+
+    expect(prompt).toContain(
+      'The purpose of the workflow is: Keep release notes accurate for on-call engineers.'
+    );
+    expect(prompt).toContain('- Name: keep-release-notes-accurate-for-on-call');
+  });
+
   it('preserves explicit data-fetch settings in single-workflow suggestions', () => {
     const prompt = generateAgentPrompt(
       answers({ archetype: 'status-report', needsData: false }),

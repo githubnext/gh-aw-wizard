@@ -13,13 +13,7 @@ import {
 const archetypeConfig = {
   archetypes: {
     pinned: ['skill-pr-reviewer', 'code-improvement', 'daily-test-improver', 'documentation-updater'],
-    aliases: {},
-    custom: {
-      id: 'custom',
-      label: 'Custom',
-      description: 'Describe your own workflow — start from scratch',
-      full_width: true
-    }
+    aliases: {}
   }
 };
 
@@ -30,13 +24,14 @@ afterEach(() => {
 });
 
 describe('wizard navigation', () => {
-  it('keeps the Why and How tabs reachable before an archetype is selected', () => {
+  it('keeps only the Why and How tabs reachable without an archetype or intent', () => {
     expect(maxReachableStep(false)).toBe(2);
     expect(maxReachableStep(true)).toBe(7);
+    expect(maxReachableStep(false, true)).toBe(7);
   });
 
   describe('archetype option rendering', () => {
-    it('renders archetype cards from pattern data and appends custom when missing', () => {
+    it('renders archetype cards from pattern data without a custom fallback', () => {
       const container = createElement();
       globalThis.document = {
         getElementById(id) {
@@ -57,12 +52,9 @@ describe('wizard navigation', () => {
         ]
       }, archetypeConfig);
 
-      expect(container.children).toHaveLength(2);
+      expect(container.children).toHaveLength(1);
       const values = container.children.map((card) => card.dataset.value);
-      expect(values).toEqual(['status-report', 'custom']);
-      const customCard = container.children[1];
-      expect(customCard.style.gridColumn).toBe('1 / -1');
-      expect(customCard.children[0].value).toBe('custom');
+      expect(values).toEqual(['status-report']);
     });
 
     it('pins priority archetypes to the top in a fixed order', () => {
@@ -98,8 +90,7 @@ describe('wizard navigation', () => {
         'daily-test-improver',
         'documentation-updater',
         'dependency-monitor',
-        'status-report',
-        'custom'
+        'status-report'
       ]);
       expect(container.children[0].classList.contains('priority-archetype')).toBe(true);
       expect(container.children[1].classList.contains('priority-archetype')).toBe(true);
@@ -107,7 +98,6 @@ describe('wizard navigation', () => {
       expect(container.children[3].classList.contains('priority-archetype')).toBe(true);
       expect(container.children[4].classList.contains('priority-archetype')).toBe(false);
       expect(container.children[5].classList.contains('priority-archetype')).toBe(false);
-      expect(container.children[6].classList.contains('priority-archetype')).toBe(false);
     });
 
     it('renders choice cards from wizard configuration', () => {

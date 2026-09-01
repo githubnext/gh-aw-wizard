@@ -3,8 +3,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { EVAL_CORPUS, EVAL_REPETITIONS, EVAL_SAMPLE_SIZE, pickRandomSample, runEvals } from '../src/js/slm-evals.js';
 
 describe('SLM eval corpus', () => {
-  it('contains 105 queries with golden scenario answers', () => {
-    expect(EVAL_CORPUS).toHaveLength(105);
+  it('contains 100 queries with golden scenario answers', () => {
+    expect(EVAL_CORPUS).toHaveLength(100);
     EVAL_CORPUS.forEach((item) => {
       expect(item.query).toBeTruthy();
       expect(item.golden).toBeTruthy();

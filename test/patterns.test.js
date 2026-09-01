@@ -26,6 +26,10 @@ describe('getArchetype', () => {
   });
 
   describe('workflow generation model', () => {
+    it('does not expose the custom HOW archetype', () => {
+      expect(generatedPatterns.archetypes.map((archetype) => archetype.id)).not.toContain('custom');
+    });
+
     it('loads the runtime generation data referenced by the manifest', () => {
       expect(getWorkflowGeneration(generatedPatterns)).not.toBeNull();
       expect(getWorkflowDefinition(generatedPatterns, 'status-report')).toMatchObject({
