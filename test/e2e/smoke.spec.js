@@ -22,6 +22,25 @@ test('website loads and opens the wizard', async ({ page }) => {
   await expect(page.locator('#step-3')).toHaveClass(/active/);
 });
 
+test('shows featured agents before revealing the remaining options', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Create Your Agentic Workflow' }).click();
+  await page.getByLabel('Tell us your intent so that we can generate graders and evals')
+    .fill('Keep the repository healthy');
+  await page.locator('.progress-step[data-step="6"]').click();
+
+  const visibleAgents = page.locator('#engine-options .option-card:visible input[name="engine"]');
+  await expect(visibleAgents).toHaveCount(4);
+  expect(await visibleAgents.evaluateAll((inputs) => inputs.map((input) => input.value)))
+    .toEqual(['codex', 'claude', 'copilot', 'pi']);
+  await expect(page.locator('#engine-options input[value="gemini"]')).toBeHidden();
+
+  await page.getByRole('button', { name: 'More' }).click();
+
+  await expect(page.locator('#engine-options input[value="gemini"]')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'More' })).toHaveCount(0);
+});
+
 test('intent provides an implicit HOW without a Custom card', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Create Your Agentic Workflow' }).click();
