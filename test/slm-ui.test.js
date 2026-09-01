@@ -70,6 +70,7 @@ describe('showAssistantResult', () => {
     const { modal, nodes } = stubModal();
     const writeText = vi.fn().mockResolvedValue();
     vi.stubGlobal('navigator', { clipboard: { writeText } });
+    vi.stubGlobal('window', { setTimeout: vi.fn() });
 
     expect(showAssistantResult({
       eyebrow: 'Scenario selected',
