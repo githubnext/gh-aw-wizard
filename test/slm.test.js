@@ -154,6 +154,22 @@ describe('keyword fallback', () => {
     expect(keywordScenarioMatch('please label our incoming issues', scenarios)).toBe('issue-triage');
   });
 
+  it('recognizes security and proposed-change review language from chatty model responses', () => {
+    const reviewScenarios = [
+      { id: 'code-improvement', label: 'Code Improvement', description: 'Diagnose and fix code issues' },
+      { id: 'pr-review', label: 'PR Review', description: 'Review pull requests for quality and issues' },
+      { id: 'security-scanner', label: 'Security Scanner', description: 'Scan code for security risks' }
+    ];
+    expect(keywordScenarioMatch(
+      'Inspect proposed code changes and comment on problems',
+      reviewScenarios
+    )).toBe('pr-review');
+    expect(keywordScenarioMatch(
+      'Look for exploitable code and report findings',
+      reviewScenarios
+    )).toBe('security-scanner');
+  });
+
   it('never falls back to the custom scenario', () => {
     expect(keywordScenarioMatch('describe workflow', scenarios)).toBeNull();
   });

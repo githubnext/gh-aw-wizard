@@ -42,6 +42,7 @@ const KEYWORD_ALIASES = {
   dependencies: 'dependency',
   discussions: 'community',
   docs: 'documentation',
+  exploitable: 'security',
   failures: 'failure',
   flaky: 'test',
   guides: 'documentation',
@@ -197,6 +198,7 @@ function normalize(value) {
 function words(value) {
   const canonical = normalize(value)
     .replace(/\bpull requests?\b/g, 'pullrequest')
+    .replace(/\bproposed code changes?\b/g, 'pullrequest')
     .replace(/\bgithub actions?\b|\bcontinuous integration\b/g, 'ci')
     .replace(/\bcode health\b|\btechnical debt\b/g, 'codehealth')
     .replace(/\bscreen readers?\b/g, 'screenreader')
