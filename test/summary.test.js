@@ -46,6 +46,17 @@ describe('buildWorkflowSummary', () => {
     expect(summary.intent).toEqual({ value: 'Keep release notes accurate', complete: true });
   });
 
+  it('ellipsizes long intent previews to 42 characters', () => {
+    const summary = buildWorkflowSummary(answers({
+      intent: 'Keep release notes accurate so responders can triage incidents faster'
+    }), patterns, wizardConfig);
+
+    expect(summary.intent).toEqual({
+      value: 'Keep release notes accurate so responders…',
+      complete: true
+    });
+  });
+
   it('turns selected answers into a readable recipe', () => {
     const summary = buildWorkflowSummary(answers({
       archetype: 'issue-triage',
