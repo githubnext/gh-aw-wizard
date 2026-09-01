@@ -8,6 +8,13 @@ const QUERY_GROUPS = [
     'Find and fix a bug in the repository code',
     'Make a focused code improvement with tests'
   ]],
+  ['pr-iteration-loop', [
+    'Solve a difficult problem over multiple iterations in one pull request',
+    'Keep improving the same draft PR until its measurable goal is reached',
+    'Create a loop that ratchets verified progress on a long-running branch',
+    'Work through one checkpoint per run and preserve successful attempts',
+    'Iterate on a problem without opening a new pull request each time'
+  ]],
   ['status-report', [
     'Post a weekly summary of repository activity',
     'Create a daily report of open issues and pull requests',

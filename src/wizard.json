@@ -104,6 +104,8 @@
     "aliases": {
       "pr reviewer": "skill-pr-reviewer",
       "daily code improver": "code-improvement",
+      "iterative pr solver": "pr-iteration-loop",
+      "pr loop": "pr-iteration-loop",
       "daily test generator": "daily-test-improver",
       "documentation updater": "documentation-updater"
     },

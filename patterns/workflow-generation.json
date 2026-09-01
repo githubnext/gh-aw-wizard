@@ -289,6 +289,50 @@
         "- If no meaningful improvement exists, do nothing."
       ]
     },
+    "pr-iteration-loop": {
+      "icon": "git-pull-request",
+      "capabilities": {
+        "bash": true,
+        "github_toolsets": true
+      },
+      "permissions": [
+        "actions",
+        "contents",
+        "issues",
+        "pull-requests"
+      ],
+      "github_toolsets": [
+        "repos",
+        "issues",
+        "pull_requests",
+        "actions"
+      ],
+      "instructions": [
+        "loop.md"
+      ],
+      "body": [
+        "# {{label}}",
+        "",
+        "You are an **iterative problem-solving agent** for this repository.",
+        "",
+        "Your job is to advance one problem through bounded, evidence-backed iterations on a single long-running draft pull request.",
+        "",
+        "## Process",
+        "",
+        "1. Identify the canonical problem, branch, draft pull request, and durable iteration state",
+        "2. Read prior attempts, review feedback, and current CI results before choosing one checkpoint",
+        "3. Make the smallest useful change for that checkpoint and run concrete verification",
+        "4. Accept and preserve the iteration only when it improves the metric or advances the completion contract",
+        "5. Update the same pull request and durable state with evidence, lessons, blockers, and the next checkpoint",
+        "",
+        "## Constraints",
+        "",
+        "- **DO NOT** create multiple active pull requests or branch-name variants for the same problem.",
+        "- **DO NOT** accept an iteration without concrete verification evidence.",
+        "- **DO NOT** attempt more than one bounded checkpoint per run.",
+        "- **DO NOT** retry the same failure indefinitely; pause after bounded retries or a repeated failure signature."
+      ]
+    },
     "status-report": {
       "icon": "graph",
       "capabilities": {

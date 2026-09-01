@@ -1,0 +1,44 @@
+{
+  "id": "pr-iteration-loop",
+  "label": "PR Iteration Loop",
+  "description": "Solve a problem through verified iterations on one long-running draft pull request",
+  "success_rate": null,
+  "count": 0,
+  "recommended_triggers": [
+    {
+      "type": "schedule",
+      "config": {}
+    },
+    {
+      "type": "slash_command",
+      "config": {}
+    }
+  ],
+  "recommended_safe_outputs": [
+    "pull-requests",
+    "issues"
+  ],
+  "recommended_tools": [
+    "create-pull-request",
+    "add-comment"
+  ],
+  "timeout_minutes": 45,
+  "prompt_style": "phase-based",
+  "size_range_bytes": [
+    8000,
+    20000
+  ],
+  "top_repos": [
+    {
+      "repo": "githubnext/autoloop",
+      "stars": 0
+    }
+  ],
+  "tips": [
+    "Select one bounded checkpoint per run and preserve accepted progress on one deterministic branch and draft pull request",
+    "Persist iteration history, evidence, lessons, and blockers in repo-memory so later runs do not repeat failed approaches",
+    "Accept an iteration only when it improves the defined metric or completion contract and passes verification",
+    "Pause after bounded retries or a repeated failure signature instead of retrying indefinitely"
+  ],
+  "anti_patterns": []
+}
