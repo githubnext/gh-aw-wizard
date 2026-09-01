@@ -55,7 +55,6 @@ describe('buildWorkflowSummary', () => {
       value: 'Keep release notes accurate so responders…',
       complete: true
     });
-    expect(summary.intent.value).toHaveLength(42);
   });
 
   it('turns selected answers into a readable recipe', () => {
