@@ -20,6 +20,53 @@ afterEach(() => {
 });
 
 describe('pattern generator', () => {
+  it('retains safety guidance when regenerating measured archetypes', () => {
+    const directory = mkdtempSync(join(tmpdir(), 'gh-aw-wizard-patterns-'));
+    temporaryDirectories.push(directory);
+    mkdirSync(join(directory, 'data'));
+    mkdirSync(join(directory, 'patterns/archetypes'), { recursive: true });
+    mkdirSync(join(directory, 'scripts'));
+    copyFileSync(generatorPath, join(directory, 'scripts/generate-patterns.py'));
+    writeFileSync(join(directory, 'data/scan-results.json'), JSON.stringify({
+      metadata: {},
+      repos: {
+        'example/repo': {
+          stars: 1,
+          workflows: [
+            { name: 'CI doctor', success_rate: '1/1', triggers: ['schedule'] },
+            { name: 'Daily test improver', success_rate: '1/1', triggers: ['schedule'] },
+            { name: 'Dependency monitor', success_rate: '1/1', triggers: ['schedule'] },
+            { name: 'Docs updater', success_rate: '1/1', triggers: ['schedule'] },
+            { name: 'Repo maintainer', success_rate: '1/1', triggers: ['schedule'] },
+            { name: 'Weekly status', success_rate: '1/1', triggers: ['schedule'] }
+          ]
+        }
+      }
+    }));
+
+    const result = spawnSync('python3', ['scripts/generate-patterns.py'], {
+      cwd: directory,
+      encoding: 'utf8'
+    });
+
+    expect(result.status, result.stderr).toBe(0);
+    const readTips = (id) => JSON.parse(readFileSync(
+      join(directory, `patterns/archetypes/${id}.json`),
+      'utf8'
+    )).tips.join('\n');
+    expect(readTips('code-improvement')).toContain('protected-files');
+    expect(readTips('code-improvement')).toContain('pre-activation');
+    expect(readTips('dependency-monitor')).toContain('skip-if-match');
+    expect(readTips('status-report')).toContain('DO NOT constraints');
+    expect(readTips('documentation-updater')).toContain('protected-files');
+    expect(readTips('daily-test-improver')).toContain('passing baseline');
+    expect(readTips('repo-maintainer')).toContain('destructive actions');
+    expect(JSON.parse(readFileSync(
+      join(directory, 'patterns/archetypes/repo-maintainer.json'),
+      'utf8'
+    )).recommended_tools).toContain('create-pull-request');
+  });
+
   it('loads curated archetype data from the committed pattern file', () => {
     const directory = mkdtempSync(join(tmpdir(), 'gh-aw-wizard-patterns-'));
     temporaryDirectories.push(directory);

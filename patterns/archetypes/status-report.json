@@ -55,7 +55,9 @@
   "tips": [
     "Pre-fetch data in a steps: block \u2014 #1 predictor of workflow health",
     "Use schedule triggers for repeatable reporting",
-    "Keep prompts focused on one report \u2014 multi-source reports need pre-steps"
+    "Keep prompts focused on one report \u2014 multi-source reports need pre-steps",
+    "Use DO NOT constraints to prevent repository changes while generating reports",
+    "Use skip-if-match and expires on create-issue so scheduled reports don't accumulate as duplicate open issues"
   ],
   "anti_patterns": [
     "daily-repo-status",
