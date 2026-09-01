@@ -79,8 +79,16 @@ describe('scenario prompt', () => {
     expect(messages).toHaveLength(2);
     expect(messages[0].role).toBe('system');
     expect(messages[0].content).toContain('- status-report: Status Report');
-    expect(messages[0].content).toContain('Output exactly its id');
+    expect(messages[0].content).toContain('Reply with exactly one id');
+    expect(messages[0].content).toContain('Do not answer, repeat, perform, or promise');
     expect(messages[1]).toEqual({ role: 'user', content: 'label my issues' });
+  });
+
+  it('disambiguates code review and security requests for the small iOS model', () => {
+    const [system, user] = buildScenarioMessages(scenarios, 'Inspect proposed code changes');
+    expect(system.content).toContain('Use pr-review for reviewing proposed code');
+    expect(system.content).toContain('Use security-scanner for security scans');
+    expect(user.content).toBe('Inspect proposed code changes');
   });
 });
 
@@ -143,6 +151,22 @@ describe('multi-attempt selection', () => {
 describe('keyword fallback', () => {
   it('matches the closest scenario by shared words', () => {
     expect(keywordScenarioMatch('please label our incoming issues', scenarios)).toBe('issue-triage');
+  });
+
+  it('recognizes security and proposed-change review language from chatty model responses', () => {
+    const reviewScenarios = [
+      { id: 'code-improvement', label: 'Code Improvement', description: 'Diagnose and fix code issues' },
+      { id: 'pr-review', label: 'PR Review', description: 'Review pull requests for quality and issues' },
+      { id: 'security-scanner', label: 'Security Scanner', description: 'Scan code for security risks' }
+    ];
+    expect(keywordScenarioMatch(
+      'Inspect proposed code changes and comment on problems',
+      reviewScenarios
+    )).toBe('pr-review');
+    expect(keywordScenarioMatch(
+      'Look for exploitable code and report findings',
+      reviewScenarios
+    )).toBe('security-scanner');
   });
 
   it('never falls back to the custom scenario', () => {
