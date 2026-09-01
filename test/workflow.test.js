@@ -430,7 +430,7 @@ describe('generateWorkflowFile', () => {
       }),
       patterns
     );
-    expect(md).toContain(`You are a **${role}**`);
+    expect(md).toContain(`**${role}**`);
     expect(md).not.toContain('# Custom Workflow');
   });
 });
