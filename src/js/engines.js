@@ -3,6 +3,7 @@
 export const ENGINES_URL = 'https://raw.githubusercontent.com/github/gh-aw/main/.github/aw/engines.json';
 
 const ENGINE_ID_PATTERN = /^[a-z0-9][a-z0-9-]*$/;
+export const FEATURED_ENGINE_IDS = ['codex', 'claude', 'copilot', 'pi'];
 const builtInEngineIds = new Set(['copilot', 'claude', 'codex', 'gemini', 'pi']);
 const definitionEngineIds = new Set();
 const builtInEngineCompanies = {

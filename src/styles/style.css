@@ -455,6 +455,26 @@ a:hover {
   gap: 0.65rem;
 }
 
+.engine-more-button {
+  align-self: center;
+  padding: 0.45rem 1rem;
+  color: var(--accent-blue);
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+}
+.engine-more-button:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--border-hover);
+}
+.engine-more-button:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}
+
 .option-card {
   display: flex;
   flex-shrink: 0;

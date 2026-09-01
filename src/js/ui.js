@@ -15,6 +15,7 @@ import { initLanding } from './landing.js';
 import { buildWorkflowSummary } from './summary.js';
 import {
   engineIconMarkup,
+  FEATURED_ENGINE_IDS,
   formatEngineOptionLabel,
   loadDefinitionEngines,
   registerBuiltInEngines,
@@ -75,6 +76,7 @@ export function initWizard(options) {
     registerBuiltInEngines(wizardOptions(wizardConfig, 'engine'));
     registerDefinitionEngines(engines);
     addDefinitionEngineOptions(engines);
+    setupEngineDisclosure();
     bindFormEvents();
     const assistantContext = {
       wizardConfig,
@@ -760,6 +762,42 @@ function addDefinitionEngineOptions(engines) {
   });
 
   bindRadioDeselect(added, clearEngineSelection);
+}
+
+export function setupEngineDisclosure() {
+  const container = document.getElementById('engine-options');
+  if (!container) return;
+
+  const cardsByEngine = new Map(Array.from(container.querySelectorAll('input[name="engine"]')).map((input) => {
+    return [input.value, input.closest('.option-card')];
+  }));
+  const orderedCards = [
+    ...FEATURED_ENGINE_IDS.map((id) => cardsByEngine.get(id)).filter(Boolean),
+    ...Array.from(cardsByEngine.entries())
+      .filter(([id]) => !FEATURED_ENGINE_IDS.includes(id))
+      .map(([, card]) => card)
+  ];
+  const extraCards = orderedCards.slice(FEATURED_ENGINE_IDS.length);
+
+  orderedCards.forEach((card, index) => {
+    card.id = `engine-option-${card.querySelector('input[name="engine"]').value}`;
+    card.hidden = index >= FEATURED_ENGINE_IDS.length;
+    container.appendChild(card);
+  });
+  if (!extraCards.length) return;
+
+  const moreButton = document.createElement('button');
+  moreButton.type = 'button';
+  moreButton.className = 'engine-more-button';
+  moreButton.textContent = 'More';
+  moreButton.setAttribute('aria-expanded', 'false');
+  moreButton.setAttribute('aria-controls', extraCards.map((card) => card.id).join(' '));
+  moreButton.addEventListener('click', () => {
+    extraCards.forEach((card) => { card.hidden = false; });
+    moreButton.setAttribute('aria-expanded', 'true');
+    moreButton.remove();
+  });
+  container.appendChild(moreButton);
 }
 
 // Reset any selections that depend on the "what" (archetype) choice, since they
