@@ -153,7 +153,7 @@ function renderWorkflowBody(answers, patterns, archetype) {
   const customDesc = customDescription(answers);
   const purpose = answers.archetype === 'custom' && customDesc
     ? customDesc
-    : archetype.description || answers.customDescription || 'Perform the specified task on this repository.';
+    : archetype.description || customDesc || 'Perform the specified task on this repository.';
   return `${renderTemplate(template.join('\n'), {
     label: definition.title || archetype.label || 'Custom Workflow',
     purpose,
@@ -204,7 +204,7 @@ export function generateWorkflowFile(answers, patterns) {
   const name = workflowName(answers.archetype, customDesc);
   const description = answers.archetype === 'custom' && customDesc
     ? customDesc
-    : archetype.description || answers.customDescription || 'Custom agentic workflow';
+    : archetype.description || customDesc || 'Custom agentic workflow';
   const safeOutputs = safeOutputsFor(answers, patterns);
   const inferred = inferCapabilities(answers.archetype, patterns);
   const extras = selectedExtras(answers, patterns);
@@ -464,7 +464,7 @@ export function generateAgentPrompt(answers, patterns) {
   const name = workflowName(answers.archetype, customDesc);
   const description = answers.archetype === 'custom' && customDesc
     ? customDesc
-    : archetype.description || answers.customDescription || 'Custom agentic workflow';
+    : archetype.description || customDesc || 'Custom agentic workflow';
   const workflows = requestedWorkflows(answers, patterns);
   const multiple = workflows.length > 1;
 
