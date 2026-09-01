@@ -276,6 +276,7 @@ describe('generateWorkflowFile', () => {
       patterns
     );
     expect(md).toContain('network:\n  allowed:\n    - defaults\n    - github\n');
+    expect(md).toContain('# TODO: add this repo\'s package ecosystem identifier(s)');
   });
 
   it('raises the timeout when a trigger requires more time', () => {

@@ -223,6 +223,16 @@ export function generateWorkflowFile(answers, patterns) {
   if (inferred.network || lsp) {
     frontmatter += 'network:\n  allowed:\n    - defaults\n    - github\n';
     if (lsp) frontmatter += '    - node\n';
+    // "defaults" and "github" alone never include package-registry domains
+    // (registry.npmjs.org, pypi.org, proxy.golang.org, ...), so a pre-step that
+    // queries upstream registries would be silently blocked by the firewall.
+    // Flag the gap inline so the downstream agent adds the ecosystem
+    // identifier that matches this repository's package manager(s) — see
+    // https://github.com/github/gh-aw/blob/main/.github/aw/network.md#inferring-ecosystem-from-repository-files
+    if (inferred.network) {
+      frontmatter += '    # TODO: add this repo\'s package ecosystem identifier(s) (e.g. node, python, go, rust) ' +
+        'so registry domains are reachable — see gh-aw network.md\n';
+    }
   }
   frontmatter += `engine: ${  normalizeEngine(answers.engine)  }\n`;
   if (lsp) {
