@@ -674,6 +674,9 @@ describe('generateAgentPrompt', () => {
       'syntax-tools-imports.md',
       'create-agentic-workflow-trigger-details.md'
     ]],
+    ['primer-branding-checker',
+      'https://raw.githubusercontent.com/githubnext/gh-aw-wizard/main/.github/workflows/primer-branding.md'
+    ],
     ['performance-nut', [
       'https://raw.githubusercontent.com/github/gh-aw/main/.github/copilot/instructions/cli-performance.md',
       'https://raw.githubusercontent.com/github/gh-aw/main/.github/copilot/instructions/build-performance.md',

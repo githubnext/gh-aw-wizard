@@ -96,6 +96,7 @@ describe('getArchetype', () => {
       'daily-test-improver',
       'pr-iteration-loop',
       'accessibility-expert',
+      'primer-branding-checker',
       'performance-nut',
       'user-simulator',
       'repo-maintainer',

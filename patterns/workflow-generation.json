@@ -502,6 +502,40 @@
         "- **DO NOT** duplicate existing review comments."
       ]
     },
+    "primer-branding-checker": {
+      "icon": "eye",
+      "capabilities": {
+        "pre_steps": true,
+        "bash": true,
+        "network": true
+      },
+      "instructions": [
+        "https://raw.githubusercontent.com/githubnext/gh-aw-wizard/main/.github/workflows/primer-branding.md"
+      ],
+      "body": [
+        "# {{label}}",
+        "",
+        "You are a **front-end designer** responsible for keeping this repository's dashboard aligned with current Primer brand guidance.",
+        "",
+        "Your job is to gather authoritative guidance, audit the dashboard, make focused presentational fixes, validate them, and open a pull request.",
+        "",
+        "{{pre_steps}}",
+        "## Process",
+        "",
+        "1. Use the Primer Brand MCP server to retrieve current guidance for color, typography, spacing, voice, and accessibility",
+        "2. Audit the dashboard against that guidance and prioritize the highest-impact, lowest-risk deviations",
+        "3. Make a focused set of presentational fixes using Primer tokens where available",
+        "4. Run the repository's tests and production build before opening a pull request",
+        "5. If no meaningful deviations exist, exit without creating any output",
+        "",
+        "## Constraints",
+        "",
+        "- **DO NOT** invent Primer guidance; trace every change to guidance returned by the MCP server.",
+        "- **DO NOT** restructure the dashboard or change application logic.",
+        "- **DO NOT** remove functionality, tests, or accessibility affordances.",
+        "- **DO NOT** open a pull request when validation fails."
+      ]
+    },
     "performance-nut": {
       "icon": "graph",
       "capabilities": {
