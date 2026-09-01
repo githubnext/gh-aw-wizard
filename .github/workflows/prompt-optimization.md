@@ -5,7 +5,6 @@ engine: copilot
 on:
   schedule: daily
   workflow_dispatch:
-  skip-if-match: 'is:pr is:open in:title "Prompt optimization:"'
 permissions:
   contents: read
   pull-requests: read
@@ -15,13 +14,13 @@ network:
     - defaults
     - node
     - local
-cache:
-  key: ollama-hugging-face-models-v1-${{ runner.os }}
-  path: ~/.ollama
 skills:
   - .github/skills/optimize-scenario-prompt
 tools:
   bash: ["*"]
+  github:
+    mode: gh-proxy
+    toolsets: [pull_requests, repos]
 safe-outputs:
   create-pull-request:
     draft: true
@@ -32,13 +31,15 @@ safe-outputs:
   create-pull-request-review-comment:
     max: 1
     side: RIGHT
+    target: "*"
   submit-pull-request-review:
     max: 1
     allowed-events: [COMMENT]
+    target: "*"
 sandbox:
   agent:
     id: awf
-    runtime: docker-sudo-iptables
+    legacy-security: enable
     allow-host-ports: [11434]
 strict: true
 timeout-minutes: 180
@@ -51,6 +52,12 @@ steps:
 
   - name: Install dependencies
     run: npm ci
+
+  - name: Restore Hugging Face model weights
+    uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+    with:
+      key: ollama-hugging-face-models-v1-${{ runner.os }}
+      path: ~/.ollama
 
   - name: Set up Ollama
     uses: ai-action/setup-ollama@0fdcbba8ac63bc9c0e7629cf85f46b77a4ad4072
@@ -95,6 +102,20 @@ Use the installed `optimize-scenario-prompt` skill and
 These are Ollama/GGUF proxy scores, not bit-for-bit WebLLM scores. Preserve that qualification in
 the pull request and review comment.
 
+## Existing pull request guard
+
+Before optimizing, use the read-only GitHub tools to search for an open pull request whose title
+starts with `Prompt optimization:`.
+
+- If one exists and it has no line-level review comment from this workflow summarizing the measured
+  proxy scores, inspect its diff and body, add that review comment to the changed
+  `DEFAULT_SCENARIO_INSTRUCTIONS`, and submit a `COMMENT` review. Supply the pull request number to
+  both safe-output calls, then stop.
+- If it already has that review comment, call `noop` with its pull request number and stop.
+- Only continue to optimization when no matching open pull request exists. Do not attempt to review
+  a pull request created during the current run; the next daily run will review it after GitHub has
+  assigned its number.
+
 ## Hill-climbing loop
 
 1. Measure the incumbent with `--evaluate --sample-size 20` and save its aggregate and per-model
@@ -121,9 +142,6 @@ Only if the final incumbent measurably improves on the original without regressi
 2. Run `npm test`.
 3. Confirm the only repository file changed is `src/js/slm.js`.
 4. Create one draft pull request using `create-pull-request`.
-5. Add one line-level pull request review comment on the changed instructions summarizing the
-   aggregate and per-model before/after proxy scores and sample sizes.
-6. Submit the review with event `COMMENT`.
 
 The pull request body must describe the diagnosed failure cluster, the single-step mutations tried,
 accepted and rejected candidates, before/after proxy scores, sample sizes, and `npm test` result.
