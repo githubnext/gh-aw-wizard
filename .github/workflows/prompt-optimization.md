@@ -66,6 +66,7 @@ steps:
 
   - name: Start Ollama
     run: |
+      pkill -x ollama || true
       OLLAMA_HOST=0.0.0.0:11434 ollama serve >"$RUNNER_TEMP/ollama.log" 2>&1 &
       for attempt in {1..30}; do
         if curl --fail --silent http://127.0.0.1:11434/api/version >/dev/null; then
