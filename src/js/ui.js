@@ -81,7 +81,8 @@ export function initWizard(options) {
     const assistantContext = {
       wizardConfig,
       patterns: () => patterns,
-      extraScenarios: () => customScenario(wizardConfig)
+      extraScenarios: () => customScenario(wizardConfig),
+      prompt: () => generateAgentPrompt(gatherAnswers(), patterns)
     };
     initScenarioAssistant(assistantContext);
     renderWorkflowSummary();

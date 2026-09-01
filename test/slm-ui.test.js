@@ -28,7 +28,10 @@ function stubModal() {
     'assist-modal-eyebrow': { textContent: '' },
     'assist-modal-title': { textContent: '' },
     'assist-modal-description': { textContent: '' },
-    'assist-modal-copy': { textContent: 'Copy prompt', disabled: false, dataset: {} }
+    'assist-modal-copy': Object.assign(fakeButton(), {
+      textContent: 'Copy prompt',
+      dataset: {}
+    })
   };
   const modal = {
     open: false,
@@ -63,19 +66,25 @@ describe('assistant result dialog markup', () => {
 });
 
 describe('showAssistantResult', () => {
-  it('stores the prompt and opens the dialog', () => {
+  it('copies the complete generated prompt and opens the dialog', async () => {
     const { modal, nodes } = stubModal();
+    const writeText = vi.fn().mockResolvedValue();
+    vi.stubGlobal('navigator', { clipboard: { writeText } });
 
     expect(showAssistantResult({
       eyebrow: 'Scenario selected',
       label: 'Issue Triage',
-      request: 'label incoming issues'
+      prompt: 'Create a draft PR that adds an agentic workflow.\n\n## Intent\nLabel incoming issues.'
     })).toBe(true);
 
     expect(modal.open).toBe(true);
+    expect(modal.assistPrompt).toContain('Create a draft PR');
+    expect(modal.assistPrompt).toContain('## Intent');
     expect(nodes['assist-modal-eyebrow'].textContent).toBe('Scenario selected');
     expect(nodes['assist-modal-title'].textContent).toBe('Issue Triage');
     expect(nodes['assist-modal-copy'].textContent).toBe('Copy prompt');
+    nodes['assist-modal-copy'].trigger('click');
+    await vi.waitFor(() => expect(writeText).toHaveBeenCalledWith(modal.assistPrompt));
   });
 
   describe('diagnostic log copy', () => {

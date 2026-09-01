@@ -147,14 +147,14 @@ export function showAssistantResult(summary) {
   bindAssistPromptCopy();
   set('assist-modal-eyebrow', summary.eyebrow);
   set('assist-modal-title', summary.label);
-  modal.assistPrompt = summary.request || '';
+  modal.assistPrompt = summary.prompt || '';
   const copyButton = element('assist-modal-copy');
   if (copyButton) {
     copyButton.textContent = summary.copyLabel || summary.result_copy_label || copyButton.dataset.defaultLabel || 'Copy prompt';
     copyButton.dataset.defaultLabel = copyButton.dataset.defaultLabel || copyButton.textContent || 'Copy prompt';
     copyButton.dataset.successLabel = summary.copySuccessLabel || summary.result_copy_success_label || 'Copied';
     copyButton.dataset.failureLabel = summary.copyFailureLabel || summary.result_copy_failure_label || 'Copy failed';
-    copyButton.disabled = !summary.request;
+    copyButton.disabled = !summary.prompt;
   }
   if (!modal.open) modal.showModal();
   return true;
@@ -294,7 +294,7 @@ export function initScenarioAssistant(context) {
         showAssistantResult({
           eyebrow: copy.result_eyebrow,
           label: scenario.label,
-          request,
+          prompt: typeof ctx.prompt === 'function' ? ctx.prompt() : request,
           copyLabel: copy.result_copy_label,
           copySuccessLabel: copy.result_copy_success_label,
           copyFailureLabel: copy.result_copy_failure_label
@@ -315,7 +315,7 @@ export function initScenarioAssistant(context) {
         showAssistantResult({
           eyebrow: copy.result_fallback_eyebrow,
           label: scenario.label,
-          request,
+          prompt: typeof ctx.prompt === 'function' ? ctx.prompt() : request,
           copyLabel: copy.result_copy_label,
           copySuccessLabel: copy.result_copy_success_label,
           copyFailureLabel: copy.result_copy_failure_label
