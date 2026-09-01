@@ -219,11 +219,25 @@
           "summary": "create pull request"
         },
         {
+          "id": "push-to-pull-request-branch",
+          "label": "Push to pull request branch",
+          "description": "Push code changes to an existing pull request branch",
+          "icon": "git-commit",
+          "summary": "push to pull request branch"
+        },
+        {
+          "id": "merge-pull-request",
+          "label": "Merge pull request",
+          "description": "Merge pull requests after required checks pass",
+          "icon": "git-pull-request",
+          "summary": "merge pull request"
+        },
+        {
           "id": "create-pull-request-review-comment",
-          "label": "Add review comment",
+          "label": "Create pull request review comment",
           "description": "Leave review comments on pull request diffs",
           "icon": "eye",
-          "summary": "add review comment"
+          "summary": "create pull request review comment"
         },
         {
           "id": "create-discussion",
@@ -359,12 +373,14 @@
       "add-labels": ["add-labels"],
       "create-issue": ["create-issue"],
       "create-pull-request": ["create-pull-request"],
+      "push-to-pull-request-branch": ["push-to-pull-request-branch"],
+      "merge-pull-request": ["merge-pull-request"],
       "create-pull-request-review-comment": ["create-pull-request-review-comment"],
       "create-discussion": ["create-discussion"],
       "discussions": ["create-discussion"],
       "commit-files": ["create-pull-request"],
       "issues": ["add-comment", "add-labels", "create-issue"],
-      "pull-requests": ["create-pull-request", "add-comment", "create-pull-request-review-comment"],
+      "pull-requests": ["create-pull-request", "push-to-pull-request-branch", "merge-pull-request", "add-comment", "create-pull-request-review-comment"],
       "contents": ["create-pull-request"]
     }
   },

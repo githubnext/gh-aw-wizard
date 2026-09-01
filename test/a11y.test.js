@@ -170,6 +170,8 @@ describe('Primer iconography', () => {
       'comment-discussion',
       'tag',
       'git-pull-request',
+      'git-commit',
+      'git-pull-request',
       'eye',
       'comment-discussion'
     ]);

@@ -85,6 +85,14 @@
       "safe_output": "create-pull-request",
       "description": "open pull requests"
     },
+    "push-to-pull-request-branch": {
+      "safe_output": "push-to-pull-request-branch",
+      "description": "push code changes to existing pull request branches"
+    },
+    "merge-pull-request": {
+      "safe_output": "merge-pull-request",
+      "description": "merge pull requests"
+    },
     "create-pull-request-review-comment": {
       "safe_output": "create-pull-request-review-comment",
       "description": "add review comments on pull request diffs"
