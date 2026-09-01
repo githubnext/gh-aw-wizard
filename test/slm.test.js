@@ -85,8 +85,7 @@ describe('scenario prompt', () => {
   });
 
   it('disambiguates code review and security requests for the small iOS model', () => {
-    const [, user] = buildScenarioMessages(scenarios, 'Inspect proposed code changes');
-    const [system] = buildScenarioMessages(scenarios, 'Look for exploitable code');
+    const [system, user] = buildScenarioMessages(scenarios, 'Inspect proposed code changes');
     expect(system.content).toContain('Use pr-review for reviewing proposed code');
     expect(system.content).toContain('Use security-scanner for security scans');
     expect(user.content).toBe('Inspect proposed code changes');
