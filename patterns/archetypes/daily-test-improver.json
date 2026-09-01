@@ -18,11 +18,18 @@
       "config": {}
     }
   ],
-  "recommended_safe_outputs": [],
-  "recommended_tools": [],
+  "recommended_safe_outputs": [
+    "pull-requests"
+  ],
+  "recommended_tools": [
+    "create-pull-request"
+  ],
   "timeout_minutes": 30,
-  "prompt_style": null,
-  "size_range_bytes": null,
+  "prompt_style": "phase-based",
+  "size_range_bytes": [
+    5000,
+    12000
+  ],
   "top_repos": [
     {
       "repo": "githubnext/agentics",
@@ -33,6 +40,11 @@
       "stars": 621
     }
   ],
-  "tips": [],
+  "tips": [
+    "Establish a passing baseline before changing tests",
+    "Prefer regression-prone and critical paths over coverage inflation",
+    "Create one focused draft pull request per run",
+    "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers"
+  ],
   "anti_patterns": []
 }

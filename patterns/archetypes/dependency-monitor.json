@@ -58,7 +58,9 @@
     "Use schedule triggers for reliable periodic checks",
     "Include a checklist of specific dependencies to monitor \u2014 don't leave it open-ended",
     "Enable network access for fetching upstream release data",
-    "Add this repo's package ecosystem identifier(s) (e.g. node, python, go, rust) under network.allowed \u2014 \"defaults\" and \"github\" alone do not include package registry domains"
+    "Add this repo's package ecosystem identifier(s) (e.g. node, python, go, rust) under network.allowed \u2014 \"defaults\" and \"github\" alone do not include package registry domains",
+    "Use DO NOT constraints to prevent unrelated dependency or source changes",
+    "Use skip-if-match to prevent duplicate scheduled findings"
   ],
   "anti_patterns": [
     "wiki-sync",

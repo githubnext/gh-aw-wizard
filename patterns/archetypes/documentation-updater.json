@@ -55,7 +55,9 @@
   "tips": [
     "80% success rate \u2014 reliable when scoped to specific doc areas",
     "Add pre-steps to validate docs build before the agent starts",
-    "Use DO NOT constraints to prevent deleting existing content"
+    "Use DO NOT constraints to prevent deleting existing content",
+    "Use protected-files: fallback-to-issue for manifests, CI configuration, and agent instructions",
+    "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers"
   ],
   "anti_patterns": []
 }

@@ -4,6 +4,8 @@ import { getArchetype } from './patterns.js';
 import { formatEngineLabel } from './engines.js';
 import { wizardOptions, wizardStep } from './wizard-config.js';
 
+const INTENT_PREVIEW_MAX_LENGTH = 42;
+
 function readableList(values, conjunction) {
   conjunction = conjunction || 'and';
   if (values.length < 2) return values[0] || '';
@@ -19,6 +21,11 @@ function optionLabels(config, stepId) {
   return Object.fromEntries(wizardOptions(config, stepId).map((option) => {
     return [option.id, option.summary || option.label || option.id];
   }));
+}
+
+function intentPreview(intent) {
+  if (intent.length <= INTENT_PREVIEW_MAX_LENGTH) return intent;
+  return `${intent.slice(0, INTENT_PREVIEW_MAX_LENGTH - 1)}…`;
 }
 
 export function buildWorkflowSummary(answers, patterns, wizardConfig) {
@@ -67,7 +74,9 @@ export function buildWorkflowSummary(answers, patterns, wizardConfig) {
       complete: Boolean(engine)
     },
     intent: {
-      value: answers.intent || wizardStep(wizardConfig, 'intent').placeholder || '',
+      value: answers.intent
+        ? intentPreview(answers.intent)
+        : wizardStep(wizardConfig, 'intent').placeholder || '',
       complete: Boolean(answers.intent)
     }
   };

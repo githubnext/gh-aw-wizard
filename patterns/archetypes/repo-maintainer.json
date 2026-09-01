@@ -18,11 +18,22 @@
       "config": {}
     }
   ],
-  "recommended_safe_outputs": [],
-  "recommended_tools": [],
+  "recommended_safe_outputs": [
+    "issues",
+    "pull-requests"
+  ],
+  "recommended_tools": [
+    "add-comment",
+    "add-labels",
+    "create-issue",
+    "create-pull-request"
+  ],
   "timeout_minutes": 30,
-  "prompt_style": null,
-  "size_range_bytes": null,
+  "prompt_style": "role-steps",
+  "size_range_bytes": [
+    5000,
+    12000
+  ],
   "top_repos": [
     {
       "repo": "githubnext/agentics",
@@ -45,7 +56,11 @@
       "stars": 1651
     }
   ],
-  "tips": [],
+  "tips": [
+    "Use persistent memory and check for existing work before acting",
+    "Limit each run to one high-value maintenance task",
+    "Leave merges, approvals, and destructive actions to maintainers"
+  ],
   "anti_patterns": [
     "repo-assist",
     "repo-assist"

@@ -205,6 +205,21 @@ for arch_id, ad in sorted(
                 "Use schedule triggers for continuous maintenance coverage",
                 "Add pre-steps to run tests/linters before the agent starts — validates baseline",
                 "Avoid pr-fix and ci-doctor templates — both have <20% success in practice",
+                "Use explicit DO NOT constraints to keep changes scoped to the requested improvement",
+                "Use protected-files: fallback-to-issue for manifests, CI configuration, and agent instructions",
+                "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers",
+            ],
+        },
+        "daily-test-improver": {
+            "safe_outputs": ["pull-requests"],
+            "tools": ["create-pull-request"],
+            "prompt_style": "phase-based",
+            "size_range": [5000, 12000],
+            "tips": [
+                "Establish a passing baseline before changing tests",
+                "Prefer regression-prone and critical paths over coverage inflation",
+                "Create one focused draft pull request per run",
+                "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers",
             ],
         },
         "status-report": {
@@ -216,6 +231,8 @@ for arch_id, ad in sorted(
                 "Pre-fetch data in a steps: block — #1 predictor of workflow health",
                 "Use schedule triggers for repeatable reporting",
                 "Keep prompts focused on one report — multi-source reports need pre-steps",
+                "Use DO NOT constraints to prevent repository changes while generating reports",
+                "Use skip-if-match and expires on create-issue so scheduled reports don't accumulate as duplicate open issues",
             ],
         },
         "dependency-monitor": {
@@ -227,6 +244,9 @@ for arch_id, ad in sorted(
                 "Use schedule triggers for reliable periodic checks",
                 "Include a checklist of specific dependencies to monitor — don't leave it open-ended",
                 "Enable network access for fetching upstream release data",
+                "Add this repo's package ecosystem identifier(s) (e.g. node, python, go, rust) under network.allowed — \"defaults\" and \"github\" alone do not include package registry domains",
+                "Use DO NOT constraints to prevent unrelated dependency or source changes",
+                "Use skip-if-match to prevent duplicate scheduled findings",
             ],
         },
         "content-moderation": {
@@ -249,6 +269,19 @@ for arch_id, ad in sorted(
                 "80% success rate — reliable when scoped to specific doc areas",
                 "Add pre-steps to validate docs build before the agent starts",
                 "Use DO NOT constraints to prevent deleting existing content",
+                "Use protected-files: fallback-to-issue for manifests, CI configuration, and agent instructions",
+                "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers",
+            ],
+        },
+        "repo-maintainer": {
+            "safe_outputs": ["issues", "pull-requests"],
+            "tools": ["add-comment", "add-labels", "create-issue", "create-pull-request"],
+            "prompt_style": "role-steps",
+            "size_range": [5000, 12000],
+            "tips": [
+                "Use persistent memory and check for existing work before acting",
+                "Limit each run to one high-value maintenance task",
+                "Leave merges, approvals, and destructive actions to maintainers",
             ],
         },
         "pr-review": {

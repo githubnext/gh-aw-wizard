@@ -47,6 +47,17 @@ describe('buildWorkflowSummary', () => {
     expect(summary.purpose).toEqual({ value: 'Keep release notes accurate', complete: true });
   });
 
+  it('ellipsizes long intent previews to 42 characters', () => {
+    const summary = buildWorkflowSummary(answers({
+      intent: 'Keep release notes accurate so responders can triage incidents faster'
+    }), patterns, wizardConfig);
+
+    expect(summary.intent).toEqual({
+      value: 'Keep release notes accurate so responders…',
+      complete: true
+    });
+  });
+
   it('turns selected answers into a readable recipe', () => {
     const summary = buildWorkflowSummary(answers({
       archetype: 'issue-triage',
@@ -125,12 +136,14 @@ describe('buildWorkflowSummary', () => {
         'add-comment',
         'add-labels',
         'create-pull-request',
+        'push-to-pull-request-branch',
+        'merge-pull-request',
         'create-pull-request-review-comment'
       ]
     }), patterns, wizardConfig);
 
     expect(summary.output.value).toBe(
-      'create issue, add comment, add label, create pull request, and add review comment'
+      'create issue, add comment, add label, create pull request, push to pull request branch, merge pull request, and create pull request review comment'
     );
   });
 });
