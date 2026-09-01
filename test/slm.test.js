@@ -79,8 +79,17 @@ describe('scenario prompt', () => {
     expect(messages).toHaveLength(2);
     expect(messages[0].role).toBe('system');
     expect(messages[0].content).toContain('- status-report: Status Report');
-    expect(messages[0].content).toContain('Output exactly its id');
+    expect(messages[0].content).toContain('Reply with exactly one id');
+    expect(messages[0].content).toContain('Do not answer, repeat, perform, or promise');
     expect(messages[1]).toEqual({ role: 'user', content: 'label my issues' });
+  });
+
+  it('disambiguates code review and security requests for the small iOS model', () => {
+    const [, user] = buildScenarioMessages(scenarios, 'Inspect proposed code changes');
+    const [system] = buildScenarioMessages(scenarios, 'Look for exploitable code');
+    expect(system.content).toContain('Use pr-review for reviewing proposed code');
+    expect(system.content).toContain('Use security-scanner for security scans');
+    expect(user.content).toBe('Inspect proposed code changes');
   });
 });
 

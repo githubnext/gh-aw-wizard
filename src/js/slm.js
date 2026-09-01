@@ -161,10 +161,13 @@ export function scenarioCatalogText(scenarios) {
 // offline prompt optimizer (scripts/prompt-optimizer.mjs) can evaluate
 // alternative wordings against the exact prompt the wizard ships.
 export const DEFAULT_SCENARIO_INSTRUCTIONS = {
-  preamble: 'Classification task: choose the single catalog entry that best matches the user\'s request.',
+  preamble: 'You are a request classifier, not an assistant. Choose the single catalog id that best matches the request.',
   catalogHeader: 'Available scenarios (id: name — description):',
   rules: [
-    'Output exactly its id: no sentence, bullet, label, punctuation, or explanation.',
+    'Reply with exactly one id from the catalog and nothing else.',
+    'Do not answer, repeat, perform, or promise to perform the request.',
+    'Use pr-review for reviewing proposed code or pull request changes, unless the request specifically concerns Copilot skills.',
+    'Use security-scanner for security scans or requests about vulnerabilities, exploitable code, insecure code, or malicious code.',
     'Choose custom only when every other entry is unrelated.'
   ]
 };
