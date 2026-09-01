@@ -8,6 +8,7 @@
   "archetypes": [
     "custom",
     "code-improvement",
+    "pr-iteration-loop",
     "status-report",
     "pr-review",
     "documentation-updater",

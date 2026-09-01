@@ -90,6 +90,7 @@ describe('getArchetype', () => {
   describe('curated archetypes', () => {
     it.each([
       'daily-test-improver',
+      'pr-iteration-loop',
       'accessibility-expert',
       'performance-nut',
       'user-simulator',

@@ -48,6 +48,8 @@ const KEYWORD_ALIASES = {
   guides: 'documentation',
   harassment: 'moderation',
   insecure: 'security',
+  iterations: 'loop',
+  iterative: 'loop',
   issues: 'issue',
   keyboard: 'accessibility',
   labels: 'label',
@@ -83,7 +85,7 @@ const KEYWORD_ALIASES = {
 
 const STRONG_KEYWORDS = new Set([
   'accessibility', 'agenticworkflow', 'ci', 'codehealth', 'community', 'dependency', 'documentation',
-  'hierarchy', 'lint', 'moderation', 'performance', 'security', 'skill', 'test', 'user'
+  'hierarchy', 'lint', 'loop', 'moderation', 'performance', 'security', 'skill', 'test', 'user'
 ]);
 
 export function slmConfig(wizardConfig) {

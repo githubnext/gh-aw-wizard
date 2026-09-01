@@ -415,6 +415,7 @@ describe('generateWorkflowFile', () => {
     ['performance-nut', 'performance optimization expert'],
     ['user-simulator', 'user persona simulator'],
     ['daily-test-improver', 'test improvement engineer'],
+    ['pr-iteration-loop', 'iterative problem-solving agent'],
     ['repo-maintainer', 'proactive repository maintainer'],
     ['linter-miner', 'static-analysis rule miner'],
     ['linter-refiner', 'lint rule quality engineer'],
@@ -429,7 +430,7 @@ describe('generateWorkflowFile', () => {
       }),
       patterns
     );
-    expect(md).toContain(`You are a **${role}**`);
+    expect(md).toMatch(new RegExp(`You are an? \\*\\*${role}\\*\\*`));
     expect(md).not.toContain('# Custom Workflow');
   });
 });
@@ -666,6 +667,7 @@ describe('generateAgentPrompt', () => {
     ['user-simulator', 'github-agentic-workflows.md'],
     ['pr-review', 'pr-reviewer.md'],
     ['daily-test-improver', 'test-coverage.md'],
+    ['pr-iteration-loop', 'loop.md'],
     ['repo-maintainer', 'maintainer.md'],
     ['linter-miner', 'linter-workflows.md'],
     ['linter-refiner', 'linter-workflows.md'],
@@ -734,6 +736,7 @@ describe('generateAgentPrompt', () => {
     'user-simulator',
     'pr-review',
     'daily-test-improver',
+    'pr-iteration-loop',
     'repo-maintainer',
     'linter-miner',
     'linter-refiner',
