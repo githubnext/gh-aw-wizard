@@ -52,7 +52,7 @@ describe('buildWorkflowSummary', () => {
     }), patterns, wizardConfig);
 
     expect(summary.intent).toEqual({
-      value: 'Keep release notes accurate so responders …',
+      value: 'Keep release notes accurate so responders…',
       complete: true
     });
     expect(summary.intent.value).toHaveLength(42);
