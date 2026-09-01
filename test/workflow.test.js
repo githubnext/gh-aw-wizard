@@ -430,7 +430,7 @@ describe('generateWorkflowFile', () => {
       }),
       patterns
     );
-    expect(md).toContain(`**${role}**`);
+    expect(md).toMatch(new RegExp(`You are an? \\*\\*${role}\\*\\*`));
     expect(md).not.toContain('# Custom Workflow');
   });
 });
