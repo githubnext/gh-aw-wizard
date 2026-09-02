@@ -655,6 +655,13 @@ describe('generateAgentPrompt', () => {
     expect(docsPrompt).toContain('Guard sensitive files');
     expect(docsPrompt).toContain('protected-files');
 
+    // dependency-monitor also opens pull requests unattended (it edits manifests to bump
+    // versions), so it needs the same protected-files guidance for CI config and agent
+    // instructions — it was previously the only PR-creating archetype missing this tip.
+    const depPrompt = generateAgentPrompt(answers({ archetype: 'dependency-monitor' }), patterns);
+    expect(depPrompt).toContain('Guard sensitive files');
+    expect(depPrompt).toContain('protected-files');
+
     // status-report has no such tip and should not fabricate one.
     const reportPrompt = generateAgentPrompt(answers({ archetype: 'status-report' }), patterns);
     expect(reportPrompt).not.toContain('Guard sensitive files');

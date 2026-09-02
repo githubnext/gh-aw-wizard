@@ -57,6 +57,7 @@ describe('pattern generator', () => {
     expect(readTips('code-improvement')).toContain('protected-files');
     expect(readTips('code-improvement')).toContain('pre-activation');
     expect(readTips('dependency-monitor')).toContain('skip-if-match');
+    expect(readTips('dependency-monitor')).toContain('protected-files');
     expect(readTips('status-report')).toContain('DO NOT constraints');
     expect(readTips('documentation-updater')).toContain('protected-files');
     expect(readTips('daily-test-improver')).toContain('passing baseline');
