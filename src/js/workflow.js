@@ -194,6 +194,14 @@ function lspFor(patterns, archetype, engine, extras) {
   return Object.keys(lsp).length ? lsp : null;
 }
 
+// Safe outputs that create a brand-new GitHub item (issue/PR) on every run. When a
+// workflow is schedule-triggered and uses one of these, the generated file must ship
+// with skip-if-match + max/expires by default — otherwise every scheduled run creates
+// another duplicate issue/PR forever, since the prompt body alone cannot be relied on
+// to add this guard (see generateAgentPrompt's separate duplicatePreventionTips path,
+// which only reaches prompt-mode output, not the directly generated workflow file).
+const DEDUPE_SAFE_OUTPUTS = ['create-issue', 'create-pull-request'];
+
 export function generateWorkflowFile(answers, patterns) {
   generationModel(patterns);
   const definition = workflowDefinition(patterns, answers.archetype);
@@ -218,10 +226,16 @@ export function generateWorkflowFile(answers, patterns) {
     });
   }
 
+  const needsDedupeGuard = answers.triggers.indexOf('schedule') !== -1 &&
+    safeOutputs.some((output) => DEDUPE_SAFE_OUTPUTS.indexOf(output) !== -1);
+
   let frontmatter = '---\n';
   frontmatter += `name: ${  name  }\n`;
   frontmatter += `description: ${  description  }\n`;
   frontmatter += `on:\n${  buildTriggerYaml(answers.triggers, name, answers.archetype, patterns)}`;
+  if (needsDedupeGuard) {
+    frontmatter += `  skip-if-match: 'is:issue is:open "gh-aw-workflow-id: ${  name  }" in:body'\n`;
+  }
   frontmatter += 'permissions:\n';
   permissionsFor(patterns, answers.archetype, inferred).forEach((permission) => {
     frontmatter += `  ${  permission  }: read\n`;
@@ -270,7 +284,12 @@ export function generateWorkflowFile(answers, patterns) {
   }
   if (safeOutputs.length) {
     frontmatter += 'safe-outputs:\n';
-    safeOutputs.forEach((safeOutput) => { frontmatter += `  ${  safeOutput  }:\n`; });
+    safeOutputs.forEach((safeOutput) => {
+      frontmatter += `  ${  safeOutput  }:\n`;
+      if (needsDedupeGuard && DEDUPE_SAFE_OUTPUTS.indexOf(safeOutput) !== -1) {
+        frontmatter += '    max: 1\n    expires: 7\n';
+      }
+    });
   }
   frontmatter += `timeout-minutes: ${  timeout  }\n`;
   frontmatter += '---\n\n';
