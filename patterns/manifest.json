@@ -29,7 +29,8 @@
     "code-health-auditor",
     "ci-failure-triage",
     "community-digest",
-    "agent-cost-tracker"
+    "agent-cost-tracker",
+    "contribution-guidelines-checker"
   ],
   "workflow_generation": "workflow-generation.json",
   "anti_patterns": [
