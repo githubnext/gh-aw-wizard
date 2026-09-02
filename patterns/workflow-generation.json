@@ -1015,6 +1015,43 @@
         "- **DO NOT** create an issue or comment when the token-usage log is missing or empty.",
         "- **DO NOT** let cost reports accumulate — cap and deduplicate created issues."
       ]
+    },
+    "contribution-guidelines-checker": {
+      "icon": "checklist",
+      "capabilities": {
+        "bash": true,
+        "github_toolsets": true
+      },
+      "permissions": [
+        "contents",
+        "issues",
+        "pull-requests"
+      ],
+      "github_toolsets": [
+        "repos",
+        "issues",
+        "pull_requests"
+      ],
+      "body": [
+        "# {{label}}",
+        "",
+        "You are a **contribution guidelines checker** for this repository.",
+        "",
+        "Your job is to verify pull request #${{ github.event.pull_request.number }} complies with the repository's contribution guidelines.",
+        "",
+        "## Process",
+        "",
+        "1. Find the contribution guidelines: check `CONTRIBUTING.md`, `.github/CONTRIBUTING.md`, `docs/CONTRIBUTING.md`, then contribution sections in `README.md`. Fall back to general best practices if none exist.",
+        "2. Read the pull request title, description, changed files, and commit messages",
+        "3. Compare the pull request against the guidelines (scope, tests, documentation, commit style)",
+        "4. If it complies, apply the `contribution-ready` label. Otherwise, leave one constructive comment describing what needs to change.",
+        "",
+        "## Constraints",
+        "",
+        "- **DO NOT** merge, approve, or close contributions.",
+        "- **DO NOT** post more than one comment per run.",
+        "- **DO NOT** apply the ready label and post a needs-work comment in the same run — pick one outcome."
+      ]
     }
   }
 }

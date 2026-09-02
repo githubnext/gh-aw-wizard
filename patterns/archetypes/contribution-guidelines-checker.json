@@ -1,0 +1,35 @@
+{
+  "id": "contribution-guidelines-checker",
+  "label": "Contribution Guidelines Checker",
+  "description": "Check pull requests against CONTRIBUTING.md and label them ready or needing work",
+  "success_rate": null,
+  "count": 0,
+  "recommended_triggers": [
+    {
+      "type": "pull_request",
+      "config": {}
+    }
+  ],
+  "recommended_safe_outputs": [
+    "pull-requests"
+  ],
+  "recommended_tools": [
+    "add-labels",
+    "add-comment"
+  ],
+  "timeout_minutes": 10,
+  "prompt_style": "role-steps",
+  "size_range_bytes": [
+    3000,
+    8000
+  ],
+  "top_repos": [],
+  "tips": [
+    "Search CONTRIBUTING.md, .github/CONTRIBUTING.md, docs/CONTRIBUTING.md, and README contribution sections in order before falling back to general best practices",
+    "Label the pull request ready when it complies and leave one constructive comment when it does not — never both",
+    "Use a small model since this runs on every pull request open/synchronize event and cost adds up",
+    "For high-volume repositories, pre-filter and fetch PR data in a steps: block, then dispatch each PR to an inline sub-agent for evaluation so the parent workflow only compiles results",
+    "Use DO NOT constraints to avoid merging, approving, or closing contributions — label and comment only"
+  ],
+  "anti_patterns": []
+}
