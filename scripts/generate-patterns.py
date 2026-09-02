@@ -247,6 +247,7 @@ for arch_id, ad in sorted(
                 "Add this repo's package ecosystem identifier(s) (e.g. node, python, go, rust) under network.allowed — \"defaults\" and \"github\" alone do not include package registry domains",
                 "Use DO NOT constraints to prevent unrelated dependency or source changes",
                 "Use skip-if-match to prevent duplicate scheduled findings",
+                "Use protected-files: fallback-to-issue for CI configuration and agent instructions (not the dependency manifests themselves, since updating those is the intended change)",
             ],
         },
         "content-moderation": {
