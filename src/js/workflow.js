@@ -273,6 +273,8 @@ export function generateWorkflowFile(answers, patterns) {
     if (inferred.bash) frontmatter += '  bash: true\n';
     if (inferred.githubToolsets) {
       frontmatter += `  github:\n    toolsets: [${  toolsetsFor(patterns, answers.archetype).join(', ')  }]\n`;
+      const minIntegrity = workflowDefinition(patterns, answers.archetype).min_integrity;
+      if (minIntegrity) frontmatter += `    min-integrity: ${  minIntegrity  }\n`;
     }
     extras.forEach((extra) => {
       if (extra.tool === 'cache-memory') frontmatter += '  cache-memory:\n';
