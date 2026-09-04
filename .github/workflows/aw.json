@@ -1,0 +1,5 @@
+{
+  "auto_upgrade": {
+    "options": ["--pre-releases"]
+  }
+}
