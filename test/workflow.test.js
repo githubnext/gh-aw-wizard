@@ -307,7 +307,19 @@ describe('generateWorkflowFile', () => {
       patterns
     );
     expect(md).toContain('permissions:\n  contents: read\n  issues: read\n  pull-requests: read\n');
-    expect(md).toContain('  github:\n    toolsets: [repos, issues, pull_requests]\n');
+    expect(md).toContain('  github:\n    toolsets: [repos, issues, pull_requests]\n    min-integrity: approved\n');
+  });
+
+  it('does not add min-integrity for archetypes without untrusted external content', () => {
+    const md = generateWorkflowFile(
+      answers({
+        archetype: 'status-report',
+        triggers: ['schedule'],
+        outputs: ['create-issue']
+      }),
+      patterns
+    );
+    expect(md).not.toContain('min-integrity');
   });
 
   it('gives bash-only archetypes a minimal read permissions block', () => {
