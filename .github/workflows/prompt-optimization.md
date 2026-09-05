@@ -73,8 +73,15 @@ steps:
           echo "Ollama did not report a successful pull for $model" >&2
           exit 1
         fi
-        curl --fail --silent --show-error http://127.0.0.1:11434/api/generate \
-          --json "{\"model\":\"$model\",\"prompt\":\"Reply with exactly: ready\",\"stream\":false,\"keep_alive\":\"4h\"}" >/dev/null
+        if ! generate_response=$(curl --fail --silent --show-error http://127.0.0.1:11434/api/generate \
+          --json "{\"model\":\"$model\",\"prompt\":\"Reply with exactly: ready\",\"stream\":false,\"keep_alive\":\"4h\"}"); then
+          echo "Ollama could not load $model" >&2
+          exit 1
+        fi
+        if ! jq --exit-status '.error == null' <<<"$generate_response" >/dev/null; then
+          echo "Ollama could not load $model" >&2
+          exit 1
+        fi
       done
 ---
 
