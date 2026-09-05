@@ -63,9 +63,12 @@ steps:
       for model in \
         hf.co/bartowski/Qwen2.5-1.5B-Instruct-GGUF:Q4_K_M \
         hf.co/unsloth/SmolLM2-360M-Instruct-GGUF:Q4_K_M; do
-        pull_response=$(curl --fail --silent --show-error --retry 10 --retry-all-errors \
+        if ! pull_response=$(curl --fail --silent --show-error --retry 10 --retry-all-errors \
           --retry-max-time 900 http://127.0.0.1:11434/api/pull \
-          --json "{\"name\":\"$model\",\"stream\":false}")
+          --json "{\"name\":\"$model\",\"stream\":false}"); then
+          echo "Failed to pull $model" >&2
+          exit 1
+        fi
         jq --exit-status '.status == "success"' <<<"$pull_response" >/dev/null
         curl --fail --silent --show-error http://127.0.0.1:11434/api/generate \
           --json "{\"model\":\"$model\",\"prompt\":\"Reply with exactly: ready\",\"stream\":false,\"keep_alive\":\"4h\"}" >/dev/null
