@@ -59,6 +59,7 @@ steps:
 
   - name: Load and verify evaluation models
     run: |
+      set -e
       for model in \
         hf.co/bartowski/Qwen2.5-1.5B-Instruct-GGUF:Q4_K_M \
         hf.co/unsloth/SmolLM2-360M-Instruct-GGUF:Q4_K_M; do
