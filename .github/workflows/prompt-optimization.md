@@ -1,6 +1,6 @@
 ---
 name: "Prompt Optimization"
-description: Daily hill-climbing optimization of the scenario-assistant prompt using cached Hugging Face models served by Ollama
+description: Daily hill-climbing optimization of the scenario-assistant prompt using an Ollama service
 engine: copilot
 on:
   schedule: daily
@@ -40,7 +40,11 @@ sandbox:
   agent:
     id: awf
     runtime: docker-sudo-iptables
-    allow-host-ports: [11434]
+services:
+  ollama:
+    image: ollama/ollama:0.33.2@sha256:020e4134285e2ef4d8fd801234176de3b4faadc992a3eb06c8e66a2f9d4c4ba2
+    ports:
+      - 11434:11434
 strict: true
 timeout-minutes: 180
 steps:
@@ -53,59 +57,24 @@ steps:
   - name: Install dependencies
     run: npm ci
 
-  - name: Restore Hugging Face model weights
-    uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
-    with:
-      key: ollama-hugging-face-models-v1-${{ runner.os }}
-      path: ~/.ollama
-
-  - name: Set up Ollama
-    uses: ai-action/setup-ollama@0fdcbba8ac63bc9c0e7629cf85f46b77a4ad4072
-    with:
-      version: 0.33.2
-
-  - name: Start Ollama
-    run: |
-      pkill -x ollama || true
-      for attempt in {1..30}; do
-        if ! curl --fail --silent http://127.0.0.1:11434/api/version >/dev/null; then
-          break
-        fi
-        if [ "$attempt" -eq 30 ]; then
-          echo "Ollama did not stop" >&2
-          exit 1
-        fi
-        sleep 1
-      done
-      OLLAMA_HOST=0.0.0.0:11434 ollama serve >"$RUNNER_TEMP/ollama.log" 2>&1 &
-      for attempt in {1..30}; do
-        if curl --fail --silent http://127.0.0.1:11434/api/version >/dev/null; then
-          exit 0
-        fi
-        if [ "$attempt" -eq 30 ]; then
-          cat "$RUNNER_TEMP/ollama.log" >&2
-          echo "Ollama did not become ready" >&2
-          exit 1
-        fi
-        sleep 2
-      done
-
   - name: Load and verify evaluation models
     run: |
       for model in \
         hf.co/bartowski/Qwen2.5-1.5B-Instruct-GGUF:Q4_K_M \
         hf.co/unsloth/SmolLM2-360M-Instruct-GGUF:Q4_K_M; do
-        ollama pull "$model"
-        ollama run --keepalive 4h "$model" "Reply with exactly: ready" >/dev/null
+        curl --fail --silent --show-error --retry 10 --retry-all-errors \
+          --retry-max-time 900 http://127.0.0.1:11434/api/pull \
+          --json "{\"name\":\"$model\",\"stream\":false}" >/dev/null
+        curl --fail --silent --show-error http://127.0.0.1:11434/api/generate \
+          --json "{\"model\":\"$model\",\"prompt\":\"Reply with exactly: ready\",\"stream\":false,\"keep_alive\":\"4h\"}" >/dev/null
       done
-      ollama ps
 ---
 
 # Scenario Prompt Optimization
 
 Improve the wizard's shipped scenario-assistant instructions with measured hill climbing. The
-workflow has already restored the Ollama cache, downloaded GGUF proxies for both browser models
-from Hugging Face, and started an OpenAI-compatible Ollama server on
+workflow has downloaded and loaded GGUF proxies for both browser models in an OpenAI-compatible
+Ollama service reachable from the agent sandbox on
 `http://host.docker.internal:11434/v1`.
 
 Use the installed `optimize-scenario-prompt` skill and
