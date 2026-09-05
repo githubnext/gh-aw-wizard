@@ -984,10 +984,7 @@ a:hover {
   left: 0;
   height: 4rem;
   pointer-events: none;
-  background: linear-gradient(180deg, rgba(246, 248, 250, 0), var(--code-bg));
-}
-[data-color-mode="dark"] .prompt-preview::after {
-  background: linear-gradient(180deg, rgba(13, 17, 23, 0), var(--code-bg));
+  background: linear-gradient(180deg, transparent, var(--code-bg));
 }
 .prompt-panel .preview-code {
   font-size: 0.85rem;
@@ -1576,7 +1573,7 @@ a:hover {
   pointer-events: none;
   opacity: 0.38;
   background:
-    radial-gradient(ellipse 62% 54% at var(--thermo-warm-x) var(--thermo-warm-y), rgba(255, 112, 67, 0.24), transparent 70%),
+    radial-gradient(ellipse 62% 54% at var(--thermo-warm-x) var(--thermo-warm-y), rgba(var(--agent-purple-rgb), 0.24), transparent 70%),
     radial-gradient(ellipse 58% 50% at var(--thermo-cool-x) var(--thermo-cool-y), rgba(var(--accent-blue-rgb), 0.2), transparent 72%),
     radial-gradient(ellipse 42% 48% at 52% 48%, rgba(var(--accent-green-rgb), 0.12), transparent 74%);
   filter: blur(28px);
