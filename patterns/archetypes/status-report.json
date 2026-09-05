@@ -58,7 +58,8 @@
     "Keep prompts focused on one report \u2014 multi-source reports need pre-steps",
     "Use DO NOT constraints to prevent repository changes while generating reports",
     "Use skip-if-match and expires on create-issue so scheduled reports don't accumulate as duplicate open issues",
-    "Set close-older-issues: true on create-issue as an alternative to skip-if-match — it closes the previous report issue from the same workflow instead of preventing the new run"
+    "Set close-older-issues: true on create-issue as an alternative to skip-if-match — it closes the previous report issue from the same workflow instead of preventing the new run",
+    "Set tools.github.min-integrity: none when the report must read issues, PRs, or discussions from any author regardless of trust — the workflow only summarizes, it never acts on that content"
   ],
   "anti_patterns": [
     "daily-repo-status",
