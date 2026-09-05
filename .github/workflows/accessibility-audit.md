@@ -24,7 +24,6 @@ tools:
     mode: gh-proxy
     toolsets: [issues]
   playwright:
-    mode: cli
 safe-outputs:
   mentions: false
   allowed-github-references: []

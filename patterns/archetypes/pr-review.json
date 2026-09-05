@@ -55,7 +55,8 @@
   "tips": [
     "Focus on specific review criteria (security, performance, style)",
     "Use pull_request triggers focused on ready-to-review activity",
-    "Include DO NOT constraints to avoid false positive comments"
+    "Include DO NOT constraints to avoid false positive comments",
+    "Set tools.github.min-integrity (e.g. approved) so the agent only acts on content from trusted authors"
   ],
   "anti_patterns": [
     "supply-chain-review",

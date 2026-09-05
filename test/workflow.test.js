@@ -307,7 +307,19 @@ describe('generateWorkflowFile', () => {
       patterns
     );
     expect(md).toContain('permissions:\n  contents: read\n  issues: read\n  pull-requests: read\n');
-    expect(md).toContain('  github:\n    toolsets: [repos, issues, pull_requests]\n');
+    expect(md).toContain('  github:\n    toolsets: [repos, issues, pull_requests]\n    min-integrity: approved\n');
+  });
+
+  it('does not add min-integrity for archetypes without untrusted external content', () => {
+    const md = generateWorkflowFile(
+      answers({
+        archetype: 'status-report',
+        triggers: ['schedule'],
+        outputs: ['create-issue']
+      }),
+      patterns
+    );
+    expect(md).not.toContain('min-integrity');
   });
 
   it('gives bash-only archetypes a minimal read permissions block', () => {
@@ -338,7 +350,7 @@ describe('generateWorkflowFile', () => {
     expect(md).toContain('  github:\n');
     expect(md).toContain('  cache-memory:\n');
     expect(md).toContain('  playwright:\n    mode: cli\n');
-    expect(md).toContain('safe-outputs:\n  create-issue:\n  upload-assets:\n');
+    expect(md).toContain('safe-outputs:\n  create-issue:\n    max: 1\n    expires: 7\n  upload-assets:\n');
     expect(md).toContain('## Pre-steps');
   });
 
@@ -395,6 +407,39 @@ describe('generateWorkflowFile', () => {
     const piMd = generateWorkflowFile(answers({ engine: 'pi' }), patterns);
     expect(geminiMd).toContain('engine: gemini\n');
     expect(piMd).toContain('engine: pi\n');
+  });
+
+  it('adds skip-if-match and max/expires by default for scheduled issue/PR-creating workflows', () => {
+    // Without this default, a schedule-triggered workflow that creates issues or PRs would
+    // ship as a plain generated file with no deduplication guard, so every scheduled run
+    // creates another duplicate item — this must not depend on the downstream agent
+    // remembering the separate prompt-mode guidance (generateAgentPrompt's dedupe tips).
+    const md = generateWorkflowFile(
+      answers({ archetype: 'status-report', triggers: ['schedule'], outputs: ['create-issue'] }),
+      patterns
+    );
+    expect(md).toContain("skip-if-match: 'is:issue is:open \"gh-aw-workflow-id: status-report\" in:body'");
+    expect(md).toContain('safe-outputs:\n  create-issue:\n    max: 1\n    expires: 7\n');
+  });
+
+  it('adds the dedupe guard for every dedupe-relevant safe output the workflow uses', () => {
+    const md = generateWorkflowFile(
+      answers({
+        archetype: 'dependency-monitor',
+        triggers: ['schedule'],
+        outputs: ['create-issue', 'create-pull-request']
+      }),
+      patterns
+    );
+    expect(md).toContain('create-issue:\n    max: 1\n    expires: 7\n');
+    expect(md).toContain('create-pull-request:\n    max: 1\n    expires: 7\n');
+  });
+
+  it('does not add a dedupe guard for non-scheduled triggers or non-dedupe safe outputs', () => {
+    const md = generateWorkflowFile(answers(), patterns);
+    expect(md).not.toContain('skip-if-match');
+    expect(md).not.toContain('max: 1');
+    expect(md).not.toContain('expires: 7');
   });
 
   it('deduplicates safe outputs', () => {
@@ -621,6 +666,13 @@ describe('generateAgentPrompt', () => {
     const docsPrompt = generateAgentPrompt(answers({ archetype: 'documentation-updater' }), patterns);
     expect(docsPrompt).toContain('Guard sensitive files');
     expect(docsPrompt).toContain('protected-files');
+
+    // dependency-monitor also opens pull requests unattended (it edits manifests to bump
+    // versions), so it needs the same protected-files guidance for CI config and agent
+    // instructions — it was previously the only PR-creating archetype missing this tip.
+    const depPrompt = generateAgentPrompt(answers({ archetype: 'dependency-monitor' }), patterns);
+    expect(depPrompt).toContain('Guard sensitive files');
+    expect(depPrompt).toContain('protected-files');
 
     // status-report has no such tip and should not fabricate one.
     const reportPrompt = generateAgentPrompt(answers({ archetype: 'status-report' }), patterns);

@@ -45,7 +45,8 @@
   "tips": [
     "Never auto-close or lock \u2014 label and comment only",
     "Include explicit rules for what IS legitimate to reduce false positives",
-    "Use DO NOT constraints for actions the agent should never take"
+    "Use DO NOT constraints for actions the agent should never take",
+    "Enable tools.github.lockdown to restrict surfaced content from public repos to authors with push access"
   ],
   "anti_patterns": []
 }

@@ -204,7 +204,7 @@ for arch_id, ad in sorted(
             "tips": [
                 "Use schedule triggers for continuous maintenance coverage",
                 "Add pre-steps to run tests/linters before the agent starts — validates baseline",
-                "Avoid pr-fix and ci-doctor templates — both have <20% success in practice",
+                "Scope each run to one narrow, well-defined improvement (a single failing check or a named category of fix) rather than an open-ended \"fix anything broken\" mandate — broad, unscoped code-improvement workflows have the lowest observed success rates",
                 "Use explicit DO NOT constraints to keep changes scoped to the requested improvement",
                 "Use protected-files: fallback-to-issue for manifests, CI configuration, and agent instructions",
                 "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers",
@@ -247,6 +247,7 @@ for arch_id, ad in sorted(
                 "Add this repo's package ecosystem identifier(s) (e.g. node, python, go, rust) under network.allowed — \"defaults\" and \"github\" alone do not include package registry domains",
                 "Use DO NOT constraints to prevent unrelated dependency or source changes",
                 "Use skip-if-match to prevent duplicate scheduled findings",
+                "Use protected-files: fallback-to-issue for CI configuration and agent instructions (not the dependency manifests themselves, since updating those is the intended change)",
             ],
         },
         "content-moderation": {
