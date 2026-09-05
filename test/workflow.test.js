@@ -310,12 +310,24 @@ describe('generateWorkflowFile', () => {
     expect(md).toContain('  github:\n    toolsets: [repos, issues, pull_requests]\n    min-integrity: approved\n');
   });
 
-  it('does not add min-integrity for archetypes without untrusted external content', () => {
+  it('sets min-integrity: none for status-report, which reads untrusted content but only summarizes', () => {
     const md = generateWorkflowFile(
       answers({
         archetype: 'status-report',
         triggers: ['schedule'],
         outputs: ['create-issue']
+      }),
+      patterns
+    );
+    expect(md).toContain('    min-integrity: none\n');
+  });
+
+  it('does not add min-integrity for archetypes without github toolsets', () => {
+    const md = generateWorkflowFile(
+      answers({
+        archetype: 'documentation-updater',
+        triggers: ['push'],
+        outputs: ['create-pull-request']
       }),
       patterns
     );

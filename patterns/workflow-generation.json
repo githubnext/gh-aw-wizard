@@ -369,7 +369,8 @@
         "- Stick to facts. Do not editorialize or make recommendations.",
         "- If there is no activity, create a brief report noting that.",
         "- Label the report issue with `status-report`."
-      ]
+      ],
+      "min_integrity": "none"
     },
     "dependency-monitor": {
       "icon": "package",
