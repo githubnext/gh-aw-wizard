@@ -30,7 +30,8 @@
     "ci-failure-triage",
     "community-digest",
     "agent-cost-tracker",
-    "contribution-guidelines-checker"
+    "contribution-guidelines-checker",
+    "link-checker"
   ],
   "workflow_generation": "workflow-generation.json",
   "anti_patterns": [

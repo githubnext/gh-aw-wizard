@@ -1,0 +1,34 @@
+{
+  "id": "link-checker",
+  "label": "Broken Link Checker",
+  "description": "Find and fix broken links in documentation on a recurring schedule",
+  "success_rate": null,
+  "count": 0,
+  "recommended_triggers": [
+    {
+      "type": "schedule",
+      "config": {}
+    }
+  ],
+  "recommended_safe_outputs": [
+    "pull-requests"
+  ],
+  "recommended_tools": [
+    "create-pull-request"
+  ],
+  "timeout_minutes": 60,
+  "prompt_style": "phase-based",
+  "size_range_bytes": [
+    3000,
+    8000
+  ],
+  "top_repos": [],
+  "tips": [
+    "Pre-fetch and test every link in a steps: block before the agent starts — link testing is deterministic and does not need agent judgment",
+    "Persist a list of previously-confirmed unfixable links in cache-memory so scheduled runs don't repeatedly retry links with no available replacement",
+    "Use protected-files: fallback-to-issue so link fixes in protected paths open an issue instead of silently failing",
+    "Set if-no-changes: warn on create-pull-request and pair with noop so a run with no broken links exits cleanly instead of failing",
+    "Only replace a broken link when a working equivalent or redirect target is confirmed — do not guess at replacement URLs"
+  ],
+  "anti_patterns": []
+}

@@ -1054,6 +1054,35 @@
         "- **DO NOT** post more than one comment per run.",
         "- **DO NOT** apply the ready label and post a needs-work comment in the same run — pick one outcome."
       ]
+    },
+    "link-checker": {
+      "icon": "link",
+      "capabilities": {
+        "bash": true
+      },
+      "permissions": [
+        "contents"
+      ],
+      "body": [
+        "# {{label}}",
+        "",
+        "You are an automated **link checker and fixer** for this repository's documentation.",
+        "",
+        "{{pre_steps}}",
+        "## Process",
+        "",
+        "1. Read the link check results collected in the pre-step",
+        "2. Load cache memory for previously confirmed unfixable links and skip them",
+        "3. For each broken link, research whether the content moved to a new URL, redirect, or official replacement",
+        "4. Fix links you can confirm a working replacement for; record unconfirmed ones in cache memory as unfixable",
+        "5. Open a pull request with the fixes, or call `noop` if nothing needed fixing",
+        "",
+        "## Constraints",
+        "",
+        "- **DO NOT** guess at replacement URLs without confirming they resolve.",
+        "- **DO NOT** modify relative links or anchors — only HTTP(S) links.",
+        "- **DO NOT** retry links already recorded as unfixable in cache memory without new evidence."
+      ]
     }
   }
 }
