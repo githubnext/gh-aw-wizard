@@ -60,7 +60,7 @@ steps:
       path: ~/.ollama
 
   - name: Set up Ollama
-    uses: ai-action/setup-ollama@0fdcbba8ac63bc9c0e7629cf85f46b77a4ad4072
+    uses: ai-action/setup-ollama@435e3afb7a5b950ac8868a114712baded7616c24  # v2.0.74
     with:
       version: 0.33.2
 
