@@ -553,18 +553,17 @@ export function generateAgentPrompt(answers, patterns) {
     });
     const exampleOutputs = ['create-issue', 'create-pull-request'].filter((output) => usedSafeOutputs.has(output));
     if (!exampleOutputs.length) exampleOutputs.push('create-issue');
-    prompt += '- Use the correct schema for these fields: `skip-if-match` is a sibling key ' +
-      'under `on:` (alongside `schedule:`), while `expires` and `max` nest under the specific ' +
-      'safe-output key that creates the item (e.g. under `create-issue:` or `create-pull-request:` ' +
-      'inside `safe-outputs:`), and must be repeated under every safe-output key this workflow uses ' +
-      '(not just one of them), for example:\n' +
-      '  ```yaml\n' +
-      '  on:\n' +
-      '    schedule: every 30 minutes\n' +
-      "    skip-if-match: 'is:issue is:open \"gh-aw-workflow-id: <workflow-id>\" in:body'\n" +
-      '  safe-outputs:\n' +
-      exampleOutputs.map((output) => `    ${output}:\n      max: 1\n      expires: 7\n`).join('') +
-      '  ```\n';
+    prompt += `- Use the correct schema for these fields: \`skip-if-match\` is a sibling key under \`on:\` (alongside \`schedule:\`), while \`expires\` and \`max\` nest under the specific safe-output key that creates the item (e.g. under \`create-issue:\` or \`create-pull-request:\` inside \`safe-outputs:\`), and must be repeated under every safe-output key this workflow uses (not just one of them), for example:
+  \`\`\`yaml
+  on:
+    schedule: every 30 minutes
+    skip-if-match: 'is:issue is:open "gh-aw-workflow-id: <workflow-id>" in:body'
+  safe-outputs:
+${exampleOutputs.map((output) => `    ${output}:
+      max: 1
+      expires: 7
+`).join('')}  \`\`\`
+`;
   }
   if (intent) {
     intentRequirements(intent).forEach((requirement) => { prompt += `${requirement}\n`; });
