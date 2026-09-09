@@ -31,7 +31,8 @@
     "community-digest",
     "agent-cost-tracker",
     "contribution-guidelines-checker",
-    "link-checker"
+    "link-checker",
+    "repo-qa-assistant"
   ],
   "workflow_generation": "workflow-generation.json",
   "anti_patterns": [

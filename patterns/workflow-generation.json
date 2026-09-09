@@ -1084,6 +1084,40 @@
         "- **DO NOT** modify relative links or anchors — only HTTP(S) links.",
         "- **DO NOT** retry links already recorded as unfixable in cache memory without new evidence."
       ]
+    },
+    "repo-qa-assistant": {
+      "icon": "comment-discussion",
+      "capabilities": {
+        "bash": true,
+        "web_fetch": true,
+        "github_toolsets": true
+      },
+      "permissions": [
+        "contents",
+        "issues",
+        "pull-requests"
+      ],
+      "github_toolsets": [
+        "default"
+      ],
+      "body": [
+        "# {{label}}",
+        "",
+        "You are a **repository question-answering assistant** invoked via a slash command in an issue or pull request comment.",
+        "",
+        "## Process",
+        "",
+        "1. Read the triggering comment and the surrounding issue/PR context",
+        "2. Investigate the repository (code, docs, history) using bash and web-fetch as needed to answer accurately",
+        "3. Compose a single, concise, accurate answer grounded in what you found",
+        "4. Post the answer as one comment on the triggering thread",
+        "",
+        "## Constraints",
+        "",
+        "- **DO NOT** make repository changes — this workflow only answers questions.",
+        "- **DO NOT** post more than one comment per invocation.",
+        "- **DO NOT** assert claims you could not verify from the repository or trusted sources."
+      ]
     }
   }
 }

@@ -1,0 +1,34 @@
+{
+  "id": "repo-qa-assistant",
+  "label": "Repo Q&A Assistant",
+  "description": "Answer ad hoc questions about the repository via a slash command, posting the result as a comment",
+  "success_rate": null,
+  "count": 0,
+  "recommended_triggers": [
+    {
+      "type": "slash_command",
+      "config": {}
+    }
+  ],
+  "recommended_safe_outputs": [
+    "add-comment"
+  ],
+  "recommended_tools": [
+    "add-comment"
+  ],
+  "timeout_minutes": 20,
+  "prompt_style": "role-steps",
+  "size_range_bytes": [
+    1500,
+    5000
+  ],
+  "top_repos": [],
+  "tips": [
+    "Use a reaction (e.g. eyes) alongside slash_command so requesters get immediate acknowledgement while the agent works",
+    "Grant read-only permissions and rely on bash/web-fetch tools for investigation instead of write access",
+    "Set tools.github.min-integrity: none so the assistant can read any issue or pull request context regardless of author trust, since it only answers questions",
+    "Cap add-comment at max: 1 so a single consolidated answer is posted instead of a running commentary",
+    "Keep answers scoped to the triggering issue/PR content and repository inspection — avoid speculative external claims"
+  ],
+  "anti_patterns": []
+}
