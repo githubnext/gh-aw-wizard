@@ -33,7 +33,7 @@ describe('archetype grid keyboard accessibility', () => {
 
   it('adds a subtle visual highlight for pinned priority archetypes', () => {
     const body = ruleBody('.option-group.archetype-grid .option-card.priority-archetype');
-    expect(body).toMatch(/linear-gradient/);
+    expect(body).toMatch(/rgba\(var\(--accent-blue-rgb\)/);
   });
 
   it('exposes the archetype options as a radio group', () => {
