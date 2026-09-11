@@ -106,6 +106,7 @@ describe('getArchetype', () => {
       'skill-pr-reviewer',
       'security-scanner',
       'ci-failure-triage',
+      'batched-ci-doctor',
       'agent-cost-tracker',
       'nitpick-reviewer'
     ])('includes %s with triggers and safe outputs', (id) => {

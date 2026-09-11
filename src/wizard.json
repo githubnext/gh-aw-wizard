@@ -137,8 +137,8 @@
         },
         {
           "id": "schedule",
-          "label": "On a schedule (daily/weekly)",
-          "description": "Runs on a cron schedule",
+          "label": "On a fuzzy schedule (daily/weekly)",
+          "description": "Runs on a load-balanced fuzzy schedule",
           "icon": "calendar",
           "summary": "the schedule runs",
           "detail": {

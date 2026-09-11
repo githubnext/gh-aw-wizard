@@ -172,6 +172,26 @@ describe('inferCapabilities', () => {
     expect(md).toContain('network:\n  allowed:\n    - defaults\n    - github\n    - node\n');
   });
 
+  it('generates a scheduled, deduplicated batched CI doctor', () => {
+    const md = generateWorkflowFile(
+      answers({
+        archetype: 'batched-ci-doctor',
+        triggers: ['schedule'],
+        outputs: ['create-issue', 'add-comment']
+      }),
+      patterns
+    );
+    expect(md).toContain('name: batched-ci-doctor\n');
+    expect(md).toContain('  schedule: daily on weekdays\n');
+    expect(md).not.toContain('cron');
+    expect(md).toContain('  actions: read\n');
+    expect(md).toContain('toolsets: [repos, issues, pull_requests, actions]');
+    expect(md).not.toContain('skip-if-match');
+    expect(md).toContain('create-issue:\n    max: 1\n    expires: 7\n');
+    expect(md).toContain('Create or update one tracking issue');
+    expect(md).toContain('DO NOT** open a separate issue for every failed run');
+  });
+
   it('does not configure LSP for a non-Copilot engine', () => {
     const md = generateWorkflowFile(
       answers({
@@ -214,7 +234,8 @@ describe('buildTriggerYaml', () => {
     ], 'triage-agent');
     expect(yaml).toContain('  issues:\n    types: [opened]\n');
     expect(yaml).toContain('  pull_request:\n    types: [opened]\n');
-    expect(yaml).toContain('  schedule:\n    - cron: "0 9 * * 1-5"\n');
+    expect(yaml).toContain('  schedule: daily on weekdays\n');
+    expect(yaml).not.toContain('cron');
     expect(yaml).toContain('  slash_command:\n    name: triage-agent\n');
     expect(yaml).toContain('  label_command:\n    name: triage-agent\n');
     expect(yaml).toContain('  push:\n    branches: [main]\n');

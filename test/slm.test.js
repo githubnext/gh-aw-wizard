@@ -169,6 +169,35 @@ describe('keyword fallback', () => {
     )).toBe('security-scanner');
   });
 
+  it('distinguishes scheduled batched CI investigations from per-run triage', () => {
+    const ciScenarios = [
+      {
+        id: 'ci-failure-triage',
+        label: 'CI Failure Triage',
+        description: 'Investigate a failed GitHub Actions run and report a root cause'
+      },
+      {
+        id: 'batched-ci-doctor',
+        label: 'Batched CI Doctor',
+        description: 'Investigate recent CI failures in batches on a schedule'
+      }
+    ];
+
+    [
+      'Review recent CI failures in a scheduled batch',
+      'Run a nightly CI doctor for failed workflows',
+      'Group recurring GitHub Actions failures into one report',
+      'Investigate yesterday’s broken builds together',
+      'Review CI failures every day',
+      'Review recent CI failures weekly',
+      'Investigate failed GitHub Actions runs periodically'
+    ].forEach((request) => {
+      expect(keywordScenarioMatch(request, ciScenarios)).toBe('batched-ci-doctor');
+      expect(selectScenario('batched-ci-doctor', request, ciScenarios)).toBe('batched-ci-doctor');
+    });
+    expect(keywordScenarioMatch('Investigate one failed CI run', ciScenarios)).toBe('ci-failure-triage');
+  });
+
   it('never falls back to the custom scenario', () => {
     expect(keywordScenarioMatch('describe workflow', scenarios)).toBeNull();
   });

@@ -31,6 +31,8 @@ const STOP_WORDS = [
 
 const KEYWORD_ALIASES = {
   actions: 'ci',
+  batches: 'batch',
+  batched: 'batch',
   child: 'hierarchy',
   children: 'hierarchy',
   ci: 'ci',
@@ -38,6 +40,7 @@ const KEYWORD_ALIASES = {
   complexity: 'codehealth',
   contributions: 'community',
   coverage: 'test',
+  daily: 'schedule',
   debt: 'codehealth',
   dependencies: 'dependency',
   discussions: 'community',
@@ -64,11 +67,14 @@ const KEYWORD_ALIASES = {
   packages: 'dependency',
   parent: 'hierarchy',
   parents: 'hierarchy',
+  periodic: 'schedule',
+  periodically: 'schedule',
   policy: 'moderation',
   pr: 'pullrequest',
   prs: 'pullrequest',
   readme: 'documentation',
   screenreader: 'accessibility',
+  scheduled: 'schedule',
   reviewer: 'review',
   skills: 'skill',
   slow: 'performance',
@@ -80,6 +86,9 @@ const KEYWORD_ALIASES = {
   users: 'user',
   vulnerabilities: 'security',
   wcag: 'accessibility',
+  weekly: 'schedule',
+  monthly: 'schedule',
+  nightly: 'schedule',
   workflows: 'agenticworkflow'
 };
 
@@ -198,9 +207,11 @@ function normalize(value) {
 
 function words(value) {
   const canonical = normalize(value)
+    .replace(/\bevery (?:day|week|month)\b/g, 'schedule')
     .replace(/\bpull requests?\b/g, 'pullrequest')
     .replace(/\bproposed code changes?\b/g, 'pullrequest')
     .replace(/\bgithub actions?\b|\bcontinuous integration\b/g, 'ci')
+    .replace(/\bbroken builds?\b/g, 'ci failure')
     .replace(/\bcode health\b|\btechnical debt\b/g, 'codehealth')
     .replace(/\bscreen readers?\b/g, 'screenreader')
     .replace(/\bsub issues?\b/g, 'hierarchy')
@@ -242,16 +253,19 @@ export function parseScenarioSelection(text, scenarios) {
 function keywordScenarioRanks(request, scenarios) {
   const requestWords = words(request);
   if (!requestWords.length || !Array.isArray(scenarios)) return [];
+  const batchedCiIntent = requestWords.indexOf('ci') !== -1 &&
+    requestWords.some((word) => ['batch', 'group', 'schedule', 'together'].indexOf(word) !== -1);
   return scenarios
     .filter((scenario) => scenario.id !== 'custom')
     .map((scenario) => {
       const coreWords = new Set(words(`${scenario.id} ${scenario.label}`));
       const descriptionWords = new Set(words(scenario.description));
-      const score = requestWords.reduce((total, word) => {
+      let score = requestWords.reduce((total, word) => {
         if (coreWords.has(word)) return total + (STRONG_KEYWORDS.has(word) ? 4 : 2);
         if (descriptionWords.has(word)) return total + (STRONG_KEYWORDS.has(word) ? 2 : 1);
         return total;
       }, 0);
+      if (scenario.id === 'batched-ci-doctor' && batchedCiIntent) score += 6;
       return { id: scenario.id, score };
     })
     .filter((match) => match.score > 0)
