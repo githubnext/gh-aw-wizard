@@ -45,8 +45,8 @@
       "description": "when a pull request is marked ready for review"
     },
     "schedule": {
-      "yaml": "schedule:\n  - cron: \"0 9 * * 1-5\"",
-      "description": "on a daily/weekly schedule"
+      "yaml": "schedule: daily on weekdays",
+      "description": "on a fuzzy daily/weekly schedule"
     },
     "slash_command": {
       "yaml": "slash_command:\n  name: {{name}}",

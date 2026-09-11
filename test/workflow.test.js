@@ -182,7 +182,8 @@ describe('inferCapabilities', () => {
       patterns
     );
     expect(md).toContain('name: batched-ci-doctor\n');
-    expect(md).toContain('  schedule:\n');
+    expect(md).toContain('  schedule: daily on weekdays\n');
+    expect(md).not.toContain('cron');
     expect(md).toContain('  actions: read\n');
     expect(md).toContain('toolsets: [repos, issues, pull_requests, actions]');
     expect(md).not.toContain('skip-if-match');
@@ -233,7 +234,8 @@ describe('buildTriggerYaml', () => {
     ], 'triage-agent');
     expect(yaml).toContain('  issues:\n    types: [opened]\n');
     expect(yaml).toContain('  pull_request:\n    types: [opened]\n');
-    expect(yaml).toContain('  schedule:\n    - cron: "0 9 * * 1-5"\n');
+    expect(yaml).toContain('  schedule: daily on weekdays\n');
+    expect(yaml).not.toContain('cron');
     expect(yaml).toContain('  slash_command:\n    name: triage-agent\n');
     expect(yaml).toContain('  label_command:\n    name: triage-agent\n');
     expect(yaml).toContain('  push:\n    branches: [main]\n');
