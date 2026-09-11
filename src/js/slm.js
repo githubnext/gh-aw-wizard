@@ -31,6 +31,8 @@ const STOP_WORDS = [
 
 const KEYWORD_ALIASES = {
   actions: 'ci',
+  batches: 'batch',
+  batched: 'batch',
   child: 'hierarchy',
   children: 'hierarchy',
   ci: 'ci',
@@ -69,6 +71,7 @@ const KEYWORD_ALIASES = {
   prs: 'pullrequest',
   readme: 'documentation',
   screenreader: 'accessibility',
+  scheduled: 'schedule',
   reviewer: 'review',
   skills: 'skill',
   slow: 'performance',
@@ -80,6 +83,7 @@ const KEYWORD_ALIASES = {
   users: 'user',
   vulnerabilities: 'security',
   wcag: 'accessibility',
+  nightly: 'schedule',
   workflows: 'agenticworkflow'
 };
 
@@ -242,16 +246,19 @@ export function parseScenarioSelection(text, scenarios) {
 function keywordScenarioRanks(request, scenarios) {
   const requestWords = words(request);
   if (!requestWords.length || !Array.isArray(scenarios)) return [];
+  const batchedCiIntent = requestWords.indexOf('ci') !== -1 &&
+    requestWords.some((word) => ['batch', 'group', 'schedule', 'together'].indexOf(word) !== -1);
   return scenarios
     .filter((scenario) => scenario.id !== 'custom')
     .map((scenario) => {
       const coreWords = new Set(words(`${scenario.id} ${scenario.label}`));
       const descriptionWords = new Set(words(scenario.description));
-      const score = requestWords.reduce((total, word) => {
+      let score = requestWords.reduce((total, word) => {
         if (coreWords.has(word)) return total + (STRONG_KEYWORDS.has(word) ? 4 : 2);
         if (descriptionWords.has(word)) return total + (STRONG_KEYWORDS.has(word) ? 2 : 1);
         return total;
       }, 0);
+      if (scenario.id === 'batched-ci-doctor' && batchedCiIntent) score += 6;
       return { id: scenario.id, score };
     })
     .filter((match) => match.score > 0)

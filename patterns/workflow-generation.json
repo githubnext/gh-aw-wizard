@@ -1021,6 +1021,7 @@
     },
     "batched-ci-doctor": {
       "icon": "alert",
+      "skip_if_match": false,
       "capabilities": {
         "github_toolsets": true
       },

@@ -228,12 +228,13 @@ export function generateWorkflowFile(answers, patterns) {
 
   const needsDedupeGuard = answers.triggers.indexOf('schedule') !== -1 &&
     safeOutputs.some((output) => DEDUPE_SAFE_OUTPUTS.indexOf(output) !== -1);
+  const addsSkipIfMatch = needsDedupeGuard && definition.skip_if_match !== false;
 
   let frontmatter = '---\n';
   frontmatter += `name: ${  name  }\n`;
   frontmatter += `description: ${  description  }\n`;
   frontmatter += `on:\n${  buildTriggerYaml(answers.triggers, name, answers.archetype, patterns)}`;
-  if (needsDedupeGuard) {
+  if (addsSkipIfMatch) {
     frontmatter += `  skip-if-match: 'is:issue is:open "gh-aw-workflow-id: ${  name  }" in:body'\n`;
   }
   frontmatter += 'permissions:\n';
@@ -382,6 +383,7 @@ function doNotConstraints(workflows, patterns) {
 function duplicatePreventionTips(workflows, patterns) {
   const tips = [];
   workflows.forEach((workflow) => {
+    if (workflowDefinition(patterns, workflow.answers.archetype).skip_if_match === false) return;
     const archetype = getArchetype(patterns, workflow.answers.archetype) || {};
     (archetype.tips || []).forEach((tip) => {
       if (/skip-if-match|tracker-id|\bexpires\b|deduplicat|capped|\bmax\b/i.test(tip) && tips.indexOf(tip) === -1) tips.push(tip);

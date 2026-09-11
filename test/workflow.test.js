@@ -185,7 +185,8 @@ describe('inferCapabilities', () => {
     expect(md).toContain('  schedule:\n');
     expect(md).toContain('  actions: read\n');
     expect(md).toContain('toolsets: [repos, issues, pull_requests, actions]');
-    expect(md).toContain("skip-if-match: 'is:issue is:open \"gh-aw-workflow-id: batched-ci-doctor\" in:body'");
+    expect(md).not.toContain('skip-if-match');
+    expect(md).toContain('create-issue:\n    max: 1\n    expires: 7\n');
     expect(md).toContain('Create or update one tracking issue');
     expect(md).toContain('DO NOT** open a separate issue for every failed run');
   });
