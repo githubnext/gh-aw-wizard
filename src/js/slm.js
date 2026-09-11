@@ -205,6 +205,7 @@ function words(value) {
     .replace(/\bpull requests?\b/g, 'pullrequest')
     .replace(/\bproposed code changes?\b/g, 'pullrequest')
     .replace(/\bgithub actions?\b|\bcontinuous integration\b/g, 'ci')
+    .replace(/\bbroken builds?\b/g, 'ci failure')
     .replace(/\bcode health\b|\btechnical debt\b/g, 'codehealth')
     .replace(/\bscreen readers?\b/g, 'screenreader')
     .replace(/\bsub issues?\b/g, 'hierarchy')
