@@ -28,6 +28,7 @@
     "security-scanner",
     "code-health-auditor",
     "ci-failure-triage",
+    "batched-ci-doctor",
     "community-digest",
     "agent-cost-tracker",
     "contribution-guidelines-checker",

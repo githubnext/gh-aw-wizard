@@ -172,6 +172,24 @@ describe('inferCapabilities', () => {
     expect(md).toContain('network:\n  allowed:\n    - defaults\n    - github\n    - node\n');
   });
 
+  it('generates a scheduled, deduplicated batched CI doctor', () => {
+    const md = generateWorkflowFile(
+      answers({
+        archetype: 'batched-ci-doctor',
+        triggers: ['schedule'],
+        outputs: ['create-issue', 'add-comment']
+      }),
+      patterns
+    );
+    expect(md).toContain('name: batched-ci-doctor\n');
+    expect(md).toContain('  schedule:\n');
+    expect(md).toContain('  actions: read\n');
+    expect(md).toContain('toolsets: [repos, issues, pull_requests, actions]');
+    expect(md).toContain("skip-if-match: 'is:issue is:open \"gh-aw-workflow-id: batched-ci-doctor\" in:body'");
+    expect(md).toContain('Create or update one tracking issue');
+    expect(md).toContain('DO NOT** open a separate issue for every failed run');
+  });
+
   it('does not configure LSP for a non-Copilot engine', () => {
     const md = generateWorkflowFile(
       answers({

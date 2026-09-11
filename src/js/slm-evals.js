@@ -134,6 +134,13 @@ const QUERY_GROUPS = [
     'Respond when continuous integration jobs fail',
     'Diagnose test failures from CI logs'
   ]],
+  ['batched-ci-doctor', [
+    'Review recent CI failures in a scheduled batch',
+    'Run a nightly CI doctor for failed workflows',
+    'Group recurring GitHub Actions failures into one report',
+    'Investigate yesterday’s broken builds together',
+    'Summarize unique CI failures on a schedule'
+  ]],
   ['community-digest', [
     'Publish a digest of community discussions',
     'Summarize recent community activity each week',

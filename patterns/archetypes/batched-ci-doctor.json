@@ -1,0 +1,35 @@
+{
+  "id": "batched-ci-doctor",
+  "label": "Batched CI Doctor",
+  "description": "Investigate recent CI failures in batches on a schedule and consolidate actionable diagnoses",
+  "success_rate": null,
+  "count": 0,
+  "recommended_triggers": [
+    {
+      "type": "schedule",
+      "config": {}
+    }
+  ],
+  "recommended_safe_outputs": [
+    "issues"
+  ],
+  "recommended_tools": [
+    "create-issue",
+    "add-comment"
+  ],
+  "timeout_minutes": 30,
+  "prompt_style": "phase-based",
+  "size_range_bytes": [
+    3000,
+    8000
+  ],
+  "top_repos": [],
+  "tips": [
+    "Query a bounded lookback window of completed GitHub Actions runs and analyze only failures that have not recovered on rerun",
+    "Cluster failures by a stable key such as workflow, job, failing step, and normalized error signature before investigating root causes",
+    "Create or update one deduplicated tracking issue for the batch instead of opening an issue for every failed run",
+    "Use skip-if-match plus max and expires on scheduled issue creation so concurrent or repeated runs cannot create duplicate reports",
+    "Diagnostic only — report evidence-backed root causes and remediation steps, but do not rerun workflows or modify repository code"
+  ],
+  "anti_patterns": []
+}
