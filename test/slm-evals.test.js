@@ -3,8 +3,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { EVAL_CORPUS, EVAL_REPETITIONS, EVAL_SAMPLE_SIZE, pickRandomSample, runEvals } from '../src/js/slm-evals.js';
 
 describe('SLM eval corpus', () => {
-  it('contains 100 queries with golden scenario answers', () => {
-    expect(EVAL_CORPUS).toHaveLength(100);
+  it('contains 105 queries with golden scenario answers', () => {
+    expect(EVAL_CORPUS).toHaveLength(105);
     EVAL_CORPUS.forEach((item) => {
       expect(item.query).toBeTruthy();
       expect(item.golden).toBeTruthy();
@@ -60,7 +60,7 @@ describe('SLM eval corpus', () => {
     sample.forEach((item) => expect(EVAL_CORPUS).toContain(item));
   });
 
-  it('runs a random 10-query sample from the 100-query corpus 3 times by default', async () => {
+  it('runs a random 10-query sample from the eval corpus 3 times by default', async () => {
     const analyze = vi.fn(async () => ({ scenario: 'status-report' }));
 
     const result = await runEvals({ sampleSize: EVAL_SAMPLE_SIZE, analyze });
