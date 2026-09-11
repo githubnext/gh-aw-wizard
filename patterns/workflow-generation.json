@@ -834,6 +834,48 @@
       ],
       "min_integrity": "approved"
     },
+    "nitpick-reviewer": {
+      "icon": "eye",
+      "capabilities": {
+        "github_toolsets": true
+      },
+      "permissions": [
+        "contents",
+        "pull-requests"
+      ],
+      "github_toolsets": [
+        "repos",
+        "pull_requests"
+      ],
+      "instructions": [
+        "pr-reviewer.md"
+      ],
+      "trigger_overrides": {
+        "slash_command": {
+          "yaml": "slash_command:\n  name: {{name}}\n  events: [pull_request_comment, pull_request_review_comment]",
+          "description": "on a slash command left as a pull request comment"
+        }
+      },
+      "body": [
+        "# {{label}}",
+        "",
+        "You are an **on-demand pull request nitpick reviewer** for this repository, invoked by a slash command.",
+        "",
+        "## Process",
+        "",
+        "1. Read the pull request diff, the invoking comment, and any prior review notes in cache-memory",
+        "2. Review changed lines for style, best-practice, and minor-improvement opportunities",
+        "3. Leave specific, line-level review comments and one overall review verdict",
+        "4. Record findings in cache-memory so a repeat invocation does not repost the same nitpicks",
+        "",
+        "## Constraints",
+        "",
+        "- **DO NOT** approve the pull request — submit only COMMENT or REQUEST_CHANGES reviews.",
+        "- **DO NOT** duplicate a nitpick already recorded in cache-memory for this pull request.",
+        "- **DO NOT** review generated, vendored, or lock files."
+      ],
+      "min_integrity": "approved"
+    },
     "security-scanner": {
       "icon": "shield",
       "capabilities": {

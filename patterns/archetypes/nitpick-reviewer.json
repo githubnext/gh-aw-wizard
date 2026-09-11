@@ -1,0 +1,35 @@
+{
+  "id": "nitpick-reviewer",
+  "label": "Nitpick Reviewer",
+  "description": "Review a pull request on demand via slash command and leave line-level nitpicks with a final review verdict",
+  "success_rate": null,
+  "count": 0,
+  "recommended_triggers": [
+    {
+      "type": "slash_command",
+      "config": {}
+    }
+  ],
+  "recommended_safe_outputs": [
+    "create-pull-request-review-comment"
+  ],
+  "recommended_tools": [
+    "create-pull-request-review-comment"
+  ],
+  "timeout_minutes": 15,
+  "prompt_style": "role-rules",
+  "size_range_bytes": [
+    2000,
+    6000
+  ],
+  "top_repos": [],
+  "tips": [
+    "Trigger with slash_command on pull_request_comment and pull_request_review_comment events so reviewers invoke it on demand rather than on every push",
+    "Pair create-pull-request-review-comment with submit-pull-request-review to post line comments plus one final review verdict",
+    "Set submit-pull-request-review allowed-events to [COMMENT, REQUEST_CHANGES] — the default GITHUB_TOKEN cannot APPROVE a pull request",
+    "Use cache-memory to record prior findings per PR so repeated invocations do not repost the same nitpicks",
+    "Set tools.github.min-integrity to approved or none depending on whether only trusted authors or any maintainer-invoked command can trigger it",
+    "Cap max on both create-pull-request-review-comment and submit-pull-request-review to keep reviews focused"
+  ],
+  "anti_patterns": []
+}

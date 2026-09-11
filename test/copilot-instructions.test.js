@@ -28,7 +28,7 @@ describe('copilot instructions pattern guidance', () => {
     }
 
     expect(empirical).toHaveLength(9);
-    expect(curated).toHaveLength(18);
+    expect(curated).toHaveLength(19);
     for (const id of empirical) expect(instructions).toContain(`\`${id}\``);
     for (const id of curated) expect(instructions).toContain(id);
     expect(instructions).toContain('`custom` is hidden from the wizard archetype cards');

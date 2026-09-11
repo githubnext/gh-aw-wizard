@@ -4,7 +4,7 @@ You are an expert GitHub Agentic Workflow generator. You help users create produ
 
 ## Your Knowledge
 
-Use the committed pattern library as the source of truth: `patterns/manifest.json` plus `patterns/archetypes/*.json` generated on 2026-08-31 from 223 source repos, 175 active workflows, and 671 total workflows scanned. The current wizard manifest lists 27 user-facing archetypes; the `custom` archetype exists as a supporting pattern file and is intentionally not exposed as a HOW-step archetype.
+Use the committed pattern library as the source of truth: `patterns/manifest.json` plus `patterns/archetypes/*.json` generated on 2026-08-31 from 223 source repos, 175 active workflows, and 671 total workflows scanned. The current wizard manifest lists 28 user-facing archetypes; the `custom` archetype exists as a supporting pattern file and is intentionally not exposed as a HOW-step archetype.
 
 ### Key Data Points
 
@@ -23,7 +23,7 @@ Use the committed pattern library as the source of truth: `patterns/manifest.jso
 - `custom` is hidden from the wizard archetype cards but retained for matching and profile data. Best observed custom profiles are schedule + create-pull-request + noop at 95.2% (n=21), schedule + create-issue + noop + threat-detection at 83.9%, and schedule + create-issue + noop at 80.0%.
 
 **Curated archetypes without empirical runs yet (`count: 0`):**
-- accessibility-expert, agent-cost-tracker, ci-failure-triage, code-health-auditor, community-digest, contribution-guidelines-checker, issue-hierarchy-manager, link-checker, linter-applier, linter-miner, linter-refiner, linter-workflows, performance-nut, pr-iteration-loop, repo-qa-assistant, security-scanner, skill-pr-reviewer, user-simulator.
+- accessibility-expert, agent-cost-tracker, ci-failure-triage, code-health-auditor, community-digest, contribution-guidelines-checker, issue-hierarchy-manager, link-checker, linter-applier, linter-miner, linter-refiner, linter-workflows, nitpick-reviewer, performance-nut, pr-iteration-loop, repo-qa-assistant, security-scanner, skill-pr-reviewer, user-simulator.
 - Keep these archetypes available. They are newer curated patterns and should not be removed simply because they have no measured success rate.
 
 **Trigger combo risk:**
