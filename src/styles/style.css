@@ -497,8 +497,7 @@ a:hover {
 }
 .option-group.archetype-grid .option-card.priority-archetype {
   border-color: rgba(var(--accent-blue-rgb), 0.35);
-  background:
-    linear-gradient(90deg, rgba(var(--accent-blue-rgb), 0.08) 0%, rgba(var(--accent-blue-rgb), 0.02) 45%, var(--bg-card) 100%);
+  background: rgba(var(--accent-blue-rgb), 0.05);
 }
 .option-card.selected {
   border-color: var(--accent-blue);
@@ -827,16 +826,14 @@ a:hover {
   box-shadow: none;
 }
 .btn-assistant {
-  background: linear-gradient(135deg, var(--agent-purple), var(--agent-purple-dark));
+  background: var(--agent-purple-dark);
   border-color: var(--agent-purple-dark);
-  box-shadow: 0 2px 8px rgba(var(--agent-purple-rgb), 0.35);
 }
 .btn-assistant:hover:not(:disabled) {
-  background: var(--agent-purple-dark);
-  box-shadow: 0 4px 12px rgba(var(--agent-purple-rgb), 0.5);
+  background: var(--agent-purple);
 }
 .btn-assistant:disabled {
-  background: linear-gradient(135deg, var(--agent-purple), var(--agent-purple-dark));
+  background: var(--agent-purple-dark);
   border-color: var(--agent-purple-dark);
 }
 .btn-evals {
@@ -1025,7 +1022,6 @@ a:hover {
 }
 .copy-modal::backdrop {
   background: rgba(var(--agent-purple-rgb), 0.35);
-  backdrop-filter: blur(4px);
   animation: copyModalBackdrop 0.3s ease-out;
 }
 .copy-modal-card {
@@ -1033,12 +1029,9 @@ a:hover {
   overflow: hidden;
   padding: 2.25rem;
   text-align: center;
-  background:
-    radial-gradient(circle at 50% 0, rgba(var(--agent-purple-rgb), 0.17), transparent 46%),
-    var(--bg-card);
-  border: 1px solid rgba(var(--agent-purple-rgb), 0.5);
+  background: var(--bg-card);
+  border: 1px solid var(--agent-purple);
   border-radius: var(--radius-lg);
-  box-shadow: 0 24px 80px rgba(var(--agent-purple-rgb), 0.35);
 }
 .copy-modal-close {
   position: absolute;
@@ -1097,7 +1090,7 @@ a:hover {
   height: 3.75rem;
   place-items: center;
   color: var(--control-fg-on-emphasis);
-  background: linear-gradient(135deg, var(--agent-purple), var(--agent-purple-dark));
+  background: var(--agent-purple-dark);
   border-radius: var(--radius-lg);
   animation: copyModalIcon 0.6s 0.12s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
@@ -1180,7 +1173,7 @@ a:hover {
   width: 100%;
   justify-content: center;
   color: var(--control-fg-on-emphasis);
-  background: linear-gradient(135deg, var(--agent-purple), var(--agent-purple-dark));
+  background: var(--agent-purple-dark);
   border-color: var(--agent-purple-dark);
 }
 .copy-modal-action:hover {
