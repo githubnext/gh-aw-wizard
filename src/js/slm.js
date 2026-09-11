@@ -40,6 +40,7 @@ const KEYWORD_ALIASES = {
   complexity: 'codehealth',
   contributions: 'community',
   coverage: 'test',
+  daily: 'schedule',
   debt: 'codehealth',
   dependencies: 'dependency',
   discussions: 'community',
@@ -66,6 +67,8 @@ const KEYWORD_ALIASES = {
   packages: 'dependency',
   parent: 'hierarchy',
   parents: 'hierarchy',
+  periodic: 'schedule',
+  periodically: 'schedule',
   policy: 'moderation',
   pr: 'pullrequest',
   prs: 'pullrequest',
@@ -83,6 +86,8 @@ const KEYWORD_ALIASES = {
   users: 'user',
   vulnerabilities: 'security',
   wcag: 'accessibility',
+  weekly: 'schedule',
+  monthly: 'schedule',
   nightly: 'schedule',
   workflows: 'agenticworkflow'
 };
@@ -202,6 +207,7 @@ function normalize(value) {
 
 function words(value) {
   const canonical = normalize(value)
+    .replace(/\bevery (?:day|week|month)\b/g, 'schedule')
     .replace(/\bpull requests?\b/g, 'pullrequest')
     .replace(/\bproposed code changes?\b/g, 'pullrequest')
     .replace(/\bgithub actions?\b|\bcontinuous integration\b/g, 'ci')

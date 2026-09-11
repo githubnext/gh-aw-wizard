@@ -187,7 +187,10 @@ describe('keyword fallback', () => {
       'Review recent CI failures in a scheduled batch',
       'Run a nightly CI doctor for failed workflows',
       'Group recurring GitHub Actions failures into one report',
-      'Investigate yesterday’s broken builds together'
+      'Investigate yesterday’s broken builds together',
+      'Review CI failures every day',
+      'Review recent CI failures weekly',
+      'Investigate failed GitHub Actions runs periodically'
     ].forEach((request) => {
       expect(keywordScenarioMatch(request, ciScenarios)).toBe('batched-ci-doctor');
       expect(selectScenario('batched-ci-doctor', request, ciScenarios)).toBe('batched-ci-doctor');
