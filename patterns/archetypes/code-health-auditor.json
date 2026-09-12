@@ -27,7 +27,8 @@
     "Scope each run to one structural dimension (file size, duplication, complexity) rather than a broad audit",
     "Use tracker-id and skip-if-match so a scheduled run doesn't reopen the same finding every day",
     "Set expires on the created issue or pull request so stale findings don't accumulate",
-    "Assign findings to copilot so remediation can be picked up automatically"
+    "Assign findings to copilot so remediation can be picked up automatically",
+    "Persist the history of previously-audited structural dimensions in cache-memory and weight selection toward ones not covered in recent runs, so scheduled runs rotate through file size, duplication, and complexity instead of repeating the same dimension"
   ],
   "anti_patterns": []
 }
