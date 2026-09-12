@@ -63,7 +63,9 @@ describe('dark theme contrast', () => {
   }
 
   function darkVar(name) {
-    const match = darkThemeBody().match(new RegExp(`${name}:\\s*(#[0-9a-fA-F]{6})`));
+    // Values may be a bare hex or a Primer CSS var with a hex fallback, e.g.
+    // `var(--color-fg-default, #e6edf3)` — match the last hex literal on the line either way.
+    const match = darkThemeBody().match(new RegExp(`${name}:[^;]*?(#[0-9a-fA-F]{6})[^;]*;`));
     expect(match, `${name} not found in dark theme`).not.toBeNull();
     return match[1];
   }
