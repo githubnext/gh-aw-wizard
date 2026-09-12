@@ -58,7 +58,8 @@
     "Scope each run to one narrow, well-defined improvement (a single failing check or a named category of fix) rather than an open-ended \"fix anything broken\" mandate \u2014 broad, unscoped code-improvement workflows have the lowest observed success rates",
     "Use explicit DO NOT constraints to keep changes scoped to the requested improvement",
     "Use protected-files: fallback-to-issue for manifests, CI configuration, and agent instructions",
-    "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers"
+    "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers",
+    "When rotating across several improvement categories (e.g. code quality, testing, docs, performance), persist the history of previously-selected categories in cache-memory and weight selection toward ones not covered in recent runs, so scheduled runs don't repeatedly re-select the same category"
   ],
   "anti_patterns": [
     "ci-coach",

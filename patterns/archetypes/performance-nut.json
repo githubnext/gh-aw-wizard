@@ -28,7 +28,8 @@
     "Make one focused change and compare before-and-after results",
     "Do not trade correctness or maintainability for speculative speedups",
     "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers",
-    "Constrain create-pull-request with allowed-files scoped to the changed source files, and set protected-files: fallback-to-issue for manifests, CI config, or agent instruction files"
+    "Constrain create-pull-request with allowed-files scoped to the changed source files, and set protected-files: fallback-to-issue for manifests, CI config, or agent instruction files",
+    "When scanning multiple bottleneck categories (e.g. code-level, data, network/I-O), persist previously-selected categories in cache-memory and weight toward ones not covered in recent runs so a scheduled cadence explores the full space over time"
   ],
   "anti_patterns": []
 }
