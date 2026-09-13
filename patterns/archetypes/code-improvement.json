@@ -59,7 +59,8 @@
     "Use explicit DO NOT constraints to keep changes scoped to the requested improvement",
     "Use protected-files: fallback-to-issue for manifests, CI configuration, and agent instructions",
     "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers",
-    "When rotating across several improvement categories (e.g. code quality, testing, docs, performance), persist the history of previously-selected categories in cache-memory and weight selection toward ones not covered in recent runs, so scheduled runs don't repeatedly re-select the same category"
+    "When rotating across several improvement categories (e.g. code quality, testing, docs, performance), persist the history of previously-selected categories in cache-memory and weight selection toward ones not covered in recent runs, so scheduled runs don't repeatedly re-select the same category",
+    "Cap the schedule to one open pull request at a time with skip-if-match (max: 1) and expires, and before proposing a new fix search the most recently closed pull requests from this workflow — treat a 'not planned' close or rejecting review comment as a negative signal and avoid re-proposing the same change"
   ],
   "anti_patterns": [
     "ci-coach",
