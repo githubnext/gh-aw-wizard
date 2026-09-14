@@ -40,7 +40,8 @@
     "Establish a passing baseline before changing tests",
     "Prefer regression-prone and critical paths over coverage inflation",
     "Create one focused draft pull request per run",
-    "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers"
+    "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers",
+    "Use add-comment with target: \"*\" and hide-older-comments: true to post a running progress update across issues/PRs while minimizing prior status comments from the same workflow"
   ],
   "anti_patterns": []
 }
