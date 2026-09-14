@@ -59,7 +59,8 @@
   "tips": [
     "Use persistent memory and check for existing work before acting",
     "Limit each run to one high-value maintenance task",
-    "Leave merges, approvals, and destructive actions to maintainers"
+    "Leave merges, approvals, and destructive actions to maintainers",
+    "Use add-comment with target: \"*\" and hide-older-comments: true so status updates on tracked issues/PRs replace prior comments from this workflow instead of accumulating"
   ],
   "anti_patterns": [
     "repo-assist",
