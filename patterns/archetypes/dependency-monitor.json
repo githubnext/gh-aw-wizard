@@ -2,19 +2,19 @@
   "id": "dependency-monitor",
   "label": "Dependency Monitor",
   "description": "Track and update dependencies",
-  "success_rate": 0.5,
-  "count": 48,
+  "success_rate": 0.21,
+  "count": 10,
   "recommended_triggers": [
     {
       "type": "schedule",
       "config": {}
     },
     {
-      "type": "permissions",
+      "type": "pull_request",
       "config": {}
     },
     {
-      "type": "reaction",
+      "type": "issues",
       "config": {}
     }
   ],
@@ -35,23 +35,23 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5063
+      "stars": 5134
     },
     {
-      "repo": "github/awesome-copilot",
-      "stars": 38469
+      "repo": "adoptium/adoptium",
+      "stars": 185
     },
     {
-      "repo": "dotnet/aspnetcore",
-      "stars": 38406
+      "repo": "nitinjain999/platform-skills",
+      "stars": 42
     },
     {
-      "repo": "langfuse/langfuse",
-      "stars": 33968
+      "repo": "LionSR/TNLean",
+      "stars": 36
     },
     {
-      "repo": "dotnet/maui",
-      "stars": 23317
+      "repo": "SatelliteQE/broker",
+      "stars": 21
     }
   ],
   "tips": [
@@ -64,10 +64,10 @@
     "Use protected-files: fallback-to-issue for CI configuration and agent instructions (not the dependency manifests themselves, since updating those is the intended change)"
   ],
   "anti_patterns": [
-    "wiki-sync",
-    "course-updater",
-    "update-github-info",
-    "update-github-info",
-    "dependabot-pr-bundler"
+    "docs-blueprint-sync",
+    "php-dependency-upgrade",
+    "doc-sync",
+    "renovate-gate",
+    "agent-health-monitor"
   ]
 }

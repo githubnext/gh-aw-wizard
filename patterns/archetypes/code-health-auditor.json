@@ -29,7 +29,7 @@
     "Set expires on the created issue or pull request so stale findings don't accumulate",
     "Assign findings to copilot so remediation can be picked up automatically",
     "Persist the history of previously-audited structural dimensions in cache-memory and weight selection toward ones not covered in recent runs, so scheduled runs rotate through file size, duplication, and complexity instead of repeating the same dimension",
-    "Before creating a new finding, search the most recently closed items from this workflow and read the close reason and any review feedback — treat a rejecting comment or 'not planned' close as a negative signal and avoid re-proposing the same fix"
+    "Before creating a new finding, search the most recently closed items from this workflow and read the close reason and any review feedback \u2014 treat a rejecting comment or 'not planned' close as a negative signal and avoid re-proposing the same fix"
   ],
   "anti_patterns": []
 }
