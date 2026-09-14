@@ -2,19 +2,19 @@
   "id": "custom",
   "label": "Custom",
   "description": "Custom or uncategorized workflow",
-  "success_rate": 0.5,
-  "count": 356,
+  "success_rate": 0.56,
+  "count": 164,
   "recommended_triggers": [
     {
       "type": "schedule",
       "config": {}
     },
     {
-      "type": "roles",
+      "type": "reaction",
       "config": {}
     },
     {
-      "type": "reaction",
+      "type": "slash_command",
       "config": {}
     }
   ],
@@ -29,23 +29,23 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5063
+      "stars": 5134
     },
     {
       "repo": "githubnext/agentics",
-      "stars": 925
+      "stars": 952
     },
     {
-      "repo": "f/prompts.chat",
-      "stars": 168280
+      "repo": "OtterMind/Chat2DB",
+      "stars": 28117
     },
     {
-      "repo": "github/spec-kit",
-      "stars": 132415
+      "repo": "pydantic/pydantic-ai",
+      "stars": 19920
     },
     {
-      "repo": "home-assistant/core",
-      "stars": 90197
+      "repo": "ethereum/ethereum-org-website",
+      "stars": 5968
     }
   ],
   "tips": [
@@ -54,10 +54,10 @@
     "Use DO NOT constraints to bound agent behavior \u2014 61% more likely to be healthy"
   ],
   "anti_patterns": [
-    "issue-go-yes",
-    "hero-scenarios",
-    "dash",
-    "tester",
-    "scribe"
+    "localize-pt",
+    "validate-pr",
+    "planner",
+    "q",
+    "keybot"
   ]
 }

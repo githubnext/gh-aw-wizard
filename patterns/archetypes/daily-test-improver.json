@@ -2,8 +2,8 @@
   "id": "daily-test-improver",
   "label": "Daily Test Improver",
   "description": "Add high-value tests and improve test quality",
-  "success_rate": 1.0,
-  "count": 3,
+  "success_rate": 0.0,
+  "count": 2,
   "recommended_triggers": [
     {
       "type": "permissions",
@@ -33,11 +33,7 @@
   "top_repos": [
     {
       "repo": "githubnext/agentics",
-      "stars": 925
-    },
-    {
-      "repo": "rancher/dashboard",
-      "stars": 621
+      "stars": 952
     }
   ],
   "tips": [

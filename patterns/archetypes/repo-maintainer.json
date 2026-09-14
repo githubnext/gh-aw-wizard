@@ -2,8 +2,8 @@
   "id": "repo-maintainer",
   "label": "Repo Maintainer",
   "description": "Proactively triage, fix, and maintain a repository",
-  "success_rate": 0.33,
-  "count": 8,
+  "success_rate": 0.45,
+  "count": 11,
   "recommended_triggers": [
     {
       "type": "reaction",
@@ -37,23 +37,23 @@
   "top_repos": [
     {
       "repo": "githubnext/agentics",
-      "stars": 925
+      "stars": 952
     },
     {
       "repo": "Jguer/yay",
-      "stars": 13719
+      "stars": 13751
     },
     {
       "repo": "py-why/dowhy",
-      "stars": 8292
+      "stars": 8318
     },
     {
-      "repo": "fable-compiler/Fable",
-      "stars": 3147
+      "repo": "fsprojects/FsHttp",
+      "stars": 498
     },
     {
-      "repo": "tenstorrent/tt-metal",
-      "stars": 1651
+      "repo": "shanselman/winget-tui",
+      "stars": 462
     }
   ],
   "tips": [

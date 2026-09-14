@@ -2,19 +2,19 @@
   "id": "pr-review",
   "label": "PR Review",
   "description": "Review pull requests for quality and issues",
-  "success_rate": 0.42,
-  "count": 63,
+  "success_rate": 0.48,
+  "count": 22,
   "recommended_triggers": [
+    {
+      "type": "slash_command",
+      "config": {}
+    },
     {
       "type": "pull_request",
       "config": {}
     },
     {
       "type": "roles",
-      "config": {}
-    },
-    {
-      "type": "pull_request_target",
       "config": {}
     }
   ],
@@ -33,36 +33,35 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5063
+      "stars": 5134
     },
     {
       "repo": "githubnext/agentics",
-      "stars": 925
-    },
-    {
-      "repo": "clash-verge-rev/clash-verge-rev",
-      "stars": 141262
+      "stars": 952
     },
     {
       "repo": "OtterMind/Chat2DB",
-      "stars": 28056
+      "stars": 28117
     },
     {
-      "repo": "dotnet/maui",
-      "stars": 23317
+      "repo": "pydantic/pydantic-ai",
+      "stars": 19920
+    },
+    {
+      "repo": "ethereum/ethereum-org-website",
+      "stars": 5968
     }
   ],
   "tips": [
     "Focus on specific review criteria (security, performance, style)",
     "Use pull_request triggers focused on ready-to-review activity",
-    "Include DO NOT constraints to avoid false positive comments",
-    "Set tools.github.min-integrity (e.g. approved) so the agent only acts on content from trusted authors"
+    "Include DO NOT constraints to avoid false positive comments"
   ],
   "anti_patterns": [
-    "supply-chain-review",
-    "supply-chain-review",
-    "arm-api-review",
-    "data-plane-api-review",
-    "ai-pr-reviewer"
+    "pr-review",
+    "ai-pr-reviewer",
+    "macios-reviewer",
+    "pr-docs-reviewer",
+    "grumpy-reviewer"
   ]
 }

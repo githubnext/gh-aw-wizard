@@ -2,15 +2,15 @@
   "id": "status-report",
   "label": "Status Report",
   "description": "Generate periodic status summaries",
-  "success_rate": 0.38,
-  "count": 36,
+  "success_rate": 0.55,
+  "count": 19,
   "recommended_triggers": [
     {
       "type": "schedule",
       "config": {}
     },
     {
-      "type": "skip-if-match",
+      "type": "bots",
       "config": {}
     },
     {
@@ -33,23 +33,23 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5063
+      "stars": 5134
     },
     {
       "repo": "githubnext/agentics",
-      "stars": 925
+      "stars": 952
     },
     {
-      "repo": "github/awesome-copilot",
-      "stars": 38469
+      "repo": "adoptium/adoptium",
+      "stars": 185
     },
     {
-      "repo": "dotnet/maui",
-      "stars": 23317
+      "repo": "mcpc-tech/dev-inspector-mcp",
+      "stars": 47
     },
     {
-      "repo": "runhey/OnmyojiAutoScript",
-      "stars": 4881
+      "repo": "verkyyi/github-agent-runner",
+      "stars": 10
     }
   ],
   "tips": [
@@ -57,14 +57,9 @@
     "Use schedule triggers for repeatable reporting",
     "Keep prompts focused on one report \u2014 multi-source reports need pre-steps",
     "Use DO NOT constraints to prevent repository changes while generating reports",
-    "Use skip-if-match and expires on create-issue so scheduled reports don't accumulate as duplicate open issues",
-    "Set close-older-issues: true on create-issue as an alternative to skip-if-match — it closes the previous report issue from the same workflow instead of preventing the new run",
-    "Set tools.github.min-integrity: none when the report must read issues, PRs, or discussions from any author regardless of trust — the workflow only summarizes, it never acts on that content"
+    "Use skip-if-match and expires on create-issue so scheduled reports don't accumulate as duplicate open issues"
   ],
   "anti_patterns": [
-    "daily-repo-status",
-    "daily-repo-status",
-    "daily-repo-status",
     "daily-repo-status",
     "daily-repo-status"
   ]

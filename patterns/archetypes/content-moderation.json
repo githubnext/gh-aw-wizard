@@ -2,8 +2,8 @@
   "id": "content-moderation",
   "label": "Content Moderation",
   "description": "Review content for quality or policy",
-  "success_rate": 0.0,
-  "count": 3,
+  "success_rate": 0.86,
+  "count": 6,
   "recommended_triggers": [
     {
       "type": "issue_comment",
@@ -35,18 +35,29 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5063
+      "stars": 5134
     },
     {
       "repo": "githubnext/agentics",
-      "stars": 925
+      "stars": 952
+    },
+    {
+      "repo": "Bertverbeek4PS/bc2adls",
+      "stars": 168
+    },
+    {
+      "repo": "SSWConsulting/SSW.Rules.Content",
+      "stars": 62
+    },
+    {
+      "repo": "chrizbo/agentics-beyond-code",
+      "stars": 25
     }
   ],
   "tips": [
     "Never auto-close or lock \u2014 label and comment only",
     "Include explicit rules for what IS legitimate to reduce false positives",
-    "Use DO NOT constraints for actions the agent should never take",
-    "Enable tools.github.lockdown to restrict surfaced content from public repos to authors with push access"
+    "Use DO NOT constraints for actions the agent should never take"
   ],
   "anti_patterns": []
 }
