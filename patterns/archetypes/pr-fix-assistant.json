@@ -1,0 +1,40 @@
+{
+    "id": "pr-fix-assistant",
+    "label": "PR Fix Assistant",
+    "description": "Fix a failing pull request on demand via slash command by pushing corrections directly to its branch",
+    "success_rate": null,
+    "count": 0,
+    "recommended_triggers": [
+        {
+            "type": "slash_command",
+            "config": {}
+        },
+        {
+            "type": "reaction",
+            "config": {}
+        }
+    ],
+    "recommended_safe_outputs": [
+        "pull-requests"
+    ],
+    "recommended_tools": [
+        "push-to-pull-request-branch"
+    ],
+    "timeout_minutes": 20,
+    "prompt_style": "role-steps",
+    "size_range_bytes": [
+        2000,
+        6000
+    ],
+    "top_repos": [],
+    "tips": [
+        "Use push-to-pull-request-branch instead of create-pull-request \u2014 the fix belongs on the existing PR branch, not a new one",
+        "Set required-title-prefix or required-labels on push-to-pull-request-branch so pushes are restricted to PRs this workflow is meant to touch",
+        "Analyze failing CI logs to identify the root cause before making any change; run tests and formatters locally to verify the fix before pushing",
+        "Add a comment summarizing the change and reason once the fix is pushed, so reviewers can see what happened without re-reading the diff",
+        "Use tools.github.min-integrity: none since a maintainer-invoked slash command already establishes trust for the triggering PR",
+        "Pair with reaction: \"eyes\" so the requester gets immediate acknowledgement while the agent works",
+        "Do NOT open a second pull request or push to unrelated branches \u2014 scope every change to the triggering PR only"
+    ],
+    "anti_patterns": []
+}
