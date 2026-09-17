@@ -28,7 +28,7 @@
   --yaml-value: var(--color-prettylights-syntax-string, #0a3069);
   --yaml-string: var(--color-prettylights-syntax-string, #0a3069);
   --yaml-comment: var(--color-prettylights-syntax-comment, #6e7781);
-  --heading-color: var(--color-success-fg, #1a7f37);
+  --heading-color: var(--color-fg-default, #24292f);
   --success: var(--color-success-fg, #1a7f37);
   --warning: var(--color-attention-fg, #9a6700);
   --danger: var(--color-danger-fg, #cf222e);
@@ -85,7 +85,7 @@
   --yaml-value: var(--color-prettylights-syntax-string, #a5d6ff);
   --yaml-string: var(--color-prettylights-syntax-string, #a5d6ff);
   --yaml-comment: var(--color-prettylights-syntax-comment, #8b949e);
-  --heading-color: var(--color-success-fg, #3fb950);
+  --heading-color: var(--color-fg-default, #e6edf3);
   --success: var(--color-success-fg, #3fb950);
   --warning: var(--color-attention-fg, #d29922);
   --danger: var(--color-danger-fg, #f85149);
@@ -1550,11 +1550,7 @@ a:hover {
   line-height: 1.1;
   letter-spacing: -0.04em;
   max-width: 16ch;
-  background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
+  color: var(--heading-color);
   animation: landingRise 0.6s ease both;
 }
 .landing-message {
