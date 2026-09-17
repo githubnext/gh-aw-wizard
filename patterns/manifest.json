@@ -34,7 +34,8 @@
     "contribution-guidelines-checker",
     "link-checker",
     "repo-qa-assistant",
-    "nitpick-reviewer"
+    "nitpick-reviewer",
+    "pr-fix-assistant"
   ],
   "workflow_generation": "workflow-generation.json",
   "anti_patterns": [
