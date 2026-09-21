@@ -2,8 +2,8 @@
   "id": "code-improvement",
   "label": "Code Improvement",
   "description": "Diagnose and fix code or CI issues",
-  "success_rate": 0.33,
-  "count": 35,
+  "success_rate": 0.46,
+  "count": 27,
   "recommended_triggers": [
     {
       "type": "schedule",
@@ -33,23 +33,23 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5134
+      "stars": 5162
     },
     {
       "repo": "githubnext/agentics",
-      "stars": 952
-    },
-    {
-      "repo": "ethereum/ethereum-org-website",
-      "stars": 5968
+      "stars": 958
     },
     {
       "repo": "dotnet/macios",
-      "stars": 2903
+      "stars": 2902
     },
     {
-      "repo": "microsoft/agentrc",
-      "stars": 1063
+      "repo": "pockebot/openpocket",
+      "stars": 844
+    },
+    {
+      "repo": "drhelius/Gearsystem",
+      "stars": 387
     }
   ],
   "tips": [
@@ -61,10 +61,10 @@
     "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers"
   ],
   "anti_patterns": [
-    "ci-doctor",
-    "build-doctor",
     "code-simplifier",
-    "bug-agent-fix",
-    "issue-fix"
+    "security-autofix",
+    "ci-fix",
+    "issue-fix",
+    "ci-doctor"
   ]
 }

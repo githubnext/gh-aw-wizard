@@ -2,19 +2,19 @@
   "id": "documentation-updater",
   "label": "Documentation Updater",
   "description": "Keep docs accurate and up-to-date",
-  "success_rate": 0.7,
-  "count": 10,
+  "success_rate": 0.6,
+  "count": 6,
   "recommended_triggers": [
     {
       "type": "push",
       "config": {}
     },
     {
-      "type": "schedule",
+      "type": "permissions",
       "config": {}
     },
     {
-      "type": "permissions",
+      "type": "schedule",
       "config": {}
     }
   ],
@@ -33,23 +33,19 @@
   "top_repos": [
     {
       "repo": "githubnext/agentics",
-      "stars": 952
+      "stars": 958
     },
     {
       "repo": "OP5dev/TF-via-PR",
-      "stars": 338
+      "stars": 339
     },
     {
       "repo": "Azure/typespec-azure",
       "stars": 27
     },
     {
-      "repo": "codegefluester/GamesDat",
-      "stars": 1
-    },
-    {
-      "repo": "vinijmoura/dow-01",
-      "stars": 0
+      "repo": "AndreaGriffiths11/IssueCrush",
+      "stars": 17
     }
   ],
   "tips": [
@@ -60,6 +56,6 @@
     "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers"
   ],
   "anti_patterns": [
-    "daily-doc-updater"
+    "update-docs"
   ]
 }

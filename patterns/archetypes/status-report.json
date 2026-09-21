@@ -2,19 +2,15 @@
   "id": "status-report",
   "label": "Status Report",
   "description": "Generate periodic status summaries",
-  "success_rate": 0.55,
-  "count": 19,
+  "success_rate": 0.57,
+  "count": 18,
   "recommended_triggers": [
     {
       "type": "schedule",
       "config": {}
     },
     {
-      "type": "bots",
-      "config": {}
-    },
-    {
-      "type": "permissions",
+      "type": "cron",
       "config": {}
     }
   ],
@@ -33,23 +29,23 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5134
+      "stars": 5162
     },
     {
       "repo": "githubnext/agentics",
-      "stars": 952
+      "stars": 958
+    },
+    {
+      "repo": "microsoft/gctoolkit",
+      "stars": 1300
+    },
+    {
+      "repo": "centminmod/explain-openclaw",
+      "stars": 250
     },
     {
       "repo": "adoptium/adoptium",
       "stars": 185
-    },
-    {
-      "repo": "mcpc-tech/dev-inspector-mcp",
-      "stars": 47
-    },
-    {
-      "repo": "verkyyi/github-agent-runner",
-      "stars": 10
     }
   ],
   "tips": [
@@ -62,6 +58,7 @@
   ],
   "anti_patterns": [
     "daily-repo-status",
+    "daily-status",
     "daily-repo-status"
   ]
 }
