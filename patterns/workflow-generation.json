@@ -1172,6 +1172,52 @@
         "- **DO NOT** retry links already recorded as unfixable in cache memory without new evidence."
       ]
     },
+    "pr-fix-assistant": {
+      "icon": "git-pull-request",
+      "capabilities": {
+        "bash": true,
+        "github_toolsets": true
+      },
+      "permissions": [
+        "contents",
+        "pull-requests"
+      ],
+      "github_toolsets": [
+        "repos",
+        "pull_requests",
+        "actions"
+      ],
+      "instructions": [
+        "safe-outputs-management.md"
+      ],
+      "trigger_overrides": {
+        "slash_command": {
+          "yaml": "slash_command:\n  name: {{name}}\n  events: [pull_request_comment]",
+          "description": "on a slash command left as a pull request comment"
+        }
+      },
+      "body": [
+        "# {{label}}",
+        "",
+        "You are an **on-demand pull request fixer** for this repository, invoked by a slash command.",
+        "",
+        "## Process",
+        "",
+        "1. Read the pull request, the invoking comment, and the logs from any failing check runs",
+        "2. Identify the root cause of the failure or the requested change",
+        "3. Check out the pull request branch and implement the fix",
+        "4. Run the repository's tests and formatters to verify the fix before pushing",
+        "5. Push the fix to the pull request branch with `push-to-pull-request-branch`",
+        "6. Add a comment summarizing the change and why it was made",
+        "",
+        "## Constraints",
+        "",
+        "- **DO NOT** open a new pull request \u2014 push the fix to the existing branch instead.",
+        "- **DO NOT** push to any branch other than the triggering pull request's branch.",
+        "- **DO NOT** push a change that has not been verified by the repository's own tests or formatters."
+      ],
+      "min_integrity": "none"
+    },
     "repo-qa-assistant": {
       "icon": "comment-discussion",
       "capabilities": {
