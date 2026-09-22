@@ -2,8 +2,8 @@
   "id": "issue-triage",
   "label": "Issue Triage",
   "description": "Classify and label new issues",
-  "success_rate": 0.66,
-  "count": 39,
+  "success_rate": 0.69,
+  "count": 24,
   "recommended_triggers": [
     {
       "type": "issues",
@@ -34,23 +34,23 @@
   "top_repos": [
     {
       "repo": "githubnext/agentics",
-      "stars": 952
-    },
-    {
-      "repo": "ethereum/ethereum-org-website",
-      "stars": 5968
-    },
-    {
-      "repo": "Azure/azure-sdk-for-java",
-      "stars": 2565
+      "stars": 958
     },
     {
       "repo": "PowerShell/vscode-powershell",
       "stars": 1910
     },
     {
-      "repo": "Azure/azure-sdk-for-go",
-      "stars": 1853
+      "repo": "kassambara/ggpubr",
+      "stars": 1273
+    },
+    {
+      "repo": "kassambara/survminer",
+      "stars": 575
+    },
+    {
+      "repo": "kaito-project/aikit",
+      "stars": 539
     }
   ],
   "tips": [
@@ -60,9 +60,8 @@
   ],
   "anti_patterns": [
     "issue-triage",
-    "marketplace-harness-gap-triage",
-    "pr-triage",
     "issue-triage",
-    "issue-triage"
+    "intake-triage",
+    "pr-triage"
   ]
 }

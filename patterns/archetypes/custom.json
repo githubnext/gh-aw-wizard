@@ -2,8 +2,8 @@
   "id": "custom",
   "label": "Custom",
   "description": "Custom or uncategorized workflow",
-  "success_rate": 0.56,
-  "count": 164,
+  "success_rate": 0.46,
+  "count": 138,
   "recommended_triggers": [
     {
       "type": "schedule",
@@ -14,7 +14,7 @@
       "config": {}
     },
     {
-      "type": "slash_command",
+      "type": "pull_request",
       "config": {}
     }
   ],
@@ -29,23 +29,23 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5134
+      "stars": 5162
     },
     {
       "repo": "githubnext/agentics",
-      "stars": 952
+      "stars": 958
     },
     {
-      "repo": "OtterMind/Chat2DB",
-      "stars": 28117
+      "repo": "microsoft/pxt",
+      "stars": 2306
     },
     {
-      "repo": "pydantic/pydantic-ai",
-      "stars": 19920
+      "repo": "PowerShell/vscode-powershell",
+      "stars": 1910
     },
     {
-      "repo": "ethereum/ethereum-org-website",
-      "stars": 5968
+      "repo": "NikiforovAll/keycloak-authorization-services-dotnet",
+      "stars": 672
     }
   ],
   "tips": [
@@ -54,10 +54,10 @@
     "Use DO NOT constraints to bound agent behavior \u2014 61% more likely to be healthy"
   ],
   "anti_patterns": [
-    "localize-pt",
-    "validate-pr",
     "planner",
     "q",
-    "keybot"
+    "keybot",
+    "smoke-copilot",
+    "release"
   ]
 }

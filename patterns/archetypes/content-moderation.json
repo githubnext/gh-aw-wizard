@@ -2,19 +2,19 @@
   "id": "content-moderation",
   "label": "Content Moderation",
   "description": "Review content for quality or policy",
-  "success_rate": 0.86,
-  "count": 6,
+  "success_rate": 1.0,
+  "count": 4,
   "recommended_triggers": [
+    {
+      "type": "schedule",
+      "config": {}
+    },
     {
       "type": "issue_comment",
       "config": {}
     },
     {
       "type": "issues",
-      "config": {}
-    },
-    {
-      "type": "pull_request",
       "config": {}
     }
   ],
@@ -35,23 +35,15 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5134
+      "stars": 5162
     },
     {
       "repo": "githubnext/agentics",
-      "stars": 952
-    },
-    {
-      "repo": "Bertverbeek4PS/bc2adls",
-      "stars": 168
+      "stars": 958
     },
     {
       "repo": "SSWConsulting/SSW.Rules.Content",
       "stars": 62
-    },
-    {
-      "repo": "chrizbo/agentics-beyond-code",
-      "stars": 25
     }
   ],
   "tips": [

@@ -2,8 +2,8 @@
   "id": "pr-review",
   "label": "PR Review",
   "description": "Review pull requests for quality and issues",
-  "success_rate": 0.48,
-  "count": 22,
+  "success_rate": 0.37,
+  "count": 14,
   "recommended_triggers": [
     {
       "type": "slash_command",
@@ -33,23 +33,23 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5134
+      "stars": 5162
     },
     {
       "repo": "githubnext/agentics",
-      "stars": 952
+      "stars": 958
     },
     {
-      "repo": "OtterMind/Chat2DB",
-      "stars": 28117
+      "repo": "dotnet/macios",
+      "stars": 2902
     },
     {
-      "repo": "pydantic/pydantic-ai",
-      "stars": 19920
+      "repo": "drasi-project/drasi-platform",
+      "stars": 1251
     },
     {
-      "repo": "ethereum/ethereum-org-website",
-      "stars": 5968
+      "repo": "CliMA/ClimaAtmos.jl",
+      "stars": 129
     }
   ],
   "tips": [
@@ -59,9 +59,9 @@
   ],
   "anti_patterns": [
     "pr-review",
-    "ai-pr-reviewer",
     "macios-reviewer",
     "pr-docs-reviewer",
-    "grumpy-reviewer"
+    "grumpy-reviewer",
+    "pr-auto-review"
   ]
 }

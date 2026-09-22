@@ -2,15 +2,15 @@
   "id": "dependency-monitor",
   "label": "Dependency Monitor",
   "description": "Track and update dependencies",
-  "success_rate": 0.21,
-  "count": 10,
+  "success_rate": 0.2,
+  "count": 6,
   "recommended_triggers": [
     {
-      "type": "schedule",
+      "type": "pull_request",
       "config": {}
     },
     {
-      "type": "pull_request",
+      "type": "schedule",
       "config": {}
     },
     {
@@ -35,7 +35,7 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5134
+      "stars": 5162
     },
     {
       "repo": "adoptium/adoptium",
@@ -46,8 +46,8 @@
       "stars": 42
     },
     {
-      "repo": "LionSR/TNLean",
-      "stars": 36
+      "repo": "DevExpGbb/gh-devlake",
+      "stars": 28
     },
     {
       "repo": "SatelliteQE/broker",
@@ -64,10 +64,6 @@
     "Use protected-files: fallback-to-issue for CI configuration and agent instructions (not the dependency manifests themselves, since updating those is the intended change)"
   ],
   "anti_patterns": [
-    "docs-blueprint-sync",
-    "php-dependency-upgrade",
-    "doc-sync",
-    "renovate-gate",
-    "agent-health-monitor"
+    "docs-sync"
   ]
 }
