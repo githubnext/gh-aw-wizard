@@ -61,7 +61,8 @@
     "Add this repo's package ecosystem identifier(s) (e.g. node, python, go, rust) under network.allowed \u2014 \"defaults\" and \"github\" alone do not include package registry domains",
     "Use DO NOT constraints to prevent unrelated dependency or source changes",
     "Use skip-if-match to prevent duplicate scheduled findings",
-    "Use protected-files: fallback-to-issue for CI configuration and agent instructions (not the dependency manifests themselves, since updating those is the intended change)"
+    "Use protected-files: fallback-to-issue for CI configuration and agent instructions (not the dependency manifests themselves, since updating those is the intended change)",
+    "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers"
   ],
   "anti_patterns": [
     "docs-sync"

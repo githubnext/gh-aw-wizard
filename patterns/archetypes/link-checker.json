@@ -28,7 +28,8 @@
     "Persist a list of previously-confirmed unfixable links in cache-memory so scheduled runs don't repeatedly retry links with no available replacement",
     "Use protected-files: fallback-to-issue so link fixes in protected paths open an issue instead of silently failing",
     "Set if-no-changes: warn on create-pull-request and pair with noop so a run with no broken links exits cleanly instead of failing",
-    "Only replace a broken link when a working equivalent or redirect target is confirmed \u2014 do not guess at replacement URLs"
+    "Only replace a broken link when a working equivalent or redirect target is confirmed \u2014 do not guess at replacement URLs",
+    "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers"
   ],
   "anti_patterns": []
 }
