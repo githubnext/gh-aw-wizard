@@ -45,7 +45,7 @@
   /* light-mode label-orange (#bc4c00) passes 5:1 contrast against white per Primer color guidance */
   --shadow-card: var(--color-shadow-medium, 0 3px 12px rgba(27,31,36,0.15));
   --shadow-floating: var(--color-shadow-large, 0 8px 24px rgba(140,149,159,0.2));
-  --shadow-btn-primary-hover: 0 2px 6px rgba(31, 136, 61, 0.25);
+  --shadow-btn-primary-hover: 0 2px 6px rgba(var(--accent-green-rgb), 0.25);
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
   --radius-md: var(--borderRadius-medium, 8px);
@@ -100,7 +100,7 @@
   --label-orange-fg: #1a1300;
   --shadow-card: 0 2px 8px rgba(1,4,9,0.4);
   --shadow-floating: 0 4px 16px rgba(1,4,9,0.5);
-  --shadow-btn-primary-hover: 0 2px 6px rgba(63,185,80,0.3);
+  --shadow-btn-primary-hover: 0 2px 6px rgba(var(--accent-green-rgb), 0.3);
 }
 
 [data-color-mode="dark"] .site-header {
@@ -1433,7 +1433,7 @@ a:hover {
 .anti-pattern-card {
   background: var(--bg-subtle);
   border: 1px solid var(--border-default);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 1.25rem;
   border-left: 4px solid var(--border-default);
 }
@@ -1469,7 +1469,7 @@ a:hover {
   color: var(--text-muted);
   background: var(--bg-inset);
   padding: 2px 8px;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
 }
 .ap-fix {
   font-size: 0.8125rem;
