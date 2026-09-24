@@ -27,7 +27,8 @@
     "Use create-discussion instead of create-issue when the output is a periodic narrative or audit rather than an actionable task",
     "Set close-older-discussions: true so scheduled digests don't accumulate as duplicate open discussions",
     "Pick a category that matches the content (e.g. announcements, audits, q-a) so digests are easy to find",
-    "Pre-fetch issue, PR, and commit activity in a steps: block before the agent starts writing the narrative"
+    "Pre-fetch issue, PR, and commit activity in a steps: block before the agent starts writing the narrative",
+    "Set mentions: false, allowed-github-references: [], and max-bot-mentions: 0 on safe-outputs so periodic digests don't notify users or create backlinks/bot-trigger side effects every run"
   ],
   "anti_patterns": []
 }
