@@ -54,7 +54,8 @@
     "Keep prompts focused on one report \u2014 multi-source reports need pre-steps",
     "Use DO NOT constraints to prevent repository changes while generating reports",
     "Use skip-if-match and expires on create-issue so scheduled reports don't accumulate as duplicate open issues",
-    "For recurring reports, prefer close-older-issues: true on create-issue over skip-if-match so each scheduled run always executes and supersedes the previous report instead of being skipped while an old one is still open"
+    "For recurring reports, prefer close-older-issues: true on create-issue over skip-if-match so each scheduled run always executes and supersedes the previous report instead of being skipped while an old one is still open",
+    "Set mentions: false, allowed-github-references: [], and max-bot-mentions: 0 on safe-outputs so periodic reports don't notify users or create backlinks/bot-trigger side effects every run"
   ],
   "anti_patterns": [
     "daily-repo-status",
