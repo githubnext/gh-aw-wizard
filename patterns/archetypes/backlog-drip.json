@@ -1,0 +1,36 @@
+{
+  "id": "backlog-drip",
+  "label": "Backlog Drip",
+  "description": "Serve one open-ended backlog item at a time, activating again only after the previous item is closed",
+  "success_rate": null,
+  "count": 0,
+  "recommended_triggers": [
+    {
+      "type": "schedule",
+      "config": {}
+    }
+  ],
+  "recommended_safe_outputs": [
+    "issues"
+  ],
+  "recommended_tools": [
+    "create-issue"
+  ],
+  "timeout_minutes": 15,
+  "prompt_style": "role-steps",
+  "size_range_bytes": [
+    2000,
+    6000
+  ],
+  "top_repos": [],
+  "tips": [
+    "Wake up frequently (e.g. every 30 minutes) but cap the safe output at max: 1 and set skip-if-match to a query that matches the workflow's own still-open item, so a new one is never produced while the last is unconsumed",
+    "Match on a stable identity marker (the hidden gh-aw-workflow-id footer, or a consistent title-prefix) rather than free text, since humans rename titles",
+    "Set expires on the created issue or pull request so an abandoned, never-closed item eventually unblocks the schedule instead of stalling it forever",
+    "Before proposing a new item, search the last few closed items from this workflow and read the close reason and any review feedback \u2014 treat 'not planned' or a rejecting comment as a negative signal and avoid re-proposing the same idea",
+    "Persist a compact accept/reject history across runs in cache-memory (or repo-memory if it must survive cache eviction) so the backlog improves over time instead of repeating rejected proposals",
+    "Use this pattern for open-ended, non-event-driven backlogs (improvement ideas, maintenance chores, research notes) \u2014 prefer the community-digest archetype instead when the output is a periodic report tied to a time window",
+    "Call noop when nothing in the backlog clears the quality bar left by past rejections"
+  ],
+  "anti_patterns": []
+}
