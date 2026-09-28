@@ -2,19 +2,19 @@
   "id": "dependency-monitor",
   "label": "Dependency Monitor",
   "description": "Track and update dependencies",
-  "success_rate": 0.2,
-  "count": 6,
+  "success_rate": 0.37,
+  "count": 62,
   "recommended_triggers": [
-    {
-      "type": "pull_request",
-      "config": {}
-    },
     {
       "type": "schedule",
       "config": {}
     },
     {
-      "type": "issues",
+      "type": "pull_request",
+      "config": {}
+    },
+    {
+      "type": "roles",
       "config": {}
     }
   ],
@@ -35,23 +35,23 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5162
+      "stars": 5194
     },
     {
-      "repo": "adoptium/adoptium",
-      "stars": 185
+      "repo": "github/awesome-copilot",
+      "stars": 39466
     },
     {
-      "repo": "nitinjain999/platform-skills",
-      "stars": 42
+      "repo": "microsoft/aspire",
+      "stars": 6323
     },
     {
-      "repo": "DevExpGbb/gh-devlake",
-      "stars": 28
+      "repo": "dotnet/Open-XML-SDK",
+      "stars": 4609
     },
     {
-      "repo": "SatelliteQE/broker",
-      "stars": 21
+      "repo": "microsoft/apm",
+      "stars": 3913
     }
   ],
   "tips": [
@@ -61,10 +61,13 @@
     "Add this repo's package ecosystem identifier(s) (e.g. node, python, go, rust) under network.allowed \u2014 \"defaults\" and \"github\" alone do not include package registry domains",
     "Use DO NOT constraints to prevent unrelated dependency or source changes",
     "Use skip-if-match to prevent duplicate scheduled findings",
-    "Use protected-files: fallback-to-issue for CI configuration and agent instructions (not the dependency manifests themselves, since updating those is the intended change)",
-    "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers"
+    "Use protected-files: fallback-to-issue for CI configuration and agent instructions (not the dependency manifests themselves, since updating those is the intended change)"
   ],
   "anti_patterns": [
-    "docs-sync"
+    "dependabot-remediation",
+    "update-github-info",
+    "doc-sync",
+    "docs-sync",
+    "update-github-info"
   ]
 }

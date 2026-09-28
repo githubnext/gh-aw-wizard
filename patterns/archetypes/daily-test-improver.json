@@ -2,19 +2,19 @@
   "id": "daily-test-improver",
   "label": "Daily Test Improver",
   "description": "Add high-value tests and improve test quality",
-  "success_rate": 0.0,
-  "count": 2,
+  "success_rate": 0.53,
+  "count": 5,
   "recommended_triggers": [
+    {
+      "type": "schedule",
+      "config": {}
+    },
     {
       "type": "permissions",
       "config": {}
     },
     {
       "type": "reaction",
-      "config": {}
-    },
-    {
-      "type": "schedule",
       "config": {}
     }
   ],
@@ -33,7 +33,19 @@
   "top_repos": [
     {
       "repo": "githubnext/agentics",
-      "stars": 958
+      "stars": 962
+    },
+    {
+      "repo": "rancher/dashboard",
+      "stars": 628
+    },
+    {
+      "repo": "tastybamboo/panda-cms",
+      "stars": 4
+    },
+    {
+      "repo": "baizhiheizi/gh-sr",
+      "stars": 1
     }
   ],
   "tips": [
@@ -42,5 +54,7 @@
     "Create one focused draft pull request per run",
     "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers"
   ],
-  "anti_patterns": []
+  "anti_patterns": [
+    "daily-test-improver"
+  ]
 }

@@ -2,8 +2,8 @@
   "id": "repo-maintainer",
   "label": "Repo Maintainer",
   "description": "Proactively triage, fix, and maintain a repository",
-  "success_rate": 0.54,
-  "count": 10,
+  "success_rate": 0.55,
+  "count": 21,
   "recommended_triggers": [
     {
       "type": "reaction",
@@ -37,23 +37,23 @@
   "top_repos": [
     {
       "repo": "githubnext/agentics",
-      "stars": 958
-    },
-    {
-      "repo": "Jguer/yay",
-      "stars": 13756
+      "stars": 962
     },
     {
       "repo": "py-why/dowhy",
-      "stars": 8320
+      "stars": 8331
+    },
+    {
+      "repo": "dotnet/fsharp",
+      "stars": 4339
     },
     {
       "repo": "fsprojects/FsHttp",
       "stars": 498
     },
     {
-      "repo": "shanselman/winget-tui",
-      "stars": 463
+      "repo": "shanselman/WindowsEdgeLight",
+      "stars": 371
     }
   ],
   "tips": [
@@ -62,6 +62,8 @@
     "Leave merges, approvals, and destructive actions to maintainers"
   ],
   "anti_patterns": [
+    "repo-assist",
+    "repo-assist",
     "repo-assist"
   ]
 }

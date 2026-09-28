@@ -2,19 +2,19 @@
   "id": "pr-review",
   "label": "PR Review",
   "description": "Review pull requests for quality and issues",
-  "success_rate": 0.37,
-  "count": 14,
+  "success_rate": 0.47,
+  "count": 80,
   "recommended_triggers": [
-    {
-      "type": "slash_command",
-      "config": {}
-    },
     {
       "type": "pull_request",
       "config": {}
     },
     {
-      "type": "roles",
+      "type": "slash_command",
+      "config": {}
+    },
+    {
+      "type": "schedule",
       "config": {}
     }
   ],
@@ -33,23 +33,23 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5162
+      "stars": 5194
     },
     {
       "repo": "githubnext/agentics",
-      "stars": 958
+      "stars": 962
     },
     {
-      "repo": "dotnet/macios",
-      "stars": 2902
+      "repo": "remix-run/react-router",
+      "stars": 56589
     },
     {
-      "repo": "drasi-project/drasi-platform",
-      "stars": 1251
+      "repo": "elastic/kibana",
+      "stars": 21302
     },
     {
-      "repo": "CliMA/ClimaAtmos.jl",
-      "stars": 129
+      "repo": "pydantic/pydantic-ai",
+      "stars": 20228
     }
   ],
   "tips": [
@@ -59,9 +59,9 @@
   ],
   "anti_patterns": [
     "pr-review",
+    "pull-request-reviewer",
+    "review-tutorial",
     "macios-reviewer",
-    "pr-docs-reviewer",
-    "grumpy-reviewer",
-    "pr-auto-review"
+    "pr-docs-reviewer"
   ]
 }
