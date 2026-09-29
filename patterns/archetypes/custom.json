@@ -2,15 +2,15 @@
   "id": "custom",
   "label": "Custom",
   "description": "Custom or uncategorized workflow",
-  "success_rate": 0.46,
-  "count": 138,
+  "success_rate": 0.49,
+  "count": 469,
   "recommended_triggers": [
     {
       "type": "schedule",
       "config": {}
     },
     {
-      "type": "reaction",
+      "type": "issues",
       "config": {}
     },
     {
@@ -29,23 +29,23 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5162
+      "stars": 5194
     },
     {
       "repo": "githubnext/agentics",
-      "stars": 958
+      "stars": 962
     },
     {
-      "repo": "microsoft/pxt",
-      "stars": 2306
+      "repo": "github/spec-kit",
+      "stars": 139197
     },
     {
-      "repo": "PowerShell/vscode-powershell",
-      "stars": 1910
+      "repo": "remix-run/react-router",
+      "stars": 56589
     },
     {
-      "repo": "NikiforovAll/keycloak-authorization-services-dotnet",
-      "stars": 672
+      "repo": "OtterMind/Chat2DB",
+      "stars": 28278
     }
   ],
   "tips": [
@@ -54,10 +54,10 @@
     "Use DO NOT constraints to bound agent behavior \u2014 61% more likely to be healthy"
   ],
   "anti_patterns": [
-    "planner",
-    "q",
-    "keybot",
-    "smoke-copilot",
-    "release"
+    "documentation-audit",
+    "breaking-change-checker",
+    "ai-sdlc-gh-aw-qa-gemini",
+    "csharp-guideline-improver",
+    "news-translate"
   ]
 }

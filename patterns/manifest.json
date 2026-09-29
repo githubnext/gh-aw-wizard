@@ -1,9 +1,9 @@
 {
   "metadata": {
-    "generated_at": "2026-09-21T09:26:15.342757Z",
-    "source_repos": 89,
-    "active_workflows": 62,
-    "total_workflows": 249
+    "generated_at": "2026-09-28T10:10:50.574481Z",
+    "source_repos": 563,
+    "active_workflows": 345,
+    "total_workflows": 929
   },
   "archetypes": [
     "code-improvement",
@@ -15,6 +15,7 @@
     "dependency-monitor",
     "daily-test-improver",
     "repo-maintainer",
+    "skill-pr-reviewer",
     "pr-iteration-loop",
     "accessibility-expert",
     "performance-nut",
@@ -23,7 +24,6 @@
     "linter-miner",
     "linter-refiner",
     "linter-applier",
-    "skill-pr-reviewer",
     "issue-hierarchy-manager",
     "security-scanner",
     "code-health-auditor",
@@ -41,6 +41,18 @@
   "workflow_generation": "workflow-generation.json",
   "anti_patterns": [
     {
+      "pattern": "documentation-updater",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in Alvin-Wu-Garden/COBOL2SPEC"
+    },
+    {
+      "pattern": "documentation-audit",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in Alvin-Wu-Garden/COBOL2SPEC"
+    },
+    {
       "pattern": "update-docs",
       "success_rate": 0.0,
       "repos_seen": 1,
@@ -53,10 +65,28 @@
       "reason": "Very low success rate in AndreaGriffiths11/annotation-overlay"
     },
     {
+      "pattern": "dependabot-remediation",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in Azure/ARO-Tools"
+    },
+    {
       "pattern": "issue-triage",
       "success_rate": 0.0,
       "repos_seen": 1,
       "reason": "Very low success rate in Azure/AppConfiguration-KubernetesProvider"
+    },
+    {
+      "pattern": "ci-doctor",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in Belphemur/SuperSubtitles"
+    },
+    {
+      "pattern": "breaking-change-checker",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in Canepro/pipelinehealer-demo"
     },
     {
       "pattern": "pr-review",
@@ -65,100 +95,70 @@
       "reason": "Very low success rate in CliMA/ClimaAtmos.jl"
     },
     {
+      "pattern": "ai-sdlc-gh-aw-qa-gemini",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in DREAM-XIN/ai-sdlc"
+    },
+    {
+      "pattern": "update-github-info",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in Davidoam/skills-agentic-workflows-that-read-the-room"
+    },
+    {
+      "pattern": "doc-sync",
+      "success_rate": 0.0,
+      "repos_seen": 1,
+      "reason": "Very low success rate in DefaceRoot/agentic-documentation"
+    },
+    {
       "pattern": "docs-sync",
       "success_rate": 0.0,
       "repos_seen": 1,
       "reason": "Very low success rate in DevExpGbb/gh-devlake"
     },
     {
-      "pattern": "planner",
+      "pattern": "daily-repo-status",
       "success_rate": 0.0,
       "repos_seen": 1,
-      "reason": "Very low success rate in MaggieAppleton/maggieappleton.com-V3"
+      "reason": "Very low success rate in DoriniTT/PS-TEROS"
     },
     {
-      "pattern": "q",
+      "pattern": "csharp-guideline-improver",
       "success_rate": 0.0,
       "repos_seen": 1,
-      "reason": "Very low success rate in MoiraeSoftware/Myriad"
+      "reason": "Very low success rate in Gibbs-Morris/mississippi"
     },
     {
-      "pattern": "keybot",
+      "pattern": "news-translate",
       "success_rate": 0.0,
       "repos_seen": 1,
-      "reason": "Very low success rate in NikiforovAll/keycloak-authorization-services-dotnet"
+      "reason": "Very low success rate in Hack23/euparliamentmonitor"
     },
     {
-      "pattern": "issue-triage",
+      "pattern": "localize-pt",
       "success_rate": 0.0,
       "repos_seen": 1,
-      "reason": "Very low success rate in PowerShell/vscode-powershell"
+      "reason": "Very low success rate in HewlettPackard/morpheus-docs"
     },
     {
-      "pattern": "code-simplifier",
+      "pattern": "update-github-info",
       "success_rate": 0.0,
       "repos_seen": 1,
-      "reason": "Very low success rate in alexandru/social-publish"
+      "reason": "Very low success rate in Hukmaram/skills-agentic-workflows-that-read-the-room"
     },
     {
-      "pattern": "smoke-copilot",
+      "pattern": "imperia-market-prices",
       "success_rate": 0.0,
       "repos_seen": 1,
-      "reason": "Very low success rate in az9713/gh-aw"
+      "reason": "Very low success rate in Imperia360/Imperia360"
     },
     {
-      "pattern": "intake-triage",
+      "pattern": "imperia-cross-auditor",
       "success_rate": 0.0,
       "repos_seen": 1,
-      "reason": "Very low success rate in chrizbo/agentics-beyond-code"
-    },
-    {
-      "pattern": "release",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in colindembovsky/cols-agent-tasks"
-    },
-    {
-      "pattern": "security-autofix",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in dorlugasigal/TermBeam"
-    },
-    {
-      "pattern": "macios-reviewer",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in dotnet/macios"
-    },
-    {
-      "pattern": "pr-docs-reviewer",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in drasi-project/drasi-platform"
-    },
-    {
-      "pattern": "spec-drift",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in elastic/elasticsearch-specification"
-    },
-    {
-      "pattern": "curate-featured",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in f/wvw.dev"
-    },
-    {
-      "pattern": "smoke-copilot",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in github/gh-aw-harness"
-    },
-    {
-      "pattern": "scout-command",
-      "success_rate": 0.0,
-      "repos_seen": 1,
-      "reason": "Very low success rate in githubnext/ado-aw"
+      "reason": "Very low success rate in Imperia360/Imperia360"
     }
   ],
   "config_defaults": {
@@ -179,6 +179,20 @@
   },
   "trigger_combos": [
     {
+      "combo": "permissions+schedule",
+      "success_rate": 1.0,
+      "count": 20,
+      "risk": "low",
+      "recommendation": "Recommended"
+    },
+    {
+      "combo": "reaction",
+      "success_rate": 1.0,
+      "count": 20,
+      "risk": "low",
+      "recommendation": "Recommended"
+    },
+    {
       "combo": "issues+reaction+stop-after",
       "success_rate": 1.0,
       "count": 13,
@@ -186,7 +200,21 @@
       "recommendation": "Recommended"
     },
     {
-      "combo": "skip-if-match",
+      "combo": "issue_comment+issues+pull_request+roles+skip-bots+skip-roles",
+      "success_rate": 1.0,
+      "count": 10,
+      "risk": "low",
+      "recommendation": "Recommended"
+    },
+    {
+      "combo": "schedule+skip-if-no-match",
+      "success_rate": 1.0,
+      "count": 10,
+      "risk": "low",
+      "recommendation": "Recommended"
+    },
+    {
+      "combo": "schedule+workflow_call",
       "success_rate": 1.0,
       "count": 10,
       "risk": "low",
@@ -200,6 +228,13 @@
       "recommendation": "Recommended"
     },
     {
+      "combo": "permissions+pull_request+steps",
+      "success_rate": 1.0,
+      "count": 10,
+      "risk": "low",
+      "recommendation": "Recommended"
+    },
+    {
       "combo": "schedule+skip-if-match+skip-if-no-match",
       "success_rate": 1.0,
       "count": 10,
@@ -207,78 +242,43 @@
       "recommendation": "Recommended"
     },
     {
-      "combo": "schedule+stop-after",
+      "combo": "reaction+schedule+stop-after",
       "success_rate": 1.0,
       "count": 10,
       "risk": "low",
       "recommendation": "Recommended"
     },
     {
-      "combo": "cron+schedule",
+      "combo": "cron+env+name+schedule+steps",
       "success_rate": 1.0,
       "count": 10,
       "risk": "low",
       "recommendation": "Recommended"
     },
     {
-      "combo": "permissions+reaction+slash_command+steps",
-      "success_rate": 0.95,
-      "count": 20,
-      "risk": "low",
-      "recommendation": "Recommended"
-    },
-    {
-      "combo": "issues",
-      "success_rate": 0.84,
-      "count": 32,
-      "risk": "low",
-      "recommendation": "Recommended"
-    },
-    {
-      "combo": "pull_request+slash_command",
-      "success_rate": 0.8,
+      "combo": "push+roles",
+      "success_rate": 1.0,
       "count": 10,
       "risk": "low",
       "recommendation": "Recommended"
     },
     {
-      "combo": "pull_request+skip-bots",
-      "success_rate": 0.8,
+      "combo": "bots+permissions+skip-if-match",
+      "success_rate": 1.0,
       "count": 10,
       "risk": "low",
       "recommendation": "Recommended"
     },
     {
-      "combo": "roles+workflow_run",
-      "success_rate": 0.8,
+      "combo": "pull_request+reaction+skip-bots",
+      "success_rate": 1.0,
       "count": 10,
       "risk": "low",
       "recommendation": "Recommended"
     },
     {
-      "combo": "schedule+skip-bots",
-      "success_rate": 0.7,
-      "count": 10,
-      "risk": "low",
-      "recommendation": "Recommended"
-    },
-    {
-      "combo": "pull_request",
-      "success_rate": 0.67,
-      "count": 27,
-      "risk": "low",
-      "recommendation": "Recommended"
-    },
-    {
-      "combo": "issues+skip-if-no-match+stop-after",
-      "success_rate": 0.6,
-      "count": 10,
-      "risk": "low",
-      "recommendation": "Recommended"
-    },
-    {
-      "combo": "permissions+roles+schedule",
-      "success_rate": 0.6,
+      "combo": "manual-approval+pull_request+roles",
+      "success_rate": 1.0,
       "count": 10,
       "risk": "low",
       "recommendation": "Recommended"
@@ -286,18 +286,128 @@
   ],
   "configuration_profiles": [
     {
-      "archetype": "custom",
+      "archetype": "code-improvement",
       "triggers": [
-        "issues",
-        "pull_request",
         "workflow_run"
       ],
       "safe_outputs": [
         "add-comment",
-        "add-labels"
+        "create-issue"
       ],
-      "success_rate": 0.033,
-      "confidence_score": 0.006,
+      "success_rate": 0.217,
+      "confidence_score": 0.097,
+      "total_runs": 23,
+      "n_workflows": 7,
+      "n_repos": 7,
+      "rank": 1
+    },
+    {
+      "archetype": "code-improvement",
+      "triggers": [
+        "schedule",
+        "skip-if-match"
+      ],
+      "safe_outputs": [
+        "create-pull-request"
+      ],
+      "success_rate": 0.12,
+      "confidence_score": 0.067,
+      "total_runs": 83,
+      "n_workflows": 10,
+      "n_repos": 10,
+      "rank": 2
+    },
+    {
+      "archetype": "code-improvement",
+      "triggers": [
+        "stop-after",
+        "workflow_run"
+      ],
+      "safe_outputs": [
+        "add-comment",
+        "create-issue",
+        "messages",
+        "noop",
+        "update-issue"
+      ],
+      "success_rate": 0.0,
+      "confidence_score": -0.0,
+      "total_runs": 20,
+      "n_workflows": 3,
+      "n_repos": 3,
+      "rank": 3
+    },
+    {
+      "archetype": "custom",
+      "triggers": [
+        "schedule",
+        "skip-if-match"
+      ],
+      "safe_outputs": [
+        "create-pull-request"
+      ],
+      "success_rate": 0.93,
+      "confidence_score": 0.814,
+      "total_runs": 43,
+      "n_workflows": 6,
+      "n_repos": 4,
+      "rank": 1
+    },
+    {
+      "archetype": "custom",
+      "triggers": [
+        "pull_request"
+      ],
+      "safe_outputs": [
+        "add-comment"
+      ],
+      "success_rate": 0.6,
+      "confidence_score": 0.423,
+      "total_runs": 30,
+      "n_workflows": 4,
+      "n_repos": 4,
+      "rank": 2
+    },
+    {
+      "archetype": "custom",
+      "triggers": [
+        "schedule"
+      ],
+      "safe_outputs": [
+        "create-issue"
+      ],
+      "success_rate": 0.536,
+      "confidence_score": 0.42,
+      "total_runs": 69,
+      "n_workflows": 11,
+      "n_repos": 10,
+      "rank": 3
+    },
+    {
+      "archetype": "dependency-monitor",
+      "triggers": [
+        "schedule"
+      ],
+      "safe_outputs": [
+        "create-pull-request"
+      ],
+      "success_rate": 0.364,
+      "confidence_score": 0.296,
+      "total_runs": 176,
+      "n_workflows": 21,
+      "n_repos": 21,
+      "rank": 1
+    },
+    {
+      "archetype": "documentation-updater",
+      "triggers": [
+        "schedule"
+      ],
+      "safe_outputs": [
+        "create-pull-request"
+      ],
+      "success_rate": 0.567,
+      "confidence_score": 0.392,
       "total_runs": 30,
       "n_workflows": 3,
       "n_repos": 3,
@@ -311,11 +421,186 @@
       "safe_outputs": [
         "create-pull-request"
       ],
-      "success_rate": 0.5,
-      "confidence_score": 0.299,
-      "total_runs": 20,
+      "success_rate": 0.267,
+      "confidence_score": 0.142,
+      "total_runs": 30,
+      "n_workflows": 6,
+      "n_repos": 6,
+      "rank": 2
+    },
+    {
+      "archetype": "issue-triage",
+      "triggers": [
+        "issues",
+        "reaction"
+      ],
+      "safe_outputs": [
+        "add-comment",
+        "add-labels"
+      ],
+      "success_rate": 0.833,
+      "confidence_score": 0.641,
+      "total_runs": 24,
+      "n_workflows": 9,
+      "n_repos": 9,
+      "rank": 1
+    },
+    {
+      "archetype": "issue-triage",
+      "triggers": [
+        "issue_comment",
+        "issues"
+      ],
+      "safe_outputs": [
+        "add-comment",
+        "messages",
+        "noop"
+      ],
+      "success_rate": 0.8,
+      "confidence_score": 0.627,
+      "total_runs": 30,
       "n_workflows": 3,
       "n_repos": 3,
+      "rank": 2
+    },
+    {
+      "archetype": "pr-review",
+      "triggers": [
+        "pull_request"
+      ],
+      "safe_outputs": [
+        "add-comment"
+      ],
+      "success_rate": 0.714,
+      "confidence_score": 0.5,
+      "total_runs": 21,
+      "n_workflows": 6,
+      "n_repos": 6,
+      "rank": 1
+    },
+    {
+      "archetype": "pr-review",
+      "triggers": [
+        "pull_request"
+      ],
+      "safe_outputs": [
+        "create-pull-request-review-comment",
+        "submit-pull-request-review"
+      ],
+      "success_rate": 0.714,
+      "confidence_score": 0.5,
+      "total_runs": 21,
+      "n_workflows": 3,
+      "n_repos": 3,
+      "rank": 2
+    },
+    {
+      "archetype": "pr-review",
+      "triggers": [
+        "slash_command"
+      ],
+      "safe_outputs": [
+        "create-pull-request-review-comment",
+        "messages",
+        "submit-pull-request-review"
+      ],
+      "success_rate": 0.2,
+      "confidence_score": 0.081,
+      "total_runs": 20,
+      "n_workflows": 4,
+      "n_repos": 3,
+      "rank": 3
+    },
+    {
+      "archetype": "repo-maintainer",
+      "triggers": [
+        "permissions",
+        "reaction",
+        "slash_command",
+        "steps"
+      ],
+      "safe_outputs": [
+        "add-comment",
+        "add-labels",
+        "create-issue",
+        "create-pull-request",
+        "messages",
+        "noop",
+        "push-to-pull-request-branch",
+        "remove-labels",
+        "report-failure-as-issue",
+        "update-issue"
+      ],
+      "success_rate": 0.9,
+      "confidence_score": 0.744,
+      "total_runs": 30,
+      "n_workflows": 3,
+      "n_repos": 3,
+      "rank": 1
+    },
+    {
+      "archetype": "repo-maintainer",
+      "triggers": [
+        "permissions",
+        "reaction",
+        "schedule",
+        "slash_command",
+        "steps"
+      ],
+      "safe_outputs": [
+        "add-comment",
+        "add-labels",
+        "create-issue",
+        "create-pull-request",
+        "messages",
+        "push-to-pull-request-branch",
+        "remove-labels",
+        "update-issue"
+      ],
+      "success_rate": 0.6,
+      "confidence_score": 0.423,
+      "total_runs": 30,
+      "n_workflows": 4,
+      "n_repos": 4,
+      "rank": 2
+    },
+    {
+      "archetype": "repo-maintainer",
+      "triggers": [
+        "reaction",
+        "schedule",
+        "slash_command"
+      ],
+      "safe_outputs": [
+        "add-comment",
+        "add-labels",
+        "create-issue",
+        "create-pull-request",
+        "push-to-pull-request-branch",
+        "remove-labels",
+        "update-issue"
+      ],
+      "success_rate": 0.41,
+      "confidence_score": 0.271,
+      "total_runs": 39,
+      "n_workflows": 4,
+      "n_repos": 4,
+      "rank": 3
+    },
+    {
+      "archetype": "status-report",
+      "triggers": [
+        "schedule",
+        "stop-after"
+      ],
+      "safe_outputs": [
+        "create-discussion"
+      ],
+      "success_rate": 0.975,
+      "confidence_score": 0.871,
+      "total_runs": 40,
+      "n_workflows": 4,
+      "n_repos": 4,
       "rank": 1
     },
     {
@@ -326,12 +611,29 @@
       "safe_outputs": [
         "create-issue"
       ],
-      "success_rate": 0.475,
-      "confidence_score": 0.329,
-      "total_runs": 40,
-      "n_workflows": 5,
-      "n_repos": 5,
-      "rank": 1
+      "success_rate": 0.471,
+      "confidence_score": 0.37,
+      "total_runs": 87,
+      "n_workflows": 12,
+      "n_repos": 12,
+      "rank": 2
+    },
+    {
+      "archetype": "status-report",
+      "triggers": [
+        "schedule"
+      ],
+      "safe_outputs": [
+        "allowed-github-references",
+        "create-issue",
+        "mentions"
+      ],
+      "success_rate": 0.336,
+      "confidence_score": 0.263,
+      "total_runs": 143,
+      "n_workflows": 18,
+      "n_repos": 17,
+      "rank": 3
     }
   ],
   "research_findings": {

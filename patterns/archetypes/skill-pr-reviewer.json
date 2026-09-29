@@ -2,8 +2,8 @@
   "id": "skill-pr-reviewer",
   "label": "Skill PR Reviewer",
   "description": "Review pull requests with installed expert skills",
-  "success_rate": null,
-  "count": 0,
+  "success_rate": 0.3,
+  "count": 1,
   "recommended_triggers": [
     {
       "type": "pull_request",
@@ -16,13 +16,18 @@
   "recommended_tools": [
     "create-pull-request-review-comment"
   ],
-  "timeout_minutes": 30,
+  "timeout_minutes": 15,
   "prompt_style": "role-rules",
   "size_range_bytes": [
     3000,
     8000
   ],
-  "top_repos": [],
+  "top_repos": [
+    {
+      "repo": "tenstorrent/tt-metal",
+      "stars": 1689
+    }
+  ],
   "tips": [
     "Select skills that match the pull request's change type",
     "Name the skill that informed each actionable finding",

@@ -3,10 +3,10 @@
   "label": "Content Moderation",
   "description": "Review content for quality or policy",
   "success_rate": 1.0,
-  "count": 4,
+  "count": 6,
   "recommended_triggers": [
     {
-      "type": "schedule",
+      "type": "pull_request",
       "config": {}
     },
     {
@@ -35,15 +35,23 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5162
+      "stars": 5194
     },
     {
       "repo": "githubnext/agentics",
-      "stars": 958
+      "stars": 962
+    },
+    {
+      "repo": "Bertverbeek4PS/bc2adls",
+      "stars": 170
     },
     {
       "repo": "SSWConsulting/SSW.Rules.Content",
       "stars": 62
+    },
+    {
+      "repo": "SSWConsulting/SSW.Website",
+      "stars": 14
     }
   ],
   "tips": [

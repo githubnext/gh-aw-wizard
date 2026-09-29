@@ -2,19 +2,19 @@
   "id": "documentation-updater",
   "label": "Documentation Updater",
   "description": "Keep docs accurate and up-to-date",
-  "success_rate": 0.6,
-  "count": 6,
+  "success_rate": 0.57,
+  "count": 24,
   "recommended_triggers": [
+    {
+      "type": "schedule",
+      "config": {}
+    },
     {
       "type": "push",
       "config": {}
     },
     {
-      "type": "permissions",
-      "config": {}
-    },
-    {
-      "type": "schedule",
+      "type": "pull_request",
       "config": {}
     }
   ],
@@ -33,11 +33,11 @@
   "top_repos": [
     {
       "repo": "githubnext/agentics",
-      "stars": 958
+      "stars": 962
     },
     {
-      "repo": "OP5dev/TF-via-PR",
-      "stars": 339
+      "repo": "YousefHadder/markdown-plus.nvim",
+      "stars": 292
     },
     {
       "repo": "Azure/typespec-azure",
@@ -46,6 +46,10 @@
     {
       "repo": "AndreaGriffiths11/IssueCrush",
       "stars": 17
+    },
+    {
+      "repo": "verkyyi/github-agent-runner",
+      "stars": 10
     }
   ],
   "tips": [
@@ -56,6 +60,10 @@
     "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers"
   ],
   "anti_patterns": [
-    "update-docs"
+    "documentation-updater",
+    "update-docs",
+    "update-docs",
+    "daily-doc-updater",
+    "daily-doc-updater"
   ]
 }
