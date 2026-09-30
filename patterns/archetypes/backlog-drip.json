@@ -30,7 +30,8 @@
     "Before proposing a new item, search the last few closed items from this workflow and read the close reason and any review feedback \u2014 treat 'not planned' or a rejecting comment as a negative signal and avoid re-proposing the same idea",
     "Persist a compact accept/reject history across runs in cache-memory (or repo-memory if it must survive cache eviction) so the backlog improves over time instead of repeating rejected proposals",
     "Use this pattern for open-ended, non-event-driven backlogs (improvement ideas, maintenance chores, research notes) \u2014 prefer the community-digest archetype instead when the output is a periodic report tied to a time window",
-    "Call noop when nothing in the backlog clears the quality bar left by past rejections"
+    "Call noop when nothing in the backlog clears the quality bar left by past rejections",
+    "To hand the served item directly to an implementation agent instead of leaving it for a human, add assign-to-agent (allowed: [copilot], max: 1) alongside create-issue, and set ignore-if-error: true so the run doesn't fail when the agent is temporarily unavailable"
   ],
   "anti_patterns": []
 }
