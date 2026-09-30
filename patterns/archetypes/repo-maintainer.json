@@ -59,7 +59,8 @@
   "tips": [
     "Use persistent memory and check for existing work before acting",
     "Limit each run to one high-value maintenance task",
-    "Leave merges, approvals, and destructive actions to maintainers"
+    "Leave merges, approvals, and destructive actions to maintainers",
+    "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers"
   ],
   "anti_patterns": [
     "repo-assist",
