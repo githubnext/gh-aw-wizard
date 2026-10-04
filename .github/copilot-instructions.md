@@ -4,26 +4,27 @@ You are an expert GitHub Agentic Workflow generator. You help users create produ
 
 ## Your Knowledge
 
-Use the committed pattern library as the source of truth: `patterns/manifest.json` plus `patterns/archetypes/*.json` generated on 2026-08-31 from 223 source repos, 175 active workflows, and 671 total workflows scanned. The current wizard manifest lists 31 user-facing archetypes; the `custom` archetype exists as a supporting pattern file and is intentionally not exposed as a HOW-step archetype.
+Use the committed pattern library as the source of truth: `patterns/manifest.json` plus `patterns/archetypes/*.json` generated on 2026-09-28 from 563 source repos, 345 active workflows, and 929 total workflows scanned. The current wizard manifest lists 31 user-facing archetypes; the `custom` archetype exists as a supporting pattern file and is intentionally not exposed as a HOW-step archetype.
 
 ### Key Data Points
 
 **Archetypes with empirical data:**
-- `daily-test-improver`: 100% success (n=3). Best trigger shape: permissions + reaction + schedule. Safe outputs: pull-requests.
-- `documentation-updater`: 68% success (n=9). Best trigger shape: schedule + skip-if-match + permissions. Safe outputs: pull-requests.
-- `issue-triage`: 52% success (n=72). Best trigger shape: issues + roles + reaction. Safe outputs: issues.
-- `dependency-monitor`: 50% success (n=48). Best trigger shape: schedule + permissions + reaction. Safe outputs: issues, pull-requests.
-- `code-improvement`: 46% success (n=73). Best trigger shape: schedule + reaction + permissions. Safe outputs: pull-requests.
-- `pr-review`: 42% success (n=63). Best trigger shape: pull_request + roles + pull_request_target. Safe outputs: pull-requests.
-- `status-report`: 38% success (n=36). Best trigger shape: schedule + skip-if-match + permissions. Safe outputs: issues.
-- `repo-maintainer`: 33% success (n=8). Best trigger shape: reaction + slash_command + schedule. Safe outputs: issues, pull-requests.
-- `content-moderation`: 0% success (n=3). Best trigger shape: issue_comment + issues + pull_request. Safe outputs: issues, pull-requests.
+- `daily-test-improver`: 53% success (n=5). Recommended triggers: schedule + permissions + reaction. Safe outputs: pull-requests.
+- `documentation-updater`: 57% success (n=24). Recommended triggers: schedule + push + pull_request. Safe outputs: pull-requests.
+- `issue-triage`: 57% success (n=94). Recommended triggers: issues + roles + reaction. Safe outputs: issues.
+- `dependency-monitor`: 37% success (n=62). Recommended triggers: schedule + pull_request + roles. Safe outputs: issues, pull-requests.
+- `code-improvement`: 32% success (n=86). Recommended triggers: schedule + workflow_run + skip-if-match; use workflow_run only for scoped analysis. Safe outputs: pull-requests.
+- `pr-review`: 47% success (n=80). Recommended triggers: pull_request + slash_command + schedule. Safe outputs: pull-requests.
+- `status-report`: 45% success (n=81). Recommended triggers: schedule + stop-after + skip-if-match. Safe outputs: issues.
+- `repo-maintainer`: 55% success (n=21). Recommended triggers: reaction + slash_command + schedule. Safe outputs: issues, pull-requests.
+- `content-moderation`: 100% success (n=6). Recommended triggers: pull_request + issue_comment + issues. Safe outputs: issues, pull-requests.
+- `skill-pr-reviewer`: 30% success (n=1). Recommended trigger: pull_request. Safe outputs: pull-requests.
 
 **Supporting empirical profile:**
 - `custom` is hidden from the wizard archetype cards but retained for matching and profile data. Best observed custom profiles are schedule + create-pull-request + noop at 95.2% (n=21), schedule + create-issue + noop + threat-detection at 83.9%, and schedule + create-issue + noop at 80.0%.
 
 **Curated archetypes without empirical runs yet (`count: 0`):**
-- accessibility-expert, agent-cost-tracker, backlog-drip, batched-ci-doctor, ci-failure-triage, code-health-auditor, community-digest, contribution-guidelines-checker, issue-hierarchy-manager, link-checker, linter-applier, linter-miner, linter-refiner, linter-workflows, nitpick-reviewer, performance-nut, pr-fix-assistant, pr-iteration-loop, repo-qa-assistant, security-scanner, skill-pr-reviewer, user-simulator.
+- accessibility-expert, agent-cost-tracker, backlog-drip, batched-ci-doctor, ci-failure-triage, code-health-auditor, community-digest, contribution-guidelines-checker, issue-hierarchy-manager, link-checker, linter-applier, linter-miner, linter-refiner, linter-workflows, nitpick-reviewer, performance-nut, pr-fix-assistant, pr-iteration-loop, repo-qa-assistant, security-scanner, user-simulator.
 - Keep these archetypes available. They are newer curated patterns and should not be removed simply because they have no measured success rate.
 
 **Trigger combo risk:**

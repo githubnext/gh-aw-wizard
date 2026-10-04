@@ -27,10 +27,19 @@ describe('copilot instructions pattern guidance', () => {
       else curated.push(id);
     }
 
-    expect(empirical).toHaveLength(9);
-    expect(curated).toHaveLength(22);
-    for (const id of empirical) expect(instructions).toContain(`\`${id}\``);
-    for (const id of curated) expect(instructions).toContain(id);
+    const empiricalGuidance = instructions.split('**Archetypes with empirical data:**')[1]?.split('**Supporting empirical profile:**')[0];
+    const curatedGuidance = instructions.split('**Curated archetypes without empirical runs yet (`count: 0`):**')[1]?.split('**Trigger combo risk:**')[0];
+
+    expect(empirical.length + curated.length).toBe(manifest.archetypes.length);
+    for (const id of empirical) {
+      const data = await archetype(id);
+      expect(empiricalGuidance).toContain(`\`${id}\`: ${Math.round(data.success_rate * 100)}% success (n=${data.count})`);
+      expect(curatedGuidance).not.toContain(id);
+    }
+    for (const id of curated) {
+      expect(curatedGuidance).toContain(id);
+      expect(empiricalGuidance).not.toContain(`\`${id}\``);
+    }
     expect(instructions).toContain('`custom` is hidden from the wizard archetype cards');
   });
 
