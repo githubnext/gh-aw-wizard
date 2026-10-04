@@ -23,9 +23,9 @@
   --accent-green-rgb: 46, 160, 67;
   --accent-green-solid: #1c1917;
   --accent-green-hover: #44403c;
-  --agent-purple: var(--color-done-emphasis, #8250df);
-  --agent-purple-dark: var(--color-done-fg, #6639ba);
-  --agent-purple-rgb: 130, 80, 223;
+  --agent-purple: #5f489a;
+  --agent-purple-dark: #4b397a;
+  --agent-purple-rgb: 116, 88, 181;
   --border-color: #e7e5e4;
   --border-default: #e7e5e4;
   --border-subtle: #e7e5e4;
@@ -44,14 +44,13 @@
   --button-text: #fcfcfb;
   --header-gradient-start: #fcfcfb;
 
-  --label-blue: var(--color-accent-emphasis, #0969da);
-  --label-purple: var(--color-done-emphasis, #8250df);
-  --label-green: var(--color-success-emphasis, #1a7f37);
-  --label-orange: var(--color-severe-emphasis, #bc4c00);
-  --label-pink: var(--color-sponsors-emphasis, #bf3989);
-  --label-gray: var(--color-neutral-emphasis, #656d76);
-  --label-orange-fg: var(--color-fg-on-emphasis, #ffffff);
-  /* light-mode label-orange (#bc4c00) passes 5:1 contrast against white per Primer color guidance */
+  --label-blue: #5f489a;
+  --label-purple: #4b397a;
+  --label-green: #1a7f37;
+  --label-orange: #b8461f;
+  --label-pink: #7d2457;
+  --label-gray: #57534e;
+  --label-orange-fg: #ffffff;
   --shadow-card: 0 1px 2px rgba(28,25,23,0.05), 0 16px 40px -8px rgba(28,25,23,0.12);
   --shadow-floating: 0 2px 8px rgba(28,25,23,0.12);
   --shadow-btn-primary-hover: 0 2px 6px rgba(28,25,23,0.18);
@@ -81,9 +80,9 @@
   --accent-green-rgb: 46, 160, 67;
   --accent-green-solid: #fcfcfb;
   --accent-green-hover: #d6d3d1;
-  --agent-purple: var(--color-done-emphasis, #ab7df8);
-  --agent-purple-dark: var(--color-done-fg, #8250df);
-  --agent-purple-rgb: 171, 125, 248;
+  --agent-purple: #c3b5e4;
+  --agent-purple-dark: #5f489a;
+  --agent-purple-rgb: 166, 147, 212;
   --border-color: #44403c;
   --border-default: #44403c;
   --border-subtle: #2c2825;
@@ -100,14 +99,13 @@
   --danger: var(--color-danger-fg, #f85149);
   --header-gradient-start: #0c0a09;
   --button-text: #0c0a09;
-  --label-blue: var(--color-accent-emphasis, #0969da);
-  --label-purple: var(--color-done-emphasis, #8250df);
-  --label-green: var(--color-success-emphasis, #1a7f37);
-  --label-orange: var(--color-severe-emphasis, #e3833e);
-  --label-pink: var(--color-sponsors-emphasis, #bf3989);
-  --label-gray: var(--color-neutral-emphasis, #656d76);
-  /* dark-mode label-orange (#e3833e) needs dark text to meet contrast; light text fails */
-  --label-orange-fg: #1a1300;
+  --label-blue: #4b397a;
+  --label-purple: #5f489a;
+  --label-green: #1a7f37;
+  --label-orange: #b8461f;
+  --label-pink: #7d2457;
+  --label-gray: #44403c;
+  --label-orange-fg: #ffffff;
   --shadow-card: 0 2px 4px rgba(0,0,0,0.4), 0 24px 56px -8px rgba(0,0,0,0.7);
   --shadow-floating: 0 4px 16px rgba(0,0,0,0.5);
   --shadow-btn-primary-hover: 0 2px 6px rgba(0,0,0,0.3);
@@ -816,6 +814,7 @@ a:hover {
 .btn-assistant {
   background: var(--agent-purple-dark);
   border-color: var(--agent-purple-dark);
+  color: #ffffff;
 }
 .btn-assistant:hover:not(:disabled) {
   background: var(--agent-purple);
@@ -1516,9 +1515,10 @@ a:hover {
   isolation: isolate;
   grid-template-columns: minmax(0, 1fr);
   align-items: center;
+  align-content: center;
   text-align: left;
   min-height: calc(100svh - 5rem);
-  padding: clamp(3rem, 8vw, 7rem) 0;
+  padding: clamp(2rem, 8vw, 7rem) 0;
 }
 .is-landing main.container {
   max-width: 72rem;
@@ -1527,7 +1527,7 @@ a:hover {
   content: "";
   position: absolute;
   z-index: -1;
-  inset: 0 -2rem auto 25%;
+  inset: 0 0 auto 25%;
   height: min(32rem, 65vh);
   background-image: radial-gradient(circle, rgba(var(--accent-blue-rgb), 0.28) 1px, transparent 1.5px);
   background-size: 9px 9px;
@@ -1634,6 +1634,11 @@ a:hover {
   font-size: 0.875rem;
   color: var(--text-muted);
   animation: landingRise 0.6s ease 0.36s both;
+}
+@media (max-width: 899px) {
+  .is-landing .landing {
+    min-height: calc(100svh - 5rem);
+  }
 }
 .landing.is-leaving {
   animation: landingLeave 0.3s ease forwards;
@@ -1767,6 +1772,9 @@ a:hover {
   100% { offset-distance: 100%; opacity: 0; }
 }
 @media (max-width: 420px) {
+  .ld-phase-icon-multi .vendor-icon:nth-of-type(n+3) {
+    display: none;
+  }
   .ld-phases {
     gap: 0.1rem;
     padding: 0.15rem 0.5rem 0.45rem;
@@ -1782,6 +1790,14 @@ a:hover {
   }
   .ld-arrow {
     width: 1rem;
+  }
+}
+@media (max-width: 360px) {
+  .ld-phase-icon-multi .vendor-icon {
+    display: none;
+  }
+  .ld-phase-label {
+    font-size: 0.7rem;
   }
 }
 @media (prefers-reduced-motion: reduce) {

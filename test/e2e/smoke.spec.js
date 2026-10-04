@@ -65,6 +65,17 @@ test('landing phase labels do not wrap on iPhone', async ({ page }) => {
   for (const label of await labels.all()) {
     await expect(label).toHaveCSS('white-space', 'nowrap');
   }
+  expect(await page.evaluate(() => globalThis.document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
+  await expect(page.locator('.landing-eyebrow')).toBeVisible();
+});
+
+test('landing uses the docs typeface and theme palette', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('body')).toHaveCSS('font-family', /Mona Sans/);
+  await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(252, 252, 251)');
+
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(12, 10, 9)');
 });
 
 test('option list items keep their minimum height on iPhone', async ({ page }) => {
