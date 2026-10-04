@@ -87,8 +87,8 @@ describe('dark theme contrast', () => {
     expect(ratio).toBeGreaterThanOrEqual(4.5);
   });
 
-  it('keeps the copy-prompt button background at or above 4.5:1 against white text', () => {
-    const ratio = contrastRatio(darkVar('--accent-green-solid'), '#ffffff');
+  it('keeps the copy-prompt button background at or above 4.5:1 against its text', () => {
+    const ratio = contrastRatio(darkVar('--accent-green-solid'), darkVar('--button-text'));
     expect(ratio).toBeGreaterThanOrEqual(4.5);
   });
 });

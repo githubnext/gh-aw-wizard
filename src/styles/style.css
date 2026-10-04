@@ -1,52 +1,60 @@
+@font-face {
+  font-family: "Mona Sans";
+  src: url("../fonts/MonaSansVF.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 200 900;
+  font-display: swap;
+}
+
 :root {
   color-scheme: light;
-  --bg-primary: var(--color-canvas-default, #ffffff);
-  --bg-secondary: var(--color-canvas-subtle, #f6f8fa);
-  --bg-tertiary: var(--color-neutral-subtle, rgba(175, 184, 193, 0.2));
-  --bg-card: var(--color-canvas-default, #ffffff);
-  --bg-subtle: var(--color-canvas-subtle, #f6f8fa);
-  --bg-inset: var(--color-canvas-inset, #f6f8fa);
-  --text-primary: var(--color-fg-default, #24292f);
-  --text-secondary: var(--color-fg-muted, #57606a);
-  --text-muted: var(--color-fg-subtle, #6e7781);
-  --accent-blue: var(--color-accent-fg, #0969da);
-  --accent-blue-rgb: 9, 105, 218;
-  --accent-green: var(--color-success-emphasis, #1f883d);
-  --accent-green-rgb: 31, 136, 61;
-  --accent-green-solid: var(--color-success-emphasis, #1f883d);
-  --accent-green-hover: var(--color-success-fg, #1a7f37);
-  --agent-purple: var(--color-done-emphasis, #8250df);
-  --agent-purple-dark: var(--color-done-fg, #6639ba);
-  --agent-purple-rgb: 130, 80, 223;
-  --border-color: var(--color-border-default, #d0d7de);
-  --border-default: var(--color-border-default, #d0d7de);
-  --border-subtle: var(--color-border-muted, #d8dee4);
-  --border-hover: var(--color-border-default, #8c959f);
-  --border-focus: var(--color-accent-fg, #0969da);
-  --code-bg: var(--color-canvas-inset, #f6f8fa);
+  --bg-primary: #fcfcfb;
+  --bg-secondary: #f5f5f4;
+  --bg-tertiary: #f5f5f4;
+  --bg-card: #ffffff;
+  --bg-subtle: #f5f5f4;
+  --bg-inset: #f5f5f4;
+  --text-primary: #1c1917;
+  --text-secondary: #57534e;
+  --text-muted: #78716c;
+  --accent-blue: #5f489a;
+  --accent-blue-rgb: 116, 88, 181;
+  --accent-green: #1a7f37;
+  --accent-green-rgb: 46, 160, 67;
+  --accent-green-solid: #1c1917;
+  --accent-green-hover: #44403c;
+  --agent-purple: #5f489a;
+  --agent-purple-dark: #4b397a;
+  --agent-purple-rgb: 116, 88, 181;
+  --border-color: #e7e5e4;
+  --border-default: #e7e5e4;
+  --border-subtle: #e7e5e4;
+  --border-hover: #a8a29e;
+  --border-focus: #7458b5;
+  --code-bg: #f5f5f4;
   --yaml-key: var(--color-prettylights-syntax-constant, #0550ae);
   --yaml-value: var(--color-prettylights-syntax-string, #0a3069);
   --yaml-string: var(--color-prettylights-syntax-string, #0a3069);
   --yaml-comment: var(--color-prettylights-syntax-comment, #6e7781);
-  --heading-color: var(--color-fg-default, #24292f);
+  --heading-color: #1c1917;
   --success: var(--color-success-fg, #1a7f37);
   --warning: var(--color-attention-fg, #9a6700);
   --danger: var(--color-danger-fg, #cf222e);
-  --control-fg-on-emphasis: var(--color-fg-on-emphasis, #ffffff);
-  --header-gradient-start: rgba(246, 248, 250, 0.85);
+  --control-fg-on-emphasis: #ffffff;
+  --button-text: #fcfcfb;
+  --header-gradient-start: #fcfcfb;
 
-  --label-blue: var(--color-accent-emphasis, #0969da);
-  --label-purple: var(--color-done-emphasis, #8250df);
-  --label-green: var(--color-success-emphasis, #1a7f37);
-  --label-orange: var(--color-severe-emphasis, #bc4c00);
-  --label-pink: var(--color-sponsors-emphasis, #bf3989);
-  --label-gray: var(--color-neutral-emphasis, #656d76);
-  --label-orange-fg: var(--color-fg-on-emphasis, #ffffff);
-  /* light-mode label-orange (#bc4c00) passes 5:1 contrast against white per Primer color guidance */
-  --shadow-card: var(--color-shadow-medium, 0 3px 12px rgba(27,31,36,0.15));
-  --shadow-floating: var(--color-shadow-large, 0 8px 24px rgba(140,149,159,0.2));
-  --shadow-btn-primary-hover: 0 2px 6px rgba(var(--accent-green-rgb), 0.25);
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+  --label-blue: #5f489a;
+  --label-purple: #4b397a;
+  --label-green: #1a7f37;
+  --label-orange: #b8461f;
+  --label-pink: #7d2457;
+  --label-gray: #57534e;
+  --label-orange-fg: #ffffff;
+  --shadow-card: 0 1px 2px rgba(28,25,23,0.05), 0 16px 40px -8px rgba(28,25,23,0.12);
+  --shadow-floating: 0 2px 8px rgba(28,25,23,0.12);
+  --shadow-btn-primary-hover: 0 2px 6px rgba(28,25,23,0.18);
+  --font-sans: "Mona Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
   --radius-md: var(--borderRadius-medium, 8px);
   --radius-lg: var(--borderRadius-large, 12px);
@@ -57,50 +65,50 @@
 
 [data-color-mode="dark"] {
   color-scheme: dark;
-  --bg-primary: var(--color-canvas-default, #0d1117);
-  --bg-secondary: var(--color-canvas-subtle, #161b22);
-  --bg-tertiary: var(--color-neutral-subtle, #21262d);
-  --bg-card: var(--color-canvas-default, #161b22);
-  --bg-subtle: var(--color-canvas-subtle, #161b22);
-  --bg-inset: var(--color-canvas-inset, #010409);
-  --text-primary: var(--color-fg-default, #e6edf3);
-  --text-secondary: var(--color-fg-muted, #7d8590);
-  --text-muted: var(--color-fg-subtle, #8b949e);
-  --accent-blue: var(--color-accent-fg, #4493f8);
-  --accent-blue-rgb: 68, 147, 248;
-  --accent-green: var(--color-success-emphasis, #3fb950);
-  --accent-green-rgb: 63, 185, 80;
-  --accent-green-solid: var(--color-success-emphasis, #238636);
-  --accent-green-hover: var(--color-success-fg, #2ea043);
-  --agent-purple: var(--color-done-emphasis, #ab7df8);
-  --agent-purple-dark: var(--color-done-fg, #8250df);
-  --agent-purple-rgb: 171, 125, 248;
-  --border-color: var(--color-border-default, #30363d);
-  --border-default: var(--color-border-default, #30363d);
-  --border-subtle: var(--color-border-muted, #21262d);
-  --border-hover: var(--color-border-default, #6e7681);
-  --border-focus: var(--color-accent-fg, #4493f8);
-  --code-bg: var(--color-canvas-inset, #010409);
+  --bg-primary: #0c0a09;
+  --bg-secondary: #1c1917;
+  --bg-tertiary: #2c2825;
+  --bg-card: #231f1c;
+  --bg-subtle: #1c1917;
+  --bg-inset: #1c1917;
+  --text-primary: #fcfcfb;
+  --text-secondary: #d6d3d1;
+  --text-muted: #a8a29e;
+  --accent-blue: #c3b5e4;
+  --accent-blue-rgb: 166, 147, 212;
+  --accent-green: #2ea043;
+  --accent-green-rgb: 46, 160, 67;
+  --accent-green-solid: #fcfcfb;
+  --accent-green-hover: #d6d3d1;
+  --agent-purple: #c3b5e4;
+  --agent-purple-dark: #5f489a;
+  --agent-purple-rgb: 166, 147, 212;
+  --border-color: #44403c;
+  --border-default: #44403c;
+  --border-subtle: #2c2825;
+  --border-hover: #78716c;
+  --border-focus: #a693d4;
+  --code-bg: #231f1c;
   --yaml-key: var(--color-prettylights-syntax-constant, #79c0ff);
   --yaml-value: var(--color-prettylights-syntax-string, #a5d6ff);
   --yaml-string: var(--color-prettylights-syntax-string, #a5d6ff);
   --yaml-comment: var(--color-prettylights-syntax-comment, #8b949e);
-  --heading-color: var(--color-fg-default, #e6edf3);
+  --heading-color: #fcfcfb;
   --success: var(--color-success-fg, #3fb950);
   --warning: var(--color-attention-fg, #d29922);
   --danger: var(--color-danger-fg, #f85149);
-  --header-gradient-start: rgba(1, 4, 9, 0.95);
-  --label-blue: var(--color-accent-emphasis, #0969da);
-  --label-purple: var(--color-done-emphasis, #8250df);
-  --label-green: var(--color-success-emphasis, #1a7f37);
-  --label-orange: var(--color-severe-emphasis, #e3833e);
-  --label-pink: var(--color-sponsors-emphasis, #bf3989);
-  --label-gray: var(--color-neutral-emphasis, #656d76);
-  /* dark-mode label-orange (#e3833e) needs dark text to meet contrast; light text fails */
-  --label-orange-fg: #1a1300;
-  --shadow-card: 0 2px 8px rgba(1,4,9,0.4);
-  --shadow-floating: 0 4px 16px rgba(1,4,9,0.5);
-  --shadow-btn-primary-hover: 0 2px 6px rgba(var(--accent-green-rgb), 0.3);
+  --header-gradient-start: #0c0a09;
+  --button-text: #0c0a09;
+  --label-blue: #4b397a;
+  --label-purple: #5f489a;
+  --label-green: #1a7f37;
+  --label-orange: #b8461f;
+  --label-pink: #7d2457;
+  --label-gray: #44403c;
+  --label-orange-fg: #ffffff;
+  --shadow-card: 0 2px 4px rgba(0,0,0,0.4), 0 24px 56px -8px rgba(0,0,0,0.7);
+  --shadow-floating: 0 4px 16px rgba(0,0,0,0.5);
+  --shadow-btn-primary-hover: 0 2px 6px rgba(0,0,0,0.3);
 }
 
 [data-color-mode="dark"] .site-header {
@@ -168,15 +176,14 @@ a:hover {
 
 /* Accent bar at top */
 .gradient-bar {
-  height: 3px;
-  background: var(--accent-blue);
+  display: none;
 }
 
 /* Header */
 .site-header {
   padding: 1.5rem 0 1.25rem;
   text-align: left;
-  background: linear-gradient(180deg, var(--header-gradient-start) 0%, transparent 100%);
+  background: var(--bg-primary);
   border-bottom: 1px solid var(--border-color);
   margin-bottom: 1.5rem;
 }
@@ -189,7 +196,7 @@ a:hover {
   font-size: 1.75rem;
   font-weight: 700;
   line-height: 1.15;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.025em;
   color: var(--heading-color);
 }
 .site-header .subtitle {
@@ -789,13 +796,15 @@ a:hover {
 }
 .btn-primary {
   background: var(--accent-green-solid);
-  color: var(--control-fg-on-emphasis);
+  color: var(--button-text);
   border-color: var(--accent-green-solid);
-  box-shadow: var(--color-shadow-small, 0 1px 3px rgba(27,31,36,0.12));
+  box-shadow: none;
 }
 .btn-primary:hover {
   background: var(--accent-green-hover);
-  box-shadow: var(--shadow-btn-primary-hover);
+  color: var(--button-text);
+  border-color: var(--accent-green-hover);
+  box-shadow: none;
 }
 .btn-primary:disabled {
   opacity: 0.4;
@@ -805,6 +814,7 @@ a:hover {
 .btn-assistant {
   background: var(--agent-purple-dark);
   border-color: var(--agent-purple-dark);
+  color: #ffffff;
 }
 .btn-assistant:hover:not(:disabled) {
   background: var(--agent-purple);
@@ -1500,15 +1510,29 @@ a:hover {
   display: none;
 }
 .is-landing .landing {
-  display: flex;
+  display: grid;
   position: relative;
   isolation: isolate;
-  flex-direction: column;
+  grid-template-columns: minmax(0, 1fr);
   align-items: center;
-  justify-content: center;
-  text-align: center;
-  min-height: min(calc(100svh - 7rem), 700px);
-  padding: 1.25rem 0 1.5rem;
+  align-content: center;
+  text-align: left;
+  min-height: calc(100svh - 5rem);
+  padding: clamp(2rem, 8vw, 7rem) 0;
+}
+.is-landing main.container {
+  max-width: 72rem;
+}
+.is-landing .landing::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0 0 auto 25%;
+  height: min(32rem, 65vh);
+  background-image: radial-gradient(circle, rgba(var(--accent-blue-rgb), 0.28) 1px, transparent 1.5px);
+  background-size: 9px 9px;
+  mask-image: radial-gradient(ellipse at 85% 10%, #000, transparent 72%);
+  pointer-events: none;
 }
 .is-landing .site-header,
 .is-landing .workflow-recipe,
@@ -1537,6 +1561,7 @@ a:hover {
   color: var(--accent-blue);
 }
 .landing-title,
+.landing-eyebrow,
 .landing-message,
 .btn-get-started,
 .landing-hint,
@@ -1544,46 +1569,54 @@ a:hover {
   position: relative;
   z-index: 1;
 }
+.landing-eyebrow {
+  align-self: end;
+  margin-bottom: 1rem;
+  color: var(--accent-blue);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  animation: landingRise 0.6s ease both;
+}
 .landing-title {
-  font-size: clamp(1.75rem, 5.5vw, 2.75rem);
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -0.04em;
-  max-width: 16ch;
+  font-size: clamp(1.7rem, 4vw, 3.05rem);
+  font-weight: 460;
+  line-height: 1.06;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+  max-width: 20ch;
   color: var(--heading-color);
   animation: landingRise 0.6s ease both;
 }
 .landing-message {
-  margin-top: 0.75rem;
-  max-width: 40ch;
-  font-size: 1rem;
+  margin-top: 1.25rem;
+  max-width: 42ch;
+  font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+  line-height: 1.5;
   color: var(--text-secondary);
   animation: landingRise 0.6s ease 0.12s both;
 }
 .btn-get-started {
-  margin-top: 1.5rem;
+  margin-top: 2rem;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.8rem 2rem;
-  font-size: 1.05rem;
-  font-weight: 600;
-  border-radius: var(--radius-lg);
+  min-height: 44px;
+  padding: 0.7rem 1.4rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 999px;
   position: relative;
   animation: landingRise 0.6s ease 0.24s both;
 }
 /* The attention pulse lives on a pseudo-element so hovering can pause it
    without freezing the button's own entrance animation. */
 .btn-get-started::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  animation: landingPulse 2.8s ease-in-out 1s infinite;
+  content: none;
 }
 .btn-get-started:hover {
-  transform: translateY(-2px) scale(1.03);
+  transform: none;
 }
 .btn-get-started:hover::after {
   animation-play-state: paused;
@@ -1597,10 +1630,15 @@ a:hover {
   height: 1.1em;
 }
 .landing-hint {
-  margin-top: 0.75rem;
-  font-size: 0.8rem;
+  margin-top: 1rem;
+  font-size: 0.875rem;
   color: var(--text-muted);
   animation: landingRise 0.6s ease 0.36s both;
+}
+@media (max-width: 899px) {
+  .is-landing .landing {
+    min-height: calc(100svh - 5rem);
+  }
 }
 .landing.is-leaving {
   animation: landingLeave 0.3s ease forwards;
@@ -1608,7 +1646,7 @@ a:hover {
 
 /* Landing diagram: a compact card, actions runner -> when/what/where phases */
 .landing-diagram {
-  margin-top: 1.5rem;
+  margin-top: 2.5rem;
   display: inline-flex;
   flex-direction: column;
   align-items: stretch;
@@ -1616,8 +1654,8 @@ a:hover {
   max-width: 100%;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-color);
-  background: var(--bg-primary);
-  box-shadow: 0 1px 10px rgba(var(--accent-blue-rgb), 0.08);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-card);
   animation: landingRise 0.6s ease 0.42s both;
 }
 .ld-runner {
@@ -1668,7 +1706,7 @@ a:hover {
   border-radius: var(--radius-md);
   padding: 0 0.4rem;
   gap: 0.25rem;
-  background: rgba(var(--accent-green-rgb), 0.1);
+  background: rgba(var(--accent-blue-rgb), 0.1);
   color: var(--text-secondary);
 }
 .ld-phase-icon-multi .vendor-icon {
@@ -1681,7 +1719,7 @@ a:hover {
 }
 .ld-phase-icon-multi .ld-phase-icon-lock,
 .ld-phase-icon-multi .ld-phase-icon-shield {
-  color: var(--accent-green);
+  color: var(--accent-blue);
 }
 .ld-phase-text {
   display: flex;
@@ -1718,7 +1756,7 @@ a:hover {
   fill: var(--accent-blue);
 }
 .ld-arrow-dot {
-  fill: var(--accent-green);
+  fill: var(--accent-blue);
   offset-path: path('M2 12 H38');
   offset-rotate: 0deg;
   animation: ldArrowDot 1.6s ease-in-out infinite;
@@ -1734,6 +1772,9 @@ a:hover {
   100% { offset-distance: 100%; opacity: 0; }
 }
 @media (max-width: 420px) {
+  .ld-phase-icon-multi .vendor-icon:nth-of-type(n+3) {
+    display: none;
+  }
   .ld-phases {
     gap: 0.1rem;
     padding: 0.15rem 0.5rem 0.45rem;
@@ -1751,39 +1792,39 @@ a:hover {
     width: 1rem;
   }
 }
+@media (max-width: 360px) {
+  .ld-phase-icon-multi .vendor-icon {
+    display: none;
+  }
+  .ld-phase-label {
+    font-size: 0.7rem;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .ld-arrow-line,
   .ld-arrow-dot {
     animation: none;
   }
 }
-/* Desktop: let the landing hero fill the viewport instead of sitting small
-   in the middle of a wide screen. */
 @media (min-width: 900px) {
   .is-landing .landing {
-    min-height: calc(100svh - 7rem);
-    padding: 2rem 0 2.5rem;
+    grid-template-columns: minmax(0, 11fr) minmax(0, 10fr);
+    column-gap: clamp(2.5rem, 5vw, 3.5rem);
+    align-content: center;
   }
-  .landing-title {
-    font-size: clamp(2.75rem, 4.5vw, 4rem);
-    max-width: 20ch;
-  }
-  .landing-message {
-    margin-top: 1.25rem;
-    font-size: 1.25rem;
-    max-width: 46ch;
-  }
-  .btn-get-started {
-    margin-top: 2.25rem;
-    padding: 1rem 2.6rem;
-    font-size: 1.25rem;
-  }
+  .landing-eyebrow,
+  .landing-title,
+  .landing-message,
+  .btn-get-started,
   .landing-hint {
-    margin-top: 1rem;
-    font-size: 0.95rem;
+    grid-column: 1;
+    justify-self: start;
   }
   .landing-diagram {
-    margin-top: 2.5rem;
+    grid-column: 2;
+    grid-row: 1 / span 5;
+    justify-self: stretch;
+    margin-top: 0;
   }
   .ld-runner {
     padding: 0.5rem 1.25rem 0;
@@ -1829,11 +1870,8 @@ a:hover {
   }
 }
 @media (min-width: 1400px) {
-  .landing-title {
-    font-size: clamp(3.25rem, 4vw, 4.5rem);
-  }
-  .landing-message {
-    font-size: 1.35rem;
+  .is-landing .landing {
+    min-height: calc(100svh - 6rem);
   }
 }
 .wizard-revealed .site-header,
