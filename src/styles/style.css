@@ -1479,7 +1479,7 @@ a:hover {
   line-height: 1.5;
 }
 .ap-fix strong {
-  color: var(--text-default);
+  color: var(--text-primary);
 }
 .ap-data-source {
   font-size: 0.8125rem;
