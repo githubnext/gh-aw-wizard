@@ -69,8 +69,8 @@ test('runs in-browser inference and applies the selected scenario', async ({ pag
     'Copy the prompt, then run it with an agent in the repository you want to automate.'
   );
   await expect(result.getByRole('button', { name: 'Copy prompt' })).toHaveCSS(
-    'background-image',
-    /linear-gradient/
+    'background-color',
+    'rgb(75, 57, 122)'
   );
   await expect(result.getByRole('button', { name: 'Continue' })).toHaveCount(0);
   await expect(page.locator('input[name="archetype"][value="documentation-updater"]')).toBeChecked();
