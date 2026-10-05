@@ -543,8 +543,11 @@ describe('assistant markup', () => {
 
     const hoverStart = css.indexOf('.btn-assistant:hover:not(:disabled) {');
     expect(hoverStart).toBeGreaterThan(-1);
+    // Hover brightens the base fill rather than swapping to --agent-purple,
+    // since that token is a light lavender in dark mode and would fail
+    // WCAG contrast against the button's white/dark text.
     const hoverRule = css.slice(hoverStart, css.indexOf('}', hoverStart));
-    expect(hoverRule).toContain('var(--agent-purple)');
+    expect(hoverRule).toContain('brightness');
   });
 
   it('announces status updates to assistive technology', () => {
