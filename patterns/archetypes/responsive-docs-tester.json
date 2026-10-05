@@ -1,0 +1,37 @@
+{
+  "id": "responsive-docs-tester",
+  "label": "Responsive Docs Tester",
+  "description": "Build and serve a local web app or docs site, then test it with Playwright across mobile, tablet, and desktop viewports on a recurring schedule",
+  "success_rate": null,
+  "count": 0,
+  "recommended_triggers": [
+    {
+      "type": "schedule",
+      "config": {}
+    }
+  ],
+  "recommended_safe_outputs": [
+    "issues"
+  ],
+  "recommended_tools": [
+    "create-issue"
+  ],
+  "timeout_minutes": 30,
+  "prompt_style": "phase-based",
+  "size_range_bytes": [
+    4000,
+    8000
+  ],
+  "top_repos": [],
+  "tips": [
+    "Build and start the app or docs site locally in a pre-step, then poll localhost until the server responds before Playwright navigates to it",
+    "Test a small, named set of representative viewports (e.g. one mobile, one tablet, one desktop size) rather than an open-ended device list",
+    "Use playwright-cli commands in bash (browser_resize, browser_navigate, browser_snapshot) instead of installing Playwright as an npm dependency",
+    "Check navigation usability, content overflow, image sizing, and basic accessibility (headings, alt text, contrast) at each viewport, not just that the page loads",
+    "Capture screenshots only on failure and publish them with the upload-asset safe output so evidence is attached without bloating the report",
+    "Always stop the local preview server in a cleanup step even if earlier steps fail",
+    "Call noop when every viewport passes instead of leaving no output",
+    "Set expires and close-older-issues (or skip-if-match) on create-issue so scheduled runs don't accumulate duplicate reports"
+  ],
+  "anti_patterns": []
+}
