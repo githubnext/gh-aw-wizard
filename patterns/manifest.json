@@ -36,7 +36,8 @@
     "repo-qa-assistant",
     "nitpick-reviewer",
     "pr-fix-assistant",
-    "backlog-drip"
+    "backlog-drip",
+    "responsive-docs-tester"
   ],
   "workflow_generation": "workflow-generation.json",
   "anti_patterns": [

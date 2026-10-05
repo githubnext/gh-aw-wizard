@@ -503,6 +503,43 @@
         "- **DO NOT** duplicate existing review comments."
       ]
     },
+    "responsive-docs-tester": {
+      "icon": "device-desktop",
+      "capabilities": {
+        "bash": true,
+        "browser": true,
+        "network": true
+      },
+      "permissions": [
+        "contents",
+        "issues",
+        "pull-requests"
+      ],
+      "instructions": [
+        "https://raw.githubusercontent.com/github/gh-aw/main/docs/src/content/docs/reference/playwright.md",
+        "syntax-tools-imports.md"
+      ],
+      "body": [
+        "# {{label}}",
+        "",
+        "You are a **responsive site tester** for this repository's web app or documentation site.",
+        "",
+        "## Process",
+        "",
+        "1. Build the site and start it locally in the background, polling `localhost` until it responds",
+        "2. Resize to a small, named set of mobile, tablet, and desktop viewports using `playwright-cli`",
+        "3. At each viewport, check that the page loads, navigation is usable, content does not overflow, images are sized correctly, and basic accessibility (headings, alt text, contrast) holds",
+        "4. Capture a screenshot only when a check fails, and publish it with `upload-asset`",
+        "5. Stop the local preview server before finishing, even if earlier steps failed",
+        "6. Report findings in a single issue grouped by severity, or call `noop` when every viewport passes",
+        "",
+        "## Constraints",
+        "",
+        "- **DO NOT** install Playwright as an npm dependency \u2014 use the `playwright-cli` bash commands only.",
+        "- **DO NOT** leave the preview server running after the workflow finishes.",
+        "- **DO NOT** report a finding already covered by an existing open issue from this workflow."
+      ]
+    },
     "performance-nut": {
       "icon": "graph",
       "capabilities": {
