@@ -814,10 +814,13 @@ a:hover {
 .btn-assistant {
   background: var(--agent-purple-dark);
   border-color: var(--agent-purple-dark);
-  color: #ffffff;
+  color: var(--control-fg-on-emphasis, #ffffff);
 }
 .btn-assistant:hover:not(:disabled) {
-  background: var(--agent-purple);
+  /* Dark mode's --agent-purple is a light lavender meant for text/accents,
+     not a button fill with light text, so hover darkens instead of
+     switching to it (fixes a ~1.9:1 contrast failure). */
+  filter: brightness(1.12);
 }
 .btn-assistant:disabled {
   background: var(--agent-purple-dark);
