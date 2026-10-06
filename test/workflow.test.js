@@ -268,6 +268,11 @@ describe('buildTriggerYaml', () => {
     const yaml = buildTriggerYaml(['pull_request', 'pull_request_ready_for_review']);
     expect(yaml).toBe('  pull_request:\n    types: [opened, ready_for_review]\n');
   });
+
+  it('maps workflow_dispatch with typed inputs', () => {
+    const yaml = buildTriggerYaml(['workflow_dispatch']);
+    expect(yaml).toBe('  workflow_dispatch:\n    inputs: {}\n');
+  });
 });
 
 describe('generateWorkflowFile', () => {

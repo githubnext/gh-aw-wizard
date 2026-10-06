@@ -108,7 +108,8 @@ describe('getArchetype', () => {
       'ci-failure-triage',
       'batched-ci-doctor',
       'agent-cost-tracker',
-      'nitpick-reviewer'
+      'nitpick-reviewer',
+      'vex-statement-generator'
     ])('includes %s with triggers and safe outputs', (id) => {
       const archetype = getArchetype(generatedPatterns, id);
       expect(archetype).not.toBeNull();

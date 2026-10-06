@@ -1,0 +1,35 @@
+{
+  "id": "vex-statement-generator",
+  "label": "VEX Statement Generator",
+  "description": "Generate a machine-readable OpenVEX statement when a Dependabot alert is dismissed with a security justification",
+  "success_rate": null,
+  "count": 0,
+  "recommended_triggers": [
+    {
+      "type": "workflow_dispatch",
+      "config": {}
+    }
+  ],
+  "recommended_safe_outputs": [
+    "pull-requests"
+  ],
+  "recommended_tools": [
+    "create-pull-request"
+  ],
+  "timeout_minutes": 15,
+  "prompt_style": "role-steps",
+  "size_range_bytes": [
+    2000,
+    6000
+  ],
+  "top_repos": [],
+  "tips": [
+    "Pass the dismissed Dependabot alert's fields (alert number, GHSA/CVE id, package, ecosystem, severity, dismissal reason) as typed workflow_dispatch inputs rather than having the agent search for them",
+    "Map the Dependabot dismissal reason to an OpenVEX status and justification: not_used -> not_affected / vulnerable_code_not_present, inaccurate -> not_affected / vulnerable_code_not_in_execute_path, tolerable_risk -> not_affected / inline_mitigations_already_exist",
+    "Skip generating a statement when the dismissal reason is no_bandwidth, since that dismissal is not a security assessment",
+    "Write each statement to .vex/<ghsa-id>.json as a standalone OpenVEX v0.2.0 document so it stays independently readable by downstream scanners",
+    "Construct the package URL (purl) from the repository's own manifest version, not the dismissed alert's vulnerable version range",
+    "Open the result as a pull request rather than committing directly, so a maintainer reviews the generated VEX statement and impact wording before it is published"
+  ],
+  "anti_patterns": []
+}
