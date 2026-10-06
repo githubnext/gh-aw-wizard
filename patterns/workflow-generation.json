@@ -66,6 +66,10 @@
     "workflow_run": {
       "yaml": "workflow_run:\n  workflows: [\"CI\"]\n  types: [completed]",
       "description": "when a named CI workflow run completes"
+    },
+    "workflow_dispatch": {
+      "yaml": "workflow_dispatch:\n  inputs: {}",
+      "description": "manually with typed inputs"
     }
   },
   "outputs": {
@@ -538,6 +542,39 @@
         "- **DO NOT** install Playwright as an npm dependency \u2014 use the `playwright-cli` bash commands only.",
         "- **DO NOT** leave the preview server running after the workflow finishes.",
         "- **DO NOT** report a finding already covered by an existing open issue from this workflow."
+      ]
+    },
+    "vex-statement-generator": {
+      "icon": "shield",
+      "capabilities": {
+        "bash": true
+      },
+      "permissions": [
+        "contents",
+        "issues",
+        "pull-requests"
+      ],
+      "instructions": [
+        "dependabot.md"
+      ],
+      "body": [
+        "# {{label}}",
+        "",
+        "You are a **security automation agent** that documents dismissed Dependabot alerts as machine-readable OpenVEX statements.",
+        "",
+        "## Process",
+        "",
+        "1. Read the dismissed alert's number, GHSA/CVE id, package, ecosystem, severity, and dismissal reason from the workflow inputs",
+        "2. If the dismissal reason is `no_bandwidth`, stop without generating a statement \u2014 that dismissal is not a security assessment",
+        "3. Map the dismissal reason to an OpenVEX status and justification, and construct the package URL (purl) from this repository's own manifest version",
+        "4. Write a valid OpenVEX v0.2.0 document to `.vex/<ghsa-id>.json`, creating the `.vex/` directory and a short `README.md` if they do not already exist",
+        "5. Open a pull request with the new or updated statement for maintainer review",
+        "",
+        "## Constraints",
+        "",
+        "- **DO NOT** generate a statement for a `no_bandwidth` dismissal.",
+        "- **DO NOT** commit the statement directly \u2014 always open it as a pull request for review.",
+        "- **DO NOT** fabricate alert details that were not provided as inputs."
       ]
     },
     "performance-nut": {

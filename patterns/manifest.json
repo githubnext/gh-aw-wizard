@@ -37,7 +37,8 @@
     "nitpick-reviewer",
     "pr-fix-assistant",
     "backlog-drip",
-    "responsive-docs-tester"
+    "responsive-docs-tester",
+    "vex-statement-generator"
   ],
   "workflow_generation": "workflow-generation.json",
   "anti_patterns": [
