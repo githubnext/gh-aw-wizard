@@ -1,0 +1,39 @@
+{
+  "id": "cross-repo-monitor",
+  "label": "Cross-Repository Monitor",
+  "description": "Read and evaluate activity in a different target repository on a schedule, dispatch per-item evaluation, and write a consolidated report plus labels/comments back to the target repo",
+  "success_rate": null,
+  "count": 0,
+  "recommended_triggers": [
+    {
+      "type": "schedule",
+      "config": {}
+    }
+  ],
+  "recommended_safe_outputs": [
+    "issues",
+    "add-labels",
+    "add-comment"
+  ],
+  "recommended_tools": [
+    "create-issue",
+    "add-labels",
+    "add-comment"
+  ],
+  "timeout_minutes": 20,
+  "prompt_style": "role-steps",
+  "size_range_bytes": [
+    3000,
+    8000
+  ],
+  "top_repos": [],
+  "tips": [
+    "Set target-repo (an env var or repository variable, not a hardcoded string) on every safe output that writes to the external repository, and read from that same repository via GitHub toolsets",
+    "Pre-filter and fetch the target repository's items in a steps: block before the agent starts, so the agent only evaluates a bounded, pre-computed list",
+    "Act as an orchestrator: dispatch each item to a stateless, self-contained evaluation (inline sub-agent or per-item prompt) and compile the results into one report rather than evaluating everything inline",
+    "Publish the consolidated report as an issue in the home repository, and use close-older-issues: true so each run replaces the previous report instead of accumulating",
+    "Use add-labels and add-comment with target-repo to apply verdicts and feedback directly on items in the target repository, each capped with max: to bound write volume",
+    "Document the required token scopes (contents, issues, pull-requests, or actions:write for cross-repo dispatch) in the prompt since the default GITHUB_TOKEN cannot write to another repository"
+  ],
+  "anti_patterns": []
+}

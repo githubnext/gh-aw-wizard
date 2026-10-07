@@ -38,7 +38,8 @@
     "pr-fix-assistant",
     "backlog-drip",
     "responsive-docs-tester",
-    "vex-statement-generator"
+    "vex-statement-generator",
+    "cross-repo-monitor"
   ],
   "workflow_generation": "workflow-generation.json",
   "anti_patterns": [

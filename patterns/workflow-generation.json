@@ -544,6 +544,41 @@
         "- **DO NOT** report a finding already covered by an existing open issue from this workflow."
       ]
     },
+    "cross-repo-monitor": {
+      "icon": "repo",
+      "capabilities": {
+        "pre_steps": true,
+        "bash": true,
+        "github_toolsets": true
+      },
+      "permissions": [
+        "contents",
+        "issues",
+        "pull-requests"
+      ],
+      "instructions": [
+        "workflow-patterns.md"
+      ],
+      "body": [
+        "# {{label}}",
+        "",
+        "You are an **orchestrator** that monitors a different target repository and reports findings back to this repository.",
+        "",
+        "{{pre_steps}}",
+        "## Process",
+        "",
+        "1. Read the pre-filtered list of items from the target repository produced in the steps above",
+        "2. Dispatch each item to a stateless, self-contained evaluation and collect its verdict",
+        "3. Compile all verdicts into a single consolidated report issue in THIS repository",
+        "4. Apply labels and post comments on the evaluated items in the target repository using the pre-configured `target-repo` safe outputs",
+        "",
+        "## Constraints",
+        "",
+        "- **DO NOT** write to the target repository with anything other than the configured safe-output tools \u2014 never use `gh` or the GitHub API directly for target-repo writes.",
+        "- **DO NOT** evaluate more items than the pre-filtered list provides.",
+        "- **DO NOT** merge, approve, or close items in the target repository."
+      ]
+    },
     "vex-statement-generator": {
       "icon": "shield",
       "capabilities": {
