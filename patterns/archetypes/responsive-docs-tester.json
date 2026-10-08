@@ -31,7 +31,8 @@
     "Capture screenshots only on failure and publish them with the upload-asset safe output so evidence is attached without bloating the report",
     "Always stop the local preview server in a cleanup step even if earlier steps fail",
     "Call noop when every viewport passes instead of leaving no output",
-    "Set expires and close-older-issues (or skip-if-match) on create-issue so scheduled runs don't accumulate duplicate reports"
+    "Set expires and close-older-issues (or skip-if-match) on create-issue so scheduled runs don't accumulate duplicate reports",
+    "Since this archetype combines schedule with workflow_dispatch, set concurrency.job-discriminator to ${{ github.event_name == 'schedule' && 'scheduled' || github.run_id }} so a manually-triggered run doesn't get cancelled by (or cancel) the next scheduled run"
   ],
   "anti_patterns": []
 }
