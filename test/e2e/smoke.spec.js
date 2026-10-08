@@ -6,7 +6,7 @@ test('website loads and opens the wizard', async ({ page }) => {
   await expect(page).toHaveTitle('GitHub Agentic Workflow Generator');
   await expect(page.getByRole('heading', { name: 'Automate your repository with AI agents' })).toBeVisible();
 
-  await page.getByRole('button', { name: 'Create Your Agentic Workflow' }).click();
+  await page.getByRole('button', { name: 'Create your agentic workflow' }).click();
 
   await expect(page.locator('#step-1')).toHaveClass(/active/);
   await expect(page.getByLabel('Tell us your intent so that we can generate graders and evals')).toBeVisible();
@@ -24,7 +24,7 @@ test('website loads and opens the wizard', async ({ page }) => {
 
 test('shows featured agents before revealing the remaining options', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Create Your Agentic Workflow' }).click();
+  await page.getByRole('button', { name: 'Create your agentic workflow' }).click();
   await page.getByLabel('Tell us your intent so that we can generate graders and evals')
     .fill('Keep the repository healthy');
   await page.locator('.progress-step[data-step="6"]').click();
@@ -45,7 +45,7 @@ test('shows featured agents before revealing the remaining options', async ({ pa
 
 test('intent provides an implicit HOW without a Custom card', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Create Your Agentic Workflow' }).click();
+  await page.getByRole('button', { name: 'Create your agentic workflow' }).click();
   await page.getByLabel('Tell us your intent so that we can generate graders and evals')
     .fill('Keep release notes accurate for on-call engineers');
 
@@ -81,7 +81,7 @@ test('landing uses the docs typeface and theme palette', async ({ page }) => {
 test('option list items keep their minimum height on iPhone', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 667 });
   await page.goto('/');
-  await page.getByRole('button', { name: 'Create Your Agentic Workflow' }).click();
+  await page.getByRole('button', { name: 'Create your agentic workflow' }).click();
   await page.getByRole('button', { name: 'Continue' }).click();
 
   const options = page.locator('#archetype-options .option-card');

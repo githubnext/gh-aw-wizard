@@ -50,7 +50,7 @@ test('runs in-browser inference and applies the selected scenario', async ({ pag
   }));
 
   await page.goto('/');
-  await page.getByRole('button', { name: 'Create Your Agentic Workflow' }).click();
+  await page.getByRole('button', { name: 'Create your agentic workflow' }).click();
 
   // This would keyword-match Issue Triage, proving the model result wins over fallback matching.
   const request = 'Label incoming bug reports and prioritize urgent issues';
@@ -102,7 +102,7 @@ test('loads the secret eval control only with evals=1', async ({ page }) => {
   await expect(page.locator('#wizard-evals')).toHaveCount(0);
   await page.getByRole('link', { name: 'Run evals' }).click();
   await expect(page).toHaveURL(/\?evals=1$/);
-  await page.getByRole('button', { name: 'Create Your Agentic Workflow' }).click();
+  await page.getByRole('button', { name: 'Create your agentic workflow' }).click();
   const evals = page.getByRole('button', { name: 'Run evals' });
   await expect(evals).toBeVisible();
   await expect(evals).toBeEnabled();
