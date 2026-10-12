@@ -2,19 +2,19 @@
   "id": "issue-triage",
   "label": "Issue Triage",
   "description": "Classify and label new issues",
-  "success_rate": 0.57,
-  "count": 94,
+  "success_rate": 0.79,
+  "count": 37,
   "recommended_triggers": [
     {
       "type": "issues",
       "config": {}
     },
     {
-      "type": "roles",
+      "type": "reaction",
       "config": {}
     },
     {
-      "type": "reaction",
+      "type": "roles",
       "config": {}
     }
   ],
@@ -34,23 +34,23 @@
   "top_repos": [
     {
       "repo": "githubnext/agentics",
-      "stars": 962
+      "stars": 980
     },
     {
-      "repo": "appwrite/appwrite",
-      "stars": 57493
+      "repo": "pydantic/pydantic-ai",
+      "stars": 20566
     },
     {
-      "repo": "moeru-ai/airi",
-      "stars": 49619
+      "repo": "microsoft/AI-Engineering-Coach",
+      "stars": 4321
     },
     {
-      "repo": "cli/cli",
-      "stars": 46432
+      "repo": "microsoft/mcp",
+      "stars": 3763
     },
     {
-      "repo": "taosdata/TDengine",
-      "stars": 25146
+      "repo": "twikoojs/twikoo",
+      "stars": 2297
     }
   ],
   "tips": [
@@ -61,8 +61,8 @@
   "anti_patterns": [
     "issue-triage",
     "issue-triage",
-    "issue-triage",
     "marketplace-harness-gap-triage",
-    "issue-triage"
+    "issue-triage",
+    "pr-triage"
   ]
 }

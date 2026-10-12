@@ -3,18 +3,18 @@
   "label": "Status Report",
   "description": "Generate periodic status summaries",
   "success_rate": 0.45,
-  "count": 81,
+  "count": 33,
   "recommended_triggers": [
     {
       "type": "schedule",
       "config": {}
     },
     {
-      "type": "stop-after",
+      "type": "cron",
       "config": {}
     },
     {
-      "type": "skip-if-match",
+      "type": "issues",
       "config": {}
     }
   ],
@@ -33,23 +33,23 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5194
+      "stars": 5382
     },
     {
       "repo": "githubnext/agentics",
-      "stars": 962
+      "stars": 980
     },
     {
-      "repo": "taosdata/TDengine",
-      "stars": 25146
+      "repo": "adoptium/adoptium",
+      "stars": 185
     },
     {
-      "repo": "rancher/dashboard",
-      "stars": 628
+      "repo": "fideus-labs/ngff-zarr",
+      "stars": 73
     },
     {
-      "repo": "centminmod/explain-openclaw",
-      "stars": 250
+      "repo": "guitarrapc/githubactions-lab",
+      "stars": 56
     }
   ],
   "tips": [
@@ -62,9 +62,9 @@
   ],
   "anti_patterns": [
     "daily-repo-status",
-    "daily-repo-status",
-    "daily-repo-status",
-    "daily-report",
-    "weekly-release"
+    "weekly-release",
+    "usability-weekly",
+    "dependency-updates-report",
+    "daily-repo-status"
   ]
 }

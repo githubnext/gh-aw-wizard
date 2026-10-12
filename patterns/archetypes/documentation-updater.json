@@ -2,15 +2,15 @@
   "id": "documentation-updater",
   "label": "Documentation Updater",
   "description": "Keep docs accurate and up-to-date",
-  "success_rate": 0.57,
-  "count": 24,
+  "success_rate": 0.45,
+  "count": 14,
   "recommended_triggers": [
     {
-      "type": "schedule",
+      "type": "push",
       "config": {}
     },
     {
-      "type": "push",
+      "type": "schedule",
       "config": {}
     },
     {
@@ -33,11 +33,7 @@
   "top_repos": [
     {
       "repo": "githubnext/agentics",
-      "stars": 962
-    },
-    {
-      "repo": "YousefHadder/markdown-plus.nvim",
-      "stars": 292
+      "stars": 980
     },
     {
       "repo": "Azure/typespec-azure",
@@ -48,8 +44,12 @@
       "stars": 17
     },
     {
-      "repo": "verkyyi/github-agent-runner",
-      "stars": 10
+      "repo": "codegefluester/GamesDat",
+      "stars": 1
+    },
+    {
+      "repo": "Alvin-Wu-Garden/COBOL2SPEC",
+      "stars": 0
     }
   ],
   "tips": [
@@ -62,7 +62,7 @@
   "anti_patterns": [
     "documentation-updater",
     "update-docs",
-    "update-docs",
+    "daily-doc-updater",
     "daily-doc-updater",
     "daily-doc-updater"
   ]

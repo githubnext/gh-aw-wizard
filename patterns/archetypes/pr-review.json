@@ -2,19 +2,19 @@
   "id": "pr-review",
   "label": "PR Review",
   "description": "Review pull requests for quality and issues",
-  "success_rate": 0.47,
-  "count": 80,
+  "success_rate": 0.41,
+  "count": 30,
   "recommended_triggers": [
-    {
-      "type": "pull_request",
-      "config": {}
-    },
     {
       "type": "slash_command",
       "config": {}
     },
     {
-      "type": "schedule",
+      "type": "pull_request",
+      "config": {}
+    },
+    {
+      "type": "permissions",
       "config": {}
     }
   ],
@@ -33,23 +33,23 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5194
+      "stars": 5382
     },
     {
       "repo": "githubnext/agentics",
-      "stars": 962
+      "stars": 980
     },
     {
-      "repo": "remix-run/react-router",
-      "stars": 56589
+      "repo": "dotnet/macios",
+      "stars": 2913
     },
     {
-      "repo": "elastic/kibana",
-      "stars": 21302
+      "repo": "Azure/azure-sdk-for-go",
+      "stars": 1856
     },
     {
-      "repo": "pydantic/pydantic-ai",
-      "stars": 20228
+      "repo": "drasi-project/drasi-platform",
+      "stars": 1255
     }
   ],
   "tips": [
@@ -58,10 +58,10 @@
     "Include DO NOT constraints to avoid false positive comments"
   ],
   "anti_patterns": [
-    "pr-review",
+    "ai-sdlc-gh-aw-reviewer-deepseek-v03-structured-local",
     "pull-request-reviewer",
-    "review-tutorial",
     "macios-reviewer",
-    "pr-docs-reviewer"
+    "pr-docs-reviewer",
+    "dependabot-review"
   ]
 }

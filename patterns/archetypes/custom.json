@@ -3,7 +3,7 @@
   "label": "Custom",
   "description": "Custom or uncategorized workflow",
   "success_rate": 0.49,
-  "count": 469,
+  "count": 221,
   "recommended_triggers": [
     {
       "type": "schedule",
@@ -14,7 +14,7 @@
       "config": {}
     },
     {
-      "type": "pull_request",
+      "type": "reaction",
       "config": {}
     }
   ],
@@ -29,23 +29,23 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5194
+      "stars": 5382
     },
     {
       "repo": "githubnext/agentics",
-      "stars": 962
-    },
-    {
-      "repo": "github/spec-kit",
-      "stars": 139197
-    },
-    {
-      "repo": "remix-run/react-router",
-      "stars": 56589
+      "stars": 980
     },
     {
       "repo": "OtterMind/Chat2DB",
-      "stars": 28278
+      "stars": 28310
+    },
+    {
+      "repo": "dotnet/maui",
+      "stars": 23324
+    },
+    {
+      "repo": "pydantic/pydantic-ai",
+      "stars": 20566
     }
   ],
   "tips": [
@@ -54,10 +54,10 @@
     "Use DO NOT constraints to bound agent behavior \u2014 61% more likely to be healthy"
   ],
   "anti_patterns": [
-    "documentation-audit",
-    "breaking-change-checker",
-    "ai-sdlc-gh-aw-qa-gemini",
-    "csharp-guideline-improver",
-    "news-translate"
+    "localize-pt",
+    "imperia-market-prices",
+    "validate-pr",
+    "planner",
+    "q"
   ]
 }

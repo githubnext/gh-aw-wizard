@@ -2,8 +2,8 @@
   "id": "dependency-monitor",
   "label": "Dependency Monitor",
   "description": "Track and update dependencies",
-  "success_rate": 0.37,
-  "count": 62,
+  "success_rate": 0.36,
+  "count": 22,
   "recommended_triggers": [
     {
       "type": "schedule",
@@ -14,7 +14,7 @@
       "config": {}
     },
     {
-      "type": "roles",
+      "type": "permissions",
       "config": {}
     }
   ],
@@ -35,23 +35,23 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5194
-    },
-    {
-      "repo": "github/awesome-copilot",
-      "stars": 39466
-    },
-    {
-      "repo": "microsoft/aspire",
-      "stars": 6323
+      "stars": 5382
     },
     {
       "repo": "dotnet/Open-XML-SDK",
-      "stars": 4609
+      "stars": 4614
     },
     {
-      "repo": "microsoft/apm",
-      "stars": 3913
+      "repo": "adoptium/adoptium",
+      "stars": 185
+    },
+    {
+      "repo": "jamesmontemagno/ohmyposh-configurator",
+      "stars": 136
+    },
+    {
+      "repo": "nitinjain999/platform-skills",
+      "stars": 69
     }
   ],
   "tips": [
@@ -64,10 +64,10 @@
     "Use protected-files: fallback-to-issue for CI configuration and agent instructions (not the dependency manifests themselves, since updating those is the intended change)"
   ],
   "anti_patterns": [
-    "dependabot-remediation",
-    "update-github-info",
-    "doc-sync",
     "docs-sync",
-    "update-github-info"
+    "dependency-api-monitor",
+    "wiki-sync",
+    "advanced-copilot-cli-sync",
+    "dependabot-pr-bundler"
   ]
 }
