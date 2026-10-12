@@ -829,7 +829,7 @@ a:hover {
 .btn-evals {
   background: var(--bg-tertiary);
   border-color: var(--border-color);
-  color: var(--fg-default);
+  color: var(--text-primary);
 }
 .btn-evals:hover:not(:disabled) {
   background: var(--bg-card);
