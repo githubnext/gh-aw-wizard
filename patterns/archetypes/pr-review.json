@@ -2,8 +2,8 @@
   "id": "pr-review",
   "label": "PR Review",
   "description": "Review pull requests for quality and issues",
-  "success_rate": 0.47,
-  "count": 80,
+  "success_rate": 0.37,
+  "count": 62,
   "recommended_triggers": [
     {
       "type": "pull_request",
@@ -33,23 +33,23 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5194
+      "stars": 5420
     },
     {
       "repo": "githubnext/agentics",
-      "stars": 962
+      "stars": 990
     },
     {
-      "repo": "remix-run/react-router",
-      "stars": 56589
+      "repo": "home-assistant/core",
+      "stars": 91593
     },
     {
       "repo": "elastic/kibana",
-      "stars": 21302
+      "stars": 21317
     },
     {
-      "repo": "pydantic/pydantic-ai",
-      "stars": 20228
+      "repo": "Azure/azure-sdk-for-go",
+      "stars": 1857
     }
   ],
   "tips": [
@@ -59,9 +59,9 @@
   ],
   "anti_patterns": [
     "pr-review",
+    "ai-sdlc-gh-aw-reviewer-deepseek-v03-structured-local",
     "pull-request-reviewer",
-    "review-tutorial",
-    "macios-reviewer",
-    "pr-docs-reviewer"
+    "review",
+    "reviewer-codex"
   ]
 }

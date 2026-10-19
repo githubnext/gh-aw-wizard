@@ -2,8 +2,8 @@
   "id": "custom",
   "label": "Custom",
   "description": "Custom or uncategorized workflow",
-  "success_rate": 0.49,
-  "count": 469,
+  "success_rate": 0.45,
+  "count": 407,
   "recommended_triggers": [
     {
       "type": "schedule",
@@ -14,7 +14,7 @@
       "config": {}
     },
     {
-      "type": "pull_request",
+      "type": "reaction",
       "config": {}
     }
   ],
@@ -29,23 +29,23 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5194
+      "stars": 5420
     },
     {
       "repo": "githubnext/agentics",
-      "stars": 962
+      "stars": 990
     },
     {
       "repo": "github/spec-kit",
-      "stars": 139197
+      "stars": 141873
     },
     {
       "repo": "remix-run/react-router",
-      "stars": 56589
+      "stars": 56608
     },
     {
-      "repo": "OtterMind/Chat2DB",
-      "stars": 28278
+      "repo": "dotnet/aspnetcore",
+      "stars": 38475
     }
   ],
   "tips": [
@@ -55,9 +55,9 @@
   ],
   "anti_patterns": [
     "documentation-audit",
+    "sdk-build-repair",
     "breaking-change-checker",
     "ai-sdlc-gh-aw-qa-gemini",
-    "csharp-guideline-improver",
-    "news-translate"
+    "localize-pt"
   ]
 }

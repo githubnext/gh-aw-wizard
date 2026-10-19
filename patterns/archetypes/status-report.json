@@ -3,7 +3,7 @@
   "label": "Status Report",
   "description": "Generate periodic status summaries",
   "success_rate": 0.45,
-  "count": 81,
+  "count": 62,
   "recommended_triggers": [
     {
       "type": "schedule",
@@ -33,23 +33,23 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5194
+      "stars": 5420
     },
     {
       "repo": "githubnext/agentics",
-      "stars": 962
+      "stars": 990
     },
     {
       "repo": "taosdata/TDengine",
-      "stars": 25146
+      "stars": 25169
     },
     {
-      "repo": "rancher/dashboard",
-      "stars": 628
+      "repo": "aztfmod/terraform-provider-azurecaf",
+      "stars": 188
     },
     {
-      "repo": "centminmod/explain-openclaw",
-      "stars": 250
+      "repo": "adoptium/adoptium",
+      "stars": 186
     }
   ],
   "tips": [
@@ -62,9 +62,9 @@
   ],
   "anti_patterns": [
     "daily-repo-status",
-    "daily-repo-status",
-    "daily-repo-status",
     "daily-report",
-    "weekly-release"
+    "weekly-mock-azurerm",
+    "weekly-health-report",
+    "repo-status"
   ]
 }

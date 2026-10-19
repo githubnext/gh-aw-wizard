@@ -2,8 +2,8 @@
   "id": "code-improvement",
   "label": "Code Improvement",
   "description": "Diagnose and fix code or CI issues",
-  "success_rate": 0.32,
-  "count": 86,
+  "success_rate": 0.34,
+  "count": 83,
   "recommended_triggers": [
     {
       "type": "schedule",
@@ -33,23 +33,23 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5194
+      "stars": 5420
     },
     {
       "repo": "githubnext/agentics",
-      "stars": 962
+      "stars": 990
     },
     {
-      "repo": "github/awesome-copilot",
-      "stars": 39466
+      "repo": "github/spec-kit",
+      "stars": 141873
     },
     {
       "repo": "microsoft/aspire",
-      "stars": 6323
+      "stars": 6373
     },
     {
-      "repo": "dotnet/macios",
-      "stars": 2903
+      "repo": "microsoft/agentrc",
+      "stars": 1100
     }
   ],
   "tips": [
@@ -62,9 +62,9 @@
   ],
   "anti_patterns": [
     "ci-doctor",
-    "update-dependencies",
-    "code-simplifier",
-    "autofix-ci",
-    "tier1-ci-diagnose"
+    "ci-doctor",
+    "ci-doctor",
+    "ci-coach",
+    "update-dependencies"
   ]
 }

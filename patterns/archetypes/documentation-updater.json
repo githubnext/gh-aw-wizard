@@ -2,15 +2,15 @@
   "id": "documentation-updater",
   "label": "Documentation Updater",
   "description": "Keep docs accurate and up-to-date",
-  "success_rate": 0.57,
-  "count": 24,
+  "success_rate": 0.58,
+  "count": 29,
   "recommended_triggers": [
     {
-      "type": "schedule",
+      "type": "push",
       "config": {}
     },
     {
-      "type": "push",
+      "type": "schedule",
       "config": {}
     },
     {
@@ -33,11 +33,11 @@
   "top_repos": [
     {
       "repo": "githubnext/agentics",
-      "stars": 962
+      "stars": 990
     },
     {
-      "repo": "YousefHadder/markdown-plus.nvim",
-      "stars": 292
+      "repo": "Azure-Samples/Legacy-Modernization-Agents",
+      "stars": 226
     },
     {
       "repo": "Azure/typespec-azure",
@@ -62,8 +62,8 @@
   "anti_patterns": [
     "documentation-updater",
     "update-docs",
-    "update-docs",
     "daily-doc-updater",
+    "update-docs",
     "daily-doc-updater"
   ]
 }

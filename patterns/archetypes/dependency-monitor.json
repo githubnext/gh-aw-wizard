@@ -2,8 +2,8 @@
   "id": "dependency-monitor",
   "label": "Dependency Monitor",
   "description": "Track and update dependencies",
-  "success_rate": 0.37,
-  "count": 62,
+  "success_rate": 0.46,
+  "count": 56,
   "recommended_triggers": [
     {
       "type": "schedule",
@@ -14,7 +14,7 @@
       "config": {}
     },
     {
-      "type": "roles",
+      "type": "push",
       "config": {}
     }
   ],
@@ -35,23 +35,23 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5194
+      "stars": 5420
     },
     {
       "repo": "github/awesome-copilot",
-      "stars": 39466
+      "stars": 40174
     },
     {
-      "repo": "microsoft/aspire",
-      "stars": 6323
+      "repo": "Z3Prover/z3",
+      "stars": 12793
     },
     {
       "repo": "dotnet/Open-XML-SDK",
-      "stars": 4609
+      "stars": 4614
     },
     {
-      "repo": "microsoft/apm",
-      "stars": 3913
+      "repo": "dotnet/arcade",
+      "stars": 731
     }
   ],
   "tips": [
@@ -64,10 +64,10 @@
     "Use protected-files: fallback-to-issue for CI configuration and agent instructions (not the dependency manifests themselves, since updating those is the intended change)"
   ],
   "anti_patterns": [
-    "dependabot-remediation",
-    "update-github-info",
     "doc-sync",
-    "docs-sync",
-    "update-github-info"
+    "update-github-info",
+    "dependency-api-monitor",
+    "doc-sync",
+    "changelog-sync"
   ]
 }
