@@ -12,8 +12,8 @@ tools:
   edit: false
   github: false
 safe-outputs:
-  missing-data: false
-  missing-tool: false
+  report-missing-data: false
+  report-missing-tool: false
   noop:
     report-as-issue: false
   report-incomplete: false
