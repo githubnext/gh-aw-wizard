@@ -2,19 +2,11 @@
   "id": "status-report",
   "label": "Status Report",
   "description": "Generate periodic status summaries",
-  "success_rate": 0.45,
-  "count": 81,
+  "success_rate": 0.53,
+  "count": 12,
   "recommended_triggers": [
     {
       "type": "schedule",
-      "config": {}
-    },
-    {
-      "type": "stop-after",
-      "config": {}
-    },
-    {
-      "type": "skip-if-match",
       "config": {}
     }
   ],
@@ -33,23 +25,23 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5194
+      "stars": 5559
     },
     {
       "repo": "githubnext/agentics",
-      "stars": 962
+      "stars": 1032
     },
     {
       "repo": "taosdata/TDengine",
-      "stars": 25146
+      "stars": 25183
     },
     {
-      "repo": "rancher/dashboard",
-      "stars": 628
+      "repo": "runhey/OnmyojiAutoScript",
+      "stars": 5710
     },
     {
-      "repo": "centminmod/explain-openclaw",
-      "stars": 250
+      "repo": "adoptium/adoptium",
+      "stars": 186
     }
   ],
   "tips": [
@@ -61,10 +53,6 @@
     "For recurring reports, prefer close-older-issues: true on create-issue over skip-if-match so each scheduled run always executes and supersedes the previous report instead of being skipped while an old one is still open"
   ],
   "anti_patterns": [
-    "daily-repo-status",
-    "daily-repo-status",
-    "daily-repo-status",
-    "daily-report",
-    "weekly-release"
+    "weekly-report"
   ]
 }

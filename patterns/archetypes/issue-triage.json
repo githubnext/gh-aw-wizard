@@ -2,19 +2,19 @@
   "id": "issue-triage",
   "label": "Issue Triage",
   "description": "Classify and label new issues",
-  "success_rate": 0.57,
-  "count": 94,
+  "success_rate": 0.73,
+  "count": 29,
   "recommended_triggers": [
     {
       "type": "issues",
       "config": {}
     },
     {
-      "type": "roles",
+      "type": "reaction",
       "config": {}
     },
     {
-      "type": "reaction",
+      "type": "roles",
       "config": {}
     }
   ],
@@ -34,23 +34,23 @@
   "top_repos": [
     {
       "repo": "githubnext/agentics",
-      "stars": 962
+      "stars": 1032
     },
     {
-      "repo": "appwrite/appwrite",
-      "stars": 57493
-    },
-    {
-      "repo": "moeru-ai/airi",
-      "stars": 49619
-    },
-    {
-      "repo": "cli/cli",
-      "stars": 46432
+      "repo": "apolloconfig/apollo",
+      "stars": 29822
     },
     {
       "repo": "taosdata/TDengine",
-      "stars": 25146
+      "stars": 25183
+    },
+    {
+      "repo": "primer/css",
+      "stars": 13051
+    },
+    {
+      "repo": "runhey/OnmyojiAutoScript",
+      "stars": 5710
     }
   ],
   "tips": [
@@ -60,9 +60,8 @@
   ],
   "anti_patterns": [
     "issue-triage",
-    "issue-triage",
-    "issue-triage",
-    "marketplace-harness-gap-triage",
+    "pr-triage",
+    "smoke-triage",
     "issue-triage"
   ]
 }
