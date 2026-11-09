@@ -2,19 +2,19 @@
   "id": "pr-review",
   "label": "PR Review",
   "description": "Review pull requests for quality and issues",
-  "success_rate": 0.47,
-  "count": 80,
+  "success_rate": 0.05,
+  "count": 9,
   "recommended_triggers": [
-    {
-      "type": "pull_request",
-      "config": {}
-    },
     {
       "type": "slash_command",
       "config": {}
     },
     {
-      "type": "schedule",
+      "type": "roles",
+      "config": {}
+    },
+    {
+      "type": "bots",
       "config": {}
     }
   ],
@@ -33,23 +33,23 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5194
+      "stars": 5597
     },
     {
       "repo": "githubnext/agentics",
-      "stars": 962
+      "stars": 1048
     },
     {
-      "repo": "remix-run/react-router",
-      "stars": 56589
+      "repo": "bootc-dev/bootc",
+      "stars": 2343
     },
     {
-      "repo": "elastic/kibana",
-      "stars": 21302
+      "repo": "jonathanpeppers/dotnes",
+      "stars": 779
     },
     {
-      "repo": "pydantic/pydantic-ai",
-      "stars": 20228
+      "repo": "using-system/otelyssey",
+      "stars": 118
     }
   ],
   "tips": [
@@ -58,10 +58,7 @@
     "Include DO NOT constraints to avoid false positive comments"
   ],
   "anti_patterns": [
-    "pr-review",
-    "pull-request-reviewer",
-    "review-tutorial",
-    "macios-reviewer",
-    "pr-docs-reviewer"
+    "review",
+    "pr-review-gpt5"
   ]
 }

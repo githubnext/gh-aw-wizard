@@ -2,8 +2,8 @@
   "id": "repo-maintainer",
   "label": "Repo Maintainer",
   "description": "Proactively triage, fix, and maintain a repository",
-  "success_rate": 0.55,
-  "count": 21,
+  "success_rate": 0.62,
+  "count": 7,
   "recommended_triggers": [
     {
       "type": "reaction",
@@ -37,35 +37,31 @@
   "top_repos": [
     {
       "repo": "githubnext/agentics",
-      "stars": 962
+      "stars": 1048
     },
     {
-      "repo": "py-why/dowhy",
-      "stars": 8331
-    },
-    {
-      "repo": "dotnet/fsharp",
-      "stars": 4339
+      "repo": "Jguer/yay",
+      "stars": 13827
     },
     {
       "repo": "fsprojects/FsHttp",
       "stars": 498
     },
     {
-      "repo": "shanselman/WindowsEdgeLight",
-      "stars": 371
+      "repo": "fable-compiler/Fable.Python",
+      "stars": 144
+    },
+    {
+      "repo": "colindembovsky/cols-agent-tasks",
+      "stars": 83
     }
   ],
   "tips": [
     "Use persistent memory and check for existing work before acting",
     "Limit each run to one high-value maintenance task",
-    "Leave merges, approvals, and destructive actions to maintainers",
-    "Add a pre-activation step that skips scheduled runs once too many open PRs share your title prefix, to avoid spamming maintainers",
-    "Set concurrency.job-discriminator to ${{ github.event_name == 'schedule' && 'scheduled' || github.run_id }} so a manually- or slash-command-triggered run doesn't get cancelled by (or cancel) the recurring scheduled run"
+    "Leave merges, approvals, and destructive actions to maintainers"
   ],
   "anti_patterns": [
-    "repo-assist",
-    "repo-assist",
     "repo-assist"
   ]
 }

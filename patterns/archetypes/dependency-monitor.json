@@ -2,19 +2,19 @@
   "id": "dependency-monitor",
   "label": "Dependency Monitor",
   "description": "Track and update dependencies",
-  "success_rate": 0.37,
-  "count": 62,
+  "success_rate": 0.13,
+  "count": 7,
   "recommended_triggers": [
     {
       "type": "schedule",
       "config": {}
     },
     {
-      "type": "pull_request",
+      "type": "bots",
       "config": {}
     },
     {
-      "type": "roles",
+      "type": "issues",
       "config": {}
     }
   ],
@@ -35,23 +35,23 @@
   "top_repos": [
     {
       "repo": "github/gh-aw",
-      "stars": 5194
+      "stars": 5597
     },
     {
-      "repo": "github/awesome-copilot",
-      "stars": 39466
+      "repo": "nitinjain999/platform-skills",
+      "stars": 71
     },
     {
-      "repo": "microsoft/aspire",
-      "stars": 6323
+      "repo": "dorlugasigal/TermBeam",
+      "stars": 45
     },
     {
-      "repo": "dotnet/Open-XML-SDK",
-      "stars": 4609
+      "repo": "DevExpGbb/gh-devlake",
+      "stars": 29
     },
     {
-      "repo": "microsoft/apm",
-      "stars": 3913
+      "repo": "EvergineTeam/RenderDoc.NET",
+      "stars": 27
     }
   ],
   "tips": [
@@ -64,10 +64,9 @@
     "Use protected-files: fallback-to-issue for CI configuration and agent instructions (not the dependency manifests themselves, since updating those is the intended change)"
   ],
   "anti_patterns": [
-    "dependabot-remediation",
-    "update-github-info",
-    "doc-sync",
     "docs-sync",
-    "update-github-info"
+    "scorecard-monitor",
+    "doc-sync",
+    "renovate-gate"
   ]
 }

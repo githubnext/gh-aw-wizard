@@ -2,19 +2,19 @@
   "id": "issue-triage",
   "label": "Issue Triage",
   "description": "Classify and label new issues",
-  "success_rate": 0.57,
-  "count": 94,
+  "success_rate": 0.78,
+  "count": 27,
   "recommended_triggers": [
     {
       "type": "issues",
       "config": {}
     },
     {
-      "type": "roles",
+      "type": "reaction",
       "config": {}
     },
     {
-      "type": "reaction",
+      "type": "roles",
       "config": {}
     }
   ],
@@ -34,23 +34,23 @@
   "top_repos": [
     {
       "repo": "githubnext/agentics",
-      "stars": 962
+      "stars": 1048
     },
     {
-      "repo": "appwrite/appwrite",
-      "stars": 57493
+      "repo": "apolloconfig/apollo",
+      "stars": 29813
     },
     {
-      "repo": "moeru-ai/airi",
-      "stars": 49619
+      "repo": "twikoojs/twikoo",
+      "stars": 2319
     },
     {
-      "repo": "cli/cli",
-      "stars": 46432
+      "repo": "kassambara/ggpubr",
+      "stars": 1282
     },
     {
-      "repo": "taosdata/TDengine",
-      "stars": 25146
+      "repo": "drhelius/Gearboy",
+      "stars": 1220
     }
   ],
   "tips": [
@@ -59,10 +59,8 @@
     "Use DO NOT constraints (e.g., 'Do NOT close issues') \u2014 61% more likely to be healthy"
   ],
   "anti_patterns": [
-    "issue-triage",
-    "issue-triage",
-    "issue-triage",
-    "marketplace-harness-gap-triage",
+    "pr-triage",
+    "smoke-triage",
     "issue-triage"
   ]
 }
