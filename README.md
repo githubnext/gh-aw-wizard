@@ -36,6 +36,9 @@ selected model from its prebuilt model catalog on first use.
 
 ## Development
 
+The repository's `.npmrc` configures npm to use Microsoft's approved package feed at
+`https://packagefeedproxy.microsoft.io/npm/`.
+
 ```bash
 npm install
 npm run dev
