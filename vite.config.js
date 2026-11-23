@@ -4,6 +4,7 @@ import { join, posix } from 'node:path';
 import { defineConfig } from 'vite';
 
 import { isVendored, vendoredFiles } from './scripts/fetch-vendor-assets.mjs';
+import { loadWizardData } from './scripts/wizard-data.mjs';
 
 const patternsDir = fileURLToPath(new URL('./patterns', import.meta.url));
 const vendorDir = fileURLToPath(new URL('./vendor', import.meta.url));
@@ -26,6 +27,12 @@ function patternsPlugin() {
   return {
     name: 'gh-aw-wizard:patterns-json',
     configureServer(server) {
+      server.middlewares.use('/wizard-data.json', (req, res, next) => {
+        loadWizardData(wizardConfig, patternsDir).then((data) => {
+          res.setHeader('Content-Type', 'application/json');
+          res.end(`${JSON.stringify(data, null, 2)}\n`);
+        }).catch(next);
+      });
       const files = listPatternsFiles();
       server.middlewares.use('/patterns/', (req, res, next) => {
         const relativePath = decodeURIComponent(req.url.replace(/^\/+/, '').split('?')[0]);
@@ -37,7 +44,13 @@ function patternsPlugin() {
         res.end(readFileSync(join(patternsDir, ...relativePath.split('/'))));
       });
     },
-    generateBundle() {
+    async generateBundle() {
+      const data = await loadWizardData(wizardConfig, patternsDir);
+      this.emitFile({
+        type: 'asset',
+        fileName: 'wizard-data.json',
+        source: `${JSON.stringify(data, null, 2)}\n`
+      });
       this.emitFile({
         type: 'asset',
         fileName: 'wizard.json',

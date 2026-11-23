@@ -49,6 +49,25 @@ npm run build
 `npm run dev` and `npm run build` download the vendored browser assets into the gitignored
 `vendor/` directory; `npm run vendor` refreshes them.
 
+### Published wizard data
+
+Every build regenerates `dist/wizard-data.json`, which the existing Pages deployment publishes at
+[`wizard-data.json`](https://githubnext.github.io/gh-aw-wizard/wizard-data.json). The same endpoint is
+available from the development server. It is a consolidated, versioned snapshot with these fields:
+
+| Field | Contents |
+|-------|----------|
+| `schema_version` | Export format version, currently `1` |
+| `wizard` | Complete `src/wizard.json`, including page text, steps, options, defaults, and recommendations |
+| `patterns` | Full manifest metadata, expanded wizard archetypes, and inline `workflow_generation` data |
+| `engines` | Engine extension catalog fetched from the configured `engines_url` |
+
+The build requires access to `engines_url` and fails if that catalog cannot be fetched or is invalid,
+rather than publishing an incomplete snapshot. The existing `wizard.json` and split `patterns/`
+files remain unchanged. No generated export needs to be committed; rebuilding keeps it in sync
+with the source data. If you customize the published configuration without rebuilding, the snapshot
+still reflects the last build.
+
 ## Prompt optimization (local, Apple Silicon)
 
 `scripts/prompt-optimizer.mjs` tunes the system prompt behind the in-browser scenario assistant on a
